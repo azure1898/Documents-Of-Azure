@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+	<!-- 通过（action名称!方法名称）的url格式来调用action中方法 -->
+	<!-- 开启动态方法调用 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+	<package name="first" extends="struts-default" namespace="/" strict-method-invocation="false">
+		<interceptors>
+			<interceptor name="authinterceptor" class="com.struts.interceptors.AuthInterceptor"></interceptor>
+			<interceptor-stack name="mydefaultinterceptor">
+				<interceptor-ref name="authinterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="mydefaultinterceptor">
+		</default-interceptor-ref>
+		<global-results>
+			<result name="gologin">login.jsp</result>
+		</global-results>
+		
+		<action name="login" class="com.struts.action.LoginAction">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success">login.jsp</result>
+		</action>
+		<action name="dologin" class="com.struts.action.LoginAction" method="doLogin">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success">index.jsp</result>
+		</action>
+		
+		<action name="user" class="com.struts.action.UserAction">
+			<result name="success">/WEB-INF/userList.jsp</result>
+			<result name="toedit">/WEB-INF/userForm.jsp</result>
+		</action>
+	</package>
+</struts>
