@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jquery-validation 使用 - ___.Net - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./01_jquery-validation_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./01_jquery-validation_files/bundle-summerGarden.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./01_jquery-validation_files/bundle-summerGarden-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/lichengjava/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/lichengjava/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/lichengjava/wlwmanifest.xml">
+<script src="./01_jquery-validation_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'lichengjava', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./01_jquery-validation_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/lichengjava/"><img id="blogLogo" src="./01_jquery-validation_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/lichengjava/">编程是一门技术，更是一门艺术。</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/lichengjava/">首页</a></li>
+	<li><a href="http://news.cnblogs.com/">新闻</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/___.Net">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/lichengjava/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/lichengjava/rss"><img src="./01_jquery-validation_files/xml.gif" alt="订阅"></a></li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔- 3&nbsp;
+文章- 0&nbsp;
+评论- 4&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html">jquery-validation 使用</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><div class="cnt" id="blog_text">
+<p>一、用前必备<br>官方网站：<a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/"><span color="#108ac6" style="color: #108ac6;">http://bassistance.de/jquery-plugins/jquery-plugin-validation/</span></a><br>API: <a href="http://jquery.bassistance.de/api-browser/plugins.html"><span color="#108ac6" style="color: #108ac6;">http://jquery.bassistance.de/api-browser/plugins.html</span></a><br>当前版本：1.5.5<br>需要JQuery版本：1.2.6+, 兼容 1.3.2<br>&lt;script src="../js/jquery.js" type="text/javascript"&gt;&lt;/script&gt;<br>&lt;script src="../js/jquery.validate.js" type="text/javascript"&gt;&lt;/script&gt;</p>
+<p>二、默认校验规则<br>(1)required:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必输字段<br>(2)remote:"check.php"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 使用ajax方法调用check.php验证输入值<br>(3)email:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入正确格式的电子邮件<br>(4)url:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入正确格式的网址<br>(5)date:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入正确格式的日期<br>(6)dateISO:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入正确格式的日期(ISO)，例如：2009-06-23，1998/01/22 只验证格式，不验证有效性<br>(7)number:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入合法的数字(负数，小数)<br>(8)digits:true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入整数<br>(9)creditcard:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 必须输入合法的信用卡号<br>(10)equalTo:"#field"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入值必须和#field相同<br>(11)accept:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入拥有合法后缀名的字符串（上传文件的后缀）<br>(12)maxlength:5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入长度最多是5的字符串(汉字算一个字符)<br>(13)minlength:10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入长度最小是10的字符串(汉字算一个字符)<br>(14)rangelength:[5,10]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入长度必须介于 5 和 10 之间的字符串")(汉字算一个字符)<br>(15)range:[5,10]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入值必须介于 5 和 10 之间<br>(16)max:5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入值不能大于5<br>(17)min:10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 输入值不能小于10</p>
+<p>三、默认的提示<br>messages: {<br>&nbsp;&nbsp;&nbsp; required: "This field is required.",<br>&nbsp;&nbsp;&nbsp; remote: "Please fix this field.",<br>&nbsp;&nbsp;&nbsp; email: "Please enter a valid email address.",<br>&nbsp;&nbsp;&nbsp; url: "Please enter a valid URL.",<br>&nbsp;&nbsp;&nbsp; date: "Please enter a valid date.",<br>&nbsp;&nbsp;&nbsp; dateISO: "Please enter a valid date (ISO).",<br>&nbsp;&nbsp;&nbsp; dateDE: "Bitte geben Sie ein g眉ltiges Datum ein.",<br>&nbsp;&nbsp;&nbsp; number: "Please enter a valid number.",<br>&nbsp;&nbsp;&nbsp; numberDE: "Bitte geben Sie eine Nummer ein.",<br>&nbsp;&nbsp;&nbsp; digits: "Please enter only digits",<br>&nbsp;&nbsp;&nbsp; creditcard: "Please enter a valid credit card number.",<br>&nbsp;&nbsp;&nbsp; equalTo: "Please enter the same value again.",<br>&nbsp;&nbsp;&nbsp; accept: "Please enter a value with a valid extension.",<br>&nbsp;&nbsp;&nbsp; maxlength: $.validator.format("Please enter no more than {0} characters."),<br>&nbsp;&nbsp;&nbsp; minlength: $.validator.format("Please enter at least {0} characters."),<br>&nbsp;&nbsp;&nbsp; rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),<br>&nbsp;&nbsp;&nbsp; range: $.validator.format("Please enter a value between {0} and {1}."),<br>&nbsp;&nbsp;&nbsp; max: $.validator.format("Please enter a value less than or equal to {0}."),<br>&nbsp;&nbsp;&nbsp; min: $.validator.format("Please enter a value greater than or equal to {0}.")<br>},<br>如需要修改，可在js代码中加入：<br>jQuery.extend(jQuery.validator.messages, {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; required: "必选字段",<br>remote: "请修正该字段",<br>email: "请输入正确格式的电子邮件",<br>url: "请输入合法的网址",<br>date: "请输入合法的日期",<br>dateISO: "请输入合法的日期 (ISO).",<br>number: "请输入合法的数字",<br>digits: "只能输入整数",<br>creditcard: "请输入合法的信用卡号",<br>equalTo: "请再次输入相同的值",<br>accept: "请输入拥有合法后缀名的字符串",<br>maxlength: jQuery.validator.format("请输入一个长度最多是 {0} 的字符串"),<br>minlength: jQuery.validator.format("请输入一个长度最少是 {0} 的字符串"),<br>rangelength: jQuery.validator.format("请输入一个长度介于 {0} 和 {1} 之间的字符串"),<br>range: jQuery.validator.format("请输入一个介于 {0} 和 {1} 之间的值"),<br>max: jQuery.validator.format("请输入一个最大为 {0} 的值"),<br>min: jQuery.validator.format("请输入一个最小为 {0} 的值")<br>});<br>推荐做法，将此文件放入messages_cn.js中，在页面中引入<br>&lt;script src="../js/messages_cn.js" type="text/javascript"&gt;&lt;/script&gt;</p>
+<p>四、使用方式<br>1.将校验规则写到控件中<br>&lt;script src="../js/jquery.js" type="text/javascript"&gt;&lt;/script&gt;<br>&lt;script src="../js/jquery.validate.js" type="text/javascript"&gt;&lt;/script&gt;<br>&lt;script src="./js/jquery.metadata.js" type="text/javascript"&gt;&lt;/script&gt;<br>$().ready(function() {<br>$("#signupForm").validate();<br>});</p>
+<p>&lt;form id="signupForm" method="get" action=""&gt;<br>&nbsp;&nbsp;&nbsp; &lt;p&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label for="firstname"&gt;Firstname&lt;/label&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input id="firstname" name="firstname" class="required" /&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="email"&gt;E-Mail&lt;/label&gt;<br>&lt;input id="email" name="email" class="required email" /&gt;<br>&lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="password"&gt;Password&lt;/label&gt;<br>&lt;input id="password" name="password" type="password" class="{required:true,minlength:5}" /&gt;<br>&lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="confirm_password"&gt;确认密码&lt;/label&gt;<br>&lt;input id="confirm_password" name="confirm_password" type="password" class="{required:true,minlength:5,equalTo:'#password'}" /&gt;<br>&lt;/p&gt;<br>&nbsp;&nbsp;&nbsp; &lt;p&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input class="submit" type="submit" value="Submit"/&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br>&lt;/form&gt;<br>使用class="{}"的方式，必须引入包：jquery.metadata.js<br>可以使用如下的方法，修改提示内容：<br>class="{required:true,minlength:5,messages:{required:'请输入内容'}}"<br>在使用equalTo关键字时，后面的内容必须加上引号，如下代码：<br>class="{required:true,minlength:5,equalTo:'#password'}"<br>另外一个方式，使用关键字：meta（为了元数据使用其他插件你要包装 你的验证规则 在他们自己的项目中可以用这个特殊的选项）<br>Tell the validation plugin to look inside a validate-property in metadata for validation rules.<br>例如：<br>meta: "validate"<br>&lt;input id="password" name="password" type="password" class="{validate:{required:true,minlength:5}}" /&gt;</p>
+<p>再有一种方式：<br>$.metadata.setType("attr", "validate");<br>这样可以使用validate="{required:true}"的方式，或者class="required"，但class="{required:true,minlength:5}"将不起作用<br><br>2.将校验规则写到代码中</p>
+<p>$().ready(function() {<br>$("#signupForm").validate({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rules: {<br>&nbsp;&nbsp; firstname: "required",<br>&nbsp;&nbsp; email: {<br>&nbsp;&nbsp;&nbsp; required: true,<br>&nbsp;&nbsp;&nbsp; email: true<br>&nbsp;&nbsp; },<br>&nbsp;&nbsp; password: {<br>&nbsp;&nbsp;&nbsp; required: true,<br>&nbsp;&nbsp;&nbsp; minlength: 5<br>&nbsp;&nbsp; },<br>&nbsp;&nbsp; confirm_password: {<br>&nbsp;&nbsp;&nbsp; required: true,<br>&nbsp;&nbsp;&nbsp; minlength: 5,<br>&nbsp;&nbsp;&nbsp; equalTo: "#password"<br>&nbsp;&nbsp; }<br>},<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; messages: {<br>&nbsp;&nbsp; firstname: "请输入姓名",<br>&nbsp;&nbsp; email: {<br>&nbsp;&nbsp;&nbsp; required: "请输入Email地址",<br>&nbsp;&nbsp;&nbsp; email: "请输入正确的email地址"<br>&nbsp;&nbsp; },<br>&nbsp;&nbsp; password: {<br>&nbsp;&nbsp;&nbsp; required: "请输入密码",<br>&nbsp;&nbsp;&nbsp; minlength: jQuery.format("密码不能小于{0}个字符")<br>&nbsp;&nbsp; },<br>&nbsp;&nbsp; confirm_password: {<br>&nbsp;&nbsp;&nbsp; required: "请输入确认密码",<br>&nbsp;&nbsp;&nbsp; minlength: "确认密码不能小于5个字符",<br>&nbsp;&nbsp;&nbsp; equalTo: "两次输入密码不一致不一致"<br>&nbsp;&nbsp; }<br>}<br>&nbsp;&nbsp;&nbsp; });<br>});<br>//messages处，如果某个控件没有message，将调用默认的信息</p>
+<p>&lt;form id="signupForm" method="get" action=""&gt;<br>&nbsp;&nbsp;&nbsp; &lt;p&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label for="firstname"&gt;Firstname&lt;/label&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input id="firstname" name="firstname" /&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="email"&gt;E-Mail&lt;/label&gt;<br>&lt;input id="email" name="email" /&gt;<br>&lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="password"&gt;Password&lt;/label&gt;<br>&lt;input id="password" name="password" type="password" /&gt;<br>&lt;/p&gt;<br>&lt;p&gt;<br>&lt;label for="confirm_password"&gt;确认密码&lt;/label&gt;<br>&lt;input id="confirm_password" name="confirm_password" type="password" /&gt;<br>&lt;/p&gt;<br>&nbsp;&nbsp;&nbsp; &lt;p&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input class="submit" type="submit" value="Submit"/&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br>&lt;/form&gt;<br>required:true 必须有值<br>required:"#aa:checked"表达式的值为真，则需要验证<br>required:function(){}返回为真，表时需要验证<br>后边两种常用于，表单中需要同时填或不填的元素<br><br>五、常用方法及注意问题<br>1.用其他方式替代默认的SUBMIT<br>$().ready(function() {<br>$("#signupForm").validate({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; submitHandler:function(form){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alert("submitted");&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; form.submit();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; });<br>});<br>可以设置validate的默认值，写法如下：<br>$.validator.setDefaults({<br>submitHandler: function(form) { alert("submitted!");form.submit(); }<br>});<br>如果想提交表单, 需要使用form.submit()而不要使用$(form).submit()</p>
+<p>2.debug，如果这个参数为true，那么表单不会提交，只进行检查，调试时十分方便<br>$().ready(function() {<br>$("#signupForm").validate({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; debug:true<br>&nbsp;&nbsp;&nbsp; });<br>});<br>如果一个页面中有多个表单，用<br>$.validator.setDefaults({<br>&nbsp;&nbsp; debug: true<br>})</p>
+<p>3.ignore：忽略某些元素不验证<br>ignore: ".ignore"</p>
+<p>4.errorPlacement：Callback Default: 把错误信息放在验证的元素后面 <br>指明错误放置的位置，默认情况是：error.appendTo(element.parent());即把错误信息放在验证的元素后面 <br>errorPlacement: function(error, element) {&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; error.appendTo(element.parent());&nbsp;&nbsp; <br>}<br>//示例：<br>&lt;tr&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td class="label"&gt;&lt;label id="lfirstname" for="firstname"&gt;First Name&lt;/label&gt;&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td class="field"&gt;&lt;input id="firstname" name="firstname" type="text" value="" maxlength="100" /&gt;&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td class="status"&gt;&lt;/td&gt;<br>&lt;/tr&gt;<br>&lt;tr&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td style="padding-right: 5px;"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input id="dateformat_eu" name="dateformat" type="radio" value="0" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label id="ldateformat_eu" for="dateformat_eu"&gt;14/02/07&lt;/label&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td style="padding-left: 5px;"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input id="dateformat_am" name="dateformat" type="radio" value="1" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label id="ldateformat_am" for="dateformat_am"&gt;02/14/07&lt;/label&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;&lt;/td&gt;<br>&lt;/tr&gt;<br>&lt;tr&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td class="label"&gt;&amp;nbsp;&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td class="field" colspan="2"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div id="termswrap"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input id="terms" type="checkbox" name="terms" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label id="lterms" for="terms"&gt;I have read and accept the Terms of Use.&lt;/label&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/td&gt;<br>&lt;/tr&gt;<br>errorPlacement: function(error, element) {<br>&nbsp;&nbsp;&nbsp; if ( element.is(":radio") )<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error.appendTo( element.parent().next().next() );<br>&nbsp;&nbsp;&nbsp; else if ( element.is(":checkbox") )<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error.appendTo ( element.next() );<br>&nbsp;&nbsp;&nbsp; else<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; error.appendTo( element.parent().next() );<br>}<br>代码的作用是：一般情况下把错误信息显示在&lt;td class="status"&gt;&lt;/td&gt;中，如果是radio显示在&lt;td&gt;&lt;/td&gt;中，如果是checkbox显示在内容的后面<br>errorClass：String Default: "error" <br>指定错误提示的css类名，可以自定义错误提示的样式<br>errorElement：String Default: "label" <br>用什么标签标记错误，默认的是label你可以改成em<br>errorContainer：Selector <br>显示或者隐藏验证信息，可以自动实现有错误信息出现时把容器属性变为显示，无错误时隐藏，用处不大<br>errorContainer: "#messageBox1, #messageBox2"<br>errorLabelContainer：Selector <br>把错误信息统一放在一个容器里面。<br>wrapper：String<br>用什么标签再把上边的errorELement包起来<br>一般这三个属性同时使用，实现在一个容器内显示所有错误提示的功能，并且没有信息时自动隐藏<br>errorContainer: "div.error",<br>errorLabelContainer: $("#signupForm div.error"),<br>wrapper: "li"<br><br>设置错误提示的样式，可以增加图标显示<br>input.error { border: 1px solid red; }<br>label.error {<br>background:url("./demo/images/unchecked.gif") no-repeat 0px 0px;<br>padding-left: 16px;<br>padding-bottom: 2px;<br>font-weight: bold;<br>color: #EA5200;<br>}<br>label.checked {<br>background:url("./demo/images/checked.gif") no-repeat 0px 0px;<br>}<br>success：String,Callback <br>要验证的元素通过验证后的动作，如果跟一个字符串，会当做一个css类，也可跟一个函数<br>success: function(label) {<br>&nbsp;&nbsp;&nbsp; // set &amp;nbsp; as text for IE<br>&nbsp;&nbsp;&nbsp; label.html("&amp;nbsp;").addClass("checked");<br>&nbsp;&nbsp;&nbsp; //label.addClass("valid").text("Ok!")<br>}<br>添加"valid" 到验证元素, 在CSS中定义的样式&lt;style&gt;label.valid {}&lt;/style&gt;<br>success: "valid"<br><br><br>nsubmit： Boolean Default: true <br>提交时验证. 设置唯false就用其他方法去验证<br>onfocusout：Boolean Default: true <br>失去焦点是验证(不包括checkboxes/radio buttons) <br>onkeyup：Boolean Default: true <br>在keyup时验证.<br>onclick：Boolean Default: true <br>在checkboxes 和 radio 点击时验证<br>focusInvalid：Boolean Default: true <br>提交表单后，未通过验证的表单(第一个或提交之前获得焦点的未通过验证的表单)会获得焦点<br>focusCleanup：Boolean Default: false <br>如果是true那么当未通过验证的元素获得焦点时，移除错误提示。避免和 focusInvalid 一起用<br><br>// 重置表单<br>$().ready(function() {<br>var validator = $("#signupForm").validate({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; submitHandler:function(form){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alert("submitted");&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; form.submit();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; });<br>&nbsp;&nbsp;&nbsp; $("#reset").click(function() {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; validator.resetForm();<br>&nbsp;&nbsp;&nbsp; });<br>});<br><br>remote：URL<br>使用ajax方式进行验证，默认会提交当前验证的值到远程地址，如果需要提交其他的值，可以使用data选项<br>remote: "check-email.php"<br>remote: {<br>&nbsp;&nbsp;&nbsp; url: "check-email.php",&nbsp;&nbsp;&nbsp;&nbsp; //后台处理程序<br>&nbsp;&nbsp;&nbsp; type: "post",&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //数据发送方式<br>&nbsp;&nbsp;&nbsp; dataType: "json",&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //接受数据格式&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; data: {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //要传递的数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; username: function() {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return $("#username").val();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }<br>}</p>
+<p>远程地址只能输出 "true" 或 "false"，不能有其它输出<br><br><br>addMethod：name, method, message<br>自定义验证方法</p>
+<p>// 中文字两个字节<br>jQuery.validator.addMethod("byteRangeLength", function(value, element, param) {<br>&nbsp;&nbsp;&nbsp; var length = value.length;<br>&nbsp;&nbsp;&nbsp; for(var i = 0; i &lt; value.length; i++){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(value.charCodeAt(i) &gt; 127){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; length++;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }<br>return this.optional(element) || ( length &gt;= param[0] &amp;&amp; length &lt;= param[1] );&nbsp;&nbsp;&nbsp; <br>}, $.validator.format("请确保输入的值在{0}-{1}个字节之间(一个中文字算2个字节)"));</p>
+<p>// 邮政编码验证&nbsp;&nbsp;&nbsp; <br>jQuery.validator.addMethod("isZipCode", function(value, element) {&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; var tel = /^[0-9]{6}$/;<br>&nbsp;&nbsp;&nbsp; return this.optional(element) || (tel.test(value));<br>}, "请正确填写您的邮政编码");</p>
+<p>radio和checkbox、select的验证<br>radio的required表示必须选中一个<br>&lt;input type="radio" id="gender_male" value="m" name="gender" class="{required:true}" /&gt;<br>&lt;input type="radio" id="gender_female" value="f" name="gender"/&gt;<br>checkbox的required表示必须选中<br>&lt;input type="checkbox" class="checkbox" id="agree" name="agree" class="{required:true}" /&gt;<br>checkbox的minlength表示必须选中的最小个数,maxlength表示最大的选中个数,rangelength:[2,3]表示选中个数区间<br>&lt;input type="checkbox" class="checkbox" id="spam_email" value="email" name="spam[]" class="{required:true, minlength:2}" /&gt;<br>&lt;input type="checkbox" class="checkbox" id="spam_phone" value="phone" name="spam[]" /&gt;<br>&lt;input type="checkbox" class="checkbox" id="spam_mail" value="mail" name="spam[]" /&gt;</p>
+<p>select的required表示选中的value不能为空<br>&lt;select id="jungle" name="jungle" title="Please select something!" class="{required:true}"&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value=""&gt;&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="1"&gt;Buga&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="2"&gt;Baga&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="3"&gt;Oi&lt;/option&gt;<br>&lt;/select&gt;<br>select的minlength表示选中的最小个数（可多选的select）,maxlength表示最大的选中个数,rangelength:[2,3]表示选中个数区间<br>&lt;select id="fruit" name="fruit" title="Please select at least two fruits" class="{required:true, minlength:2}" multiple="multiple"&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="b"&gt;Banana&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="a"&gt;Apple&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="p"&gt;Peach&lt;/option&gt;<br>&nbsp;&nbsp;&nbsp; &lt;option value="t"&gt;Turtle&lt;/option&gt;<br>&lt;/select&gt;</p>
+
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(2035100,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;7abc70b5-3567-e011-a53f-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./01_jquery-validation_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./01_jquery-validation_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/lichengjava/" target="_blank"><img src="./01_jquery-validation_files/u292682.jpg" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/lichengjava/">___.Net</a><br>
+            <a href="http://home.cnblogs.com/u/lichengjava/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/lichengjava/followers">粉丝 - 1</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;7abc70b5-3567-e011-a53f-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(2035100,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(2035100,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/lichengjava/archive/2011/04/21/2023266.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/lichengjava/archive/2011/04/21/2023266.html" title="发布于2011-04-21 10:36">上传图片并生成缩略图</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2011-05-03 11:34</span> <a href="http://www.cnblogs.com/lichengjava/">___.Net</a> 阅读(<span id="post_view_count">12798</span>) 评论(<span id="post_comment_count">4</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=2035100" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#" onclick="AddToWz(2035100);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=87531,cb_entryId=2035100,cb_blogApp=currentBlogApp,cb_blogUserGuid='7abc70b5-3567-e011-a53f-842b2b196315',cb_entryCreatedDate='2011/5/3 11:34:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<!--done-->
+<br>
+<div class="feedback_area_title">发表评论</div>
+<div class="feedbackNoItems"></div>
+	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2085551" class="layer">#1楼</a><a name="2085551" id="comment_anchor_2085551"></a> <span class="comment_date">2011-05-03 17:48</span> | <a id="a_comment_author_2085551" href="http://www.cnblogs.com/damonlan/" target="_blank">随风浪迹天涯</a> <a href="http://msg.cnblogs.com/send/%E9%9A%8F%E9%A3%8E%E6%B5%AA%E8%BF%B9%E5%A4%A9%E6%B6%AF" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2085551" class="blog_comment_body">看了很萌。。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2085551,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2085551,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2085551_avatar" style="display:none;">http://pic.cnblogs.com/face/u282564.jpg?id=14170340</span><br>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2101744" class="layer">#2楼</a><a name="2101744" id="comment_anchor_2101744"></a>[<span class="louzhu">楼主</span>] <span class="comment_date">2011-05-20 10:07</span> | <a id="a_comment_author_2101744" href="http://www.cnblogs.com/lichengjava/" target="_blank">___.Net</a> <a href="http://msg.cnblogs.com/send/___.Net" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2101744" class="blog_comment_body"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2085551" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2085551);">@</a>
+随风浪迹天涯<br>呵呵~</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2101744,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2101744,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2101744_avatar" style="display:none;">http://pic.cnblogs.com/face/u292682.jpg?id=17195256</span><br>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2477997" class="layer">#3楼</a><a name="2477997" id="comment_anchor_2477997"></a> <span class="comment_date">2012-09-21 10:36</span> | <a id="a_comment_author_2477997" href="http://www.cnblogs.com/qq1027187712/" target="_blank">曾小弦老师</a> <a href="http://msg.cnblogs.com/send/%E6%9B%BE%E5%B0%8F%E5%BC%A6%E8%80%81%E5%B8%88" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_2477997" class="blog_comment_body">有点糙 糙哥啊 remote 有个dataFilter属性咋没说</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2477997,&#39;Digg&#39;,this)">支持(1)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2477997,&#39;Bury&#39;,this)">反对(0)</a></div><br>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#3219363" class="layer">#4楼</a><a name="3219363" id="comment_anchor_3219363"></a><span id="comment-maxId" style="display:none;">3219363</span><span id="comment-maxDate" style="display:none;">2015/7/1 17:47:31</span> <span class="comment_date">2015-07-01 17:47</span> | <a id="a_comment_author_3219363" href="http://www.cnblogs.com/luoqin520/" target="_blank">东辰潋（it猪）</a> <a href="http://msg.cnblogs.com/send/%E4%B8%9C%E8%BE%B0%E6%BD%8B%EF%BC%88it%E7%8C%AA%EF%BC%89" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3219363" class="blog_comment_body">有点看不懂。。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3219363,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3219363,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3219363_avatar" style="display:none;">http://pic.cnblogs.com/face/746142/20150423174821.png</span><br>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://vcloud.163.com/?adchannel=bp_cnblogs2" target="_blank">【推荐】用1%的研发投入，搭载3倍性能的网易视频云技术</a><br><a href="http://rongcloud.cn/reports/journal2" target="_blank">【推荐】融云发布 App 社交化白皮书 IM 提升活跃超 8 倍</a><br></div>
+<div id="opt_under_post"></div>
+<div id="ad_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/componentone.htm?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=C1&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./01_jquery-validation_files/24442-20161031104644908-57254170.png" alt=""></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/557365/" target="_blank">苹果中国AppleWatch商标纠纷案败诉</a><br> ·  <a href="http://news.cnblogs.com/n/557364/" target="_blank">巴菲特叫马云捐出所有财产：马云回答拍案叫绝</a><br> ·  <a href="http://news.cnblogs.com/n/557363/" target="_blank">Windows 10新版14971推送！Edge支持epub电子书</a><br> ·  <a href="http://news.cnblogs.com/n/557362/" target="_blank">王强：读完这三本书，你就离优秀不远了</a><br> ·  <a href="http://news.cnblogs.com/n/557361/" target="_blank">就连腾讯也可能需要正视后智能手机红利时代了</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="ad_c2" class="c_ad_block"><a href="https://www.jiguang.cn/devservice/?from=cnblogs01" target="_blank"><img width="468" height="60" src="./01_jquery-validation_files/24442-20161114133622451-1554357151.jpg" alt=""></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/555750/" target="_blank">循序渐进地代码重构</a><br> ·  <a href="http://kb.cnblogs.com/page/554496/" target="_blank">技术的正宗与野路子</a><br> ·  <a href="http://kb.cnblogs.com/page/553682/" target="_blank">陈皓：什么是工程师文化？</a><br> ·  <a href="http://kb.cnblogs.com/page/551422/" target="_blank">没那么难，谈CSS的设计模式</a><br> ·  <a href="http://kb.cnblogs.com/page/550625/" target="_blank">程序猿媳妇儿注意事项</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/lichengjava/">___.Net</a><br>园龄：<a href="http://home.cnblogs.com/u/lichengjava/" title="入园时间：2011-04-15">5年7个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/lichengjava/followers/">1</a><br>关注：<a href="http://home.cnblogs.com/u/lichengjava/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;7abc70b5-3567-e011-a53f-842b2b196315&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2011/04/01&#39;);return false;">&lt;</a></td><td align="center">2011年5月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2011/06/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">24</td><td class="CalOtherMonthDay" align="center">25</td><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td></tr><tr><td class="CalWeekendDay" align="center">1</td><td align="center">2</td><td align="center"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03.html"><u>3</u></a></td><td align="center">4</td><td align="center">5</td><td align="center">6</td><td class="CalWeekendDay" align="center">7</td></tr><tr><td class="CalWeekendDay" align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td align="center">13</td><td class="CalWeekendDay" align="center">14</td></tr><tr><td class="CalWeekendDay" align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td class="CalWeekendDay" align="center">21</td></tr><tr><td class="CalWeekendDay" align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td class="CalWeekendDay" align="center">28</td></tr><tr><td class="CalWeekendDay" align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/lichengjava/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/lichengjava/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/lichengjava/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/lichengjava/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/lichengjava/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/lichengjava/archive/2011/05.html">2011年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/lichengjava/archive/2011/04.html">2011年4月 (2)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#3219363">1. Re:jquery-validation 使用</a></li>
+        <li class="recent_comment_body">有点看不懂。。</li>
+        <li class="recent_comment_author">--枫&amp;&amp;东辰潋</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2477997">2. Re:jquery-validation 使用</a></li>
+        <li class="recent_comment_body">有点糙 糙哥啊 remote 有个dataFilter属性咋没说</li>
+        <li class="recent_comment_author">--曾小弦老师</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2101744">3. Re:jquery-validation 使用</a></li>
+        <li class="recent_comment_body">@随风浪迹天涯呵呵~...</li>
+        <li class="recent_comment_author">--___.Net</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html#2085551">4. Re:jquery-validation 使用</a></li>
+        <li class="recent_comment_body">看了很萌。。</li>
+        <li class="recent_comment_author">--随风浪迹天涯</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html">1. jquery-validation 使用(12799)</a></li><li><a href="http://www.cnblogs.com/lichengjava/archive/2011/04/21/2023261.html">2. 兼容FF 加入收藏夹和设为首页(344)</a></li><li><a href="http://www.cnblogs.com/lichengjava/archive/2011/04/21/2023266.html">3. 上传图片并生成缩略图(284)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html">1. jquery-validation 使用(4)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/lichengjava/archive/2011/05/03/validation.html">1. jquery-validation 使用(2)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2016 ___.Net
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

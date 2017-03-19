@@ -1,0 +1,2 @@
+介绍两个软件的安装及使用，介绍如何通过GIT及tortoiseGit管理Github代码；介绍如何通过TortoiseSvn管理taocode代码。
+这两个软件的讲解时间较短，穿插在近期的jquery专题中讲解完毕。
