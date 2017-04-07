@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 注解扫描!!!
+    <context:component-scan base-package="com.zhiyou100"/>
+    -->
+
+    <!-- 自动扫描且只扫描@Controller -->
+    <context:component-scan base-package="com.zhiyou100" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!-- 注解映射器
+     说明 ：对类中标记@ResquestMapping的方法进行映射，根据ResquestMapping定义的url匹配
+     ResquestMapping标记的方法，匹配成功返回HandlerMethod对象给前端控制器，HandlerMethod对象中封装url对应的方法Method
+    -->
+    <!--
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    -->
+    <!-- 注解适配器
+         说明：注解式处理器适配器，对标记@ResquestMapping的方法进行适配。
+    -->
+    <!--
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+    -->
+
+    <!-- 自定义转换器 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <!--日期转换器-->
+                <bean class="com.zhiyou100.util.DateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <!-- springmvc使用<mvc:annotation-driven> -->
+    <!-- 自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter， -->
+    <!-- 可用在springmvc.xml配置文件中使用<mvc:annotation-driven>替代注解处理器和适配器的配置。 -->
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+                <property name="prettyPrint" value="true"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 处理静态资源 让静态资源可以直接访问
+    <mvc:resources mapping="/static/**" location="/static/"/>
+    -->
+    <!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 定义无需Controller的url<->view直接映射-->
+    <mvc:view-controller path="/list_rest" view-name="rest/list_rest"/>
+    <mvc:view-controller path="/add_rest" view-name="rest/add_rest"/>
+
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>

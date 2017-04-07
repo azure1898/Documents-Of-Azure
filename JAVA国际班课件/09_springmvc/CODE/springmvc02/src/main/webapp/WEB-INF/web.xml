@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <!-- 解决POST请求的中文乱码-->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- DispatcherServlet：前端控制器 配置前端控制器servlet -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--加载前端控制器配置文件 上下文配置位置-->
+        <init-param>
+            <!--contextConfigLocation：指定springmvc配置的加载位置，
+                如果不指定则默认加 载WEB-INF/[DispatcherServlet的Servlet名字]-servlet.xml(例如springmvc-servlet.xml)。
+            -->
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:applicationContext-servlet.xml</param-value>
+        </init-param>
+        <!-- 表示随WEB服务器启动 -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <!-- 可以拦截二种请求
+            第一种：拦截固定后缀的url，比如设置为 *.do、*.action，
+                例如：/user/add.action 此方法最简单,不会导致静态资源（jpg,js,css）被拦截
+            第二种：拦截所有 设置为/，
+                例如：/user/add /user/add.action此方法可以实现REST风格的url
+                很多互联网类型的应用使用这种方式.但是此方法会导致静态文件(jpg,js,css)被拦截后不能正常显示.需要特殊处理
+            错误设置：拦截所有,设置为/*，此设置方法错误,因为请求到Action,
+                当action转到jsp时再次被拦截,提示不能根据jsp路径mapping成功.
+        -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+</web-app>

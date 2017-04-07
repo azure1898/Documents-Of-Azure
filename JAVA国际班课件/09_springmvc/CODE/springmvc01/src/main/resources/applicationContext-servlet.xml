@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <!-- 处理器映射器 -->
+    <!-- 根据bean的name进行查找Handler处理器 将请求的url配置在bean的name中 -->
+    <!-- 这是一个默认的映射处理器,即使不配置，那么也是默认就是这个
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+    -->
+
+    <!-- HandlerAdapter适配器 -->
+    <!--  注意：这个适配器不是必须配置的，这是默认的、他在servlet容器已启动就被加载
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    -->
+
+    <!-- 配置视图解析器 -->
+    <!-- InternalResourceViewResolver：支持JSP视图解析 -->
+    <!-- viewClass：JstlView表示JSP模板页面需要使用JSTL标签库，所以classpath中必须包含jstl的相关jar包； -->
+    <!-- prefix 和suffix：查找视图页面的前缀和后缀，最终视图的址为： -->
+    <!-- 前缀+逻辑视图名+后缀，逻辑视图名需要在controller中返回ModelAndView指定，比如逻辑视图名为hello，-->
+    <!-- 则最终返回的jsp视图地址 "WEB-INF/view/hello.jsp" -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- Handler后端控制器 -->
+    <!-- 配置controller ,使用beanName:name="/hello"进行进行请求映射匹配-->
+    <bean name="/hello" class="com.zhiyou100.controller.HelloController"/>
+</beans>
