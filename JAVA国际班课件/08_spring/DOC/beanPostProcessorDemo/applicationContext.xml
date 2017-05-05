@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 创建Dao实例 -->
+	<bean id="bookDao" class="com.zhiyou.dao.impl.BookDaoImpl" />
+
+	<!-- 创建Service实例 -->
+	<bean id="bookService" class="com.zhiyou.service.impl.BookServiceImpl">
+		<!-- 注入Dao -->
+		<property name="bookDao" ref="bookDao" />
+	</bean>
+	
+	<bean id="stuBean" class="com.zhiyou.entity.Student">  
+        <property name="id" value="100" />  
+        <property name="name" value="xy" />  
+    </bean>
+	
+	<!-- 将后处理的实现类注册给spring  -->
+	<bean id="myBeanPost" class="com.zhiyou.controller.MyBeanPost"/>
+</beans>

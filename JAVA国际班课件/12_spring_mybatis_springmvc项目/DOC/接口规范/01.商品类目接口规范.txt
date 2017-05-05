@@ -1,0 +1,52 @@
+{
+   data: {
+      "level1" :  {
+          name : "食品/饮料/酒水",
+	  level2 : {
+	      name :  "饼干糕点",
+              level3 : {
+	          name : "奥利奥",
+		  url : ''
+	      }
+	  }
+      },
+     "level1" :  {
+          name : "食品/饮料/酒水",
+	  level2 : {
+	      name :  "饼干糕点",
+              level3 : {
+	          name : "奥利奥",
+		  url : ''
+	      }
+	  }
+      },
+      "level1" :  {
+          name : "食品/饮料/酒水",
+	  level2 : {
+	      name :  "饼干糕点",
+              level3 : {
+	          name : "奥利奥",
+		  url : ''
+	      }
+	  }
+      },
+      "level1" :  {
+          name : "食品/饮料/酒水",
+	  level2 : {
+	      name :  "饼干糕点",
+              level3 : {
+	          name : "奥利奥",
+		  url : ''
+	      }
+	  }
+      },
+      .....
+   },
+   "success": Y     
+}
+
+mode {
+     private String name,
+     private String url,
+     private List<mode> items
+}
