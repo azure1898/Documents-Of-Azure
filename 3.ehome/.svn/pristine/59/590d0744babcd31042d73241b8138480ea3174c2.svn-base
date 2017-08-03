@@ -1,0 +1,128 @@
+/**
+ * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
+ */
+package com.its.modules.service.web;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.its.common.config.Global;
+import com.its.common.utils.StringUtils;
+import com.its.common.web.BaseController;
+import com.its.modules.goods.entity.SortInfo;
+import com.its.modules.goods.service.SortInfoService;
+import com.its.modules.service.entity.ServiceInfo;
+import com.its.modules.service.service.ServiceInfoService;
+import com.its.modules.sys.entity.User;
+import com.its.modules.sys.utils.UserUtils;
+
+/**
+ * 服务分类信息Controller
+ * @author liuhl
+ * @version 2017-07-11
+ */
+@Controller
+@RequestMapping(value = "${adminPath}/service/serviceSortInfo")
+public class ServiceSortInfoController extends BaseController {
+
+	/** 分类信息Service */
+	@Autowired
+	private SortInfoService sortInfoService;
+	
+	/** 服务信息Service */
+	@Autowired
+	private ServiceInfoService serviceInfoService;
+	
+	/** 分类类别：服务 */
+	private static final String SORT_TYPE_SERVICE = "1";
+	/** 信息类别：ERROR */
+	private static final String MSG_TYPE_ERROR = "error";
+	
+	@ModelAttribute
+	public SortInfo get(@RequestParam(required=false) String id) {
+		SortInfo entity = null;
+		if (StringUtils.isNotBlank(id)){
+			entity = sortInfoService.get(id);
+		}
+		if (entity == null){
+			entity = new SortInfo();
+		}
+		return entity;
+	}
+	
+	@RequiresPermissions("service:sortInfo:view")
+	@RequestMapping(value = {"list", ""})
+	public String list(SortInfo sortInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        // 只查询出当前用户的分类信息
+        sortInfo.setBusinessInfoId(user.getBusinessinfoId());
+        // 只查询服务分类信息
+        sortInfo.setType(SORT_TYPE_SERVICE);
+        List<SortInfo> list = sortInfoService.findList(sortInfo); 
+        model.addAttribute("list", list);
+        return "modules/service/serviceSortInfoList";
+	}
+
+	@RequiresPermissions("service:sortInfo:edit")
+	@RequestMapping(value = "save")
+	public String save(SortInfo sortInfo, Model model, RedirectAttributes redirectAttributes) {
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        //从SESSION中取得商家信息
+        sortInfo.setBusinessInfoId(user.getBusinessinfoId());
+        //从服务分类页面追加的固定为1
+        sortInfo.setType(SORT_TYPE_SERVICE);
+        //创建者为当前用户
+        sortInfo.setCreateBy(user);
+        //当前时间
+        sortInfo.setCreateDate(new Date());
+        if (StringUtils.isNotBlank(sortInfo.getId())) {
+            //更新者为当前用户
+            sortInfo.setUpdateBy(user);
+            //当前时间
+            sortInfo.setUpdateDate(new Date());
+        }
+        if (!beanValidator(redirectAttributes, sortInfo)){
+            return "redirect:"+Global.getAdminPath()+"/service/serviceSortInfo/?repage";
+        }
+        sortInfoService.save(sortInfo);
+        addMessage(redirectAttributes, "保存服务分类成功");
+        return "redirect:"+Global.getAdminPath()+"/service/serviceSortInfo/?repage";
+	}
+	
+	@RequiresPermissions("service:sortInfo:edit")
+	@RequestMapping(value = "delete")
+	public String delete(SortInfo sortInfo, RedirectAttributes redirectAttributes) {
+        // 根据分类ID来取得服务信息
+        List<ServiceInfo> serviceInfoList = serviceInfoService.findServiceInfoListBySortInfo(sortInfo.getId());
+        // 如果该分类已经被应用在服务中则无法删除
+        if (serviceInfoList != null && serviceInfoList.size() > 0) {
+            //SortInfo sortInfo = sortInfoService.get(sortInfo.getId());
+            StringBuffer sb = new StringBuffer();
+            sb.append("还有服务使用“");
+            sb.append(sortInfo.getName());
+            sb.append("”分类，请确认删除服务后再尝试删除分类。");
+            redirectAttributes.addFlashAttribute("msgType", MSG_TYPE_ERROR);
+            addMessage(redirectAttributes, sb.toString());
+            return "redirect:"+Global.getAdminPath()+"/service/serviceSortInfo/?repage";
+        } else {
+            sortInfoService.delete(sortInfo);
+            addMessage(redirectAttributes, "删除服务分类成功");
+            return "redirect:"+Global.getAdminPath()+"/service/serviceSortInfo/?repage";
+        }
+    }
+
+}

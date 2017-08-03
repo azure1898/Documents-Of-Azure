@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.recharge.dao.RechargeManageDao">
+    
+	<sql id="rechargeManageColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.recharge_money AS "rechargeMoney",
+		a.give_money AS "giveMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageInfoColumns">
+		v.id AS "villageInfo.id",
+		v.village_name AS "villageInfo.villageName",
+		v.addr_pro AS
+		"villageInfo.addrPro",
+		v.addr_city AS "villageInfo.addrCity",
+		v.addr_area AS "villageInfo.addrArea",
+		v.company_info_id AS "villageInfo.companyInfoId",
+		v.property_company_id AS
+		"villageInfo.propertyCompanyId",
+		v.property_company_name AS "villageInfo.propertyCompanyName",
+		v.state AS "villageInfo.state",
+		v.create_by AS "villageInfo.createBy.id",
+		v.create_date AS
+		"villageInfo.createDate",
+		v.update_by AS "villageInfo.updateBy.id",
+		v.update_date AS
+		"villageInfo.updateDate",
+		v.remarks AS "villageInfo.remarks",
+		v.del_flag AS "villageInfo.delFlag"
+	</sql>
+	
+	<sql id="rechargeManageJoins">
+	</sql>
+	
+	<select id="findList" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>,
+			<include refid="villageInfoColumns"/>
+		FROM recharge_manage a, village_info v
+		<include refid="rechargeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.recharge_money <![CDATA[<>]]> #{SIGN_PUBLISH_DATE}
+			AND a.village_info_id = v.id
+			AND v.state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("正常","use_state", "0")}'
+			<if test="villageInfo != null and villageInfo.userVillageIds != null and villageInfo.userVillageIds.size() > 0">
+				AND v.id IN 
+				<foreach item="item" collection="villageInfo.userVillageIds" separator="," open="(" close=")" index="index">    
+         			 #{item}
+        		</foreach>
+			</if>
+			<if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
+				AND v.addr_pro = #{villageInfo.addrPro}
+			</if>
+			<if test="villageInfo != null and villageInfo.addrCity != null and villageInfo.addrCity != ''">
+				AND v.addr_city = #{villageInfo.addrCity}
+			</if>
+			<!-- 查询优先级：下拉列表 > 输入框 -->
+			<choose>
+				<when  test="villageInfo.id != null and villageInfo.id != ''">
+					AND v.id = #{villageInfo.id}
+				</when>
+				<otherwise>
+					<if test="villageInfo.villageName != null and villageInfo.villageName != ''">
+					AND v.village_name LIKE 
+						<if test="dbName == 'oracle'">'%'||#{villageInfo.villageName}||'%'</if>
+						<if test="dbName == 'mssql'">'%'+#{villageInfo.villageName}+'%'</if>
+						<if test="dbName == 'mysql'">concat('%',#{villageInfo.villageName},'%')</if>
+					</if>
+	            </otherwise>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.Recharge_Money ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getRechargeCountByVillage" resultType="integer">
+		SELECT 
+		count(1) 
+		FROM recharge_manage a 
+		<where>
+			a.del_flag = "0"
+			AND a.Village_Info_ID = #{villageId}
+		</where>
+	</select>
+	
+	<select id="getPublishDate" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<where> 
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.Village_Info_ID = #{villageInfoId}
+			AND a.recharge_money = #{SIGN_PUBLISH_DATE}
+		</where>
+	</select>
+	
+	<!-- 以下select方法用之前需要改进 -->
+	<select id="findAllList" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<include refid="rechargeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.recharge_money <![CDATA[<>]]> #{SIGN_PUBLISH_DATE}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="get" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<include refid="rechargeManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO recharge_manage(
+			id,
+			village_info_id,
+			recharge_money,
+			give_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{rechargeMoney},
+			#{giveMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE recharge_manage SET 	
+			village_info_id = #{villageInfoId},
+			recharge_money = #{rechargeMoney},
+			give_money = #{giveMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE recharge_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE village_info_id = #{villageInfo.id}
+		<if test="rechargeMoney != null and rechargeMoney != ''">
+			AND recharge_money <![CDATA[<>]]> #{rechargeMoney}
+		</if>
+	</update>
+	
+</mapper>

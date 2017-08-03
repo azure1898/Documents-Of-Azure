@@ -1,0 +1,23 @@
+{
+"code" : 1000,
+"data" : {
+  "groupBuyID":"g_6",
+  "groupBuyName":"价值800元酒店抵用券",
+  "groupBuyStartTime":"即将开抢",
+  "groupBuyEndTime":"",
+  "groupBuyStatus":"明日10点",
+  "groupBuyImage":"../../images/top_bg2.jpg",
+"originalPrice":"500",
+"discountedPrice":"750",
+"businessID":"11",
+  "businessName":"璟湖城会所",
+  "businessPhone":"13521004205",
+  "businessAddress":"广东省广州市常春藤小区附近",
+  "businessUrl":"",
+  "groupBuyDesc":"<p>.详细介绍：各种新鲜水果,精美包装，不可错过",
+  "validPeriod":"2017-07-12至2017-07-13",
+  "usageTime":"2017-07-13   10:00-12:00",
+  "useRules":"不在于其他优惠同享"
+},
+"message" : ""
+}

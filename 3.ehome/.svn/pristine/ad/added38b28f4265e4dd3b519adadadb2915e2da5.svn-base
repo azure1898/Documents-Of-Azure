@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.goods.dao.GoodsInfoDao">
+    
+    <sql id="goodsInfoColumns">
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.serial_numbers AS "serialNumbers",
+        a.name AS "name",
+        a.sort_info_id AS "sortInfoId",
+        a.imgs AS "imgs",
+        a.base_price AS "basePrice",
+        a.benefit_price AS "benefitPrice",
+        a.stock AS "stock",
+        a.base_unit_id AS "baseUnitId",
+        a.is_base AS "isBase",
+        a.content AS "content",
+        a.quota AS "quota",
+        a.quota_num AS "quotaNum",
+        a.recommend AS "recommend",
+        a.state AS "state",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag",
+        b.name AS "sortInfoName",
+        b.sort_order AS "sortInfoOrder"
+    </sql>
+    
+    <sql id="goodsInfoColumnsNoJoin">
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.serial_numbers AS "serialNumbers",
+        a.name AS "name",
+        a.sort_info_id AS "sortInfoId",
+        a.imgs AS "imgs",
+        a.base_price AS "basePrice",
+        a.benefit_price AS "benefitPrice",
+        a.stock AS "stock",
+        a.base_unit_id AS "baseUnitId",
+        a.is_base AS "isBase",
+        a.content AS "content",
+        a.quota AS "quota",
+        a.quota_num AS "quotaNum",
+        a.recommend AS "recommend",
+        a.state AS "state",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+    
+    <sql id="goodsInfoJoins">
+    LEFT JOIN sort_info b ON b.id = a.sort_info_id
+    </sql>
+    
+    <select id="get" resultType="GoodsInfo">
+        SELECT 
+            <include refid="goodsInfoColumns"/>
+        FROM goods_info a
+        <include refid="goodsInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="GoodsInfo">
+        SELECT 
+            <include refid="goodsInfoColumns"/>
+        FROM goods_info a
+        <include refid="goodsInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+            <if test="sortInfoId != null and sortInfoId != ''">
+                AND a.sort_info_id = #{sortInfoId}
+            </if>
+            <if test="recommend != null and recommend != ''">
+                AND a.recommend = #{recommend}
+            </if>
+            <if test="state != null and state != ''">
+                AND a.state = #{state}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_Date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="GoodsInfo">
+        SELECT 
+            <include refid="goodsInfoColumns"/>
+        FROM goods_info a
+        <include refid="goodsInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+           <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO goods_info(
+            id,
+            business_info_id,
+            serial_numbers,
+            name,
+            sort_info_id,
+            imgs,
+            base_price,
+            <if test="benefitPrice != null and benefitPrice != ''">
+            benefit_price,
+            </if>
+            stock,
+            base_unit_id,
+            is_base,
+            content,
+            quota,
+            <if test="quotaNum != null and quotaNum != ''">
+            quota_num,
+            </if>
+            recommend,
+            state,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{businessInfoId},
+            #{serialNumbers},
+            #{name},
+            #{sortInfoId},
+            #{imgs},
+            #{basePrice},
+            <if test="benefitPrice != null and benefitPrice != ''">
+            #{benefitPrice},
+            </if>
+            #{stock},
+            #{baseUnitId},
+            #{isBase},
+            #{content},
+            #{quota},
+            <if test="quotaNum != null and quotaNum != ''">
+            #{quotaNum},
+            </if>
+            #{recommend},
+            #{state},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE goods_info SET     
+            name = #{name},
+            sort_info_id = #{sortInfoId},
+            imgs = #{imgs},
+            base_price = #{basePrice},
+            <if test="benefitPrice != null and benefitPrice != ''">
+            benefit_price = #{benefitPrice},
+            </if>
+            <if test="benefitPrice == null">
+            benefit_price = null,
+            </if>
+            stock = #{stock},
+            base_unit_id = #{baseUnitId},
+            is_base = #{isBase},
+            content = #{content},
+            quota = #{quota},
+            <if test="quotaNum != null and quotaNum != ''">
+            quota_num = #{quotaNum},
+            </if>
+            <if test="quotaNum == null">
+            quota_num = null,
+            </if>
+            recommend = #{recommend},
+            state = #{state},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="delete">
+        UPDATE goods_info SET 
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+    
+       <update id="groundingByGoodsId">
+        UPDATE goods_info SET 
+            state = "1"
+        WHERE id = #{goodsId}
+    </update>
+    
+    <update id="undercarriageByGoodsId">
+        UPDATE goods_info SET 
+            state = "0"
+        WHERE id = #{goodsId}
+    </update>
+    
+    <select id="selectZeroStockGoods" resultType="GoodsInfo">
+        SELECT 
+            <include refid="goodsInfoColumns"/>
+        FROM goods_info a
+        <include refid="goodsInfoJoins"/>
+        <where>
+                IFNULL(a.Stock,0) = 0
+            AND a.id = #{goodsId}
+        </where>
+    </select>
+    
+    <update id="imgNameUpdate">
+        UPDATE goods_info SET 
+            Imgs = #{imgUrl}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findGoodsInfoListForUpdate" resultType="GoodsInfo">
+        SELECT 
+            <include refid="goodsInfoColumnsNoJoin"/>
+        FROM goods_info a
+        <where>
+            a.del_flag = "0"
+        AND a.id in
+        <foreach collection="list" item="goodsid" index="index"
+            open="(" close=")" separator=",">
+            #{goodsid}
+        </foreach>
+          FOR UPDATE
+        </where>
+    </select>
+</mapper>

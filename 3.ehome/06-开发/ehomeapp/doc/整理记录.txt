@@ -1,0 +1,19 @@
+add by zhujiao
+
+数据库修改
+1.用户表（sys_user）  使用user_type（国控原始字段）作为    商家用户和系统管理用户的区分字段
+2.菜单表（sys_menu） 添加menu_type作为  商家菜单和综合管理平台菜单区分
+
+xml文件修改内容
+1. 用户查询sql添加user_type字段过滤  本综合管理后台为1
+2. 用户添加sql 添加user_type的值   本综合管理后台为1
+
+样式修改
+1.本系统前端样式框架为bootstarp2 故不支持文本图标 
+2.添加glyphicons-halflings_custom.png图标文件 颜色为客户提供
+3.本系统为天蓝色主题  修改（bootstrap.min.css）文件中 table的样式和按钮的样式
+
+
+
+
+

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.sys.dao.SysCodeMaxDao">
+
+
+	<parameterMap type="map" id="parameterMap">
+		<parameter property="id_in" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="small_in" jdbcType="INTEGER" mode="IN"/>
+		<parameter property="is_day_update_in" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="code_value_out" jdbcType="INTEGER" mode="OUT"/>
+	</parameterMap>
+
+	<update id="getCodeNo" parameterMap="parameterMap" statementType="CALLABLE">
+	{call get_increment_id(?, ?, ?, ?)}
+	</update>
+
+	<sql id="sysCodeMaxColumns">
+		a.id AS "id",
+		a.code_name AS "codeName",
+		a.code_date AS "codeDate",
+		a.code_value AS "codeValue"
+	</sql>
+	
+	<sql id="sysCodeMaxJoins">
+	</sql>
+    
+	<select id="get" resultType="SysCodeMax">
+		SELECT 
+			<include refid="sysCodeMaxColumns"/>
+		FROM sys_code_max a
+		<include refid="sysCodeMaxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getModuleManageId"  resultType="String">
+		SELECT
+		manage.id
+		FROM
+		business_categorydict dict
+		LEFT JOIN business_categoryinfo info ON info.Business_Category_Dict_ID = dict.ID
+		LEFT JOIN module_manage manage ON dict.ID = manage.Business_Category_Dict_ID
+		WHERE
+		dict.Prod_Type = '3'
+		AND manage.Business_Category_Dict_Flag = '1'
+		AND info.BusinessInfo_ID = #{businessInfoId};
+	</select>
+	
+	<select id="findList" resultType="SysCodeMax">
+		SELECT 
+			<include refid="sysCodeMaxColumns"/>
+		FROM sys_code_max a
+		<include refid="sysCodeMaxJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysCodeMax">
+		SELECT 
+			<include refid="sysCodeMaxColumns"/>
+		FROM sys_code_max a
+		<include refid="sysCodeMaxJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_code_max(
+			id,
+			code_name,
+			code_date,
+			code_value
+		) VALUES (
+			#{id},
+			#{codeName},
+			#{codeDate},
+			#{codeValue}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_code_max SET 	
+			code_name = #{codeName},
+			code_date = #{codeDate},
+			code_value = #{codeValue}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sys_code_max
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,105 @@
+{
+"code" : 1000,
+"data" : {
+  "totalMoney":12,
+  "businessID":"0001",
+  "businessName":"懒人家政",
+"serviceWay":1,
+"serviceCharge":12,
+	"serviceNumber":0,
+  "contactPerson":"普及小管家",
+  "contactPhone":"18536952240",
+  "contactAddress":"富力一城小区2栋405室",
+  "serviceID":"003",
+  "serviceName":"换地板",
+"unit":"平方米",
+"servicePrice":12,
+"stockNumber":0,
+"limitPurchase":1,
+"coupons":[{
+   "couponID":"",
+   "couponMoney":"",
+   "couponName":"",
+   "couponCondition":"",
+   "couponStatus":""
+}],
+"serviceDate":[{
+   			"date":"2017-07-12",
+   			"desc":"今天",
+   			"timePeriod":[{
+     			"isImmediate":1,
+     			"start":"",
+     			"end":"12:00"
+			},{
+     			"isImmediate":0,
+     			"start":"13:00",
+     			"end":"14:00"
+			},{
+     			"isImmediate":0,
+     			"start":"14:00",
+     			"end":"15:00"
+			},{
+     			"isImmediate":0,
+     			"start":"15:00",
+     			"end":"16:00"
+			},{
+     			"isImmediate":0,
+     			"start":"16:00",
+     			"end":"17:00"
+			},{
+     			"isImmediate":0,
+     			"start":"17:00",
+     			"end":"18:00"
+			},{
+     			"isImmediate":0,
+     			"start":"18:00",
+     			"end":"19:00"
+			},{
+     			"isImmediate":0,
+     			"start":"19:00",
+     			"end":"20:00"
+			},{
+     			"isImmediate":0,
+     			"start":"20:00",
+     			"end":"21:00"
+			}]
+		},{
+   			"date":"2017-07-13",
+   			"desc":"明天",
+   			"timePeriod":[{
+     			"isImmediate":0,
+     			"start":"13:00",
+     			"end":"14:00"
+			},{
+     			"isImmediate":0,
+     			"start":"14:00",
+     			"end":"15:00"
+			},{
+     			"isImmediate":0,
+     			"start":"15:00",
+     			"end":"16:00"
+			},{
+     			"isImmediate":0,
+     			"start":"16:00",
+     			"end":"17:00"
+			},{
+     			"isImmediate":0,
+     			"start":"17:00",
+     			"end":"18:00"
+			},{
+     			"isImmediate":0,
+     			"start":"18:00",
+     			"end":"19:00"
+			},{
+     			"isImmediate":0,
+     			"start":"19:00",
+     			"end":"20:00"
+			},{
+     			"isImmediate":0,
+     			"start":"20:00",
+     			"end":"21:00"
+			}]
+		}]
+},
+"message" : ""
+}

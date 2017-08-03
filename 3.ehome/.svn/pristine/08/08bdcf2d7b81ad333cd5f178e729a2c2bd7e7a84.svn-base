@@ -1,0 +1,28 @@
+{"code" : 1000,
+"data" : {
+  "businessID":"course2",
+  "businessName":"贝瑞母婴店",
+  "contactPerson":"普及小管家",
+  "contactPhone":"13521004205",
+ "courseID":"course2_3",
+  "courseName":"日语外教培训课",
+"discountedPrice":29.90,
+"classNumber":12,
+"classTime":"2017-07-01至02-10",
+"classLocation":"昌珉大厦3层304",
+"coupons":[{
+   "couponID":"q_1",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+},{
+   "couponID":"q_2",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+}]
+},
+"message" : ""
+} 

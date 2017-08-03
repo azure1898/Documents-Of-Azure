@@ -1,0 +1,11 @@
+/*列表中被选中的行*/
+tr.listRowSelected {
+	background-color : #FFFF81;
+}
+/*列表中未被选中的行*/
+tr.listRowUnSelected {
+	background-color : white;
+}
+.timelist{
+	width: 80px;
+}

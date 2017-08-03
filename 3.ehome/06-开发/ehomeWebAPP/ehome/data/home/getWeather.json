@@ -1,0 +1,19 @@
+{
+"code" : 1000,
+"data" : [
+{
+  "buildingName":"实地中山璟湖城",
+  "weatherLogo":"../../images/index_icon2.png",
+  "weatherName":"多云",
+  "temperature":"13°C~20°C",
+  "pmValue":"71",
+  "pmStatus":"空气良",
+	"cityName":"无锡市",
+  "dayOfWeek":"星期六",
+  "gregorianDate":"01月10日",
+  "lunarDate":"四月初二",
+"backgroud":""
+}
+],
+"message" : ""
+}

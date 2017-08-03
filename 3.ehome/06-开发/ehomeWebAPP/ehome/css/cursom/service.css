@@ -1,0 +1,45 @@
+/*服务分类*/
+
+
+/*没有分类时显示一列*/
+
+.notclass {
+	margin-left: 0;!important
+}
+
+.business_price_box2_2 {
+	position: absolute;
+	top: 215px;
+	left: -70px;
+}
+/*一行 超出一行隐藏*/
+/*.one{
+    	overflow: hidden;
+    	white-space: nowrap;
+    }*/
+/*.one::after{ position: absolute; bottom: 0; right: 0; padding-left: 40px;
+background: -webkit-linear-gradient(left, transparent, #fff 55%);
+background: -o-linear-gradient(right, transparent, #fff 55%);
+background: -moz-linear-gradient(right, transparent, #fff 55%);
+background: linear-gradient(to right, transparent, #fff 55%);*/
+}
+/*确认订单*/
+/*.goods_num a.num_jian2{ background-image:url(../../images/service/num_jian2.png);}*/
+.order_tip{
+	display: none;
+}
+
+.message {
+	float: left;
+	width: 100px;
+}
+
+.message span {
+	float: left;
+}
+
+.input {
+	width: 66%;
+	border-radius: 2px;
+	border: 0px solid #CCCCCC;
+}

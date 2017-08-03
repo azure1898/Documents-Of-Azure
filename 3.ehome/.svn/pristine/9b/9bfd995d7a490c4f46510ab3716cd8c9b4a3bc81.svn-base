@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>确认订单</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+	<style type="text/css">		
+		.message {
+	float: left;
+	width: 100px;
+}
+
+.message span {
+	float: left;
+}
+
+.input {
+	width: 66%;
+	border-radius: 2px;
+	border: none;
+}
+input:focus {  
+    outline: none;  
+    border-color:none;  
+    box-shadow: none;  
+    border-radius: 1px;  
+ }  
+	</style>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="green_back" onClick="javascript :history.go(-1)"></a>
+				确认订单
+			</div>
+			<div style="height:44px; line-height:44px; padding-left:10px;">预留电话</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl"></div>
+						<div class="message"><span>联系电话：</span></div><input type="text"  class="phone input" v-model="items.contactPhone">
+					</div>
+				</div>
+			</div>
+			<div class="line_ec mt10"></div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl"><strong>{{items.businessName}}</strong></div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">团购名称</div>
+						<div class="fr oneLine" v-bind:data-id="items.groupBuyID">{{items.groupBuyName}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">团购价格</div>
+						<div class="fr">{{items.groupBuyPrice|formatDecimal}}</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">购买数量 <span v-if="items.limitPurchase>=1">(限购{{items.limitPurchase}}件 <span v-if="items.purchasedNumber>0">已购{{items.purchasedNumber}}件</span>)</span></div>
+						<div class="goods_num fr" style="margin-top:0;">
+							<a href="#" class="num_jian" @click="reduceNumber(items)"></a><span class="goods_shuzi">{{items.groupBuyNumber}}</span>
+							<a href="#" class="num_zeng" @click="addNumber(items)"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<!--<div class="fl">您的留言：</div>-->
+						<div class="message"><span>您的留言:</span></div><input type="text"  class="input" v-model="leaveWords" >
+						<div class="fr font_orange"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="business_bottom">
+				<span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{items.totalMoney|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
+				<!--<span class="ft12">优惠：<font class="font_orange"></font></span>-->
+				<div class="business_zbtn"><a href="#"  @click="affirm()">提交订单</a></div>
+
+			</div>
+
+		</div>
+       
+		<script src="../../js/static/jquery.js"></script>
+		<script src="../../js/static/bootstrap.min.js"></script>
+		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/groupbuy/groupbuyorder.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+ 		
+        
+</html>

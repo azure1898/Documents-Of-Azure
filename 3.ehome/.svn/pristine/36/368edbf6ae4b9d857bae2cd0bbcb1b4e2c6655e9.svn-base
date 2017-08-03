@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderTrackDao">
+    
+	<sql id="orderTrackColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_no AS "orderNo",
+		a.order_type AS "orderType",
+		a.state_msg AS "stateMsg",
+		a.handle_msg AS "handleMsg",
+		a.state_msg_phone AS "stateMsgPhone",
+        a.handle_msg_phone AS "handleMsgPhone",
+		a.create_name AS "createName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.businessinfo_id AS "businessInfoId"
+	</sql>
+	
+	<sql id="orderTrackJoins">
+	    LEFT JOIN sys_user b ON a.create_by = b.id
+	</sql>
+    
+	<select id="get" resultType="OrderTrack">
+		SELECT 
+			<include refid="orderTrackColumns"/>
+		FROM order_track a
+		<include refid="orderTrackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderTrack">
+		SELECT 
+			<include refid="orderTrackColumns"/>
+		FROM order_track a
+		<include refid="orderTrackJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderTrack">
+		SELECT 
+			<include refid="orderTrackColumns"/>
+		FROM order_track a
+		<include refid="orderTrackJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_track(
+			id,
+			order_id,
+			order_no,
+			order_type,
+			state_msg,
+			handle_msg,
+            state_msg_phone,
+            handle_msg_phone,
+            create_Name,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{orderNo},
+			#{orderType},
+			#{stateMsg},
+			#{handleMsg},
+            #{stateMsgPhone},
+            #{handleMsgPhone},
+            #{createName},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_track SET
+		    order_id = #{orderId},
+			order_no = #{orderNo},
+			order_type = #{orderType},
+			state_msg = #{stateMsg},
+			handle_msg = #{handleMsg},
+            state_msg_phone = #{stateMsgPhone},
+            handle_msg_phone = #{handleMsgPhone},
+            create_name = #{createName},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_track SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

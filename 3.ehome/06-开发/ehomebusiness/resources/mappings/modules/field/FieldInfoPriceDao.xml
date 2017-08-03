@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.field.dao.FieldInfoPriceDao">
+    
+	<sql id="fieldInfoPriceColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.field_info_id AS "fieldInfoId",
+		a.monday AS "monday",
+		a.tuesday AS "tuesday",
+		a.wednesday AS "wednesday",
+		a.thursday AS "thursday",
+		a.friday AS "friday",
+		a.saturday AS "saturday",
+		a.sunday AS "sunday",
+		a.start_open_time AS "startOpenTime",
+		a.end_open_time AS "endOpenTime",
+		a.base_price AS "basePrice",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="fieldInfoPriceJoins">
+		LEFT JOIN field_info b ON b.id = a.field_info_id
+	</sql>
+    
+	<select id="get" resultType="FieldInfoPrice">
+		SELECT 
+			<include refid="fieldInfoPriceColumns"/>
+		FROM field_info_price a
+		<include refid="fieldInfoPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FieldInfoPrice">
+		SELECT 
+			<include refid="fieldInfoPriceColumns"/>
+		FROM field_info_price a
+		<include refid="fieldInfoPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="businessInfoId != null and businessInfoId != ''">
+				AND a.business_info_id = #{businessInfoId}
+			</if>
+			<if test="fieldInfoId != null and fieldInfoId != ''">
+				AND a.field_info_id = #{fieldInfoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.start_open_time ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FieldInfoPrice">
+		SELECT 
+			<include refid="fieldInfoPriceColumns"/>
+		FROM field_info_price a
+		<include refid="fieldInfoPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO field_info_price(
+			id,
+			business_info_id,
+			field_info_id,
+			monday,
+			tuesday,
+			wednesday,
+			thursday,
+			friday,
+			saturday,
+			sunday,
+			start_open_time,
+			end_open_time,
+			base_price,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{fieldInfoId},
+			#{monday},
+			#{tuesday},
+			#{wednesday},
+			#{thursday},
+			#{friday},
+			#{saturday},
+			#{sunday},
+			#{startOpenTime},
+			#{endOpenTime},
+			#{basePrice},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE field_info_price SET 	
+			business_info_id = #{businessInfoId},
+			field_info_id = #{fieldInfoId},
+			monday = #{monday},
+			tuesday = #{tuesday},
+			wednesday = #{wednesday},
+			thursday = #{thursday},
+			friday = #{friday},
+			saturday = #{saturday},
+			sunday = #{sunday},
+			start_open_time = #{startOpenTime},
+			end_open_time = #{endOpenTime},
+			base_price = #{basePrice},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE field_info_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		UPDATE field_info_price SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE field_info_id = #{fieldInfoId}
+	</update>
+	
+</mapper>

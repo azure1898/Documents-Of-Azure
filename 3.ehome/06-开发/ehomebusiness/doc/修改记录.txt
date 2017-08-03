@@ -1,0 +1,9 @@
+add by zhujiao
+
+商家-分类中间表  去掉ID
+
+
+
+
+
+

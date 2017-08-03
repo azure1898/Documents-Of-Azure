@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.FamilyInfoDao">
+    
+	<sql id="familyInfoColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.room_certify_id AS "roomCertifyId",
+		a.name AS "name",
+		a.identity AS "identity",
+		a.phone_num AS "phoneNum",
+		a.certify_state AS "certifyState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="familyInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FamilyInfo">
+		SELECT 
+			<include refid="familyInfoColumns"/>
+		FROM family_info a
+		<include refid="familyInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FamilyInfo">
+		SELECT 
+			<include refid="familyInfoColumns"/>
+		FROM family_info a
+		<include refid="familyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FamilyInfo">
+		SELECT 
+			<include refid="familyInfoColumns"/>
+		FROM family_info a
+		<include refid="familyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO family_info(
+			id,
+			account_id,
+			village_info_id,
+			room_certify_id,
+			name,
+			identity,
+			phone_num,
+			certify_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{roomCertifyId},
+			#{name},
+			#{identity},
+			#{phoneNum},
+			#{certifyState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE family_info SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			room_certify_id = #{roomCertifyId},
+			name = #{name},
+			identity = #{identity},
+			phone_num = #{phoneNum},
+			certify_state = #{certifyState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE family_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ======================================= -->
+	<select id="getRoomFamilies" resultType="FamilyInfo">
+		SELECT <include refid="familyInfoColumns"/> FROM family_info a
+		<where>
+			a.del_flag=0 AND a.Room_Certify_ID=#{roomId}
+		</where>
+	</select>
+</mapper>

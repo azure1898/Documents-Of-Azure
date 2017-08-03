@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.FieldPartitionPriceDao">
+    
+	<sql id="fieldPartitionPriceColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.field_info_id AS "fieldInfoId",
+		a.appointment_time AS "appointmentTime",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.base_price AS "basePrice",
+		a.state AS "state",
+		a.sum_money AS "sumMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="fieldPartitionPriceJoins">
+	</sql>
+    
+	<select id="get" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO field_partition_price(
+			id,
+			business_info_id,
+			field_info_id,
+			appointment_time,
+			start_time,
+			end_time,
+			base_price,
+			state,
+			sum_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{fieldInfoId},
+			#{appointmentTime},
+			#{startTime},
+			#{endTime},
+			#{basePrice},
+			#{state},
+			#{sumMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE field_partition_price SET 	
+			business_info_id = #{businessInfoId},
+			field_info_id = #{fieldInfoId},
+			appointment_time = #{appointmentTime},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			base_price = #{basePrice},
+			state = #{state},
+			sum_money = #{sumMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE field_partition_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<!-- ================================================ -->
+	<!-- 可预约的日期集合 -->
+	<select id="findAppointmentDateList" resultType="string">
+		SELECT  DISTINCT DATE_FORMAT(a.appointment_time,'%Y-%m-%d')
+		FROM field_partition_price a 
+		<where>
+			a.del_flag = 0 AND
+			appointment_time>=#{today} AND business_info_id=#{businessInfoID}
+			ORDER BY appointment_time
+		</where>
+	</select>
+	<!-- 可预约的场地集合 -->
+	<select id="findAppointmentSiteList" resultType="FieldInfoBean">
+		SELECT  DISTINCT a.field_info_id AS fieldInfoID, b.name AS fieldInfoName
+			FROM field_partition_price a,field_info b
+		<where>
+			a.del_flag = 0 AND a.Field_Info_ID=b.ID 
+			AND a.appointment_time>=#{today}  AND a.business_info_id=#{businessInfoID}
+			ORDER BY appointment_time
+		</where>
+	</select>
+	<!-- 返回某一商家某一天的某个场地的时段预约情况 -->
+	<select id="findFieldPartition" resultType="FieldPartitionPrice">
+		SELECT  DISTINCT <include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<where>
+			a.del_flag = 0 
+			AND DATE_FORMAT(appointment_time,'%Y-%m-%d')=#{dateString}  
+			AND a.business_info_id=#{businessInfoID}
+			AND a.field_info_id=#{siteID}
+			ORDER BY a.start_time
+		</where>
+	</select>
+	<!-- 根据用户选择的时段ID查询相关数据 -->
+	<select id="findSelectedFieldPartition" resultType="FieldPartitionBean">
+		SELECT  DISTINCT <include refid="fieldPartitionPriceColumns"/>,b.name AS fieldName
+		FROM field_partition_price a,field_info b
+		<where>
+			a.Field_Info_ID=b.ID AND a.id in 
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+			  	#{item}
+			</foreach> 
+		</where>
+	</select>
+	<!-- 更新场地时段的预约状态 -->
+	<update id="updateFieldPartitionState">
+		UPDATE field_partition_price a SET a.state=#{newState} WHERE a.id=#{id} AND a.state=#{oldState}
+	</update>
+</mapper>

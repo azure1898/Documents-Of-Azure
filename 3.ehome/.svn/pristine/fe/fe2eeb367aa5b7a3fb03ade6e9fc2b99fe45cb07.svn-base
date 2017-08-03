@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.OrderGroupPurcListDao">
+    
+	<sql id="orderGroupPurcListColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.group_purchase_id AS "groupPurchaseId",
+		a.order_group_purc_id AS "orderGroupPurcId",
+		a.order_no AS "orderNo",
+		a.name AS "name",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.group_purc_price AS "groupPurcPrice",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.content AS "content",
+		a.use_time AS "useTime",
+		a.use_content AS "useContent",
+		a.pay_sum_money AS "paySumMoney",
+		a.group_purc_number AS "groupPurcNumber",
+		a.group_purc_state AS "groupPurcState",
+		a.consume_time AS "consumeTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGroupPurcListJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_group_purc_list(
+			id,
+			business_info_id,
+			group_purchase_id,
+			order_group_purc_id,
+			order_no,
+			name,
+			imgs,
+			base_price,
+			group_purc_price,
+			start_time,
+			end_time,
+			content,
+			use_time,
+			use_content,
+			pay_sum_money,
+			group_purc_number,
+			group_purc_state,
+			consume_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{groupPurchaseId},
+			#{orderGroupPurcId},
+			#{orderNo},
+			#{name},
+			#{imgs},
+			#{basePrice},
+			#{groupPurcPrice},
+			#{startTime},
+			#{endTime},
+			#{content},
+			#{useTime},
+			#{useContent},
+			#{paySumMoney},
+			#{groupPurcNumber},
+			#{groupPurcState},
+			#{consumeTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_group_purc_list SET 	
+			business_info_id = #{businessInfoId},
+			group_purchase_id = #{groupPurchaseId},
+			order_group_purc_id = #{orderGroupPurcId},
+			order_no = #{orderNo},
+			name = #{name},
+			imgs = #{imgs},
+			base_price = #{basePrice},
+			group_purc_price = #{groupPurcPrice},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			content = #{content},
+			use_time = #{useTime},
+			use_content = #{useContent},
+			pay_sum_money = #{paySumMoney},
+			group_purc_number = #{groupPurcNumber},
+			group_purc_state = #{groupPurcState},
+			consume_time = #{consumeTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_group_purc_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

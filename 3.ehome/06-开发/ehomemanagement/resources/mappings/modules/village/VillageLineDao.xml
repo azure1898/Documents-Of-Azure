@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.village.dao.VillageLineDao">
+
+  <sql id="villageLineColumns">
+    a.id AS "id",
+    a.village_info_id AS "villageInfoId",
+    b.village_name AS "villageInfo.villageName",
+    a.product_line AS "productLine",
+    a.set_state AS "setState",
+    a.set_time AS "setTime",
+    a.main_navigation AS "mainNavigation",
+    a.community_module AS "communityModule",
+    a.life_module AS "lifeModule",
+    a.maint_recom_module AS "maintRecomModule",
+    a.community_recom_module AS "communityRecomModule",
+    a.life_recom_module AS "lifeRecomModule",
+    a.create_by AS "createBy.id",
+    a.create_date AS "createDate",
+    a.update_by AS "updateBy.id",
+    a.update_date AS "updateDate",
+    a.remarks AS "remarks",
+    a.del_flag AS "delFlag"
+  </sql>
+
+  <sql id="villageLineJoins">
+  LEFT JOIN village_info b on a.village_info_id=b.id
+  </sql>
+
+  <select id="get" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineColumns" />
+    FROM village_line a
+    
+    <include refid="villageLineJoins" />
+    WHERE a.id = #{id}
+  </select>
+
+  <select id="findList" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineColumns" />
+    FROM village_line a
+    <include refid="villageLineJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="villageInfoId != null and villageInfoId != ''">
+        AND a.village_info_id = #{villageInfoId}
+      </if>
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.product_line ASC
+      </otherwise>
+    </choose>
+  </select>
+
+  <!-- 楼盘线所对应的所有楼盘信息列表所需展示的列 add by zhujiao -->
+  <sql id="villageLineListColumns">
+    a.id AS "id",
+    b.id AS "villageInfo.id",
+    b.village_name AS "villageInfo.villageName",
+    b.Property_Company_Name AS "villageInfo.propertyCompanyName",
+    a.village_info_id AS "villageInfoId",
+    a.product_line AS "productLine",
+    a.set_state AS "setState",
+    a.set_time AS "setTime",
+    a.del_flag AS "delFlag"
+  </sql>
+  <!-- 楼盘线所对应的所有楼盘信息列表 add by zhujiao -->
+  <select id="findLineList" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineListColumns" />
+    FROM village_line a
+    LEFT JOIN village_info b on a.village_info_id=b.id
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="villageInfoId != null and villageInfoId != ''">
+        AND a.village_info_id = #{villageInfoId}
+      </if>
+      <if test="setState != null and setState != ''">
+        AND a.set_state = #{setState}
+      </if>
+      <if test="setState != null and setState != ''">
+        AND a.set_state = #{setState}
+      </if>
+      <if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
+        AND b.addr_pro = #{villageInfo.addrPro}
+      </if>
+      <if test="villageInfo != null and villageInfo.addrCity != null and villageInfo.addrCity != ''">
+        AND b.addr_city = #{villageInfo.addrCity}
+      </if>
+      <if test="productLine != null and productLine != ''">
+        AND a.product_line = #{productLine}
+      </if>
+      <if test="villageInfo != null and villageInfo.propertyCompanyId != null and villageInfo.propertyCompanyId != ''">
+        AND b.property_company_id = #{villageInfo.propertyCompanyId}
+      </if>
+      <if test="villageInfo != null and villageInfo.villageName != null and villageInfo.villageName != ''">
+            AND b.village_name LIKE
+            <if test="dbName == 'oracle'">'%'||#{villageInfo.villageName}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{villageInfo.villageName}+'%'</if>
+            <if test="dbName == 'mysql'">concat('%',#{villageInfo.villageName},'%')</if>
+      </if>
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY b.Property_Company_Name, b.village_name
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findAllList" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineColumns" />
+    FROM village_line a
+    <include refid="villageLineJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <insert id="insert">
+    INSERT INTO village_line(
+    id,
+    village_info_id,
+    product_line,
+    set_state,
+    set_time,
+    main_navigation,
+    community_module,
+    life_module,
+    maint_recom_module,
+    community_recom_module,
+    life_recom_module,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remarks,
+    del_flag
+    ) VALUES (
+    #{id},
+    #{villageInfoId},
+    #{productLine},
+    #{setState},
+    #{setTime},
+    #{mainNavigation},
+    #{communityModule},
+    #{lifeModule},
+    #{maintRecomModule},
+    #{communityRecomModule},
+    #{lifeRecomModule},
+    #{createBy.id},
+    #{createDate},
+    #{updateBy.id},
+    #{updateDate},
+    #{remarks},
+    #{delFlag}
+    )
+  </insert>
+
+  <update id="update">
+    UPDATE village_line SET
+    village_info_id = #{villageInfoId},
+    product_line = #{productLine},
+    set_state = #{setState},
+    set_time = #{setTime},
+    main_navigation = #{mainNavigation},
+    community_module = #{communityModule},
+    life_module = #{lifeModule},
+    maint_recom_module = #{maintRecomModule},
+    community_recom_module = #{communityRecomModule},
+    life_recom_module = #{lifeRecomModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate},
+    remarks = #{remarks}
+    <if test="delFlag != null and delFlag != ''">
+      ,del_flag = #{delFlag}
+    </if>
+    WHERE id = #{id}
+  </update>
+
+  <update id="delete">
+    UPDATE village_line SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
+  </update>
+
+  <select id="findListByVillageId" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineColumns" />
+    FROM village_line a
+    <include refid="villageLineJoins" />
+    <where>
+      a.village_info_id = #{villageInfoId}
+    </where>
+    ORDER BY a.product_line ASC
+  </select>
+
+  <select id="findSettedList" resultType="VillageLine">
+    SELECT
+    <include refid="villageLineColumns" />
+    FROM village_line a
+    <include refid="villageLineJoins" />
+    <where>
+      a.del_flag = '0'
+      AND a.set_state='${@com.its.modules.sys.utils.DictUtils@getDictValue("已设置", "set_state", "1")}'
+      AND ((a.community_module is not null and a.community_module <![CDATA[<> ]]>
+      '')
+      or (a.life_module is not null and a.life_module <![CDATA[<> ]]>
+      ''))
+    </where>
+  </select>
+  <!-- 设置模块数据 add by zhujiao -->
+  <update id="setModule">
+    UPDATE village_line SET
+    set_state = #{setState},
+    set_time = #{setTime},
+    main_navigation = #{mainNavigation},
+    community_module = #{communityModule},
+    life_module = #{lifeModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE id = #{id}
+  </update>
+  <!-- 批量设置模块数据（根据楼盘信息设置模块数据） add by zhujiao -->
+  <update id="batchSetModule">
+    UPDATE village_line SET
+    set_state = #{setState},
+    set_time = #{setTime},
+    main_navigation = #{mainNavigation},
+    community_module = #{communityModule},
+    life_module = #{lifeModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE village_info_id = #{villageInfoId}
+  </update>
+  <!-- 推荐设置  设置首页推荐  add by zhujiao -->
+  <update id="updateMaintRecomModule">
+    UPDATE village_line SET
+    set_time = #{setTime},
+    maint_recom_module = #{maintRecomModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE id = #{id}
+  </update>
+  <!-- 推荐设置  设置优家推荐（生活模块推荐）  add by zhujiao -->
+  <update id="updateLifeRecomModule">
+    UPDATE village_line SET
+    set_time = #{setTime},
+    life_recom_module = #{lifeRecomModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE id = #{id}
+  </update>
+  <!-- 推荐设置  设置社区推荐（社区模块推荐）  add by zhujiao -->
+  <update id="updateCommunityRecomModule">
+    UPDATE village_line SET
+    set_time = #{setTime},
+    community_recom_module = #{communityRecomModule},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE id = #{id}
+  </update>
+</mapper>

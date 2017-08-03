@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.business.dao.BusinessServicescopeDao">
+    
+	<sql id="businessServicescopeColumns">
+		a.businessinfo_id AS "businessinfoId",
+		a.village_info_id AS "villageInfoId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessServicescopeJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessServicescope">
+		SELECT 
+			<include refid="businessServicescopeColumns"/>
+		FROM business_servicescope a
+		<include refid="businessServicescopeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessServicescope">
+		SELECT 
+			<include refid="businessServicescopeColumns"/>
+		FROM business_servicescope a
+		<include refid="businessServicescopeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessinfoId != null and businessinfoId != ''">
+				AND a.businessinfo_id = #{businessinfoId}
+			</if>
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND a.village_info_id = #{villageInfoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessServicescope">
+		SELECT 
+			<include refid="businessServicescopeColumns"/>
+		FROM business_servicescope a
+		<include refid="businessServicescopeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_servicescope(
+			businessinfo_id,
+			village_info_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{businessinfoId},
+			#{villageInfoId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<!-- <update id="update">
+		UPDATE business_servicescope SET 	
+			businessinfo_id = #{businessinfoId},
+			village_info_id = #{villageInfoId},
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update> -->
+	
+	<!-- <update id="delete">
+		UPDATE business_servicescope SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update> -->
+	
+</mapper>

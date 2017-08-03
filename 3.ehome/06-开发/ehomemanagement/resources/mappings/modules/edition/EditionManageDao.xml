@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.edition.dao.EditionManageDao">
+    
+	<sql id="editionManageColumns">
+		a.id AS "id",
+		a.product_line AS "productLine",
+		a.system_type AS "systemType",
+		a.edition_name AS "editionName",
+		a.edition_no AS "editionNo",
+		a.edition_instruction AS "editionInstruction",
+		a.file_url AS "fileUrl",
+		a.file_size AS "fileSize",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="editionManageJoins">
+	</sql>
+    
+	<select id="get" resultType="EditionManage">
+		SELECT 
+			<include refid="editionManageColumns"/>
+		FROM edition_manage a
+		<include refid="editionManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EditionManage">
+		SELECT 
+			<include refid="editionManageColumns"/>
+		FROM edition_manage a
+		<include refid="editionManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="productLine != null and productLine != ''">
+				AND a.product_line = #{productLine}
+			</if>
+			<if test="systemType != null and systemType != ''">
+				AND a.system_type = #{systemType}
+			</if>
+			<if test="createDateStart != null and createDateStart != ''">
+				AND a.create_date <![CDATA[>= ]]> #{createDateStart}
+			</if>
+			<if test="createDateEnd != null and createDateEnd != ''">
+				AND a.create_date <![CDATA[<= ]]> #{createDateEnd}
+			</if>
+			<if test="editionName != null and editionName != ''">
+				AND a.edition_name = #{editionName}
+			</if>
+			<if test="editionNo != null and editionNo != ''">
+				AND a.edition_no = #{editionNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="EditionManage">
+		SELECT 
+			<include refid="editionManageColumns"/>
+		FROM edition_manage a
+		<include refid="editionManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO edition_manage(
+			id,
+			product_line,
+			system_type,
+			edition_name,
+			edition_no,
+			edition_instruction,
+			file_url,
+			file_size,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{productLine},
+			#{systemType},
+			#{editionName},
+			#{editionNo},
+			#{editionInstruction},
+			#{fileUrl},
+			#{fileSize},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE edition_manage SET 	
+			product_line = #{productLine},
+			system_type = #{systemType},
+			edition_name = #{editionName},
+			edition_no = #{editionNo},
+			edition_instruction = #{editionInstruction},
+			file_url = #{fileUrl},
+			file_size = #{fileSize},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE edition_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,30 @@
+{"code": 1000,
+"data":{
+  "courseID":"course1_3",
+  "courseName":"室内高尔夫兴趣课",
+  "courseImage":[
+   {
+     "url":"../../images/course/c1_3.jpg"
+  },
+   {
+     "url":"../../images/course/c1_2.jpg"
+  },
+   {
+     "url":"../../images/course/c1_1.jpg"
+  }],
+"originalPrice":3800.00,
+"discountedPrice":4000.00,
+"classNumber":12,
+"limitPeople":20,
+"classTime":"9:00-18:00",
+"classLocation":"昌珉大厦3层305",
+ "courseDesc":"海绵兴趣班开设的高尔夫兴趣课旨在帮助广大爱好者提供活动空间及交友的场所！！",
+  "businessID":"",
+  "businessName":"海绵兴趣班",
+    "isNormal":1,
+  "businessPhone":"13521004205",
+  "bussinessUrl":"../../page/course/courseindex.html?id=course1",
+    "stockNumber":""
+},
+"message" : ""
+}

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.goods.dao.GoodsSkuPriceDao">
+    
+	<sql id="goodsSkuPriceColumns">
+		a.id AS "id",
+		a.goods_info_id AS "goodsInfoId.id",
+		a.sku_key_id AS "skuKeyId",
+		a.sku_value_id AS "skuValueId",
+		a.sort_order AS "sortOrder",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.name AS "skuValueName"
+	</sql>
+	
+	<sql id="goodsSkuPriceJoins">
+	    LEFT JOIN sku_value b ON a.sku_value_id = b.id
+	</sql>
+    
+	<select id="get" resultType="GoodsSkuPrice">
+		SELECT 
+			<include refid="goodsSkuPriceColumns"/>
+		FROM goods_sku_price a
+		<include refid="goodsSkuPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsSkuPrice">
+		SELECT 
+			<include refid="goodsSkuPriceColumns"/>
+		FROM goods_sku_price a
+		<include refid="goodsSkuPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="goodsInfoId.id != null and goodsInfoId.id != ''">
+			AND a.goods_info_id = #{goodsInfoId.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsSkuPrice">
+		SELECT 
+			<include refid="goodsSkuPriceColumns"/>
+		FROM goods_sku_price a
+		<include refid="goodsSkuPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findGoodsSkuPriceListForUpdate" resultType="GoodsSkuPrice">
+        SELECT 
+            <include refid="goodsSkuPriceColumns"/>
+        FROM goods_sku_price a
+        <include refid="goodsSkuPriceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        AND A.goods_info_id   =  #{goodsInfoId.id}
+        AND a.sku_key_id      =  #{skuKeyId}
+        AND a.sku_value_id    =  #{skuValueId}
+        </where>
+    </select>
+	<insert id="insert">
+		INSERT INTO goods_sku_price(
+			id,
+			goods_info_id,
+			sku_key_id,
+			sku_value_id,
+			sort_order,
+			base_price,
+			<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price,
+			</if>
+			stock,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{goodsInfoId.id},
+			#{skuKeyId},
+			#{skuValueId},
+			#{sortOrder},
+			#{basePrice},
+			<if test="benefitPrice != null and benefitPrice != ''">
+			#{benefitPrice},
+			</if>
+			#{stock},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_sku_price SET 	
+			goods_info_id = #{goodsInfoId.id},
+			sku_key_id = #{skuKeyId},
+			sku_value_id = #{skuValueId},
+			sort_order = #{sortOrder},
+			base_price = #{basePrice},
+			<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price = #{benefitPrice},
+			</if>
+			stock = #{stock},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE goods_sku_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	   <update id="deleteByGoodsId">
+        UPDATE goods_sku_price SET 
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE Goods_Info_ID = #{goodsInfoId.id}
+    </update>
+	
+	<select id="getGoodsSkuPriceBySkuKeyID" resultType="GoodsSkuPrice">
+        SELECT 
+            <include refid="goodsSkuPriceColumns"/>
+        FROM goods_sku_price a
+        <include refid="goodsSkuPriceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="id != null and id != ''">
+                AND a.sku_key_id = #{id}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getGoodsSkuPriceBySkuValueID" resultType="GoodsSkuPrice">
+        SELECT 
+            <include refid="goodsSkuPriceColumns"/>
+        FROM goods_sku_price a
+        <include refid="goodsSkuPriceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="id != null and id != ''">
+                AND a.sku_value_id = #{id}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findGoodsInfoListForUpdate" resultType="GoodsSkuPrice">
+        SELECT 
+            <include refid="goodsSkuPriceColumns"/>
+        FROM goods_sku_price a
+        <include refid="goodsSkuPriceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.sku_key_id =  #{skuKeyId}
+        AND a.sku_value_id =  #{skuValueId}
+        </where>
+         FOR UPDATE
+    </select>
+</mapper>

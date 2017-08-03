@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.MemberDiscountDao">
+    
+	<sql id="memberDiscountColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.discount_id AS "discountId",
+		a.discount_num AS "discountNum",
+		a.account_id AS "accountId",
+		a.obtain_date AS "obtainDate",
+		a.valid_start AS "validStart",
+		a.valid_end AS "validEnd",
+		a.use_state AS "useState",
+		a.receive_type AS "receiveType",
+		a.order_type AS "orderType",
+		a.order_id AS "orderId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="memberDiscountJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberDiscount">
+		SELECT 
+			<include refid="memberDiscountColumns"/>
+		FROM member_discount a
+		<include refid="memberDiscountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MemberDiscount">
+		SELECT 
+			<include refid="memberDiscountColumns"/>
+		FROM member_discount a
+		<include refid="memberDiscountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberDiscount">
+		SELECT 
+			<include refid="memberDiscountColumns"/>
+		FROM member_discount a
+		<include refid="memberDiscountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO member_discount(
+			id,
+			village_info_id,
+			discount_id,
+			discount_num,
+			account_id,
+			obtain_date,
+			valid_start,
+			valid_end,
+			use_state,
+			receive_type,
+			order_type,
+			order_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{discountId},
+			#{discountNum},
+			#{accountId},
+			#{obtainDate},
+			#{validStart},
+			#{validEnd},
+			#{useState},
+			#{receiveType},
+			#{orderType},
+			#{orderId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE member_discount SET 	
+			village_info_id = #{villageInfoId},
+			discount_id = #{discountId},
+			discount_num = #{discountNum},
+			account_id = #{accountId},
+			obtain_date = #{obtainDate},
+			valid_start = #{validStart},
+			valid_end = #{validEnd},
+			use_state = #{useState},
+			receive_type = #{receiveType},
+			order_type = #{orderType},
+			order_id = #{orderId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE member_discount SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某用户某楼盘下的某种优惠券数量 -->
+	<select id="getReceiveCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			Member_Discount a
+		WHERE
+			a.del_flag = 0
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		AND a.Discount_ID = #{couponId}
+	</select>
+	
+	<!-- 获取某用户某楼盘下的某种优惠券当天领取的数量 -->
+	<select id="getTodayReceiveCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			Member_Discount a
+		WHERE
+			a.del_flag = 0
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		AND a.Discount_ID = #{couponId}
+		AND DATE_FORMAT(a.Obtain_Date, "%Y-%m-%d") = DATE_FORMAT(NOW(), "%Y-%m-%d")
+	</select>
+	
+</mapper>

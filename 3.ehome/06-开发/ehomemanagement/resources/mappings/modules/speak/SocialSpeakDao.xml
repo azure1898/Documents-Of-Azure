@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.speak.dao.SocialSpeakDao">
+    
+	<sql id="socialSpeakColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.tag AS "tag",
+		a.content AS "content",
+		a.visrange AS "visrange",
+		a.forbitcomment AS "forbitcomment",
+		a.forbidforward AS "forbidforward",
+		a.createtime AS "createtime",
+		a.istop AS "istop",
+		a.readnum AS "readnum",
+		a.plateid AS "plateid",
+		a.villageinfoid AS "villageinfoid",
+		a.images AS "images",
+		a.delflag AS "delflag"
+	</sql>
+	
+	<sql id="socialSpeakJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>, vi.village_name AS "villageinfoname", ss.subname AS "subjectname", 
+			(select count(*) from social_forward sf where sf.speakId = a.id) as sumforward,
+			(select count(*) from social_comment sc where sc.speakId = a.id) as sumcomment,
+			(select su.name from sys_user su where su.id = a.userid) as username
+		FROM village_info vi 
+			RIGHT JOIN social_speak a on vi.id = a.villageinfoid 
+			LEFT JOIN social_sub_relation ssr on a.id=ssr.speakId 
+			LEFT JOIN social_subject ss ON ssr.subjectId = ss.id 
+		<include refid="socialSpeakJoins"/>
+		<where>
+			
+			<if test="content != null and content != ''">
+				AND a.content like 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if> 
+			</if>
+			<if test="beginCreatetime != null and endCreatetime != null and beginCreatetime != '' and endCreatetime != ''">
+				AND a.createtime BETWEEN #{beginCreatetime} AND #{endCreatetime}
+			</if>
+			<if test="addrpro != null and addrpro != ''">
+				AND a.villageinfoid IN(
+					SELECT c.id FROM village_info c WHERE c.addr_pro =  '${addrpro}'
+				) 
+			</if>
+			<if test="addrcity != null and addrcity != ''">
+				AND a.villageinfoid IN(
+					SELECT d.id FROM village_info d WHERE d.addr_city =  '${addrcity}'
+				) 
+			</if>
+			<if test="villageinfoid != null and villageinfoid != ''">
+				AND a.villageinfoid = ${villageInfoId} 
+			</if>
+			<if test="delflag != null and delflag != ''">
+				AND a.delflag = ${delflag} 
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.istop desc, a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_speak(
+			id,
+			userid,
+			tag,
+			content,
+			visrange,
+			forbitcomment,
+			forbidforward,
+			createtime,
+			istop,
+			readnum,
+			plateid,
+			villageinfoid,
+			images,
+			delflag
+		) VALUES (
+			#{id},
+			#{userid},
+			#{tag},
+			#{content},
+			#{visrange},
+			#{forbitcomment},
+			#{forbidforward},
+			#{createtime},
+			#{istop},
+			#{readnum},
+			#{plateid},
+			#{villageinfoid},
+			#{images},
+			#{delflag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_speak SET 	
+			forbitcomment = #{forbitcomment},
+			forbidforward = #{forbidforward},
+			createtime = #{createtime},
+			istop = #{istop},
+			readnum = #{readnum},
+			villageinfoid = #{villageinfoid},
+			images = #{images},
+			delflag = #{delflag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_speak
+		WHERE id = #{id}
+	</update>
+	
+	<update id="changeDelFlag">
+		UPDATE social_speak SET
+			delflag = #{delflag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="changeTop">
+		UPDATE social_speak SET
+			istop = #{istop}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

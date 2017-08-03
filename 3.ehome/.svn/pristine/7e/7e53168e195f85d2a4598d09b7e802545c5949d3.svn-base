@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.module.dao.VillageLinerecombusitypeDao">
+    
+	<sql id="villageLinerecombusitypeColumns">
+		a.id AS "id",
+		a.village_line_id AS "villageLineId",
+		a.recom_position AS "recomPosition",
+		a.sort_num AS "sortNum",
+		a.recom_business_id AS "recomBusinessId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageLinerecombusitypeJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageLinerecombusitype">
+		SELECT 
+			<include refid="villageLinerecombusitypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLinerecombusitypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageLinerecombusitype">
+		SELECT 
+			<include refid="villageLinerecombusitypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLinerecombusitypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageLinerecombusitype">
+		SELECT 
+			<include refid="villageLinerecombusitypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLinerecombusitypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_linerecombusitype(
+			id,
+			village_line_id,
+			recom_position,
+			sort_num,
+			recom_business_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageLineId},
+			#{recomPosition},
+			#{sortNum},
+			#{recomBusinessId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_linerecombusitype SET 	
+			village_line_id = #{villageLineId},
+			recom_position = #{recomPosition},
+			sort_num = #{sortNum},
+			recom_business_id = #{recomBusinessId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_linerecombusitype SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.account.dao.AccountDao">
+    
+	<sql id="accountColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.phone_num AS "phoneNum",
+		a.nickname AS "nickname",
+		a.pwd AS "pwd",
+		a.photo AS "photo",
+		a.sex AS "sex",
+		a.height AS "height",
+		a.birth_year AS "birthYear",
+		a.weight AS "weight",
+		a.terminal_source AS "terminalSource",
+		a.certify_state AS "certifyState",
+		a.regist_date AS "registDate",
+		a.bind_bracelet_flag AS "bindBraceletFlag",
+		a.bracelet_name AS "braceletName",
+		a.wallet_balance AS "walletBalance",
+		a.bracelet_num AS "braceletNum",
+		a.wallet_principal AS "walletPrincipal",
+		a.face_recognition_flag AS "faceRecognitionFlag",
+		a.create_by AS "createBy.id",
+		a.wallet_present AS "walletPresent",
+		a.first_login_time AS "firstLoginTime",
+		a.last_login_time AS "lastLoginTime",
+		a.use_state AS "useState",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountJoins">
+	</sql>
+    
+	<select id="get" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="nickname != null and nickname != ''">
+				AND a.nickname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{nickname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{nickname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{nickname},'%')</if>
+			</if>
+			<if test="terminalSource != null and terminalSource != ''">
+				AND a.terminal_source = #{terminalSource}
+			</if>
+			<if test="certifyState != null and certifyState != ''">
+				AND a.certify_state = #{certifyState}
+			</if>
+			<if test="beginRegistDate != null and endRegistDate != null and beginRegistDate != '' and endRegistDate != ''">
+				AND a.regist_date BETWEEN #{beginRegistDate} AND #{endRegistDate}
+			</if>
+            <if test="beginLastLoginTime != null and endLastLoginTime != null and beginLastLoginTime != '' and endLastLoginTime != ''">
+                AND a.last_login_time BETWEEN #{beginLastLoginTime} AND #{endLastLoginTime}
+            </if>
+			<if test="bindBraceletFlag != null and bindBraceletFlag != ''">
+				AND a.bind_bracelet_flag = #{bindBraceletFlag}
+			</if>
+			<if test="faceRecognitionFlag != null and faceRecognitionFlag != ''">
+				AND a.face_recognition_flag = #{faceRecognitionFlag}
+			</if>
+			<if test="useState != null and useState != ''">
+				AND a.use_state = #{useState}
+			</if>
+			<!-- add by Liuqi 20170707 18:02根据手机号查会员 -->
+            <if test="phoneNum != null and phoneNum != ''">
+                AND a.phone_num = #{phoneNum}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO account(
+			phone_num
+		) VALUES (
+			#{phoneNum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE account SET 	
+			id = #{id},
+			village_info_id = #{villageInfoId},
+			phone_num = #{phoneNum},
+			nickname = #{nickname},
+			pwd = #{pwd},
+			photo = #{photo},
+			sex = #{sex},
+			height = #{height},
+			birth_year = #{birthYear},
+			weight = #{weight},
+			terminal_source = #{terminalSource},
+			certify_state = #{certifyState},
+			regist_date = #{registDate},
+			bind_bracelet_flag = #{bindBraceletFlag},
+			bracelet_name = #{braceletName},
+			wallet_balance = #{walletBalance},
+			bracelet_num = #{braceletNum},
+			wallet_principal = #{walletPrincipal},
+			face_recognition_flag = #{faceRecognitionFlag},
+			create_by = #{createBy.id},
+			wallet_present = #{walletPresent},
+			first_login_time = #{firstLoginTime},
+			last_login_time = #{lastLoginTime},
+			use_state = #{useState},
+			create_date = #{createDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateUseState">
+		UPDATE account SET 
+			use_state = #{useState}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findListByOrder" resultType="Account">
+        SELECT 
+            <include refid="accountColumns"/>
+        FROM account a
+        WHERE 
+        <if test="unOrder != null and unOrder != ''">
+            NOT
+        </if>
+        EXISTS 
+    (SELECT 1
+    FROM 
+        (SELECT account_id,
+        module_manage_id,
+        pay_time
+        FROM order_field og
+        WHERE 1=1
+            <if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+                AND og.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+            </if> 
+        UNION
+        SELECT account_id,
+        module_manage_id,
+        pay_time
+        FROM order_goods og
+        WHERE 1=1
+            <if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+                AND og.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+            </if> 
+        UNION
+        SELECT account_id,
+        module_manage_id,
+        pay_time
+        FROM order_lesson og
+        WHERE 1=1
+            <if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+                AND og.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+            </if> 
+        UNION
+        SELECT account_id,
+        module_manage_id,
+        pay_time
+        FROM order_group_purc og
+        WHERE 1=1
+            <if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+                AND og.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+            </if>
+        UNION
+        SELECT account_id,
+        module_manage_id,
+        pay_time
+        FROM order_service og
+        WHERE 1=1
+            <if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+                AND og.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+            </if> 
+        ) b
+        WHERE a.id = b.account_id
+                AND b.module_manage_id  IN 
+            (SELECT id
+            FROM module_manage c 
+            WHERE c.id in 
+            <foreach item="item" index="index" collection="moduleManageIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )); 
+    </select>
+</mapper>

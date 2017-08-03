@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>首页</title>
+
+<!-- Bootstrap -->
+<link href="../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../../css/main.css" rel="stylesheet">
+<link href="../../css/common.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div id="app">
+<div class="grey_top">优家</div>
+<div class="index_ad2"><img src="../../images/top_bg7.jpg" ></div>
+<!--<div class="index2_ad" v-for=" item1 in topAd" v-bind:data-id="item1.adID"><a :href="item1.adUrl"><img v-bind:src="item1.adImage"></a></div>-->
+<!--头部广告-->
+<div class="index2_topmain">
+<div class="index2_menu">
+  <ul>
+  	<li><img src="../../images/index2_icon1.png">
+      <p>餐饮美食</p>
+    </li>
+    <!--<li v-for="item2 in topModule" onclick="javascript:location.href='item2.moduleUrl'"><img v-bind:src="item2.moduleIcon">
+      <p>{{item2.moduleName}}</p>
+    </li>-->
+    <li onclick="javascript:location.href='../business/modulelist.html'"><img src="../../images/index2_icon2.png">
+      <p>社区商城</p>
+    </li>
+    <li onclick="javascript:location.href='../service/modulelist.html'"><img src="../../images/index2_icon3.png">
+      <p>服务预定</p>
+    </li>
+    <li onclick="javascript:location.href='../course/modulelist.html'"><img src="../../images/index2_icon4.png">
+      <p>课程培训</p>
+    </li>
+  </ul>
+  <div class="clear"></div>
+</div>
+</div>
+<!--模块推荐-->
+
+
+
+<div class="index2_topmain2 mt10">
+	<div class="media" style="margin-right:2%">
+  <div class="media-body">
+    <h4 class="media-heading ft16">爱鲜蜂</h4>
+<font class="index_redft ft12">消费满100送100</font>
+  </div>
+   <div class="media-right" style="padding-left:0;">
+    <a href="#">
+      <img class="media-object" src="../../images/index_pic2.jpg" width="42" height="50"> 
+    </a>
+  </div>
+</div>
+<!--<div class="media" style="margin-right:2%" v-for="item3 in topBusiness">
+  <div class="media-body">
+    <h4 class="media-heading ft16" v-bind:data-id="item3.businessID">{{item3.businessName}}</h4>
+<font class="index_redft ft12">{{item3.businessDesc}}</font>
+  </div>
+   <div class="media-right" style="padding-left:0;">
+    <a :href="item3.businessUrl">
+      <img class="media-object" v-bind:src="item3.businessImage" width="42" height="50"> 
+    </a>
+  </div>
+</div>-->
+<div class="media" style="margin-top:0">
+  <div class="media-body">
+    <h4 class="media-heading ft16">爱鲜蜂</h4>
+<font class="index_buleft ft12">消费满100送100</font>
+  </div>
+   <div class="media-right" style="padding-left:0;">
+    <a href="#">
+      <img class="media-object" src="../../images/index_pic2.jpg" width="42" height="50"> 
+    </a>
+  </div>
+</div>
+<div class="media" style="margin-right:2%">
+  <div class="media-body">
+    <h4 class="media-heading ft16">爱鲜蜂</h4>
+<font class="index_orangeft ft12">消费满100送100</font>
+  </div>
+   <div class="media-right" style="padding-left:0;">
+    <a href="#">
+      <img class="media-object" src="../../images/index_pic2.jpg" width="42" height="50"> 
+    </a>
+  </div>
+</div>
+<div class="media">
+  <div class="media-body">
+    <h4 class="media-heading ft16">爱鲜蜂</h4>
+<font class="index_greenft ft12">消费满100送100</font>
+  </div>
+   <div class="media-right" style="padding-left:0;">
+    <a href="#">
+      <img class="media-object" src="../../images/index_pic2.jpg" width="42" height="50"> 
+    </a>
+  </div>
+</div>
+
+
+<div class="clear"></div>
+</div>
+
+<!--顶部商家推荐-->
+
+<div class="goods_list">
+
+<div class="goods_right" style="margin-left:0">
+<div class="goods_pic" style="border:none; margin-top:8px;"><a href="../groupbuy/modulelist.html"><img src="../../images/index2_icon5.png"></a></div>
+<div class="details_title_box">
+<div class="plr10">
+<div class="details_title">除油烟机清</div>
+<div class="mt4 clearfix">
+<div class="fl">
+<div class="font_orange font18 fl">￥1.00</div>
+<div class="font14 fl ml10 mt4"><del>￥12.00</del></div>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="goods_num fr" style="margin-right:10px; margin-top:-47px;"><a href="../groupbuy/modulelist.html"><img src="../../images/list_inbtn.png" width="9" height="16"></a></div>
+</div>
+<!--<div class="goods_list" v-for="item4 in groupBuy" >
+<a :href="item4.groupBuyUrl">
+<div class="goods_right" style="margin-left:0">
+<div class="goods_pic" style="border:none; margin-top:8px;"><img v-biind:src="item4.groupBuyImage"></div>
+<div class="details_title_box">
+<div class="plr10">
+<div class="details_title">{{item4.groupBuyName}}</div>
+<div class="mt4 clearfix">
+<div class="fl">
+<div class="font_orange font18 fl">{{item4.groupBuyPrice|formatDecimal}}</div>
+<div class="font14 fl ml10 mt4"><del>{{item4.marketPrice}}</del></div>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="goods_num fr" style="margin-right:10px; margin-top:-47px;" onclick="javascript:location.href='../groupbuy/modulelist.html'"><img src="../../images/list_inbtn.png" width="9" height="16"></div>
+</a>
+</div>-->
+<!--团购-->
+
+
+<div class="teshkj mt10">
+  <div class="xq_jstitle">图腾生活空间</div>
+  <div class="Boutique_buy_main_pic2">
+    <div class="Boutique_buy_main_tupian2" style="margin-right:2%;"><img src="../../images/index_pic1.jpg">
+      <div class="Boutique_buy_main_biaoti"><a href="#">抢购中</a></div>
+    </div>
+    <div class="Boutique_buy_main_tupian2"  style="float:right;"><img src="../../images/index_pic1.jpg">
+      <div class="Boutique_buy_main_biaoti2"><a href="#">抢购中</a></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div class="he10"></div>
+  <div class="Boutique_buy_main_pic3">
+    <div class="Boutique_buy_main_tupian3" style="margin-right:7.5%;"><img src="../../images/pic8.png">
+      <div class="Boutique_buy_main_biaoti3"><a href="#">抢购中</a></div>
+    </div>
+    <div class="Boutique_buy_main_tupian3"><img src="../../images/pic8.png">
+      <div class="Boutique_buy_main_biaoti4"><a href="#">抢购中</a></div>
+    </div>
+    <div class="Boutique_buy_main_tupian3" style="float:right;"><img src="../../images/pic8.png">
+      <div class="Boutique_buy_main_biaoti5"><a href="#">抢购中</a></div>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+<div class="Boutique_buy">
+  <div class="xq_jstitle" style="padding-top:10px;">实地会所</div>
+  <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=1915b262a28c42edab0d3899f11831c1'">
+    <div class="Boutique_buy_main_tupian"><img src="../../images/pic9.jpg"> </div>  
+  </div>  
+</div>
+<div class="xq_jstitle" style="background:#fff; margin-bottom:0; padding:10px 0; border-bottom:1px solid #edecec;">推荐商家</div>
+<div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;">
+  <div class="sortlist_top2">
+    <div class="business_price_box">
+      <div class="business_pic75 fl"><img src="../../images/pic1.jpg"></div>
+      <div class="business_nr2 font_black">
+        <div style="height:26px;">
+          <div class="business_name fl">爱鲜蜂</div>
+          <div class="fr"></div>
+        </div>
+        <div class="business_type fl"><span>日用百货</span><span>粮油</span></div>
+        <div class="business_start"></div><br>
+        <div class="full_cut clearfix"><span class="fl ">免配送</span></div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;">
+  <div class="sortlist_top2">
+    <div class="business_price_box">
+      <div class="business_pic75 fl"><img src="../../images/pic1.jpg"></div>
+      <div class="business_nr2 font_black">
+        <div style="height:26px;">
+          <div class="business_name fl">爱鲜蜂</div>
+          <div class="fr"></div>
+        </div>
+        <div class="business_type fl"><span>日用百货</span></div>
+        <div class="business_start"></div><br>
+        <div class="full_cut clearfix"><span class="fl ">运费￥5.00</span></div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;">
+  <div class="sortlist_top2">
+    <div class="business_price_box">
+      <div class="business_pic75 fl"><img src="../../images/pic1.jpg"></div>
+      <div class="business_nr2 font_black">
+        <div style="height:26px;">
+          <div class="business_name fl">爱鲜蜂</div>
+          <div class="fr"></div>
+        </div>
+        <div class="business_type fl"><span>日用百货</span></div>
+        <div class="business_start"></div><br>
+        <div class="full_cut clearfix"><span class="fl ">运费￥5.00</span></div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<div class="he100"></div>
+<div class="foot2">
+  <div class="foot2_bg">
+    <ul>
+      <li> <a href="#" ><i class="i2_con1"></i><span  style="display:block;">首页</span></a></li>
+      <li><a href="#" ><i class="i2_con2"></i><span style="display:block;">消息</span></a></li>
+      <li style="width:24%; z-index:1000; margin-top:-0;"><a href="#" ><img src="../../images/index2_icon6.png" ></a></li>
+      <li><a href="#" ><i class="i2_con3"></i><span class="index_redft" style="display:block;">优家</span></a></li>
+      <li><a href="#" ><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
+    </ul>
+  </div>
+</div>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+<!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script> -->
+<!-- Include all compiled plugins (below), or include individual files as needed --> 
+<!--<script src="js/bootstrap.min.js"></script>-->
+<script src="../../js/static/jquery.js"></script>
+<script src="../../js/static/bootstrap.js"></script>
+<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="../../js/cursom/home/lift_index.js" type="text/javascript" charset="utf-8"></script>-->
+</body>
+</html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.company.dao.CompanyInfoDao">
+    
+	<sql id="companyInfoColumns">
+		a.id AS "id",
+		a.company_name AS "companyName",
+		a.addr_pro AS "addrPro",
+		a.addr_city AS "addrCity",
+		a.addr_area AS "addrArea",
+		a.addr_detail AS "addrDetail",
+		a.contact_person AS "contactPerson",
+		a.phone_num AS "phoneNum",
+		a.balance_model AS "balanceModel",
+		a.collect_fees AS "collectFees",
+		a.balance_cycle AS "balanceCycle",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="companyInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="CompanyInfo">
+		SELECT 
+			<include refid="companyInfoColumns"/>
+		FROM company_info a
+		<include refid="companyInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CompanyInfo">
+		SELECT 
+			<include refid="companyInfoColumns"/>
+		FROM company_info a
+		<include refid="companyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="addrPro != null and addrPro != ''">
+				AND a.addr_pro = #{addrPro}
+			</if>
+			<if test="addrCity != null and addrCity != ''">
+				AND a.addr_city = #{addrCity}
+			</if>
+			<if test="addrArea != null and addrArea != ''">
+				AND a.addr_area = #{addrArea}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CompanyInfo">
+		SELECT 
+			<include refid="companyInfoColumns"/>
+		FROM company_info a
+		<include refid="companyInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO company_info(
+			id,
+			company_name,
+			addr_pro,
+			addr_city,
+			addr_area,
+			addr_detail,
+			contact_person,
+			phone_num,
+			balance_model,
+			collect_fees,
+			balance_cycle,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{companyName},
+			#{addrPro},
+			#{addrCity},
+			#{addrArea},
+			#{addrDetail},
+			#{contactPerson},
+			#{phoneNum},
+			#{balanceModel},
+			#{collectFees},
+			#{balanceCycle},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE company_info SET 	
+			company_name = #{companyName},
+			addr_pro = #{addrPro},
+			addr_city = #{addrCity},
+			addr_area = #{addrArea},
+			addr_detail = #{addrDetail},
+			contact_person = #{contactPerson},
+			phone_num = #{phoneNum},
+			balance_model = #{balanceModel},
+			collect_fees = #{collectFees},
+			balance_cycle = #{balanceCycle},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE company_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

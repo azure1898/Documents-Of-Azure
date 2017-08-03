@@ -1,0 +1,22 @@
+{
+  "code" : 1000,
+  "data" : [{
+    "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc35d",
+    "commodityName":"海南金煌芒果 1.75kg ±100g",
+    "commodityImage":"../../images/business/commodity8.png",
+    "originalPrice":40.00,
+		"discountedPrice":39.90,
+		"commodityNumber":0,
+		"isMoreSpe":0,
+ 		"commodityUrl":""
+   },{
+    "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc31d",
+    "commodityName":"妃子笑荔枝1kg装",
+    "commodityImage":"../../images/business/commodity1.jpg",
+    "originalPrice":3.50,
+		"discountedPrice":0,
+		"isMoreSpe":1,
+ 		"commodityUrl":""
+   }],
+  "message" : ""
+}

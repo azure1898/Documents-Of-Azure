@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VillageLineRecomBusiTypeDao">
+    
+	<sql id="villageLineRecomBusiTypeColumns">
+		a.id AS "id",
+		a.village_line_id AS "villageLineId",
+		a.recom_position AS "recomPosition",
+		a.sort_num AS "sortNum",
+		a.recom_business_id AS "recomBusinessId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageLineRecomBusiTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageLineRecomBusiType">
+		SELECT 
+			<include refid="villageLineRecomBusiTypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLineRecomBusiTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageLineRecomBusiType">
+		SELECT 
+			<include refid="villageLineRecomBusiTypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLineRecomBusiTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageLineRecomBusiType">
+		SELECT 
+			<include refid="villageLineRecomBusiTypeColumns"/>
+		FROM village_linerecombusitype a
+		<include refid="villageLineRecomBusiTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_linerecombusitype(
+			id,
+			village_line_id,
+			recom_position,
+			sort_num,
+			recom_business_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageLineId},
+			#{recomPosition},
+			#{sortNum},
+			#{recomBusinessId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_linerecombusitype SET 	
+			village_line_id = #{villageLineId},
+			recom_position = #{recomPosition},
+			sort_num = #{sortNum},
+			recom_business_id = #{recomBusinessId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_linerecombusitype SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<resultMap type="VillageLineRecomBusiTypeBean" id="villageLineRecomBusiTypeBeanMapOne">
+		<association property="businessInfo" javaType="BusinessInfo">
+			<id property="id" column="ID" />
+			<result property="businessName" column="Business_Name" />
+		</association>
+		<collection property="villageLineRecomBusiTypeDetails" ofType="VillageLineRecomBusiTypeDetail">
+			<result property="prodType" column="Prod_Type" />
+			<result property="picUrl" column="Pic_Url" />
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 获取某楼盘下某推荐位置的商家列表 -->
+	<select id="getRecommendBusinessList" resultMap="villageLineRecomBusiTypeBeanMapOne">
+		SELECT
+			c.ID,
+			c.Business_Name,
+			b.Prod_Type,
+			b.Pic_Url
+		FROM
+			Village_LineRecomBusiType a,
+			Village_LineRecomBusiTypeDetail b,
+			Business_Info c
+		WHERE
+			a.ID = b.Village_Line_Recom_Busi_Type_ID
+		AND a.Recom_Business_ID = c.ID
+		AND a.del_flag = '0'
+		AND b.del_flag = '0'
+		AND c.del_flag = '0'
+		AND a.Village_Line_ID = (
+			SELECT
+				d.ID
+			FROM
+				Village_Line d
+			WHERE
+				d.del_flag = 0
+			AND d.Village_Info_ID = #{villageInfoId}
+			AND d.Product_Line = '0'
+			AND d.Set_State = '1'
+		)
+		AND a.Recom_Position = #{recommendPosition}
+		ORDER BY
+			a.Sort_Num,
+			b.Default_Flag DESC,
+			b.Sort_Num
+	</select>
+	
+</mapper>

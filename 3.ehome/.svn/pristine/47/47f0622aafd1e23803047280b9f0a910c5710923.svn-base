@@ -1,0 +1,28 @@
+{"code" : 1000,
+"data" : {
+  "businessID":"course1",
+  "businessName":"海绵兴趣班",
+  "contactPerson":"普及小管家",
+  "contactPhone":"13521004205",
+ "courseID":"course1_3",
+  "courseName":"室内高尔夫兴趣课",
+"discountedPrice":3800.00,
+"classNumber":12,
+"classTime":"2017-07-01至02-10",
+"classLocation":"昌珉大厦3层305",
+"coupons":[{
+   "couponID":"q_1",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+},{
+   "couponID":"q_2",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+}]
+},
+"message" : ""
+} 

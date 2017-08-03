@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>懒人家政</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/service.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<div class="business_top">
+				<div class="container-fluid top">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn" onclick="javascript :history.go(-1);"></span>
+						</div>
+						<div class="fr">
+							<span class="collection_btn" id="collection"></span>
+						</div>
+					</div>
+					<div class="business_price_box">
+						<div class="business_pic75 fl"><a :href="urlList.index + business.businessID"><img v-bind:src="business.businessImage"></a></div>
+						<div class="business_nr" v-bind:data-id="business.businessID">
+							<div class="business_name">{{business.businessName}}</div>
+							<div class="business_type">
+								<a style="float:right; border:none;" v-bind:href="urlList.index + business.businessID"><img src="../../images/white_go.png" width="9" height="16"></a>
+								<span class="bg2dc78a" style="color:#fff;border:none;" v-if="business.serviceWay==1">到店服务</span><span class="bg2dc78a" style="color:#fff;border:none;" v-else="business.serviceWay==0">上门服务</span>
+								<span v-for="lable in business.businessLabels">{{lable.labelName}}</span>
+							</div>
+							<div class="business_start"><span v-if="business.serviceCharge != 0">服务费  {{business.serviceCharge|formatDecimal}}</span><span v-else="business.serviceCharge==0">营业时间   {{business.businessHours}}</span></div>
+							<div class="full_cut"></div>
+						</div>
+					</div>
+				</div>
+				<img :src="urlList.bg" style="width: 100%; height: 162px;"/>
+			</div>
+			
+			<div class="mt10 clearfix" >
+				<div class="business_mainmenu" v-if="business.serviceCategory && business.serviceCategory.length>0">
+					<ul id="menu_category">
+						<li v-bind:class="{'selected':index==0}" v-for="(category,index) in business.serviceCategory" v-on:click="changeCategory(category)">
+							<a href="#">{{category.categoryName}}</a>
+						</li>
+					</ul>
+				</div>
+				<div class="business_goods_box" v-bind:class="{'notclass' : business.serviceCategory && business.serviceCategory.length<=0}">
+					<div class="businessmenu_choice" id="categoryName" v-for="(category,index) in business.serviceCategory" v-if="index==0 && business.serviceCategory.length>0">{{category.categoryName}}</div>
+					<div class="plr10 sort_list" v-for="serviceList in serviceLists">
+						<div class="goods_list" v-bind:data-id="serviceList.serviceID">
+							<div class="goods_pic">
+								<a :href="urlList.detail + serviceList.serviceID"><img v-bind:src="serviceList.serviceImage"></a>
+							</div>
+							<div class="goods_right">
+								<div class="goods_name twoLine"><a :href="urlList.detail + serviceList.serviceID">{{serviceList.serviceName}}</a></div>
+								<div class="">
+									<div class="fl mt10" v-if="serviceList.discountedPrice!=0">
+										<div class="font_orange fl">{{serviceList.discountedPrice|formatDecimal}}/{{serviceList.serviceUnit}}</div>
+										<div class="font14 fl ml10"><del>{{serviceList.originalPrice|formatDecimal}}</del></div>
+									</div>
+									<div class="fl mt10" v-else="serviceList.discountedPrice==0">
+										<div class="font_orange fl">{{serviceList.originalPrice|formatDecimal}}/{{serviceList.serviceUnit}}</div>
+									</div>
+									<div class="details_spgm_right">
+										<a v-bind:href="urlList.detail + serviceList.serviceID"><img src="../../images/grey_go.png" width="9" height="16"></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/static/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/static/bootstrap.min.js"></script>
+		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/cursom/common/common.js"></script>
+		<script src="../../js/cursom/service/servicelist.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

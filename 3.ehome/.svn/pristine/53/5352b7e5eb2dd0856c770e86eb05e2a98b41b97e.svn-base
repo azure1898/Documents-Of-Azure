@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.account.dao.RoomCertifyDao">
+    
+	<sql id="roomCertifyColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.building_id AS "buildingId",
+		a.building_name AS "buildingName",
+		a.floor_code AS "floorCode",
+		a.room_name AS "roomName",
+		a.customer_type AS "customerType",
+		a.customer_name AS "customerName",
+		a.phone_num AS "phoneNum",
+		a.customer_id AS "customerId",
+		a.customer_update_time AS "customerUpdateTime",
+		a.account_id AS "accountId",
+		a.room_update_time AS "roomUpdateTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountColumns">
+		u.id AS "account.id",
+		u.village_info_id AS "account.villageInfoId",
+		u.phone_num AS "account.phoneNum",
+		u.nickname AS "account.nickname",
+		u.pwd AS "account.pwd",
+		u.photo AS "account.photo",
+		u.sex AS "account.sex",
+		u.height AS "account.height",
+		u.birth_year AS "account.birthYear",
+		u.weight AS "account.weight",
+		u.terminal_source AS "account.terminalSource",
+		u.certify_state AS "account.certifyState",
+		u.regist_date AS "account.registDate",
+		u.bind_bracelet_flag AS "account.bindBraceletFlag",
+		u.bracelet_name AS "account.braceletName",
+		u.wallet_balance AS "account.walletBalance",
+		u.bracelet_num AS "account.braceletNum",
+		u.wallet_principal AS "account.walletPrincipal",
+		u.face_recognition_flag AS "account.faceRecognitionFlag",
+		u.create_by AS "account.createBy.id",
+		u.wallet_present AS "account.walletPresent",
+		u.use_state AS "account.useState",
+		u.create_date AS "account.createDate",
+		u.update_by AS "account.updateBy.id",
+		u.update_date AS "account.updateDate",
+		u.remarks AS "account.remarks",
+		u.del_flag AS "account.delFlag"
+	</sql>
+	
+	<sql id="villageInfoColumns">
+		v.id AS "villageInfo.id",
+		v.village_name AS "villageInfo.villageName",
+		v.addr_pro AS "villageInfo.addrPro",
+		v.addr_city AS "villageInfo.addrCity",
+		v.addr_area AS "villageInfo.addrArea",
+		v.company_info_id AS "villageInfo.companyInfoId",
+		v.property_company_id AS "villageInfo.propertyCompanyId",
+		v.property_company_name AS "villageInfo.propertyCompanyName",
+		v.state AS "villageInfo.state",
+		v.create_by AS "villageInfo.createBy.id",
+		v.create_date AS "villageInfo.createDate",
+		v.update_by AS "villageInfo.updateBy.id",
+		v.update_date AS "villageInfo.updateDate",
+		v.remarks AS "villageInfo.remarks",
+		v.del_flag AS "villageInfo.delFlag"
+	</sql>
+	
+	<sql id="roomCertifyJoins">
+	</sql>
+    
+	<select id="get" resultType="RoomCertify">
+		SELECT 
+			<include refid="roomCertifyColumns"/>
+		FROM room_certify a
+		<include refid="roomCertifyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 从物管接口查询出的房间数据信息：查询房间信息是否存在 -->
+	<select id="countRoom" resultType="java.lang.Integer">
+		SELECT 
+			count(id)
+		FROM room_certify a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id !=null and id != ''">
+				AND a.id = #{id}
+			</if>			
+		</where>
+	</select>
+	
+	<select id="findList" resultType="RoomCertify">
+		SELECT 
+			<include refid="roomCertifyColumns"/>,
+			<include refid="accountColumns"/>,
+			<include refid="villageInfoColumns"/>
+		FROM room_certify a, Account u, Village_Info v
+		<include refid="roomCertifyJoins"/>
+		<where>
+			a.account_id = u.id
+			AND a.village_info_id = v.id
+			AND a.del_flag = #{DEL_FLAG_NORMAL}
+			AND v.state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("正常","use_state", "0")}'
+			AND u.certify_state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("已认证","certify_state", "1")}'
+			<!-- 客户名称、注册手机号、房间号查询 -->
+			<if test="customerName != null and customerName != ''">
+				AND (a.customer_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{customerName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{customerName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{customerName},'%')</if>
+				OR a.phone_num LIKE 
+					<if test="dbName == 'oracle'">'%'||#{customerName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{customerName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{customerName},'%')</if>
+				OR a.room_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{customerName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{customerName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{customerName},'%')</if>
+				)
+			</if>
+			<!-- 客户类别查询 -->
+			<if test="customerType != null and customerType != ''">
+				AND a.customer_type = #{customerType}
+			</if>
+			<!-- 用户注册时间查询 -->
+			<if test="registDateStart != null and registDateStart != ''">
+				AND u.regist_date <![CDATA[>= ]]> #{registDateStart}
+			</if>
+			<if test="registDateEnd != null and registDateEnd != ''">
+				AND u.regist_date <![CDATA[<= ]]> #{registDateEnd}
+			</if>
+			<!-- 楼盘查询 -->
+			<if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
+	        	AND v.addr_pro = #{villageInfo.addrPro}
+	     	</if>
+		    <if test="villageInfo != null and villageInfo.addrCity != null and villageInfo.addrCity != ''">
+		        AND v.addr_city = #{villageInfo.addrCity}
+		    </if>
+			<if test="villageInfo != null and villageInfo.id != null and villageInfo.id != ''">
+				AND v.id = #{villageInfo.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY u.phone_num DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RoomCertify">
+		SELECT 
+			<include refid="roomCertifyColumns"/>
+		FROM room_certify a
+		<include refid="roomCertifyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 在本系统房间信息不存在，把物管的房间信息插入本系统 -->
+	<insert id="insert">
+		INSERT INTO room_certify(
+			id,
+			village_info_id,
+			building_id,
+			building_name,
+			floor_code,
+			room_name,
+			customer_type,
+			customer_name,
+			phone_num,
+			customer_id,
+			customer_update_time,
+			account_id,
+			room_update_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{buildingId},
+			#{buildingName},
+			#{floorCode},
+			#{roomName},
+			#{customerType},
+			#{customerName},
+			#{phoneNum},
+			#{customerId},
+			#{customerUpdateTime},
+			#{accountId},
+			#{roomUpdateTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE room_certify SET 	
+			village_info_id = #{villageInfoId},
+			building_id = #{buildingId},
+			building_name = #{buildingName},
+			floor_code = #{floorCode},
+			room_name = #{roomName},
+			customer_type = #{customerType},
+			customer_name = #{customerName},
+			phone_num = #{phoneNum},
+			customer_id = #{customerId},
+			customer_update_time = #{customerUpdateTime},
+			account_id = #{accountId},
+			room_update_time = #{roomUpdateTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	<!-- 在本系统房间信息存在，把物管的房间编号，楼层Id更新过来 -->
+	<update id="updateRoom">
+		UPDATE room_certify SET 	
+			floor_code = #{floorCode},
+			room_name = #{roomName},			
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE room_certify SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

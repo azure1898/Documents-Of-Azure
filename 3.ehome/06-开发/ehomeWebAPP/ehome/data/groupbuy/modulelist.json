@@ -1,0 +1,32 @@
+{
+"code" : 1000,
+"data" : [{
+ 	"groupBuyID":"g_1",
+   "groupBuyName":"花千束 价值298元11支花4选1套餐1束！",
+   "groupBuyStatus":"抢购中",
+   "groupBuyPrice":120,
+   "marketPrice":298,
+   "groupBuyUnit":"",
+   "soldNum":236,
+   "groupBuyUrl":"../../images/pic8.png"
+},{
+ 	"groupBuyID":"g_2",
+   "groupBuyName":"价值1888健身年卡",
+   "groupBuyStatus":"已抢光",
+   "groupBuyPrice":588,
+   "marketPrice":1888,
+   "groupBuyUnit":"",
+   "soldNum":100,
+   "groupBuyUrl":"../../images/groupbuy/g-2.jpg"
+},{
+ 	"groupBuyID":"g_3",
+   "groupBuyName":"爱鲜蜂 价值120元鲜果",
+   "groupBuyStatus":"抢购中",
+   "groupBuyPrice":88,
+   "marketPrice":120,
+   "groupBuyUnit":"",
+   "soldNum":100,
+   "groupBuyUrl":"../../images/groupbuy/g-3.jpg"
+}],
+"message" : ""
+}

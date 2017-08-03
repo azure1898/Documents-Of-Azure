@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.GroupPurchaseDao">
+    
+	<sql id="groupPurchaseColumns">
+		a.id AS "id",
+		a.module_id AS "moduleId",
+		a.businessinfo_id AS "businessinfoId",
+		a.group_purc_name AS "groupPurcName",
+		a.group_purc_pic AS "groupPurcPic",
+		a.market_money AS "marketMoney",
+		a.group_purc_money AS "groupPurcMoney",
+		a.restriction_number AS "restrictionNumber",
+		a.support_type AS "supportType",
+		a.group_purc_detail AS "groupPurcDetail",
+		a.validity_start_time AS "validityStartTime",
+		a.validity_end_time AS "validityEndTime",
+		a.use_time AS "useTime",
+		a.use_rule AS "useRule",
+		a.sort_num AS "sortNum",
+		a.group_purc_state AS "groupPurcState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="groupPurchaseJoins">
+	</sql>
+    
+	<select id="get" resultType="GroupPurchase">
+		SELECT 
+			<include refid="groupPurchaseColumns"/>
+		FROM group_purchase a
+		<include refid="groupPurchaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GroupPurchase">
+		SELECT 
+			<include refid="groupPurchaseColumns"/>
+		FROM group_purchase a
+		<include refid="groupPurchaseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GroupPurchase">
+		SELECT 
+			<include refid="groupPurchaseColumns"/>
+		FROM group_purchase a
+		<include refid="groupPurchaseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO group_purchase(
+			id,
+			module_id,
+			businessinfo_id,
+			group_purc_name,
+			group_purc_pic,
+			market_money,
+			group_purc_money,
+			restriction_number,
+			support_type,
+			group_purc_detail,
+			validity_start_time,
+			validity_end_time,
+			use_time,
+			use_rule,
+			sort_num,
+			group_purc_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{moduleId},
+			#{businessinfoId},
+			#{groupPurcName},
+			#{groupPurcPic},
+			#{marketMoney},
+			#{groupPurcMoney},
+			#{restrictionNumber},
+			#{supportType},
+			#{groupPurcDetail},
+			#{validityStartTime},
+			#{validityEndTime},
+			#{useTime},
+			#{useRule},
+			#{sortNum},
+			#{groupPurcState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE group_purchase SET 	
+			module_id = #{moduleId},
+			businessinfo_id = #{businessinfoId},
+			group_purc_name = #{groupPurcName},
+			group_purc_pic = #{groupPurcPic},
+			market_money = #{marketMoney},
+			group_purc_money = #{groupPurcMoney},
+			restriction_number = #{restrictionNumber},
+			support_type = #{supportType},
+			group_purc_detail = #{groupPurcDetail},
+			validity_start_time = #{validityStartTime},
+			validity_end_time = #{validityEndTime},
+			use_time = #{useTime},
+			use_rule = #{useRule},
+			sort_num = #{sortNum},
+			group_purc_state = #{groupPurcState}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE group_purchase SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ======================代码生成分割线========================= -->
+	
+	<!-- 获取某商家正在进行和即将进行的团购活动 -->
+	<select id="getBusinessGroupPurchase" resultType="GroupPurchaseBean">
+		SELECT DISTINCT
+			<include refid="groupPurchaseColumns"/>,
+			b.ID AS "groupPurchaseTimeId",
+			b.start_time AS "startTime",
+			b.end_time AS "endTime",
+			b.stock_num AS "stockNum",
+			b.sale_num AS "saleNum"
+		FROM
+			Group_Purchase a,
+			Group_PurchaseTime b
+		WHERE
+			a.ID = b.Group_Purchase_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.Group_Purc_State <![CDATA[<>]]> 3
+		AND b.End_Time <![CDATA[>]]> NOW()
+		AND a.BusinessInfo_ID=#{businessInfoID}
+		ORDER BY b.End_Time ASC, a.Sort_Num ASC
+	</select>
+	
+	<!-- 获取正在进行或即将进行的团购活动 -->
+	<select id="getGroupPurchaseListOnOrComing" resultType="GroupPurchaseBean">
+		SELECT DISTINCT
+			<include refid="groupPurchaseColumns"/>,
+			b.ID AS "groupPurchaseTimeId",
+			b.start_time AS "startTime",
+			b.end_time AS "endTime",
+			b.stock_num AS "stockNum",
+			b.sale_num AS "saleNum"
+		FROM
+			Group_Purchase a,
+			Group_PurchaseTime b
+		WHERE
+			a.ID = b.Group_Purchase_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.Group_Purc_State <![CDATA[<>]]> 3
+		<choose>
+			<when test="groupPurcState == 1">
+				AND b.Start_Time <![CDATA[<=]]> NOW()
+				AND b.End_Time <![CDATA[>]]> NOW()
+			</when>
+			<otherwise>
+				AND b.Start_Time <![CDATA[>]]> NOW()
+			</otherwise>
+		</choose>
+		ORDER BY a.Sort_Num ASC
+	</select>
+	
+	<!-- 根据团购活动子表ID获取该团购活动信息 -->
+	<select id="getGroupPurchaseBean" resultType="GroupPurchaseBean">
+		SELECT DISTINCT
+			<include refid="groupPurchaseColumns"/>,
+			b.ID AS "groupPurchaseTimeId",
+			b.start_time AS "startTime",
+			b.end_time AS "endTime",
+			b.stock_num AS "stockNum",
+			b.sale_num AS "saleNum"
+		FROM
+			Group_Purchase a,
+			Group_PurchaseTime b
+		WHERE
+			a.ID = b.Group_Purchase_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.Group_Purc_State <![CDATA[<>]]> 3
+		AND b.ID = #{groupPurchaseTimeId}
+	</select>
+	
+	<!-- 获取某楼盘下正在进行中和即将进行的团购活动 -->
+	<select id="getByVillageInfoId" resultType="GroupPurchaseBean">
+		SELECT DISTINCT
+			<include refid="groupPurchaseColumns"/>,
+			b.ID AS "groupPurchaseTimeId",
+			b.start_time AS "startTime",
+			b.end_time AS "endTime",
+			b.stock_num AS "stockNum",
+			b.sale_num AS "saleNum"
+		FROM
+			Group_Purchase a,
+			Group_PurchaseTime b
+		WHERE
+			a.ID = b.Group_Purchase_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.Group_Purc_State <![CDATA[<>]]> 3
+		AND b.End_Time <![CDATA[>]]> NOW()
+		AND a.BusinessInfo_ID IN (
+			SELECT DISTINCT
+				c.BusinessInfo_ID
+			FROM
+				Business_ServiceScope c
+			WHERE
+				c.del_flag = '0'
+			AND c.Village_Info_ID = #{villageInfoId}
+		)
+		ORDER BY
+			b.Start_Time,
+			a.Sort_Num
+		LIMIT 3
+	</select>
+	
+</mapper>

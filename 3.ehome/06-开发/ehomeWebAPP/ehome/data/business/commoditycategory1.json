@@ -1,0 +1,43 @@
+{
+  "code" : 1000,
+  "data" : {
+    "businessID":"6be9a9cd5a1c4f5d81564b0be53cc37e",
+    "businessName":"鲜果时光",
+    "businessImage":"../../images/business/business2.png",
+    "isNormal":1,
+    "businessLabels":[{
+        "labelName":"水果"
+    },{
+    	"labelName":"零食"
+    }],
+    "sendMoney":20,
+    "isFeeActivity":1,
+    "deliveryFee":12,
+    "deliveryFeeActivity":"",
+    "activities":[{
+       "label":"满减",
+       "desc":"满20减2，满30减4元，满100减20"
+    }],
+    "commodityCategory":[{
+      "categoryID":"1",
+      "categoryName":"降价促销"
+    },{
+      "categoryID":"2",
+      "categoryName":"新品抢购"
+    },{
+      "categoryID":"3",
+      "categoryName":"海南水果"
+    },{
+      "categoryID":"4",
+      "categoryName":"新西兰水果"
+    },{
+      "categoryID":"5",
+      "categoryName":"休闲零食"
+    },{
+      "categoryID":"6",
+      "categoryName":"口袋干果"
+    }],
+    "businessUrl":""
+  },
+  "message" : ""
+}

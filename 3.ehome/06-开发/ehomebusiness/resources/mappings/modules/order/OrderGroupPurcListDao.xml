@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderGroupPurcListDao">
+    
+	<sql id="orderGroupPurcListColumns">
+		a.ID AS "ID",
+		a.Business_Info_ID AS "Business_Info_ID",
+		a.Group_Purchase_ID AS "Group_Purchase_ID",
+		a.Order_Group_Purc_ID AS "Order_Group_Purc_ID",
+		a.Order_No AS "Order_No",
+		a.Name AS "Name",
+		a.Imgs AS "Imgs",
+		a.Base_Price AS "Base_Price",
+		a.Group_Purc_Price AS "Group_Purc_Price",
+		a.Start_Time AS "Start_Time",
+		a.End_Time AS "End_Time",
+		a.Content AS "Content",
+		a.Use_Time AS "Use_Time",
+		a.Use_Content AS "Use_Content",
+		a.Pay_Sum_Money AS "Pay_Sum_Money",
+		a.Group_Purc_Number AS "Group_Purc_Number",
+		a.Group_Purc_State AS "Group_Purc_State",
+		a.Consume_Time AS "Consume_Time",
+		a.Create_By AS "Create_By",
+		a.Create_Date AS "Create_Date",
+		a.Update_By AS "Update_By",
+		a.Update_Date AS "Update_Date",
+		a.Remarks AS "Remarks",
+		a.Del_Flag AS "Del_Flag"
+	</sql>
+	
+	<sql id="orderGroupPurcListJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.Order_Group_Purc_ID = #{orderGroupPurcId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGroupPurcList">
+		SELECT 
+			<include refid="orderGroupPurcListColumns"/>
+		FROM order_group_purc_list a
+		<include refid="orderGroupPurcListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		AND a.order_no = #{orderNo}
+		</where>
+	</select>
+	<!-- 优惠/验券管理（验券）： 依据团购券号查找订单号-->
+	<select id="getOrderListByNumber" resultType="OrderGroupPurcList">
+		SELECT 
+			a.id AS "id",
+			a.order_no AS "orderNo"			
+		FROM order_group_purc_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="groupPurcNumber != null and groupPurcNumber != ''">
+				AND a.group_purc_number = #{groupPurcNumber}
+			</if>
+		</where>
+	</select>
+	<!-- 优惠/验券管理（验券）： 依据团购券清单表ID查找订单号-->
+	<select id="getOrderInfoById" resultType="OrderGroupPurcList">
+		SELECT 
+			a.id AS "id",
+			a.order_no AS "orderNo",
+			a.group_purc_number AS 	"groupPurcNumber"	
+		FROM order_group_purc_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+	</select>
+	<!-- 优惠/验券管理：验券的团购券消费列表信息的查询 -->
+	<select id="getNumberList" resultType="OrderGroupPurcList">
+		SELECT 
+			a.id AS "id",
+			a.group_purc_number AS "groupPurcNumber",
+			a.group_purc_state AS "groupPurcState",
+			"团购" AS "type",
+			a.consume_time AS "consumeTime"
+		FROM order_group_purc_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.group_purc_state in (0,1)
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+		</where>
+		ORDER BY a.create_date ASC
+	</select>
+	<!-- 优惠/验券管理（验券）： 查找同订单号下面未消费的记录-->
+	<select id="countNotSpending" resultType="java.lang.Integer">
+		SELECT 
+			count(id)		
+		FROM order_group_purc_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="groupPurcState != null and groupPurcState != ''">
+			    AND a.group_purc_state = #{groupPurcState}
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+		</where>
+	</select>
+	<insert id="insert">
+		INSERT INTO order_group_purc_list(
+			id,
+			business_info_id,
+			GroupPurc_info_id,
+			order_GroupPurc_id,
+			order_no,
+			serial_numbers,
+			name,
+			imgs,
+			content,
+			sku_content,
+			sku_key_id,
+			sku_value_id,
+			base_price,
+			benefit_price,
+			GroupPurc_sum,
+			pay_sum_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{GroupPurcInfoId},
+			#{orderGroupPurcId},
+			#{orderNo},
+			#{serialNumbers},
+			#{name},
+			#{imgs},
+			#{content},
+			#{skuContent},
+			#{skuKeyId},
+			#{skuValueId},
+			#{basePrice},
+			#{benefitPrice},
+			#{GroupPurcSum},
+			#{paySumMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_group_purc_list SET 	
+			business_info_id = #{businessInfoId},
+			GroupPurc_info_id = #{GroupPurcInfoId},
+			order_GroupPurc_id = #{orderGroupPurcId},
+			order_no = #{orderNo},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			imgs = #{imgs},
+			content = #{content},
+			sku_content = #{skuContent},
+			sku_key_id = #{skuKeyId},
+			sku_value_id = #{skuValueId},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			GroupPurc_sum = #{GroupPurcSum},
+			pay_sum_money = #{paySumMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	<!-- 优惠/验券管理：依据团购券号，更新团购券状态、消费时间 -->
+	<update id="updateGroupNumber">
+		UPDATE order_group_purc_list SET 	
+			group_purc_state = #{groupPurcState},
+			consume_time = #{consumeTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		UPDATE order_group_purc_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

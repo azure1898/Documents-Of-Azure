@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VerifyCodeRecordDao">
+    
+	<sql id="verifyCodeRecordColumns">
+		a.id AS "id",
+		a.phone_num AS "phoneNum",
+		a.code AS "code",
+		a.send_time AS "sendTime",
+		a.create_by AS "createBy.id",
+		a.code_type AS "codeType",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="verifyCodeRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="VerifyCodeRecord">
+		SELECT 
+			<include refid="verifyCodeRecordColumns"/>
+		FROM verify_code_record a
+		<include refid="verifyCodeRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VerifyCodeRecord">
+		SELECT 
+			<include refid="verifyCodeRecordColumns"/>
+		FROM verify_code_record a
+		<include refid="verifyCodeRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VerifyCodeRecord">
+		SELECT 
+			<include refid="verifyCodeRecordColumns"/>
+		FROM verify_code_record a
+		<include refid="verifyCodeRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO verify_code_record(
+			id,
+			phone_num,
+			code,
+			send_time,
+			create_by,
+			code_type,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{phoneNum},
+			#{code},
+			#{sendTime},
+			#{createBy.id},
+			#{codeType},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE verify_code_record SET 	
+			phone_num = #{phoneNum},
+			code = #{code},
+			send_time = #{sendTime},
+			code_type = #{codeType},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE verify_code_record SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<!-- ============================================= -->
+	<select id="getLatestCode" resultType="VerifyCodeRecord">
+		SELECT a.* FROM verify_code_record a 
+		WHERE a.del_flag=0
+		 AND a.phone_num=#{phoneNum} AND a.code_type=#{codeType} AND a.code=#{code}
+		 ORDER BY a.send_time DESC LIMIT 1
+	</select>
+	<select id="getTodaySendNum" resultType="int">
+		SELECT COUNT(a.ID) FROM verify_code_record a 
+		WHERE a.del_flag=0 AND DATEDIFF(NOW(),a.Send_Time) = 0 
+		AND a.phone_num=#{phoneNum} AND a.code_type=#{codeType}
+	</select>
+</mapper>

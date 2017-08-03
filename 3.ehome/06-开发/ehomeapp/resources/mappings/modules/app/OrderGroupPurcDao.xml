@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.OrderGroupPurcDao">
+    
+	<sql id="orderGroupPurcColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.order_no AS "orderNo",
+		a.module_manage_id AS "moduleManageId",
+		a.prod_type AS "prodType",
+		a.type AS "type",
+		a.village_info_id AS "villageInfoId",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.group_purchase_id AS "groupPurchaseId",
+		a.name AS "name",
+		a.base_price AS "basePrice",
+		a.group_purc_price AS "groupPurcPrice",
+		a.pay_number AS "payNumber",
+		a.sum_money AS "sumMoney",
+		a.benefit_money AS "benefitMoney",
+		a.coupon_money AS "couponMoney",
+		a.pay_money AS "payMoney",
+		a.order_state AS "orderState",
+		a.check_order_state AS "checkOrderState",
+		a.check_time AS "checkTime",
+		a.check_state AS "checkState",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.account_phone_number AS "accountPhoneNumber",
+		a.account_msg AS "accountMsg",
+		a.pay_type AS "payType",
+		a.pay_org AS "payOrg",
+		a.pay_time AS "payTime",
+		a.pay_user_name AS "payUserName",
+		a.pay_state AS "payState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGroupPurcJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="orderGroupPurcColumns"/>
+		FROM order_group_purc a
+		<include refid="orderGroupPurcJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="orderGroupPurcColumns"/>
+		FROM order_group_purc a
+		<include refid="orderGroupPurcJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="orderGroupPurcColumns"/>
+		FROM order_group_purc a
+		<include refid="orderGroupPurcJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_group_purc(
+			id,
+			business_info_id,
+			order_no,
+			module_manage_id,
+			prod_type,
+			type,
+			village_info_id,
+			province_id,
+			city_id,
+			group_purchase_id,
+			name,
+			base_price,
+			group_purc_price,
+			pay_number,
+			sum_money,
+			benefit_money,
+			coupon_money,
+			pay_money,
+			order_state,
+			check_order_state,
+			check_time,
+			check_state,
+			account_id,
+			account_name,
+			account_phone_number,
+			account_msg,
+			pay_type,
+			pay_org,
+			pay_time,
+			pay_user_name,
+			pay_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{orderNo},
+			#{moduleManageId},
+			#{prodType},
+			#{type},
+			#{villageInfoId},
+			#{provinceId},
+			#{cityId},
+			#{groupPurchaseId},
+			#{name},
+			#{basePrice},
+			#{groupPurcPrice},
+			#{payNumber},
+			#{sumMoney},
+			#{benefitMoney},
+			#{couponMoney},
+			#{payMoney},
+			#{orderState},
+			#{checkOrderState},
+			#{checkTime},
+			#{checkState},
+			#{accountId},
+			#{accountName},
+			#{accountPhoneNumber},
+			#{accountMsg},
+			#{payType},
+			#{payOrg},
+			#{payTime},
+			#{payUserName},
+			#{payState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_group_purc SET 	
+			business_info_id = #{businessInfoId},
+			order_no = #{orderNo},
+			module_manage_id = #{moduleManageId},
+			prod_type = #{prodType},
+			type = #{type},
+			village_info_id = #{villageInfoId},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			group_purchase_id = #{groupPurchaseId},
+			name = #{name},
+			base_price = #{basePrice},
+			group_purc_price = #{groupPurcPrice},
+			pay_number = #{payNumber},
+			sum_money = #{sumMoney},
+			benefit_money = #{benefitMoney},
+			coupon_money = #{couponMoney},
+			pay_money = #{payMoney},
+			order_state = #{orderState},
+			check_order_state = #{checkOrderState},
+			check_time = #{checkTime},
+			check_state = #{checkState},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			account_phone_number = #{accountPhoneNumber},
+			account_msg = #{accountMsg},
+			pay_type = #{payType},
+			pay_org = #{payOrg},
+			pay_time = #{payTime},
+			pay_user_name = #{payUserName},
+			pay_state = #{payState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_group_purc SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某精品团购用户已购数量 -->
+	<select id="getCountByGroupPurcIdAndAccountId" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			Order_Group_Purc a,
+			Order_Group_Purc_List b
+		WHERE
+			a.ID = b.Order_Group_Purc_ID
+		AND a.Del_Flag = 0
+		AND b.Del_Flag = 0
+		AND a.Account_ID = #{accountId}
+		AND a.Group_Purchase_ID = #{groupPurchaseId}
+	</select>
+	
+	<!-- 根据订单号获取团购券订单 -->
+	<select id="getByOrderNo" resultType="OrderGroupPurc">
+		SELECT
+			<include refid="orderGroupPurcColumns"/>
+		FROM
+			Order_Group_Purc a
+		WHERE
+			a.Order_No = #{orderNo}
+	</select>
+	
+	<resultMap type="OrderGroupPurcBean" id="orderGroupPurcBeanMapOne">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="payMoney" column="payMoney" />
+		<result property="orderState" column="orderState" />
+		<result property="payState" column="payState" />
+		<result property="createDate" column="createDate" />
+		<association property="businessInfo" javaType="BusinessInfo">
+			<id property="id" column="Business_Info_Id" />
+			<result property="businessName" column="Business_Name" />
+			<result property="businessPic" column="Business_Pic" />
+		</association>
+	</resultMap>
+	
+	<!-- 获取某用户某楼盘下的团购类订单 -->
+	<select id="getOrderGroupPurcList" resultMap="orderGroupPurcBeanMapOne">
+		SELECT DISTINCT
+			<include refid="orderGroupPurcColumns"/>,
+			b.ID AS Business_Info_Id,
+			b.Business_Name,
+			b.Business_Pic
+		FROM
+			Order_Group_Purc a,
+			Business_Info b
+		WHERE
+			a.Business_Info_ID = b.ID
+		AND a.Del_Flag = 0
+		AND b.del_flag = 0
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		<if test="moduleManageId != 0 and moduleManageId != -1">
+			AND a.Module_Manage_ID = #{moduleManageId}
+		</if>
+		ORDER BY
+			a.Create_Date DESC
+	</select>
+	
+	<resultMap type="OrderGroupPurcBean" id="orderGroupPurcBeanMapTwo">
+		<id property="id" column="id" />
+		<result property="payMoney" column="payMoney" />
+		<result property="accountPhoneNumber" column="accountPhoneNumber" />
+		<result property="accountMsg" column="accountMsg" />
+		<result property="orderNo" column="orderNo" />
+		<result property="createDate" column="createDate" />
+		<result property="payType" column="payType" />
+		<association property="businessInfo" javaType="BusinessInfo">
+			<result property="phoneNum" column="Phone_Num" />
+		</association>
+		<collection property="orderGroupPurcLists" ofType="OrderGroupPurcList">
+			<result property="groupPurchaseId" column="Group_Purchase_ID" />
+			<result property="name" column="Group_Purchase_Name" />
+			<result property="endTime" column="End_Time" />
+			<result property="imgs" column="Group_Purchase_Imgs" />
+			<result property="groupPurcNumber" column="Group_Purc_Number" />
+			<result property="groupPurcState" column="Group_Purc_State" />
+		</collection>
+	</resultMap>
+	
+	<!-- 根据订单ID和用户ID获取订单信息 -->
+	<select id="getOrderGroupPurcByOrderIdAndAccountId" resultMap="orderGroupPurcBeanMapTwo">
+		SELECT DISTINCT
+			<include refid="orderGroupPurcColumns"/>,
+			b.Phone_Num,
+			c.Group_Purchase_ID,
+			c.Name AS Group_Purchase_Name,
+			c.End_Time,
+			c.Imgs AS Group_Purchase_Imgs,
+			c.Group_Purc_Number,
+			c.Group_Purc_State
+		FROM
+			Order_Group_Purc a,
+			Business_Info b,
+			Order_Group_Purc_List c
+		WHERE
+			a.Business_Info_ID = b.ID
+		AND c.Order_Group_Purc_ID = a.ID
+		AND a.Del_Flag = 0
+		AND b.del_flag = 0
+		AND c.Del_Flag = 0
+		AND a.ID = #{orderId}
+		AND a.Account_ID = #{accountId}
+	</select>
+	
+	<!-- 判断某用户是否可以取消某订单 -->
+	<select id="judgeOrderGroupPurcByOrderIdAndAccountId" resultType="OrderGroupPurc">
+		SELECT DISTINCT
+			<include refid="orderGroupPurcColumns"/>
+		FROM
+			Order_Group_Purc a
+		WHERE
+			a.Del_Flag = 0
+		AND a.ID = #{orderId}
+		AND a.Account_ID = #{accountId}
+		AND a.Pay_State = 0
+	</select>
+</mapper>

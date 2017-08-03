@@ -1,0 +1,40 @@
+{
+"code" : 1000,
+"data" : [{
+  "businessID":"course1",
+  "businessName":"海绵兴趣班",
+  "businessImage":"../../images/course/c1_logo.jpg",
+"businessLabels":[{
+  "labelName":"课程"
+},{
+  "labelName":"培训"
+}],
+"businessHours":"9:00-18:00",
+"courseItems":[{
+  "ID":"course1_1",
+  "name":"智能乐高兴趣课<span class='font14'>（限购一件）</span>",
+  "image":"../../images/course/c1_1.jpg",
+  "originalPrice":2000.00,
+"discountedPrice":2500.00,
+  "url":"../../page/course/coursedetails.html"
+},
+  {
+  "ID":"course1_2",
+  "name":"3D打印兴趣课",
+  "image":"../../images/course/c1_2.jpg",
+  "originalPrice":2000.00,
+"discountedPrice":2400.00,
+  "url":"../../page/course/coursedetails.html"
+},
+  {
+  "ID":"course1_3",
+  "name":"室内高尔夫兴趣课",
+  "image":"../../images/course/c1_3.jpg",
+  "originalPrice":3800.00,
+"discountedPrice":4000.00,
+  "url":"../../page/course/coursedetails.html"
+}],
+"businessUrl":"../../page/course/courseindex.html"
+}],
+"message" : ""
+}

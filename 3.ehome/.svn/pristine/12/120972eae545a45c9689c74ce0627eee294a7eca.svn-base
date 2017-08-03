@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.adver.dao.AdverPositionDao">
+
+	<sql id="adverPositionColumns">
+		a.id AS "id",
+		a.position_name AS "positionName",
+		a.module_code AS "moduleCode",
+		a.open_screen_flag AS "openScreenFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS
+		"delFlag"
+	</sql>
+
+	<sql id="adverPositionJoins">
+	</sql>
+
+	<select id="get" resultType="AdverPosition">
+		SELECT
+		<include refid="adverPositionColumns" />
+		FROM adver_position a
+		<include refid="adverPositionJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="AdverPosition">
+		SELECT
+		<include refid="adverPositionColumns" />
+		FROM adver_position a
+		<include refid="adverPositionJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="moduleCode != null and moduleCode != ''">
+				AND a.module_code = #{moduleCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AdverPosition">
+		SELECT
+		<include refid="adverPositionColumns" />
+		FROM adver_position a
+		<include refid="adverPositionJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="moduleCode != null and moduleCode != ''">
+				AND a.module_code = #{moduleCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getOpenScreenOfModuleCount" resultType="integer">
+		SELECT
+		COUNT(1)
+		FROM adver_position a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.module_code = #{moduleCode}
+			AND a.open_screen_flag = ${@com.its.common.config.Global@YES}
+		</where>
+	</select>
+	
+	<select id="getPositionByPositionName" resultType="AdverPosition">
+		SELECT 
+			<include refid="adverPositionColumns"/>
+		FROM adver_position a
+		WHERE a.position_name = #{positionName}
+		AND a.module_code = #{moduleCode}
+		AND a.del_flag = '0'
+	</select>
+
+	<insert id="insert">
+		INSERT INTO adver_position(
+		id,
+		position_name,
+		module_code,
+		open_screen_flag,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{id},
+		#{positionName},
+		#{moduleCode},
+		#{openScreenFlag},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE adver_position SET
+		position_name = #{positionName},
+		module_code = #{moduleCode},
+		open_screen_flag = #{openScreenFlag},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE adver_position SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

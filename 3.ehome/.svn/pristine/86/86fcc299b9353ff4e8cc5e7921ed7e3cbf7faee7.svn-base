@@ -1,0 +1,81 @@
+{
+  "code" : 1000,
+  "data" : [{
+    "businessID":"6be9a9cd5a1c4f5d81564b0be53cc37e",
+    "businessName":"鲜果时光",
+    "businessImage":"../../images/business/business2.png",
+    "isNormal":1,
+    "businessLabels":[{
+        "labelName":"水果"
+    },{
+    		"labelName":"零食"
+    }],
+    "sendMoney":0,
+    "isFeeActivity":0,
+    "deliveryFee":0,
+    "deliveryFeeActivity":"免配送",
+    "activities":[{
+       "label":"满减",
+       "desc":"满20减2，满30减4元，满100减20"
+    }],
+    "commodities":[{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc31e",
+      "commodityName":"四川蒲江青见柑橘 5斤装 自营水果",
+      "commodityImage":"../../images/business/commodity4.png",
+      "commodityPrice":"39.90",
+      "url":"commoditydetail.html"
+    },{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc32e",
+      "commodityName":"烟台红富士12枚75mm",
+      "commodityImage":"../../images/business/commodity5.png",
+      "commodityPrice":"23.5",
+      "url":"commoditydetail.html"
+    },{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc33e",
+      "commodityName":"云南麒麟 西瓜 1粒 7-8斤",
+      "commodityImage":"../../images/business/commodity6.png",
+      "commodityPrice":"13.00",
+      "url":"commoditydetail.html"
+    }],
+    "businessUrl":"commoditylist.html"
+  },{
+    "businessID":"6be9a9cd5a1c4f5d81564b0be53cc37d",
+    "businessName":"爱鲜蜂",
+    "businessImage":"../../images/business/business1.jpg",
+    "isNormal":1,
+    "businessLabels":[{
+        "labelName":"水果"
+    },{
+    		"labelName":"零食"
+    }],
+    "sendMoney":20,
+    "isFeeActivity":1,
+    "deliveryFee":12,
+    "deliveryFeeActivity":"",
+    "activities":[{
+       "label":"满减",
+       "desc":"满20减2，满30减4元，满100减20"
+    }],
+    "commodities":[{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc31d",
+      "commodityName":"妃子笑荔枝1kg装",
+      "commodityImage":"../../images/business/commodity1.jpg",
+      "commodityPrice":"3.50",
+      "url":"commoditydetail.html"
+    },{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc32d",
+      "commodityName":"新西兰阳光金奇异果16个礼盒装",
+      "commodityImage":"../../images/business/commodity2.png",
+      "commodityPrice":"5.5",
+      "url":"commoditydetail.html"
+    },{
+      "commodityID":"6be9a9cd5a1c4f5d81564b0be53cc33d",
+      "commodityName":"高原红富士苹果 6个装 1.2kg 新鲜水果",
+      "commodityImage":"../../images/business/commodity3.png",
+      "commodityPrice":"13.00",
+      "url":"commoditydetail.html"
+    }],
+    "businessUrl":"commoditylist.html"
+  }],
+  "message" : ""
+}

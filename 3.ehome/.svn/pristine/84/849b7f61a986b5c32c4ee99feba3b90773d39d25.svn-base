@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VillageInfoDao">
+    
+	<sql id="villageInfoColumns">
+		a.id AS "id",
+		a.village_name AS "villageName",
+		a.addr_pro AS "addrPro",
+		a.addr_city AS "addrCity",
+		a.addr_area AS "addrArea",
+		a.company_info_id AS "companyInfoId",
+		a.property_company_id AS "propertyCompanyId",
+		a.property_company_name AS "propertyCompanyName",
+		a.state AS "state",
+		a.phone_num AS "phoneNum",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageInfo">
+		SELECT 
+			<include refid="villageInfoColumns"/>
+		FROM village_info a
+		<include refid="villageInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageInfo">
+		SELECT 
+			<include refid="villageInfoColumns"/>
+		FROM village_info a
+		<include refid="villageInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="villageName != null and villageName != ''">
+				AND a.village_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{villageName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{villageName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{villageName},'%')</if>
+			</if>
+			<if test="addrPro != null and addrPro != ''">
+				AND a.addr_pro = #{addrPro}
+			</if>
+			<if test="addrCity != null and addrCity != ''">
+				AND a.addr_city = #{addrCity}
+			</if>
+			<if test="addrArea != null and addrArea != ''">
+				AND a.addr_area = #{addrArea}
+			</if>
+			<if test="propertyCompanyId != null and propertyCompanyId != ''">
+				AND a.property_company_id = #{propertyCompanyId}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageInfo">
+		SELECT 
+			<include refid="villageInfoColumns"/>
+		FROM village_info a
+		<include refid="villageInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_info(
+			id,
+			village_name,
+			addr_pro,
+			addr_city,
+			addr_area,
+			company_info_id,
+			property_company_id,
+			property_company_name,
+			state,
+			phone_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageName},
+			#{addrPro},
+			#{addrCity},
+			#{addrArea},
+			#{companyInfoId},
+			#{propertyCompanyId},
+			#{propertyCompanyName},
+			#{state},
+			#{phoneNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_info SET 	
+			village_name = #{villageName},
+			addr_pro = #{addrPro},
+			addr_city = #{addrCity},
+			addr_area = #{addrArea},
+			company_info_id = #{companyInfoId},
+			property_company_id = #{propertyCompanyId},
+			property_company_name = #{propertyCompanyName},
+			state = #{state},
+			phone_num = #{phoneNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ======================================上面是生成的代码============================================ -->
+	<sql id="sysAreaColumns"> 
+		a.id AS "id", a.parent_id AS "parent.id", a.parent_ids AS "parentIds", a.name AS "name", 
+		a.sort AS "sort", a.code AS "code", a.type AS "type", a.create_by AS "createBy.id", 
+		a.create_date AS "createDate", a.update_by AS "updateBy.id", a.update_date AS "updateDate", 
+		a.remarks AS "remarks", a.del_flag AS "delFlag", a.is_open AS "isOpen" 
+	</sql>
+	<select id="findCities" resultType="SysArea">
+		SELECT DISTINCT a.id,a.name
+		 FROM sys_area a,village_info v
+		<where>
+ 			a.id=v.Addr_City and a.type=2 and v.State=0
+ 		</where>
+ 		ORDER BY a.create_date DESC
+	</select>
+	
+	<select id="findCityVillageList" resultType="VillageInfo">
+		SELECT 
+			<include refid="villageInfoColumns"/>
+		FROM village_info a
+		<include refid="villageInfoJoins"/>
+		<where>
+			a.del_flag = 0 and a.Addr_City=#{addrCity} and State=0
+		</where>
+				ORDER BY a.update_date DESC
+	</select>
+	<!-- 获取用户上次选择楼盘所在的城市 -->
+	<select id="getAccountCityID" resultType="String">
+		SELECT v.Addr_City from village_info v,account a 
+		<where>
+			v.id=a.village_info_id AND a.ID=#{accountID}
+		</where>
+	</select>
+</mapper>

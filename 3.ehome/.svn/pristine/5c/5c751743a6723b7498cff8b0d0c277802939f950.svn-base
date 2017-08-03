@@ -1,0 +1,63 @@
+# Output pattern : date [thread] priority category - message   FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 
+log4j.rootLogger=WARN, Console, RollingFile
+
+#Console
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%d %-5p [%c{5}] - %m%n
+
+#RollingFile
+log4j.appender.RollingFile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.RollingFile.File=../logs/itssite/itssite.log
+log4j.appender.RollingFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.RollingFile.layout.ConversionPattern=%d [%t] %-5p [%c] - %m%n
+
+#log4j.logger.java.sql=DEBUG
+
+#Springframework level
+#log4j.logger.org.springframework=ERROR
+
+#Hibernate level
+#log4j.logger.org.hibernate=ERROR
+#log4j.logger.org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory=ERROR
+#log4j.logger.org.hibernate.search.impl.ConfigContext=ERROR
+#log4j.logger.net.sf.ehcache.config.CacheConfiguration=ERROR
+
+#Project defalult level
+#log4j.logger.org.activiti.engine.impl.persistence=DEBUG
+#log4j.logger.org.apache.shiro=DEBUG
+log4j.logger.com.thinkgem.itssite=INFO
+log4j.logger.com.its.common.security.shiro=WARN
+log4j.logger.com.its.common.utils.JedisUtils=WARN
+log4j.logger.com.its.modules.sys.web.LoginController=WARN
+log4j.logger.com.its.modules.oa.dao.OaNotifyDao.findCount=WARN
+
+
+# BusinessBalanceTask BusinessBalanceService LogFile configure
+# true\u65f6\uff0c\u8fd9\u4e2a\u65e5\u5fd7\u4f1a\u540c\u6b65\u8f93\u51fa\u5230\u5176\u5b83\u65e5\u5fd7\u91cc\u3002\u4e3afalse\u65f6\uff0c\u5c31\u4f1a\u53ea\u8f93\u51fa\u5230\u8fd9\u4e00\u4e2a\u6587\u4ef6\u91cc
+log4j.additivity.com.its.modules.task.BusinessBalanceTask=true
+log4j.additivity.com.its.modules.balance.service.BusinessBalanceService=true
+log4j.logger.com.its.modules.task.BusinessBalanceTask= INFO, BusinessBalanceTaskLog
+log4j.logger.com.its.modules.balance.service.BusinessBalanceService= INFO, BusinessBalanceTaskLog
+log4j.appender.BusinessBalanceTaskLog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.BusinessBalanceTaskLog.File=../logs/itssite/BusinessBalanceTask.log
+log4j.appender.BusinessBalanceTaskLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.BusinessBalanceTaskLog.layout.ConversionPattern=%d [%t] %-5p [%c] - %m%n
+
+log4j.additivity.com.its.modules.task.BuildingTask=true
+log4j.additivity.com.its.modules.village.service.BuildingInfoService=true
+log4j.logger.com.its.modules.task.BuildingTask= INFO, BuildingTaskLog
+log4j.logger.com.its.modules.village.service.BuildingInfoService= INFO, BuildingTaskLog
+log4j.appender.BuildingTaskLog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.BuildingTaskLog.File=../logs/itssite/BuildingTask.log
+log4j.appender.BuildingTaskLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.BuildingTaskLog.layout.ConversionPattern=%d [%t] %-5p [%c] - %m%n
+
+og4j.additivity.com.its.modules.task.RoomTask=true
+log4j.additivity.com.its.modules.account.service.RoomCertifyService=true
+log4j.logger.com.its.modules.task.RoomTask= INFO, RoomTaskLog
+log4j.logger.com.its.modules.account.service.RoomCertifyService= INFO, RoomTaskLog
+log4j.appender.RoomTaskLog=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.RoomTaskLog.File=../logs/itssite/RoomTask.log
+log4j.appender.RoomTaskLog.layout=org.apache.log4j.PatternLayout
+log4j.appender.RoomTaskLog.layout.ConversionPattern=%d [%t] %-5p [%c] - %m%n

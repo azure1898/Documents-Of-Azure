@@ -1,0 +1,39 @@
+{
+"code" : 1000,
+"data" : [{
+  "subjectList":[{
+		"subjectId":"123456",
+ 		"subjectName":"#装修作业#"
+	}],
+  "userName":"蓝色理想",
+  "headPicSrc":"../../images/pic01.jpg",
+  "createTime":"昨天 18:30",
+  "speakContent":"装修房子是个苦差事啊，晒个图~ @优米的米",
+  "countForword":123,
+  "countComment":456,
+  "countPraise":789,
+  "isPraise":0,
+   "imgList":[{ 
+   "imgUrl":"../../images/pic01.jpg" 
+},{ 
+   "imgUrl":"../../images/pic01.jpg" 
+},{ 
+   "imgUrl":"../../images/pic01.jpg" 
+}]
+},{
+  "subjectList":[{
+		"subjectId":"123456",
+ 		"subjectName":"#装修作业#"
+	}],
+  "userName":"蓝色理想",
+  "headPicSrc":"../../images/pic01.jpg",
+  "createTime":"昨天 18:30",
+  "speakContent":"装修房子是个苦差事啊，晒个图~ @优米的米",
+  "countForword":123,
+  "countComment":456,
+  "countPraise":789,
+  "isPraise":0,
+   "imgList":[]
+}],
+"message" : ""
+}

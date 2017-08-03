@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.ServiceInfoDao">
+    
+	<sql id="serviceInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.sort_info_id AS "sortInfoId",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.sell_count AS "sellCount",
+		a.base_unit AS "baseUnit",
+		a.is_base AS "isBase",
+		a.content AS "content",
+		a.quota AS "quota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.state AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="serviceInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="ServiceInfo">
+		SELECT 
+			<include refid="serviceInfoColumns"/>
+		FROM service_info a
+		<include refid="serviceInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ServiceInfo">
+		SELECT 
+			<include refid="serviceInfoColumns"/>
+		FROM service_info a
+		<include refid="serviceInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ServiceInfo">
+		SELECT 
+			<include refid="serviceInfoColumns"/>
+		FROM service_info a
+		<include refid="serviceInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO service_info(
+			id,
+			business_info_id,
+			serial_numbers,
+			name,
+			sort_info_id,
+			imgs,
+			base_price,
+			benefit_price,
+			stock,
+			sell_count,
+			base_unit,
+			is_base,
+			content,
+			quota,
+			quota_num,
+			recommend,
+			state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{serialNumbers},
+			#{name},
+			#{sortInfoId},
+			#{imgs},
+			#{basePrice},
+			#{benefitPrice},
+			#{stock},
+			#{sellCount},
+			#{baseUnit},
+			#{isBase},
+			#{content},
+			#{quota},
+			#{quotaNum},
+			#{recommend},
+			#{state},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE service_info SET 	
+			business_info_id = #{businessInfoId},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			sort_info_id = #{sortInfoId},
+			imgs = #{imgs},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			stock = #{stock},
+			sell_count = #{sellCount},
+			base_unit = #{baseUnit},
+			is_base = #{isBase},
+			content = #{content},
+			quota = #{quota},
+			quota_num = #{quotaNum},
+			recommend = #{recommend},
+			state = #{state},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE service_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据商户信息ID获取商家服务项目（不包含下架或删除的服务） -->
+	<select id="getByBusinessId" resultType="ServiceInfo">
+		SELECT DISTINCT
+			<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<where>
+			a.state = 1 AND a.del_flag = 0
+			AND a.business_info_id = #{businessInfoId}
+		</where>
+		ORDER BY a.recommend desc, a.create_date desc
+		LIMIT #{showCount}
+	</select>
+	
+	<!-- 根据商家ID和服务分类ID获取商家服务项目（不包含下架或删除的服务） -->
+	<select id="getByBusinessIdAndSortInfoId" parameterType="ServiceInfo" resultType="ServiceInfo">
+		SELECT DISTINCT
+			<include refid="serviceInfoColumns" />
+		FROM
+			service_info a
+		WHERE
+			a.state = '1'
+		AND a.del_flag = '0'
+		AND a.business_info_id = #{businessInfoId}
+		<if test="sortInfoId != null and sortInfoId != ''">
+			AND a.Sort_Info_ID = #{sortInfoId}
+		</if>
+		ORDER BY
+			a.recommend DESC,
+			a.create_date DESC
+	</select>
+	
+</mapper>

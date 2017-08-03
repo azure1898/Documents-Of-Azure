@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.PropertyDealDao">
+    
+    <sql id="PropertyDealColumns">
+    	a.ID AS "id",
+    	b.Company_Name AS "companyName",
+    	c.Module_Name AS "moduleName",
+    	a.Property_Company_ID AS "propertyCompanyId",
+    	a.Module_ID AS "moduleManageId",
+    	a.Village_Info_ID AS "villageInfoId",
+    	a.Order_No AS "orderNo",
+    	a.Order_Money AS "orderMoney",
+    	a.Discount_Money AS "discountMoney",
+    	a.Pay_Type AS "payType",
+    	a.Pay_Money AS "payMoney",
+    	a.Pay_State AS "payState",
+    	a.Terminal_Source AS "terminalSource",
+    	a.create_date AS "createDate",
+    	a.update_date AS "updateDate",
+    	a.del_flag AS "delFlag"
+	</sql>
+    
+    <sql id="PropertyDealJoins">
+    </sql>
+    
+    <select id="get" resultType="PropertyDeal">
+    	select * from property_bill where id=#{id}
+    </select>
+    
+    <select id="findList" resultType="PropertyDeal">
+       select <include refid="PropertyDealColumns" /> from Property_Bill a
+		left join Property_Company b on (a.Property_Company_ID=b.ID)
+		left join Module_Manage c on (a.Module_ID=c.ID)
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="beginCreateDate != null and beginCreateDate != ''">
+                AND a.create_date >= #{beginCreateDate}
+            </if>
+             <if test="endCreateDate != null and endCreateDate != ''">
+                <![CDATA[AND a.create_date <= #{endCreateDate}]]>
+            </if>
+            <if test="propertyCompanyId != null and propertyCompanyId != ''">
+                AND a.Property_Company_ID = #{propertyCompanyId}
+            </if>
+           <if test="villageInfoId != null and villageInfoId != ''">
+                AND a.Village_Info_ID = #{villageInfoId}
+            </if>
+            <if test="moduleManageId != null and moduleManageId != ''">
+                AND a.Module_ID = #{moduleManageId}
+            </if>
+            <if test="terminalSource != null and terminalSource != ''">
+                AND a.Terminal_Source = #{terminalSource}
+            </if>
+            <if test="payType != null and payType != ''">
+                AND a.Pay_Type = #{payType}
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                AND a.Order_No = #{orderNo}
+            </if>
+            
+            <!--  
+             <if test="filter != null and filter != ''">
+                AND (
+                	a.orderNo like
+					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+					or b.business_name like
+					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+                )
+            </if>
+            -->
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="PropertyDeal">
+        SELECT 
+            <include refid="PropertyDealColumns"/>
+        FROM order_refund_info a
+        <include refid="PropertyDealJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <resultMap type="java.util.HashMap" id="totalMap">
+    	<result column="orderMoney" property="orderMoney"/>
+    	<result column="discountMoney" property="discountMoney"/>
+    	<result column="payMoney" property="payMoney"/>
+    </resultMap>
+    
+   <select id="getTotal" parameterType="PropertyDeal" resultMap="totalMap">
+    	select sum(d.orderMoney) AS "orderMoney",sum(d.discountMoney) AS "discountMoney",sum(d.payMoney) AS "payMoney" from(
+    		 select <include refid="PropertyDealColumns" /> from Property_Bill a
+			left join Property_Company b on (a.Property_Company_ID=b.ID)
+			left join Module_Manage c on (a.Module_ID=c.ID)
+	        <where>
+	            a.del_flag = #{DEL_FLAG_NORMAL}
+	            <if test="beginCreateDate != null and beginCreateDate != ''">
+	                AND a.create_date >= #{beginCreateDate}
+	            </if>
+	             <if test="endCreateDate != null and endCreateDate != ''">
+	                <![CDATA[AND a.create_date <= #{endCreateDate}]]>
+	            </if>
+	            <if test="propertyCompanyId != null and propertyCompanyId != ''">
+	                AND a.Property_Company_ID = #{propertyCompanyId}
+	            </if>
+	           <if test="villageInfoId != null and villageInfoId != ''">
+	                AND a.Village_Info_ID = #{villageInfoId}
+	            </if>
+	            <if test="moduleManageId != null and moduleManageId != ''">
+	                AND a.Module_ID = #{moduleManageId}
+	            </if>
+	            <if test="terminalSource != null and terminalSource != ''">
+	                AND a.Terminal_Source = #{terminalSource}
+	            </if>
+	            <if test="payType != null and payType != ''">
+	                AND a.Pay_Type = #{payType}
+	            </if>
+	            <if test="orderNo != null and orderNo != ''">
+	                AND a.Order_No = #{orderNo}
+	            </if>
+	        </where>
+    	)d
+    </select>
+    
+    
+    <resultMap type="PropertyDeal" id="propertyDealMap">
+    	<result column="Order_No" property="orderNo"/>
+    	<result column="Nickname" property="nickName"/>
+    	<result column="Phone_Num" property="phoneNum"/>
+    	<result column="remarks" property="remarks"/>
+    	<result column="Pay_Money" property="payMoney"/>
+    	<result column="Pay_State" property="payState"/>
+    	<result column="create_date" property="createDate"/>
+    	<result column="Pay_Type" property="payType"/>
+    	<result column="Pay_User_Name" property="payUserName"/>
+    	<result column="Discount_ID" property="discountId"/>
+    	<result column="Discount_Money" property="discountMoney"/>
+    	<result column="Order_Money" property="orderMoney"/>
+    	<result column="Pay_Time" property="payTime"/>
+    	<association property="propertyBillDetails" column="ID" select="getPropertyBillDetails" />
+    </resultMap>
+    <select id="getAll" parameterType="String" resultMap="propertyDealMap">
+    	select a.ID ID,a.Order_No Order_No,b.Nickname Nickname,b.Phone_Num Phone_Num,a.remarks remarks,a.Pay_Money Pay_Money,a.Pay_State Pay_State,
+    	a.create_date create_date,a.Pay_Type Pay_Type,a.Pay_User_Name Pay_User_Name,a.Discount_ID Discount_ID,a.Discount_Money Discount_Money,
+    	a.Order_Money Order_Money,a.Pay_Time Pay_Time from property_bill a left JOIN account b on(a.Account_ID=b.id)
+    	where a.id=#{id}
+    </select>
+    <resultMap type="PropertyBillDetail" id="propertyBillDetailMap">
+    	<result column="Room_Certify_ID" property="roomCertifyId"/>
+   		<result column="Period" property="period"/>
+		<result column="Fee_Type" property="feeType"/>
+		<result column="Money" property="money"/>
+    	<result column="create_date" property="createDate"/>
+		<result column="update_date" property="updateDate"/>
+		<result column="remarks" property="remarks"/>
+    </resultMap>
+    <select id="getPropertyBillDetails" parameterType="String" resultMap="propertyBillDetailMap">
+    	select * from property_bill_detail where Property_Bill_ID=#{id} order by update_date desc
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,28 @@
+{"code" : 1000,
+"data" : {
+  "businessID":"course1",
+  "businessName":"海绵兴趣班",
+  "contactPerson":"普及小管家",
+  "contactPhone":"13521004205",
+ "courseID":"course1_2",
+  "courseName":"3D打印兴趣课",
+"discountedPrice":2000.00,
+"classNumber":12,
+"classTime":"2017-07-01至02-10",
+"classLocation":"璟湖城会所二层瑜伽室",
+"coupons":[{
+   "couponID":"q_1",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+},{
+   "couponID":"q_1",
+   "couponMoney":"2",
+   "couponName":"通用券",
+   "couponCondition":"满20元可用",
+   "couponStatus":""
+}]
+},
+"message" : ""
+} 

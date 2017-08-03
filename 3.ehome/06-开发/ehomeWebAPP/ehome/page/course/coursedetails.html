@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>课程详情</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="details_top">
+				<div class="container-fluid top">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn cursor" onClick="javascript :history.go(-1)"></span>
+						</div>
+						<div class="fr">
+							<span class="collection_btn" id="collection"></span>
+						</div>
+					</div>
+				</div>
+				<div id="myCarousel" class="carousel slide">
+					<ol class="carousel-indicators">
+						<li data-target="#myCarousel" v-for="(image,index) in items.courseImage" :data-slide-to="index" :class="{'active':index==0}"></li>
+
+					</ol>
+					<ul class="carousel-inner">
+						<li class="item" v-for="(image,index) in items.courseImage" :class="{'active':index==0}"><img :src="image.url" /></li>
+
+					</ul>
+				</div>
+
+			</div>
+			<div class="clear"></div>
+			<div class="mt20 clearfix">
+				<div class="details_title_box">
+					<div class="plr10" v-bind:data-id="items.courseID">
+						<div class="details_title" v-html="items.courseName"></div>
+						<div class="mt4 clearfix">						
+								<div class="font_orange font18 fl" >{{items.discountedPrice|formatDecimal}}</div>
+								<div class="font14 fl ml10 mt4"><del>{{items.originalPrice|formatDecimal}}</del></div>
+							<div class="goods_num fr"></div>
+						</div>
+
+					</div>
+				</div>
+				<div class=" mt10"></div>
+				<div class="details_sjxx" style="border-bottom:1px solid #ececec;">
+					<p>课&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;次：{{items.classNumber}}</p>
+					<p>限制人数：{{items.limitPeople}}</p>
+					<p>上课时间：{{items.classTime}}</p>
+					<p>上课地点：{{items.classLocation}}</p>
+
+				</div>
+				<div class="details_title_box mt10">
+					<div class="plr10 clearfix">
+						<div class="shop_name" v-bind:data-id="items.businessID">
+							<a :href="urlList.list+items.businessID"><img src="../../images/dian.png">{{items.businessName}}</a>
+						</div>
+						<div class="shop_call">
+							<a :href="'tel:'+items.businessPhone"><img src="../../images/phone.png">联系商家</a>
+						</div>
+					</div>
+					<div class="detail_twobtn">
+						<a href="#" class="sc_business">收藏商家</a>
+						<a :href="urlList.index+items.businessID" class="in_business">进入商家</a>
+					</div>
+				</div>
+				<div class="xq_jstitle">课程介绍</div>
+				<div class="details_sjxx">
+					<p>.详细介绍：
+						<div v-html="items.courseDesc"></div>
+					</p>
+				</div>
+
+			</div>
+			<div class="height44"></div>
+			<div class="business_bottom">
+				<div class="ser_zbtn" id="change_coursedetail" @click="change_stockNumbe()"><a :href="Change?urlList.order+items.courseID+'&businessID='+items.businessID:'#'"></a>					
+				</div>
+			</div>
+		</div> 
+	</body>
+
+	
+	<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+	<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/cursom/course/coursedetails.js" type="text/javascript" charset="utf-8"></script>
+	
+	
+</html>

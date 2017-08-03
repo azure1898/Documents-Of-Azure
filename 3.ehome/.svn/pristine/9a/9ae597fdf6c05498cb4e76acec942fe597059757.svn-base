@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.operation.dao.CouponManageUsersDao">
+    
+	<sql id="couponManageUsersColumns">
+		a.id AS "id",
+		a.coupon_manage_id AS "couponManageId",
+		a.account AS "account",
+		a.register_time AS "registerTime",
+		a.exist_flag AS "existFlag",
+		a.account_id AS "accountId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="couponManageUsersJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponManageUsers">
+		SELECT 
+			<include refid="couponManageUsersColumns"/>
+		FROM coupon_manage_users a
+		<include refid="couponManageUsersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponManageUsers">
+		SELECT 
+			<include refid="couponManageUsersColumns"/>
+		FROM coupon_manage_users a
+		<include refid="couponManageUsersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="couponManageId != null and couponManageId != ''">
+				AND a.coupon_manage_id = #{couponManageId}
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account = #{account}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponManageUsers">
+		SELECT 
+			<include refid="couponManageUsersColumns"/>
+		FROM coupon_manage_users a
+		<include refid="couponManageUsersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_manage_users(
+			id,
+			coupon_manage_id,
+			account,
+			register_time,
+			exist_flag,
+			account_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{couponManageId},
+			#{account},
+			#{registerTime},
+			#{existFlag},
+			#{accountId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_manage_users SET 	
+			coupon_manage_id = #{couponManageId},
+			account = #{account},
+			register_time = #{registerTime},
+			exist_flag = #{existFlag},
+			account_id = #{accountId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE coupon_manage_users SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+    <update id="updateCouponManageId">
+        UPDATE coupon_manage_users SET  
+            coupon_manage_id = #{couponManageId}
+        WHERE coupon_manage_id = #{lastId}
+    </update>
+	
+</mapper>

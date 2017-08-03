@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.operation.dao.GroupPurchasetimeDao">
+    
+	<sql id="groupPurchasetimeColumns">
+		a.id AS "id",
+		a.group_purchase_id AS "groupPurchaseId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.stock_num AS "stockNum",
+		a.sale_num AS "saleNum",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="groupPurchasetimeJoins">
+	
+	</sql>
+    
+	<select id="get" resultType="GroupPurchasetime">
+		SELECT 
+			<include refid="groupPurchasetimeColumns"/>
+		FROM group_purchasetime a
+		<include refid="groupPurchasetimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<!-- 团购活动删除用，取团购时间条数 -->
+	<select id="countTime" resultType="java.lang.Integer">
+		SELECT 
+			count(id)
+		FROM group_purchasetime a
+		
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+			<if test="id != null and id != ''">
+		      AND a.id = #{id}
+		    </if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="GroupPurchasetime">
+		SELECT 
+			a.id AS "id",
+			a.group_purchase_id AS "groupPurchaseId",
+			a.start_time AS "startTime",
+			a.end_time AS "endTime",
+			a.stock_num AS "stockNum",
+			a.sale_num AS "saleNum",
+			(case 
+			    when <![CDATA[DATE_FORMAT(now(), '%Y-%m-%d %H:%i:%s') < DATE_FORMAT(a.start_time, '%Y-%m-%d %H:%i:%s')]]> then "0" 
+				when <![CDATA[(DATE_FORMAT(now(), '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(a.start_time, '%Y-%m-%d %H:%i:%s') and DATE_FORMAT(now(), '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s'))]]> then "1"  
+				when <![CDATA[DATE_FORMAT(now(), '%Y-%m-%d %H:%i:%s') > DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s')]]> then "2"  
+				else "3" end) AS "groupState",
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag"
+			FROM group_purchasetime a
+			JOIN group_purchase b ON a.group_purchase_id = b.id AND b.del_flag=0
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="groupPurchaseId != null and groupPurchaseId != ''">
+				AND a.group_purchase_id = #{groupPurchaseId}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				<![CDATA[
+				    AND DATE_FORMAT(a.start_time, '%Y-%m-%d') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+				]]>
+			</if>
+			<if test="endTime != null and endTime != ''">
+				<![CDATA[
+				    AND DATE_FORMAT(a.start_time, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+				]]>
+			</if>	
+		</where>
+	
+		ORDER BY a.start_time
+
+	</select>
+	
+	<select id="findAllList" resultType="GroupPurchasetime">
+		SELECT 
+			<include refid="groupPurchasetimeColumns"/>
+		FROM group_purchasetime a
+		<include refid="groupPurchasetimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO group_purchasetime(
+			id,
+			group_purchase_id,
+			start_time,
+			end_time,
+			stock_num,
+			sale_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{groupPurchaseId},
+			#{startTime},
+			#{endTime},
+			#{stockNum},
+			#{saleNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE group_purchasetime SET 	
+			group_purchase_id = #{groupPurchaseId},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			stock_num = #{stockNum},
+			sale_num = #{saleNum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE group_purchasetime SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteGroupPurchasetime">
+		DELETE FROM group_purchasetime 
+		WHERE 
+			<if test="groupPurchaseId != null and groupPurchaseId != ''">
+				Group_Purchase_ID = #{groupPurchaseId}
+			</if>
+	</update>
+	
+</mapper>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.CouponManageDao">
+    
+	<sql id="couponManageColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.coupon_name AS "couponName",
+		a.coupon_type AS "couponType",
+		a.coupon_money AS "couponMoney",
+		a.upper_limit_money AS "upperLimitMoney",
+		a.use_rule AS "useRule",
+		a.full_use_money AS "fullUseMoney",
+		a.grant_type AS "grantType",
+		a.limited_num AS "limitedNum",
+		a.receive_num AS "receiveNum",
+		a.use_scope AS "useScope",
+		a.use_object AS "useObject",
+		a.share_flag AS "shareFlag",
+		a.validity_type AS "validityType",
+		a.validity_start_time AS "validityStartTime",
+		a.validity_end_time AS "validityEndTime",
+		a.validity_days AS "validityDays",
+		a.receive_type AS "receiveType",
+		a.receive_rule AS "receiveRule",
+		a.give_rule AS "giveRule",
+		a.full_give_rule AS "fullGiveRule",
+		a.push_obj_type AS "pushObjType",
+		a.time_scope AS "timeScope",
+		a.time_scope_start_time AS "timeScopeStartTime",
+		a.time_scope_end_time AS "timeScopeEndTime",
+		a.order_type AS "orderType",
+		a.user_describes AS "userDescribes",
+		a.active_start_time AS "activeStartTime",
+		a.active_end_time AS "activeEndTime",
+		a.active_state AS "activeState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="couponManageJoins">
+	</sql>
+    
+	<select id="get" resultType="CouponManage">
+		SELECT 
+			<include refid="couponManageColumns"/>
+		FROM coupon_manage a
+		<include refid="couponManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CouponManage">
+		SELECT 
+			<include refid="couponManageColumns"/>
+		FROM coupon_manage a
+		<include refid="couponManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CouponManage">
+		SELECT 
+			<include refid="couponManageColumns"/>
+		FROM coupon_manage a
+		<include refid="couponManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO coupon_manage(
+			id,
+			village_info_id,
+			coupon_name,
+			coupon_type,
+			coupon_money,
+			upper_limit_money,
+			use_rule,
+			full_use_money,
+			grant_type,
+			limited_num,
+			receive_num,
+			use_scope,
+			use_object,
+			share_flag,
+			validity_type,
+			validity_start_time,
+			validity_end_time,
+			validity_days,
+			receive_type,
+			receive_rule,
+			give_rule,
+			full_give_rule,
+			push_obj_type,
+			time_scope,
+			time_scope_start_time,
+			time_scope_end_time,
+			order_type,
+			user_describes,
+			active_start_time,
+			active_end_time,
+			active_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{couponName},
+			#{couponType},
+			#{couponMoney},
+			#{upperLimitMoney},
+			#{useRule},
+			#{fullUseMoney},
+			#{grantType},
+			#{limitedNum},
+			#{receiveNum},
+			#{useScope},
+			#{useObject},
+			#{shareFlag},
+			#{validityType},
+			#{validityStartTime},
+			#{validityEndTime},
+			#{validityDays},
+			#{receiveType},
+			#{receiveRule},
+			#{giveRule},
+			#{fullGiveRule},
+			#{pushObjType},
+			#{timeScope},
+			#{timeScopeStartTime},
+			#{timeScopeEndTime},
+			#{orderType},
+			#{userDescribes},
+			#{activeStartTime},
+			#{activeEndTime},
+			#{activeState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE coupon_manage SET 	
+			village_info_id = #{villageInfoId},
+			coupon_name = #{couponName},
+			coupon_type = #{couponType},
+			coupon_money = #{couponMoney},
+			upper_limit_money = #{upperLimitMoney},
+			use_rule = #{useRule},
+			full_use_money = #{fullUseMoney},
+			grant_type = #{grantType},
+			limited_num = #{limitedNum},
+			receive_num = #{receiveNum},
+			use_scope = #{useScope},
+			use_object = #{useObject},
+			share_flag = #{shareFlag},
+			validity_type = #{validityType},
+			validity_start_time = #{validityStartTime},
+			validity_end_time = #{validityEndTime},
+			validity_days = #{validityDays},
+			receive_type = #{receiveType},
+			receive_rule = #{receiveRule},
+			give_rule = #{giveRule},
+			full_give_rule = #{fullGiveRule},
+			push_obj_type = #{pushObjType},
+			time_scope = #{timeScope},
+			time_scope_start_time = #{timeScopeStartTime},
+			time_scope_end_time = #{timeScopeEndTime},
+			order_type = #{orderType},
+			user_describes = #{userDescribes},
+			active_start_time = #{activeStartTime},
+			active_end_time = #{activeEndTime},
+			active_state = #{activeState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE coupon_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某用户某楼盘下的有效优惠券 -->
+	<select id="getValidCoupons" resultType="CouponManageBean">
+		SELECT DISTINCT
+			<include refid="couponManageColumns" />,
+			b.ID AS memberDiscountId
+		FROM
+			Coupon_Manage a,
+			Member_Discount b
+		WHERE
+			a.ID = b.Discount_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND b.Use_State = 0
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND b.Account_ID = #{accountId}
+		AND b.Valid_Start <![CDATA[<=]]> NOW()
+		AND b.Valid_End <![CDATA[>]]> NOW()
+		ORDER BY b.Obtain_Date DESC
+	</select>
+	
+	<!-- 获取某用户某楼盘下的无效优惠券（已使用、已过期、已冻结） -->
+	<select id="getInvalidCoupons" resultType="CouponManageBean">
+		SELECT DISTINCT
+			<include refid="couponManageColumns" />,
+			b.ID AS memberDiscountId,
+			b.Use_State AS useState
+		FROM
+			Coupon_Manage a,
+			Member_Discount b
+		WHERE
+			a.ID = b.Discount_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND (
+			b.Use_State IN (1, 3)
+			OR (
+				b.Use_State = 0
+				AND b.Valid_End <![CDATA[<=]]> NOW()
+			)
+		)
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND b.Account_ID = #{accountId}
+		ORDER BY b.Valid_End DESC
+	</select>
+	
+	<!-- 获取某楼盘下买家可领取的优惠券 -->
+	<select id="getCanReceiveCoupons" resultType="CouponManage">
+		SELECT DISTINCT
+			<include refid="couponManageColumns" />
+		FROM
+			Coupon_Manage a
+		WHERE
+			a.del_flag = 0
+		AND a.Receive_Type = 0
+		AND a.Active_State <![CDATA[<>]]> 3
+		AND a.Active_Start_Time <![CDATA[<=]]> NOW()
+		AND a.Active_End_Time > NOW()
+		AND a.Village_Info_ID = #{villageInfoId}
+		ORDER BY a.create_date DESC
+	</select>
+	
+	<!-- 根据优惠券ID修改优惠券领取总量 -->
+	<update id="updateReceiveNumById">
+		UPDATE Coupon_Manage a
+		SET a.Receive_Num = #{receiveNum}
+		WHERE
+			a.del_flag = 0
+		AND a.ID = #{couponId}
+	</update>
+	
+	<!-- 获取可用的优惠券 -->
+	<select id="getEnableCoupons" resultType="CouponManageBean">
+		SELECT DISTINCT
+			<include refid="couponManageColumns" />,
+			b.ID AS memberDiscountId
+		FROM
+			Coupon_Manage a,
+			Member_Discount b
+		WHERE
+			a.ID = b.Discount_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND b.Use_State = 0
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND b.Account_ID = #{accountId}
+		AND b.Valid_Start <![CDATA[<=]]> NOW()
+		AND b.Valid_End <![CDATA[>]]> NOW()
+		AND (
+			a.Use_Scope = 0
+			OR (
+				a.Use_Scope = 1
+				AND a.Use_Object IN (
+					SELECT
+						c.ID
+					FROM
+						Module_Manage c
+					WHERE
+						c.Business_Category_Dict_Flag = 1
+					AND c.del_flag = 0
+					AND c.Business_Category_Dict_ID IN (
+						SELECT
+							e.ID
+						FROM
+							Business_CategoryInfo d,
+							Business_CategoryDict e
+						WHERE
+							d.Business_Category_Dict_ID = e.ID
+						AND d.del_flag = 0
+						AND e.del_flag = 0
+						AND e.Prod_Type = #{prodType}
+						AND d.BusinessInfo_ID = #{businessInfoId}
+					)
+				)
+			)
+			OR (
+				a.Use_Scope = 2
+				AND a.Use_Object = #{businessInfoId}
+			)
+		)
+		AND a.Share_Flag IN (${shareFlag}
+		)
+		AND (
+			a.Use_Rule = 0
+			OR (
+				a.Use_Rule = 1
+				AND a.Full_Use_Money <![CDATA[<=]]> #{totalMoney}
+			)
+		)
+	</select>
+	
+	<!-- 判断优惠券是否可用 -->
+	<select id="judgeCoupon" resultType="CouponManageBean">
+		SELECT DISTINCT
+			<include refid="couponManageColumns" />,
+			b.ID AS memberDiscountId
+		FROM
+			Coupon_Manage a,
+			Member_Discount b
+		WHERE
+			a.ID = b.Discount_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND b.Use_State = 0
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND b.Account_ID = #{accountId}
+		AND b.Valid_Start <![CDATA[<=]]> NOW()
+		AND b.Valid_End <![CDATA[>]]> NOW()
+		AND b.ID = #{memberDiscountId}
+	</select>
+	
+	<!-- 修改会员优惠券的使用状态 -->
+	<select id="updateUserState">
+		UPDATE member_discount a SET a.use_state=#{newState} WHERE a.id=#{id}
+	</select>
+	
+</mapper>

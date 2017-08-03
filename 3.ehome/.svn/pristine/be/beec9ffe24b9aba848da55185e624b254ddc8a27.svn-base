@@ -1,0 +1,13 @@
+{
+"code" : 1000,
+"data" : [{
+  "serviceID":"002",
+  "serviceName":"抽油烟机清洗",
+  "serviceImage":"../../images/service/1-2.jpg",
+  "originalPrice":12,
+"discountedPrice":12,
+  "serviceUnit":"台",
+  "url":"../../page/service/servicedetail.html?id=002"
+}],
+"message" : ""
+}

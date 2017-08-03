@@ -1,0 +1,24 @@
+{
+"code" : 1000,
+"data" : {
+  "businessID":"0001",
+  "businessName":"懒人家政",
+  "businessImage":"../../images/pic3.jpg",
+  "isNormal":1,
+	"businessLabels":[{
+  "labelName":"清洁"
+}],
+"serviceWay":"上门服务",
+"serviceCharge":"12",
+"businessHours":"9:00-18:00",
+"serviceCategory":[{
+      "cagegoryID":"1",
+      "categoryName":"卫生打扫"
+    },{
+      "cagegoryID":"2",
+      "categoryName":"电器清理"
+    }],
+"businessUrl":""
+},
+"message" : ""
+}

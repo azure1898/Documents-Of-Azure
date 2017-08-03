@@ -1,0 +1,13 @@
+{
+"code" : 1000,
+"data" : [
+{
+   "couponID":"",
+   "couponMoney":"",
+   "couponName":"",
+   "couponCondition":"",
+   "couponStatus":""
+}
+],
+"message" : ""
+}

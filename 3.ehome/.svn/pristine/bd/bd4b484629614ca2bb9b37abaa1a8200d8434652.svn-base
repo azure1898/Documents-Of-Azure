@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.OrderLessonListDao">
+    
+	<sql id="orderLessonListColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.lesson_info_id AS "lessonInfoId",
+		a.order_lesson_id AS "orderLessonId",
+		a.order_no AS "orderNo",
+		a.name AS "name",
+		a.imgs AS "imgs",
+		a.people_limit AS "peopleLimit",
+		a.lesson_count AS "lessonCount",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.address AS "address",
+		a.content AS "content",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.pay_sum_money AS "paySumMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderLessonListJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderLessonList">
+		SELECT 
+			<include refid="orderLessonListColumns"/>
+		FROM order_lesson_list a
+		<include refid="orderLessonListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderLessonList">
+		SELECT 
+			<include refid="orderLessonListColumns"/>
+		FROM order_lesson_list a
+		<include refid="orderLessonListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderLessonList">
+		SELECT 
+			<include refid="orderLessonListColumns"/>
+		FROM order_lesson_list a
+		<include refid="orderLessonListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_lesson_list(
+			id,
+			business_info_id,
+			lesson_info_id,
+			order_lesson_id,
+			order_no,
+			name,
+			imgs,
+			people_limit,
+			lesson_count,
+			start_time,
+			end_time,
+			address,
+			content,
+			base_price,
+			benefit_price,
+			pay_sum_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{lessonInfoId},
+			#{orderLessonId},
+			#{orderNo},
+			#{name},
+			#{imgs},
+			#{peopleLimit},
+			#{lessonCount},
+			#{startTime},
+			#{endTime},
+			#{address},
+			#{content},
+			#{basePrice},
+			#{benefitPrice},
+			#{paySumMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_lesson_list SET 	
+			business_info_id = #{businessInfoId},
+			lesson_info_id = #{lessonInfoId},
+			order_lesson_id = #{orderLessonId},
+			order_no = #{orderNo},
+			name = #{name},
+			imgs = #{imgs},
+			people_limit = #{peopleLimit},
+			lesson_count = #{lessonCount},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			address = #{address},
+			content = #{content},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			pay_sum_money = #{paySumMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_lesson_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

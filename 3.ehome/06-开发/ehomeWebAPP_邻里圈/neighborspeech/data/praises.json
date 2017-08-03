@@ -1,0 +1,20 @@
+{
+"code" : 1000,
+"data" : [{
+"id":"001",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"createTime":""
+},{
+"id":"002",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"createTime":""
+},{
+"userName":"蓝色理想",
+"id":"003",
+"headPicSrc":"../../images/pic01.jpg",
+"createTime":""
+}],
+"message" : ""
+}

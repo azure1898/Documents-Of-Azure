@@ -1,0 +1,34 @@
+{
+
+"code":1000,
+"data":{
+"courseID":"course2_2",
+  "courseName":"韩语外教培训课<span class='font14'>（限购一件）</span>",
+"courseImage":[
+  {
+     "url":"../../images/course/c2_2.jpg"
+  },
+   {
+     "url":"../../images/course/c2_3.jpg"
+  },
+   {
+     "url":"../../images/course/c2_1.jpg"
+  }],
+"originalPrice":2000.00,
+"discountedPrice":2300.00,
+"classNumber":12,
+"limitPeople":20,
+"classTime":"9:00-18:00",
+"classLocation":"昌珉大厦3层304",
+  "courseDesc":"韩语外教培训课，丰富孩子的闲暇时光接触新奇的世界带给孩子不一样的玩乐体验！<table width='90%' border='1' style='margin:0 5%;'><tr style='background:#f6f6f6;'><td align='center' valign='middle'>日期</td><td align='center' valign='middle'>时间</td><td align='center' valign='middle'>课程</td></tr> <tr><td align='center' valign='middle'>05-08</td><td align='center' valign='middle'>18:00-19:00</td><td align='center' valign='middle'>普拉提</td> </tr><tr><td align='center' valign='middle'>05-08</td><td align='center' valign='middle'>18:00-19:00</td> <td align='center' valign='middle'>普拉提</td></tr></table>",
+
+  "businessID":"course2",
+  "businessName":"贝瑞母婴店",
+  "isNormal":1,
+  "businessPhone":"tel:13521004205",
+  "bussinessUrl":"../../page/course/courseindex.html?id=course2",
+    "stockNumber":""
+  
+},
+"message" : ""
+}

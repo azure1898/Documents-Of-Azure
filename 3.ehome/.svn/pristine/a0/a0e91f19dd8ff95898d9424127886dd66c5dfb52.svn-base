@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>确认订单</title>
+
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- page -->
+    <link href="../../css/cursom/business.css" rel="stylesheet">
+  </head>
+  <body>
+  	<div id="app" v-cloak>
+  		<div class="grey_top">
+  			<a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
+  			确认订单
+  		</div>
+  		<div class="order_whitebox">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">
+  						<p>收货人：<span>{{order.contactPerson}}</span><span class="plr10">{{order.contactPhone}}</span></p>
+  						<p>收货地址：{{order.contactAddress}}</p>
+  					</div>
+  					<div class="list_inbtn mt10"></div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="order_whitebox">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">配送时间</div>
+  					<div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
+  					<div class="fr">{{deliveryDate.label}}</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="line_ec mt10"></div>
+  		<div class="order_whitebox">
+  			<div class="plr10">
+  				<strong>{{order.businessName}}</strong>
+  			</div>
+  		</div>
+  		<div class="plr10 sort_list" v-for="commodity in order.commodities">
+  			<div class="goods_list">
+  				<div class="goods_pic">
+  					<img v-bind:src="commodity.commodityImage">
+  				</div>
+  				<div class="goods_right">
+  					<div class="goods_name">{{commodity.commodityName}}</div>
+  					<div class="">
+  						<div class="fl">
+  							<div class="font22 mt10">&times;{{commodity.commodityNumber}}</div>
+  						</div>
+  						<div class="goods_num fr">{{commodity.commodityPrice | formatDecimal}}</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="order_whitebox">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">配送费</div>
+  					<div class="fr">{{order.deliveryFee | formatDecimal}}</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="order_whitebox" v-if="order.activityDiscounted > 0">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">活动优惠</div>
+  					<div class="fr">-{{order.activityDiscounted | formatDecimal}}</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="line_ec mt10"></div>
+  		<div class="order_whitebox" v-if="order.coupons && order.coupons.length > 0">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">优惠券</div>
+  					<div class="list_inbtn fr"></div>
+  					<div class="fr font_orange">-¥0</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="order_whitebox">
+  			<div class="plr10">
+  				<div class="goods_receipt clearfix">
+  					<div class="fl">您的留言：</div>
+  					<div class="fr font_orange"></div>
+  				</div>
+  			</div>
+  		</div>
+  		<!--<div class="ts_txt">满20减2，还差5元</div>-->
+  		<div class="business_bottom">
+  			<div class="total_amount">待支付：{{order.totalMoney | formatDecimal}}</div>
+  			<div class="total_amount">优惠：{{order.activityDiscounted | formatDecimal}}</div>
+  			<div class="business_zbtn"><a href="#" v-on:click="submitOrder">去结算</a></div>
+  		</div>
+  		<div id="timeModal" class="modal fade" tabindex="-1" role="dialog">
+  			<div class="modal-dialog" role="document">
+  				<div class="modal-content">
+  					<div class="modal-header">
+  						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  						<h4 class="modal-title fontcenter">选择配送时间</h4>
+  					</div>
+  					<div class="modal-body nopadding">
+  						<div class="business_mainmenu2" style="border-top:none;">
+  							<ul>
+  								<li v-for="(delivery,index) in order.deliveryDate" v-bind:class="index==0?'selected':''" v-on:click="changeDelivery(delivery)">
+  									<a href="#">{{delivery.desc}}</a>
+  								</li>
+  							</ul>
+  						</div>
+  						<div class="business_goods_box" >
+  							<div class="businessmenu_choice2 colorbg" v-for="period in timePeriod" v-if="period.isImmediate" v-on:click="timeSelected(period)">立即配送（预计{{period.end}}送达）</div>
+  							<div class="plr10">
+  								<div class="Selection_time_m">
+  									<ul>
+  										<li v-for="period in timePeriod" v-if="!period.isImmediate"><a href="#" v-on:click="timeSelected(period)">{{period.start}}~{{period.end}}</a></li>
+  									</ul>
+  									<div class="clear"></div>
+  								</div>
+  							</div>
+  						</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  	</div> 	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../../js/static/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/static/bootstrap.min.js"></script>
+    <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/business/commodityorder.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    $(function(){   	
+    	$("#choose").click(function(){
+    		$(".chooseTime").css("display","block")
+    	})
+    })   	
+    </script>
+  </body>
+</html>

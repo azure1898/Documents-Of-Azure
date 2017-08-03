@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>官方发言</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+<div class="business_top3">
+    <div class="container-fluid">
+    <div class="h20"></div>
+    <div class="topbtn_region">
+    <div class="fl">
+    <span class="back_btn"></span>
+    </div>
+    <div class="fr">
+    <span class="collection_btn2">+取消关注</span>
+    </div>
+    </div>
+    <div class="business_price_box">
+    <div class="personal_top_img"><img src="images/pic01.jpg" width="110" height="110"></div>
+    <div class="personal_top_title">
+    <p>蓝色理想</p>
+    <p><span>关注:223&nbsp;|&nbsp;粉丝:322</span></p>
+    </div>
+    
+    </div>
+    </div>
+</div>
+ <div class="main_box">
+<div class="fyxq_main">
+<div class="fyxq_main_l">
+<div class="fyxq_main_l_img"><img src="images/pic01.jpg" width="110" height="110"></div>
+<div class="fyxq_main_l_title">
+<p>蓝色理想</p>
+<p><span>昨天 18:30</span></p>
+</div>
+</div>
+<div class="fyxq_main_r"></div>
+<div class="clear"></div>
+</div>
+<div class="fyxq_main2">
+<p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font></p>
+</div>
+<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+<div class="fyxq_main_l2_img"><img src="images/pic01.jpg" width="110" height="110"></div>
+<div class="fyxq_main_l_title2">
+<p>@蓝色理想</p>
+<p><span><font class="ftcred">#装修作业#</font>从交房验房，到涉及预算到后期开
+始装修以及装修后的一些处理，这个过程是...</span></p>
+</div>
+</div>
+<div class="personal_main_bottom">
+<ul>
+<li><a href="#" class="bottom_icon1">转发</a></li>
+<li><a href="#" class="bottom_icon2">评论</a></li>
+<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+ </div>
+ 
+<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+<div class="fyxq_main">
+<div class="fyxq_main_l">
+<div class="fyxq_main_l_img"><img src="images/pic01.jpg" width="110" height="110"></div>
+<div class="fyxq_main_l_title">
+<p>蓝色理想</p>
+<p><span>昨天 18:30</span></p>
+</div>
+</div>
+<div class="fyxq_main_r"></div>
+<div class="clear"></div>
+</div>
+<div class="fyxq_main2">
+<p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font>从交房验房，到涉及预算到后期开
+始装修以及装修后的一些处理，这个过程是...从交房验房，到涉及预算到后期开
+始装修以及装修后的一些处理，这个过程是...</p>
+</div>
+
+<div class="personal_main_bottom">
+<ul>
+<li><a href="#" class="bottom_icon1">转发</a></li>
+<li><a href="#" class="bottom_icon2">评论</a></li>
+<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+</ul>
+<div class="clear"></div>
+</div>
+
+ </div>
+ 
+ 
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderFieldListDao">
+    
+	<sql id="orderFieldListColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.field_info_id AS "fieldInfoId",
+		a.field_partition_price_id AS "fieldPartitionPriceId",
+		a.order_field_id AS "orderField.id",
+		a.order_no AS "orderNo",
+		a.name AS "name",
+		a.appointment_time AS "appointmentTime",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.sum_money AS "sumMoney",
+		a.order_state AS "orderState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+
+
+	</sql>
+
+	<sql id="orderFieldListJoinColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.field_info_id AS "fieldInfoId",
+		a.field_partition_price_id AS "fieldPartitionPriceId",
+		a.order_field_id AS "orderField.id",
+		a.order_no AS "orderNo",
+		a.name AS "name",
+		a.appointment_time AS "appointmentTime",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.sum_money AS "sumMoney",
+		a.order_state AS "orderState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+
+
+		b.order_no AS "orderField.orderNo",
+		b.module_manage_id AS "orderField.moduleManageId",
+		b.prod_type AS "orderField.prodType",
+		b.type AS "orderField.type",
+		b.name AS "orderField.name",
+		b.field_info_id AS "orderField.fieldInfoId",
+		b.sum_money AS "orderField.sumMoney",
+		b.benefit_money AS "orderField.benefitMoney",
+		b.coupon_money AS "orderField.couponMoney",
+		b.pay_money AS "orderField.payMoney",
+		b.order_state AS "orderField.orderState",
+		b.check_order_state AS "orderField.checkOrderState",
+		b.check_time AS "orderField.checkTime",
+		b.check_state AS "orderField.checkState",
+		b.account_id AS "orderField.accountId",
+		b.account_name AS "orderField.accountName",
+		b.account_phone_number AS "orderField.accountPhoneNumber",
+		b.pay_type AS "orderField.payType",
+		b.pay_org AS "orderField.payOrg",
+		b.pay_time AS "orderField.payTime",
+		b.pay_user_name AS "orderField.payUserName",
+		b.pay_state AS "orderField.payState",
+		b.create_by AS "orderField.createBy.id",
+		b.create_date AS "orderField.createDate",
+		b.update_by AS "orderField.updateBy.id",
+		b.update_date AS "orderField.updateDate",
+		b.remarks AS "orderField.remarks",
+		b.del_flag AS "orderField.delFlag"
+
+	</sql>
+	
+	<sql id="orderFieldListJoins">
+		LEFT JOIN order_field b ON b.id = a.order_field_id
+	</sql>
+
+
+
+
+
+
+	<select id="getOrderFieldListByFieldPartitionPriceId" resultType="OrderFieldList">
+		SELECT
+			<include refid="orderFieldListJoinColumns"/>
+		FROM order_field_list a
+		<include refid="orderFieldListJoins"/>
+		WHERE a.field_partition_price_id = #{id} and a.order_state='1'
+	</select>
+
+
+
+	<select id="getJoin" resultType="OrderFieldList">
+		SELECT
+			<include refid="orderFieldListJoinColumns"/>
+		FROM order_field_list a
+		<include refid="orderFieldListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="findJoinList" resultType="OrderFieldList">
+		SELECT 
+			<include refid="orderFieldListJoinColumns"/>
+		FROM order_field_list a
+		<include refid="orderFieldListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderField.id != null and orderField.id != ''">
+				AND a.order_field_id = #{orderField.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllJoinList" resultType="OrderFieldList">
+		SELECT 
+			<include refid="orderFieldListJoinColumns"/>
+		FROM order_field_list a
+		<include refid="orderFieldListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="get" resultType="OrderFieldList">
+		SELECT
+		<include refid="orderFieldListColumns"/>
+		FROM order_field_list a
+		<include refid="orderFieldListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	
+	<select id="findList" resultType="OrderFieldList">
+		SELECT
+			<include refid="orderFieldListColumns"/>
+		FROM order_field_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderField.id != null and orderField.id != ''">
+				AND a.order_field_id = #{orderField.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="OrderFieldList">
+		SELECT
+			<include refid="orderFieldListColumns"/>
+		FROM order_field_list a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO order_field_list(
+			id,
+			business_info_id,
+			field_info_id,
+			order_field_id,
+			field_partition_price_id,
+			order_no,
+			name,
+			appointment_time,
+			start_time,
+			end_time,
+			base_price,
+			benefit_price,
+			sum_money,
+			order_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{fieldInfoId},
+			#{orderField.id},
+			#{fieldPartitionPriceId},
+			#{orderNo},
+			#{name},
+			#{appointmentTime},
+			#{startTime},
+			#{endTime},
+			#{basePrice},
+			#{benefitPrice},
+			#{sumMoney},
+			#{orderState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_field_list SET 	
+			business_info_id = #{businessInfoId},
+			field_info_id = #{fieldInfoId},
+			order_field_id = #{orderField.id},
+			field_partition_price_id = #{fieldPartitionPriceId},
+			order_no = #{orderNo},
+			name = #{name},
+			appointment_time = #{appointmentTime},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			sum_money = #{sumMoney},
+			order_state = #{orderState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_field_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE order_field_id = #{orderField.id}
+			</otherwise>
+		</choose>
+	</update>
+
+	<update id="cancelOrderFieldList">
+		UPDATE order_field_list SET
+			order_state = '2'
+				WHERE field_partition_price_id = #{id}
+	</update>
+	
+	<update id="cancelOrderFieldListByOrderNo">
+        UPDATE order_field_list SET
+            order_state = '2'
+                WHERE order_no = #{orderNo}
+    </update>
+    
+    <select id="getOrderFieldListByOrderNo" resultType="OrderFieldList">
+        SELECT
+            <include refid="orderFieldListColumns"/>
+        FROM order_field_list a
+        <where>
+            a.order_no = #{orderNo}
+        </where>
+    </select>
+    
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.AdverPositionDao">
+    
+	<sql id="adverPositionColumns">
+		a.id AS "id",
+		a.position_name AS "positionName",
+		a.module_code AS "moduleCode",
+		a.create_by AS "createBy",
+		a.open_screen_flag AS "openScreenFlag",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="adverPositionJoins">
+	</sql>
+    
+	<select id="get" resultType="AdverPosition">
+		SELECT 
+			<include refid="adverPositionColumns"/>
+		FROM adver_position a
+		<include refid="adverPositionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AdverPosition">
+		SELECT 
+			<include refid="adverPositionColumns"/>
+		FROM adver_position a
+		<include refid="adverPositionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="moduleCode != null and moduleCode != ''">
+				AND a.module_code = #{moduleCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdverPosition">
+		SELECT 
+			<include refid="adverPositionColumns"/>
+		FROM adver_position a
+		<include refid="adverPositionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO adver_position(
+			id,
+			position_name,
+			module_code,
+			create_by,
+			open_screen_flag,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{positionName},
+			#{moduleCode},
+			#{createBy},
+			#{openScreenFlag},
+			#{createDate},
+			#{updateBy},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE adver_position SET 	
+			position_name = #{positionName},
+			module_code = #{moduleCode},
+			open_screen_flag = #{openScreenFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE adver_position SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

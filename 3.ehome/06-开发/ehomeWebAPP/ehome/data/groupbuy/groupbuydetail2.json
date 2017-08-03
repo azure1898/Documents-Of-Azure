@@ -1,0 +1,25 @@
+{
+"code" : 1000,
+"data" : {
+  "groupBuyID":"g_2",
+  "groupBuyName":"价值1888健身年卡",
+   "groupBuyStartTime":"",
+  
+  "groupBuyEndTime":"00天12时23分18秒",
+  "groupBuyImage":"../../images/groupbuy/g-2.jpg",
+  "groupBuyStatus":"已抢光",
+"originalPrice":"588",
+"discountedPrice":"1888",
+"businessID":"",
+  "businessName":"璟湖城会所",
+  "businessPhone":"13521004205",
+  "businessAddress":"广东省广州市常春藤小区附近",
+  "businessUrl":"",
+  "groupBuyDesc":"<p>.详细介绍： 经常健身有利于身体健康，长命百岁！！！<div class='details_sjxx2'><img src='../../images/pic7.jpg' ></div><div class='details_sjxx2'><img src='../../images/pic7.jpg' ></div><div class='clear'></div>",
+  "validPeriod":"2017-05-31至2017-12-31",
+  "usageTime":"2017-10-31   10:00-12:00",
+  "useRules":"不在于其他优惠同享",
+  "soldNum":32
+},
+"message" : ""
+}

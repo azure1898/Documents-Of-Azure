@@ -1,0 +1,27 @@
+{
+"code" : 1000,
+"data" : [
+{
+  "moduleIcon":"../../images/index_icon3.png",
+  "moduleName":"生鲜超市",
+  "moduleUrl":""
+},{
+  "moduleIcon":"../../images/index_icon4.png",
+  "moduleName":"生鲜超市",
+  "moduleUrl":""
+},{
+  "moduleIcon":"../../images/index_icon5.png",
+  "moduleName":"",
+  "moduleUrl":""
+},{
+  "moduleIcon":"../../images/index_icon6.png",
+  "moduleName":"生鲜超市",
+  "moduleUrl":""
+},{
+  "moduleIcon":"../../images/index_icon7.png",
+  "moduleName":"生鲜超市",
+  "moduleUrl":""
+}
+],
+"message" : ""
+}

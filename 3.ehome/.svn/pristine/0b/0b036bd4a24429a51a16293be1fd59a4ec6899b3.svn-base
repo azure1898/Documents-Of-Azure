@@ -1,0 +1,14 @@
+{
+"code" : 1000,
+"data" : [{
+  "businessName":"花千束",
+  "groupBuyID":"g_1",
+  "contactPhone":"13521004205",
+  "groupBuyName":"花千束 价值298元11支花4选1套餐1束！",
+  "groupBuyPrice":120,
+"groupBuyNumber":0,
+"stockNumber":12,
+"limitPurchase":1
+}],
+"message" : ""
+}

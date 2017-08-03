@@ -1,0 +1,44 @@
+{
+	"code" : 1000,
+	"data" : {
+		"businessID":"6be9a9cd5a1c4f5d81564b0be53cc37e",
+  		"businessName":"鲜果时光",
+  		"businessImage":"../../images/top_bg2.jpg",
+  		"isNormal":1,
+		"businessAddress":"北京市海淀区成府路10号",
+		"businessPhone":"0371123456",
+		"groupBuy":[{
+ 			"groupBuyID":"6be9a9cd5a1c4f5d81564b0be53cc32d",
+   			"groupBuyName":"新西兰阳光金奇异果16个礼盒装",
+   			"groupBuyImage":"../../images/business/commodity2.png",
+   			"groupBuyPrice":5.5,
+   			"marketPrice":12.00,
+   			"soldNum":50,
+   			"groupBuyUrl":""
+		},{
+ 			"groupBuyID":"6be9a9cd5a1c4f5d81564b0be53cc34d",
+   			"groupBuyName":"陕西阎良甜瓜 6个装 总重约2.5kg",
+   			"groupBuyImage":"../../images/business/commodity7.png",
+   			"groupBuyPrice":23.90,
+   			"marketPrice":33.00,
+   			"soldNum":20,
+   			"groupBuyUrl":""
+		}],
+  		"businessHours":"09:00 - 18:00",
+		"businessLabels":[{
+        	"labelName":"水果"
+    	},{
+    		"labelName":"零食"
+    	}],
+		"sendMoney":0,
+		"isFeeActivity":0,
+		"deliveryFee":0,
+		"deliveryFeeActivity":"免配送",
+		"activities":[{
+       		"label":"满减",
+       		"desc":"满20减2，满30减4元，满100减20"
+    	}],
+		"businessDesc":"各种新鲜，闪电送！鲜蜂快急送，1小时内送货上门，下单后鲜蜂侠火速送上冰饮零食、卤味夜宵。OTO领域的创新企业，专注于社区服务的最后1公里。"
+	},
+	"message" : ""
+}

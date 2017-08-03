@@ -1,0 +1,256 @@
+/**
+ * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
+ */
+package com.its.modules.goods.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.its.common.persistence.Page;
+import com.its.common.service.CrudService;
+import com.its.common.utils.StringUtils;
+import com.its.modules.goods.entity.GoodsInfo;
+import com.its.modules.goods.dao.GoodsInfoDao;
+import com.its.modules.goods.entity.GoodsSkuPrice;
+import com.its.modules.goods.dao.GoodsSkuPriceDao;
+
+/**
+ * 商品信息Service
+ * 
+ * @author test
+ * @version 2017-07-03
+ */
+@Service
+@Transactional(readOnly = true)
+public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
+
+    @Autowired
+    private GoodsSkuPriceDao goodsSkuPriceDao;
+
+    /**
+     * 根据ID查询商品信息
+     * 
+     * @param id 商品ID
+     * @return 商品信息
+     */
+    public GoodsInfo get(String id) {
+        GoodsInfo goodsInfo = super.get(id);
+        goodsInfo.setGoodsSkuPriceList(goodsSkuPriceDao.findList(new GoodsSkuPrice(goodsInfo)));
+        // 根据查询出来的规格库存信息，使画面上规格项被选中
+        String[] checkedSkuValue = new String[goodsInfo.getGoodsSkuPriceList().size()];
+        int i = 0;
+        // 将应该选中的规格的ID放在画面上
+        for (GoodsSkuPrice goodsSkuPrice : goodsInfo.getGoodsSkuPriceList()) {
+            checkedSkuValue[i] = goodsSkuPrice.getSkuValueId();
+            i++;
+        }
+        goodsInfo.setCheckedSkuValue(checkedSkuValue);
+        return goodsInfo;
+    }
+
+    /**
+     * 商品分页信息查询
+     * 
+     */
+    public List<GoodsInfo> findList(GoodsInfo goodsInfo) {
+        return super.findList(goodsInfo);
+    }
+
+    /**
+     * 商品信息列表取得
+     */
+    public Page<GoodsInfo> findPage(Page<GoodsInfo> page, GoodsInfo goodsInfo) {
+
+        StringBuffer orderBy = new StringBuffer();
+
+        // 根据画面选择的条件来进行排序
+        if (StringUtils.isNotBlank(goodsInfo.getSortItem())) {
+            orderBy.append(goodsInfo.getSortItem());
+            orderBy.append(" ");
+            orderBy.append(goodsInfo.getSort());
+            orderBy.append(",");
+        } else {
+            // 默认根据创建时间升序排序
+            orderBy.append("a.create_date ASC,");
+        }
+
+        // 去掉末尾逗号
+        page.setOrderBy(StringUtils.removeEnd(orderBy.toString(), ","));
+        return super.findPage(page, goodsInfo);
+    }
+
+    /**
+     * 商品信息保存
+     * @param goodsInfo 商品信息
+     */
+    @Transactional(readOnly = false)
+    public void save(GoodsInfo goodsInfo) {
+        if (StringUtils.isNotBlank(goodsInfo.getContent())) {
+            goodsInfo.setContent(StringEscapeUtils.unescapeHtml4(goodsInfo.getContent()));
+        }
+        super.save(goodsInfo);
+        for (GoodsSkuPrice goodsSkuPrice : goodsInfo.getGoodsSkuPriceList()) {
+            if (goodsSkuPrice.getId() == null) {
+                continue;
+            }
+            if (GoodsSkuPrice.DEL_FLAG_NORMAL.equals(goodsSkuPrice.getDelFlag())) {
+                if (StringUtils.isBlank(goodsSkuPrice.getId())) {
+                    goodsSkuPrice.setGoodsInfoId(goodsInfo);
+                    goodsSkuPrice.preInsert();
+                    goodsSkuPriceDao.insert(goodsSkuPrice);
+                } else {
+                    goodsSkuPrice.setGoodsInfoId(goodsInfo);
+                    goodsSkuPrice.preUpdate();
+                    goodsSkuPriceDao.update(goodsSkuPrice);
+                }
+            } else {
+                goodsSkuPriceDao.delete(goodsSkuPrice);
+            }
+        }
+    }
+
+    /**
+     * 商品表以及商品规格价格表删除
+     */
+    @Transactional(readOnly = false)
+    public void delete(GoodsInfo goodsInfo) {
+        super.delete(goodsInfo);
+        // 级联删除商品规格价格表
+        goodsSkuPriceDao.deleteByGoodsId(new GoodsSkuPrice(goodsInfo));
+    }
+
+    /**
+     * 根据商品分类ID取得商品信息
+     * 
+     * @param sortInfoID
+     *            商品分类ID
+     * @return 商品信息
+     */
+    public List<GoodsInfo> findGoodsInfoList(String sortInfoID) {
+        GoodsInfo goodsInfo = new GoodsInfo();
+        goodsInfo.setSortInfoId(sortInfoID);
+        return super.findList(goodsInfo);
+    }
+
+    /**
+     * 复数删除商品信息
+     * 
+     * @param goodsid
+     */
+    @Transactional(readOnly = false)
+    public void muliDelete(String goodsid) {
+
+        String[] goodsIdArr = goodsid.split(",");
+        for (String goodsId : goodsIdArr) {
+            GoodsInfo goodsInfo = new GoodsInfo();
+            goodsInfo.setId(goodsId);
+            super.delete(goodsInfo);
+            // 级联删除商品规格价格表
+            goodsSkuPriceDao.deleteByGoodsId(new GoodsSkuPrice(goodsInfo));
+        }
+
+    }
+
+    /**
+     * 复数上架商品信息
+     * 
+     * @param goodsid
+     * @return 总库存为0不能上传的商品
+     */
+    @Transactional(readOnly = false)
+    public List<String> muliGrounding(String goodsid) {
+
+        List<String> cannotGroundingGoods = new ArrayList<String>();
+        String[] goodsIdArr = goodsid.split(",");
+        for (String goodsId : goodsIdArr) {
+            GoodsInfo goodsInfo = this.dao.selectZeroStockGoods(goodsId);
+            if (goodsInfo != null && StringUtils.isNotBlank(goodsInfo.getId())) {
+                cannotGroundingGoods.add(goodsInfo.getName());
+                continue;
+            }
+            this.dao.groundingByGoodsId(goodsId);
+        }
+        return cannotGroundingGoods;
+    }
+
+    /**
+     * 复数下架商品信息
+     * 
+     * @param goodsid
+     */
+    @Transactional(readOnly = false)
+    public void muliUndercarriage(String goodsid) {
+
+        String[] goodsIdArr = goodsid.split(",");
+        for (String goodsId : goodsIdArr) {
+            this.dao.undercarriageByGoodsId(goodsId);
+        }
+    }
+
+    /**
+     * 图片地址更新 地址由 根目录+save+商家ID+商品ID 构成
+     * 
+     * @param goodsInfo
+     *            商品信息ID
+     * @param imgName
+     *            图片名
+     */
+    @Transactional(readOnly = false)
+    public void imgNameUpdate(GoodsInfo goodsInfo, List<String> imgUrlList) {
+
+        // 图片地址更新用MAP
+        Map<String, String> imgUrlUpdateMap = new HashMap<String, String>();
+        // 所有图片服务器文件ID集合
+        StringBuffer imgUrls = new StringBuffer();
+        if (StringUtils.isNotBlank(goodsInfo.getImgs())) {
+            imgUrls.append(goodsInfo.getImgs());
+            imgUrls.append(",");
+        }
+        for (String imgUrl : imgUrlList) {
+            imgUrls.append(imgUrl);
+            imgUrls.append(",");
+        }
+        String imgUrlsForUpdate = imgUrls.toString();
+        // 将画面上删除的文件ID从DB中跟新掉
+        if (StringUtils.isNotBlank(goodsInfo.getDelImageName())){
+        	String[] delImgName = goodsInfo.getDelImageName().split(",");
+        	for (String imgName : delImgName) {
+        		imgUrlsForUpdate = imgUrlsForUpdate.replace(imgName + ",", "");
+        		// 避免该文件ID在最后一个
+        		imgUrlsForUpdate = imgUrlsForUpdate.replace(imgName, "");
+        	}
+        }
+        imgUrlUpdateMap.put("id", goodsInfo.getId());
+        // 将拼接好的文件ID存入DB（DB中只存放图片服务器MY_FILE_ID，显示时拼接好URL再放到画面上）
+        imgUrlUpdateMap.put("imgUrl", StringUtils.removeEnd(imgUrlsForUpdate, ","));
+        this.dao.imgNameUpdate(imgUrlUpdateMap);
+    }
+    
+    /**
+     * 根据商品分类ID取得商品信息并将该行锁定
+     * 
+     * @param goodsId
+     *            商品ID
+     * @return 商品信息
+     */
+    public List<GoodsInfo> findGoodsInfoListForUpdate(List<String> goodsId) {
+        return this.dao.findGoodsInfoListForUpdate(goodsId);
+    }
+
+    /**
+     * 查询商品个数
+     * @param goodsInfo
+     * @return
+     */
+    public Integer findAllListCount(GoodsInfo goodsInfo) {
+        return  this.dao.findAllListCount(goodsInfo);
+
+    }
+}

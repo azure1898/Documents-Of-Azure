@@ -1,0 +1,32 @@
+{
+"code" : 1000,
+"data" : [{
+ 	"groupBuyID":"g_4",
+   "groupBuyName":"精品红富士60一箱",
+   "groupBuyStatus":"明日10点",
+   "groupBuyPrice":60,
+   "marketPrice":88,
+   "groupBuyUnit":"",
+   "soldNum":0,
+   "groupBuyUrl":"../../images/top_bg1.jpg"
+},{
+ 	"groupBuyID":"g_5",
+   "groupBuyName":"价值150元电影年卡",
+   "groupBuyStatus":"明日10点",
+   "groupBuyPrice":100,
+   "marketPrice":150,
+   "groupBuyUnit":"",
+   "soldNum":0,
+   "groupBuyUrl":"../../images/top_bg6.jpg"
+},{
+ 	"groupBuyID":"g_6",
+   "groupBuyName":"价值800元酒店抵用券",
+   "groupBuyStatus":"明日10点",
+   "groupBuyPrice":500,
+   "marketPrice":750,
+   "groupBuyUnit":"",
+   "soldNum":0,
+   "groupBuyUrl":"../../images/top_bg2.jpg"
+}],
+"message" : ""
+}

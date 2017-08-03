@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.BuildingInfoDao">
+    
+	<sql id="buildingInfoColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.building_name AS "buildingName",
+		a.sort_num AS "sortNum",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="buildingInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="BuildingInfo">
+		SELECT 
+			<include refid="buildingInfoColumns"/>
+		FROM building_info a
+		<include refid="buildingInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BuildingInfo">
+		SELECT 
+			<include refid="buildingInfoColumns"/>
+		FROM building_info a
+		<include refid="buildingInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BuildingInfo">
+		SELECT 
+			<include refid="buildingInfoColumns"/>
+		FROM building_info a
+		<include refid="buildingInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO building_info(
+			id,
+			village_info_id,
+			building_name,
+			sort_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{buildingName},
+			#{sortNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE building_info SET 	
+			village_info_id = #{villageInfoId},
+			building_name = #{buildingName},
+			sort_num = #{sortNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE building_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<resultMap type="BuildingInfoBean" id="buildingInfoBeanMapOne">
+		<id property="id" column="ID" />
+		<result property="buildingName" column="Building_Name" />
+		<collection property="roomCertifies" ofType="RoomCertify">
+			<result property="floorCode" column="Floor_Code" />
+			<result property="roomName" column="Room_Name" />
+		</collection>
+	</resultMap>
+	
+	<!-- 获取某楼盘下的楼栋和房间信息 -->
+	<select id="getBuildingAndRoomList" resultMap="buildingInfoBeanMapOne">
+		SELECT
+			a.ID,
+			a.Building_Name,
+			b.Floor_Code,
+			b.Room_Name
+		FROM
+			Building_Info a,
+			Room_Certify b
+		WHERE
+			a.ID = b.Building_ID
+		AND a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.Village_Info_ID = #{villageInfoId}
+		ORDER BY
+			a.ID,
+			a.Building_Name,
+			b.Floor_Code,
+			b.Room_Name
+	</select>
+	
+</mapper>

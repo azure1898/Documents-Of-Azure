@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>个人发言</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    	.fyxq_main3 ul li:nth-child(3n+1){
+				margin-left: 3%;
+			}
+		a:link{text-decoration: none;}
+		a:visited{text-decoration: none;}
+		a:hover{text-decoration: none;}
+		[v-cloak] {
+			  display: none;
+			}
+		.bottom_icon6 {
+	    background: url(../../images/bot_icon3.png) left center no-repeat;
+	    padding-left: 25px;
+	    }
+	    .topbtn_region span.collection_btn2 {
+		    width: 50px;
+		    height: 24px;
+		    background: #fff;
+		    border-radius: 4px;
+		    text-align: center;
+		    line-height: 24px;
+		    color: #b2b2b2;
+		}
+    </style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="business_top3">
+				<div class="container-fluid">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn" onclick="javascript :history.go(-1);"></span>
+						</div>
+						<div class="fr">
+							<span class="collection_btn" v-if="personalpage.isFocus==0" @click="follow(personalpage)">+关注</span>
+							<span class="collection_btn2" v-else  @click="follow(personalpage)">已关注</span>
+						</div>
+					</div>
+					<div class="business_price_box">
+						<div class="personal_top_img"><img :src="personalpage.headPicSrc" width="110" height="110"></div>
+						<div class="personal_top_title">
+							<p>{{personalpage.userName}}</p>
+							<p><span>关注:{{personalpage.countFollow}}&nbsp;|&nbsp;粉丝:{{personalpage.countFans}}</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="main_box" style="border-top:solid 1px #ececec;" v-for="releaseDetail in releaseDetails">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img :src="personalpage.headPicSrc" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>{{personalpage.userName}}</p>
+							<p><span>{{releaseDetail.createTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><img src="../../images/xl_icon.png" width="12" height="7"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred" v-for="(subject,index) in releaseDetail.subjectList" :key="index">{{subject.subjectName}}</font>{{releaseDetail.speakContent}}
+						<!--<font class="ftcred">@优米的米</font>-->
+					</p>
+				</div>
+				<div class="fyxq_main3" v-if="releaseDetail.imgList.length>0">
+					<ul>
+						<li v-for="image in releaseDetail.imgList"><img :src="image.imgUrl" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li>
+							<a href="#" class="bottom_icon1">{{releaseDetail.countForword}}</a>
+						</li>
+						<li>
+							<a href="#" class="bottom_icon2">{{releaseDetail.countComment}}</a>
+						</li>
+						<li style="border-right:none;">
+							<a href="#" :class="releaseDetail.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(releaseDetail,1)">{{releaseDetail.countPraise}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<!--<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">#装修作业#</font>从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。
+					</p>
+				</div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li>
+							<a href="#" class="bottom_icon1">转发</a>
+						</li>
+						<li>
+							<a href="#" class="bottom_icon2">评论</a>
+						</li>
+						<li style="border-right:none;">
+							<a href="#" class="bottom_icon3">赞</a>
+						</li>
+					</ul>
+				</div>
+			</div>-->
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/personalpage.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

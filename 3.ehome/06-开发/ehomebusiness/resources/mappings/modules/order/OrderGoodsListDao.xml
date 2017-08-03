@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderGoodsListDao">
+    
+	<sql id="orderGoodsListColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.goods_info_id AS "goodsInfoId",
+		a.order_goods_id AS "orderGoodsId",
+		a.order_no AS "orderNo",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.imgs AS "imgs",
+		a.content AS "content",
+		a.sku_content AS "skuContent",
+		a.sku_key_id AS "skuKeyId",
+		a.sku_value_id AS "skuValueId",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.goods_sum AS "goodsSum",
+		a.pay_sum_money AS "paySumMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGoodsListJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGoodsList">
+		SELECT 
+			<include refid="orderGoodsListColumns"/>
+		FROM order_goods_list a
+		<include refid="orderGoodsListJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoodsList">
+		SELECT 
+			<include refid="orderGoodsListColumns"/>
+		FROM order_goods_list a
+		<include refid="orderGoodsListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		AND a.order_no = #{orderNo}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoodsList">
+		SELECT 
+			<include refid="orderGoodsListColumns"/>
+		FROM order_goods_list a
+		<include refid="orderGoodsListJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		AND a.order_no = #{orderNo}
+		</where>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_goods_list(
+			id,
+			business_info_id,
+			goods_info_id,
+			order_goods_id,
+			order_no,
+			serial_numbers,
+			name,
+			imgs,
+			content,
+			sku_content,
+			sku_key_id,
+			sku_value_id,
+			base_price,
+			benefit_price,
+			goods_sum,
+			pay_sum_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{goodsInfoId},
+			#{orderGoodsId},
+			#{orderNo},
+			#{serialNumbers},
+			#{name},
+			#{imgs},
+			#{content},
+			#{skuContent},
+			#{skuKeyId},
+			#{skuValueId},
+			#{basePrice},
+			#{benefitPrice},
+			#{goodsSum},
+			#{paySumMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods_list SET 	
+			business_info_id = #{businessInfoId},
+			goods_info_id = #{goodsInfoId},
+			order_goods_id = #{orderGoodsId},
+			order_no = #{orderNo},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			imgs = #{imgs},
+			content = #{content},
+			sku_content = #{skuContent},
+			sku_key_id = #{skuKeyId},
+			sku_value_id = #{skuValueId},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			goods_sum = #{goodsSum},
+			pay_sum_money = #{paySumMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_goods_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

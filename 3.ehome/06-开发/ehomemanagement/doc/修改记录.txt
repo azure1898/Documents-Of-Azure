@@ -1,0 +1,14 @@
+add by zhujiao
+商家-分类中间表 (business_categoryinfo) 去掉ID
+
+广告-楼盘 中间表(adver_building)  去掉ID
+
+
+
+
+
+
+
+
+
+

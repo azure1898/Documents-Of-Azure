@@ -1,0 +1,20 @@
+{
+"code" : 1000,
+"data" :[{
+  "businessID":"",
+  "businessName":"爱鲜蜂",
+  "businessImage":"../../images/index_pic3.jpg",
+  "businessUrl":""
+},{
+ 	"businessID":"",
+  "businessName":"鲜果时光",
+  "businessImage":"../../images/index_pic2.jpg",
+  "businessUrl":""
+},{
+ 	"businessID":"",
+  "businessName":"爱鲜蜂",
+  "businessImage":"../../images/index_pic3.jpg",
+  "businessUrl":""
+}],
+"message" : ""
+}

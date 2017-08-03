@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderRefundInfoDao">
+    
+    <sql id="orderRefundInfoColumns">
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.order_no AS "orderNo",
+        a.order_type AS "orderType",
+        a.pay_type AS "payType",
+        a.order_money AS "orderMoney",
+        a.type AS "type",
+        a.module_manage_id AS "moduleManageId",
+        a.prod_type AS "prodType",
+        a.refund_money AS "refundMoney",
+        a.refund_no AS "refundNo",
+        a.refund_type AS "refundType",
+        a.refund_state AS "refundState",
+        a.refund_over_time AS "refundOverTime",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+    
+    <sql id="orderRefundInfoListColumns">
+        a.id AS "id",
+        e.Business_Name AS "businessInfoId",
+        a.order_no AS "orderNo",
+        '在线支付-支付宝' AS "orderType",
+        a.pay_type AS "payType",
+        a.order_money AS "orderMoney",
+        f.Module_Name AS "moduleManageId",
+        a.refund_money AS "refundMoney",
+        temp.orderState AS "remarks", <!--订单状态  -->
+        a.refund_state AS "refundState",
+        temp.orderDate AS "createDate"
+    </sql>
+    <sql id="orderRefundInfoJoins">
+    </sql>
+    
+    <select id="get" resultType="OrderRefundInfo">
+        SELECT 
+            <include refid="orderRefundInfoColumns"/>
+        FROM order_refund_info a
+        <include refid="orderRefundInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="OrderRefundInfo">
+        SELECT 
+            <include refid="orderRefundInfoListColumns"/>
+        FROM order_refund_info a
+        LEFT JOIN(
+            SELECT 'orderGoods' AS tableName, d.ID AS id, d.Order_No AS orderNo ,d.Pay_Org AS payOrg,d.Create_Date AS orderDate,
+                    CASE when d.Order_State=0 then '待受理' when d.Order_State=1 then '已受理' when d.Order_State=2 then '配送中'  when d.Order_State=3 then '已完成'  when d.Order_State=4 then '已取消'  else '--' end AS orderState
+            FROM order_goods d
+            UNION ALL
+            SELECT 'orderField' AS tableName, b.ID AS id, b.Order_No AS orderNo,b.Pay_Org AS payOrg,b.Create_Date AS orderDate,
+                    CASE when b.Order_State=0 then '待预约' when b.Order_State=1 then '预约成功' when b.Order_State=2 then '已取消'  else '--' end AS orderState
+            FROM order_field b
+            UNION ALL
+            SELECT 'orderService' AS tableName, c.ID AS id, c.Order_No AS orderNo,c.Pay_Org AS payOrg,c.Create_Date AS orderDate,
+                    CASE when c.Order_State=0 then '待受理' when c.Order_State=1 then '已受理'  when c.Order_State=3 then '已完成'  when c.Order_State=4 then '已取消'  else '--' end AS orderState
+            FROM  order_service c
+        ) temp  on a.Order_No=temp.orderNo and a.Order_ID= temp.id
+        LEFT JOIN business_info  e on a.Business_Info_ID =e.ID
+        LEFT JOIN module_manage f on a.Module_Manage_ID =f.ID
+        LEFT JOIN business_servicescope g on g.BusinessInfo_ID=g.BusinessInfo_ID
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="moduleManageId != null and moduleManageId != ''">
+                AND a.module_manage_id = #{moduleManageId}
+            </if>
+            <if test="refundState != null and refundState != ''">
+                AND a.refund_state = #{refundState}
+            </if>
+            <if test="villageId != null and villageId != ''">
+                AND g.Village_Info_ID = #{villageId}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND temp.orderDate BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+        </where>
+        GROUP BY a.ID
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="OrderRefundInfo">
+        SELECT 
+            <include refid="orderRefundInfoColumns"/>
+        FROM order_refund_info a
+        <include refid="orderRefundInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO order_refund_info(
+            id,
+            business_info_id,
+            order_no,
+            order_type,
+            pay_type,
+            order_money,
+            type,
+            module_manage_id,
+            prod_type,
+            refund_money,
+            refund_no,
+            refund_type,
+            refund_state,
+            refund_over_time,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{businessInfoId},
+            #{orderNo},
+            #{orderType},
+            #{payType},
+            #{orderMoney},
+            #{type},
+            #{moduleManageId},
+            #{prodType},
+            #{refundMoney},
+            #{refundNo},
+            #{refundType},
+            #{refundState},
+            #{refundOverTime},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE order_refund_info SET     
+            business_info_id = #{businessInfoId},
+            order_no = #{orderNo},
+            order_type = #{orderType},
+            pay_type = #{payType},
+            order_money = #{orderMoney},
+            type = #{type},
+            module_manage_id = #{moduleManageId},
+            prod_type = #{prodType},
+            refund_money = #{refundMoney},
+            refund_no = #{refundNo},
+            refund_type = #{refundType},
+            refund_state = #{refundState},
+            refund_over_time = #{refundOverTime},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="delete">
+        UPDATE order_refund_info SET 
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+    
+    
+    <select id="findOrderRefundInfoByOrderNo"  resultType="OrderRefundInfo">
+        SELECT 
+            <include refid="orderRefundInfoColumns"/>
+        FROM order_refund_info a
+        <include refid="orderRefundInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        AND a.order_no = #{orderNo}
+        </where>
+	</select>
+	
+</mapper>

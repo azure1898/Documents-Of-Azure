@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.AddressDao">
+    
+	<sql id="addressColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.contact AS "contact",
+		a.phone_num AS "phoneNum",
+		a.address_type AS "addressType",
+		a.address AS "address",
+		a.building AS "building",
+		a.house_number AS "houseNumber",
+		a.is_default AS "isDefault",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="addressJoins">
+	</sql>
+    
+	<select id="get" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM address a
+		<include refid="addressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM address a
+		<include refid="addressJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM address a
+		<include refid="addressJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO address(
+			id,
+			account_id,
+			village_info_id,
+			contact,
+			phone_num,
+			address_type,
+			address,
+			building,
+			house_number,
+			is_default,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{contact},
+			#{phoneNum},
+			#{addressType},
+			#{address},
+			#{building},
+			#{houseNumber},
+			#{isDefault},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE address SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			contact = #{contact},
+			phone_num = #{phoneNum},
+			address_type = #{addressType},
+			address = #{address},
+			building = #{building},
+			house_number = #{houseNumber},
+			is_default = #{isDefault},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE address SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某用户某楼盘下的默认地址 -->
+	<select id="getDefaultAddress" resultType="Address">
+		SELECT DISTINCT
+			<include refid="addressColumns" />
+		FROM
+			Address a
+		WHERE
+			a.del_flag = 0
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.is_default = 1
+	</select>
+	
+	<!-- 获取某用户某楼盘下的地址列表 -->
+	<select id="getAddressListByAccountIdAndVillageInfoId" resultType="Address">
+		SELECT DISTINCT
+			<include refid="addressColumns" />
+		FROM
+			Address a
+		WHERE
+			a.del_flag = 0
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		ORDER BY
+			a.Is_Default DESC,
+			a.create_date DESC
+	</select>
+	
+	<!-- 判断某用户某楼盘下的某地址是否存在 -->
+	<select id="judgeAddressEnabled" resultType="Address">
+		SELECT DISTINCT
+			<include refid="addressColumns" />
+		FROM
+			Address a
+		WHERE
+			a.del_flag = 0
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.ID = #{addressId}
+	</select>
+	
+</mapper>

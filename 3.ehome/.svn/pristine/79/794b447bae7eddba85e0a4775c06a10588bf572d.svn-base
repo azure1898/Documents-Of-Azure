@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.MyCollectDao">
+    
+	<sql id="myCollectColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.business_info_id AS "businessInfoId",
+		a.collect_date AS "collectDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="myCollectJoins">
+	</sql>
+    
+	<select id="get" resultType="MyCollect">
+		SELECT 
+			<include refid="myCollectColumns"/>
+		FROM my_collect a
+		<include refid="myCollectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MyCollect">
+		SELECT 
+			<include refid="myCollectColumns"/>
+		FROM my_collect a
+		<include refid="myCollectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MyCollect">
+		SELECT 
+			<include refid="myCollectColumns"/>
+		FROM my_collect a
+		<include refid="myCollectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO my_collect(
+			id,
+			account_id,
+			village_info_id,
+			business_info_id,
+			collect_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{businessInfoId},
+			#{collectDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE my_collect SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			business_info_id = #{businessInfoId},
+			collect_date = #{collectDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE my_collect SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ======================代码生成分割线======================= -->
+	<update id="cancelCollection">
+		UPDATE my_collect SET 
+			del_flag = 1
+		WHERE account_id=#{0} and village_info_id=#{1} and business_info_id=#{2}
+	</update>
+	
+	<select id="findMyCollectOfAccount" resultType="MyCollectBean">
+		SELECT 
+			<include refid="myCollectColumns"/>,b.business_name AS "businessName",b.business_pic AS "businessPic"
+			,b.business_label AS "businessLabel",b.distribute_charge AS "distributeCharge",b.free_distribute_flag AS "freeDistributeFlag"
+		FROM my_collect a,business_info b
+		<where>
+			a.del_flag = 0 AND b.del_flag = 0 AND a.business_info_id = b.id
+			 AND a.account_id = #{accountId} AND a.village_info_id = #{villageInfoId}
+		</where>		
+			ORDER BY a.update_date DESC
+	</select>
+	
+	<select id="isCollect" resultType="int">
+		SELECT count(a.id) 
+		FROM my_collect a
+		<where>
+			a.del_flag = 0 
+			 AND a.account_id = #{accountId} AND a.village_info_id = #{villageInfoId} AND a.business_info_id = #{businessInfoId}
+		</where>	
+	</select>
+</mapper>

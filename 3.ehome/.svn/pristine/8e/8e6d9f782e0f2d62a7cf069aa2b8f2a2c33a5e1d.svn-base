@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>团购详情页</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy/normalize.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy/component.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+
+			<div class="details_top3" style="position:relative;">
+				<div class="container-fluid top">
+					<div class="h20 "></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn" onClick="javascript :history.go(-1)"></span>
+						</div>
+						
+					</div>
+					<div class="business_price_box2_2">
+						<div class="business_nr">
+							<div class="business_name">{{particulars.groupBuyName}}</div>
+							<div class="business_type"></div>
+							<div class="business_start">
+								<span>已售：{{particulars.soldNum}}件</span> 
+								<span>限量：{{particulars.stockNumber}}件</span> <span id="timeStatus"><span class="word_tip"></span> <span id="fnTimeCountDown">
+								<!--<span class="year">00</span>
+								<span class="month">00</span>-->
+								<span class="day">00</span>天
+								<span class="hour">00</span>时
+								<span class="mini">00</span>分
+								<span class="sec">00</span>秒
+<!--							    <span class="hm">00</span>秒-->
+								</span>
+								</span>
+							
+							</div>
+							<div class="full_cut"></div>
+						</div>
+				</div>
+				
+					<!--<div  class="business_price_box3" v-if="particulars.groupBuyStatus==1"><a href="#"><span id="Days"></span>开始</a></div>-->
+<div id="status_tip"></div>
+
+				</div>
+				<span><img v-bind:src="particulars.groupBuyImage" width="100%" height="282px"></span>
+
+			</div>
+
+			<div class="details_title_box2">
+				<div class="plr10" style="line-height:50px;">
+					<div class="clearfix">
+						<div class="fl">
+							<div class="font_orange font18 fl">{{particulars.discountedPrice|formatDecimal}}</div>
+							<div class="font14 fl ml10 mt4"><del>{{particulars.originalPrice|formatDecimal}}</del></div>
+							<div class="font14 fl ml10 mt4">(限购{{particulars.limitPurchase}}件)</div>
+						</div>
+						<div class="goods_num fr"></div>
+					</div>
+				</div>
+			</div>
+			<div class="details_title_box2" style="border-top:none;line-height:34px;width: 100%;float: left;">
+				<div style="line-height:34px;">
+					<a href="#" class="sc_business2" id="cancel_1">随时退</a>
+					<a href="#" class="sc_business2"  id="cancel_2">过期退</a>
+					<a href="#" class="sc_business2"  id="reservation">免预约</a>
+				</div>
+			</div>
+			<div class=" mt10" style="clear: both;"></div>
+			<div class="details_add_main">
+				<div class="details_add_tel">
+					<a :href="'tel:'+particulars.businessPhone"><img src="../../images/telphone.png" width="25" height="25"></a>
+				</div>
+				<div class="details_add_left">
+					<div class="details_add_left_title"><a href="#">{{particulars.businessName}}</a></div>
+					<div class="details_add_left_text"><a href="#">{{particulars.businessAddress}}</a></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+			<div class="xq_jstitle">商品详情介绍</div>
+			<div class="details_sjxx" v-html="particulars.groupBuyDesc">
+
+			</div>
+
+			<div class="xq_jstitle">购买须知</div>
+			<div class="details_sjxx" style="border-bottom:1px solid #ececec;">
+				<p>有效期<br><span class="font14">{{particulars.validPeriod}}</span></p>
+				<p>使用时间<br><span class="font14">{{particulars.usageTime}}</span></p>
+				<p>使用规则<br><span class="font14" v-html="particulars.useRules"></span></p>
+			</div>
+			<div class="height44"></div>
+			<div class="business_bottom">
+				<div class="ser_zbtn">
+					<a id="change_groupdeatil"v-bind:href="isOK?urlList.order + particulars.groupBuyID+'&businessID='+particulars.businessID:'#'"></a>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+	<script src="../../js/static/jquery.js"></script>
+	<script src="../../js/static/classie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/cursom/groupbuy/Count_down.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/bootstrap.js"></script>
+	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/vue.js"></script>
+	<script src="../../js/static/vue-resource.js"></script>
+	<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/cursom/groupbuy/groupbuydetail.js"></script>
+
+
+</html>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.village.dao.VillageInfoDao">
+
+  <sql id="villageInfoColumns">
+    a.id AS "id",
+    a.village_name AS "villageName",
+    a.addr_pro AS
+    "addrPro",
+    a.addr_city AS "addrCity",
+    a.addr_area AS "addrArea",
+    a.company_info_id AS "companyInfoId",
+    a.property_company_id AS
+    "propertyCompanyId",
+    a.property_company_name AS "propertyCompanyName",
+    a.phone_num AS "phoneNum",
+    a.state AS "state",
+    a.create_by AS "createBy.id",
+    a.create_date AS
+    "createDate",
+    a.update_by AS "updateBy.id",
+    a.update_date AS
+    "updateDate",
+    a.remarks AS "remarks",
+    a.del_flag AS "delFlag"
+  </sql>
+
+  <sql id="villageInfoJoins">
+  </sql>
+
+  <select id="get" resultType="VillageInfo">
+    SELECT
+    <include refid="villageInfoColumns" />
+    FROM village_info a
+    <include refid="villageInfoJoins" />
+    WHERE a.id = #{id}
+  </select>
+
+  <select id="findList" resultType="VillageInfo">
+    SELECT
+    <include refid="villageInfoColumns" />
+    FROM village_info a
+    <include refid="villageInfoJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="addrPro != null and addrPro != ''">
+        AND a.addr_pro = #{addrPro}
+      </if>
+      <if test="addrCity != null and addrCity != ''">
+        AND a.addr_city = #{addrCity}
+      </if>
+      <if test="addrArea != null and addrArea != ''">
+        AND a.addr_area = #{addrArea}
+      </if>
+      <!-- 查询优先级：下拉列表 > 输入框 -->
+      <choose>
+        <when test="id != null and id != ''">
+          AND a.id = #{id}
+        </when>
+        <otherwise>
+          <if test="villageName != null and villageName != ''">
+            AND a.village_name LIKE
+            <if test="dbName == 'oracle'">'%'||#{villageName}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{villageName}+'%'</if>
+            <if test="dbName == 'mysql'">concat('%',#{villageName},'%')</if>
+          </if>
+        </otherwise>
+      </choose>
+      <if test="propertyCompanyId != null and propertyCompanyId != ''">
+        AND a.property_company_id = #{propertyCompanyId}
+      </if>
+      <if test="state != null and state != ''">
+        AND a.state = #{state}
+      </if>
+      <if test="userVillageIds != null and userVillageIds.size() > 0">
+        AND a.id IN
+        <foreach item="item" collection="userVillageIds" separator="," open="(" close=")" index="index">
+          #{item}
+        </foreach>
+      </if>
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findAllList" resultType="VillageInfo">
+    SELECT
+    <include refid="villageInfoColumns" />
+    FROM village_info a
+    <include refid="villageInfoJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+  <!--查询楼盘（查询楼栋信息接口定时任务开始用） -->
+  <select id="getVillageList" resultType="VillageInfo">
+    SELECT
+    <include refid="villageInfoColumns" />
+    FROM village_info a
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    ORDER BY a.update_date DESC
+  </select>
+  <insert id="insert">
+    INSERT INTO village_info(
+    id,
+    village_name,
+    addr_pro,
+    addr_city,
+    addr_area,
+    company_info_id,
+    property_company_id,
+    property_company_name,
+    phone_num,
+    state,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remarks,
+    del_flag
+    ) VALUES (
+    #{id},
+    #{villageName},
+    #{addrPro},
+    #{addrCity},
+    #{addrArea},
+    #{companyInfoId},
+    #{propertyCompanyId},
+    #{propertyCompanyName},
+    #{phoneNum},
+    #{state},
+    #{createBy.id},
+    #{createDate},
+    #{updateBy.id},
+    #{updateDate},
+    #{remarks},
+    #{delFlag}
+    )
+  </insert>
+
+  <update id="update">
+    UPDATE village_info SET
+    village_name = #{villageName},
+    addr_pro = #{addrPro},
+    addr_city = #{addrCity},
+    addr_area = #{addrArea},
+    company_info_id = #{companyInfoId},
+    property_company_id =
+    #{propertyCompanyId},
+    property_company_name = #{propertyCompanyName},
+    phone_num = #{phoneNum},
+    state = #{state},
+    update_by = #{updateBy.id},
+    update_date =
+    #{updateDate},
+    remarks = #{remarks}
+    WHERE id = #{id}
+  </update>
+
+  <update id="delete">
+    UPDATE village_info SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
+  </update>
+  <!-- 获取楼盘全部省份数据 -->
+  <select id="findPro" resultType="VillageInfo">
+    SELECT
+    ifnull(b.name,'无省份') AS "villageName",
+    a.Addr_Pro AS "id"
+    from
+    village_info a
+    LEFT JOIN sys_area b on a.Addr_Pro=b.id
+    LEFT JOIN village_line c on a.ID=c.Village_Info_ID
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="villageLineId != null and villageLineId != ''">
+        AND c.Product_Line = #{villageLineId}
+      </if>
+    </where>
+    GROUP BY b.id;
+  </select>
+  <!-- 根据省份获取楼盘城市数据 -->
+  <select id="findCity" resultType="VillageInfo">
+    SELECT
+    a.Addr_City AS "id",
+    ifnull(b.name,'无城市') AS "villageName"
+    from
+    village_info a
+    LEFT JOIN sys_area b on a.addr_city=b.id
+    LEFT JOIN village_line c on a.ID=c.Village_Info_ID
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      AND a.Addr_Pro = #{id}
+      <if test="villageLineId != null and villageLineId != ''">
+        AND c.Product_Line = #{villageLineId}
+      </if>
+    </where>
+    GROUP BY b.name
+  </select>
+  <!-- 根据城市获取楼盘数据 -->
+  <select id="findVillage" resultType="VillageInfo">
+    SELECT
+    b.id AS "id",
+    a.Village_Name AS "villageName"
+    FROM village_info a
+    LEFT JOIN village_line b on a.ID=b.Village_Info_ID
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="villageLineId != null and villageLineId != ''">
+        AND b.Product_Line = #{villageLineId}
+      </if>
+      AND a.Addr_City = #{id};
+    </where>
+  </select>
+
+  <update id="updateState">
+    UPDATE village_info SET
+    state = #{state}
+    WHERE id = #{id}
+  </update>
+  <!-- 根据城市获取楼盘数据 添加用户时用 -->
+  <select id="findUserVillage" resultType="VillageInfo">
+    SELECT
+    a.id AS "id",
+    a.Village_Name AS "villageName"
+    FROM
+    village_info a
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      AND a.Addr_City = #{id};
+    </where>
+  </select>
+
+</mapper>

@@ -1,0 +1,25 @@
+{
+"code" : 1000,
+"data" : {
+  "groupBuyID":"g_3",
+  "groupBuyName":"爱鲜蜂 价值120元鲜果",
+   "groupBuyStartTime":"",
+
+  "groupBuyEndTime":"00天12时23分18秒",
+  "groupBuyStatus":"抢购中",
+  "groupBuyImage":"../../images/groupbuy/g-3.jpg",
+"originalPrice":"88",
+"discountedPrice":"120",
+"businessID":"22",
+  "businessName":"爱鲜蜂",
+  "businessPhone":"13521004205",
+  "businessAddress":"广东省广州市常春藤小区附近",
+  "businessUrl":"",
+  "groupBuyDesc":"<p>.详细介绍：各种新鲜花束,精美包装，不可错过",
+  "validPeriod":"2017-07-11至2017-07-12",
+  "usageTime":"2017-07-12   10:00-12:00",
+  "useRules":"不在于其他优惠同享",
+  "soldNum":32
+},
+"message" : ""
+}

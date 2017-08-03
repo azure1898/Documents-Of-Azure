@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.GoodsInfoDao">
+    
+	<sql id="goodsInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.sort_info_id AS "sortInfoId",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.sell_count AS "sellCount",
+		a.base_unit_id AS "baseUnitId",
+		a.is_base AS "isBase",
+		a.content AS "content",
+		a.quota AS "quota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.state AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="goodsInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodsInfo">
+		SELECT 
+			<include refid="goodsInfoColumns"/>
+		FROM goods_info a
+		<include refid="goodsInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO goods_info(
+			id,
+			business_info_id,
+			serial_numbers,
+			name,
+			sort_info_id,
+			imgs,
+			base_price,
+			benefit_price,
+			stock,
+			sell_count,
+			base_unit_id,
+			is_base,
+			content,
+			quota,
+			quota_num,
+			recommend,
+			state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{serialNumbers},
+			#{name},
+			#{sortInfoId},
+			#{imgs},
+			#{basePrice},
+			#{benefitPrice},
+			#{stock},
+			#{sellCount},
+			#{baseUnitId},
+			#{isBase},
+			#{content},
+			#{quota},
+			#{quotaNum},
+			#{recommend},
+			#{state},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE goods_info SET 	
+			business_info_id = #{businessInfoId},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			sort_info_id = #{sortInfoId},
+			imgs = #{imgs},
+			base_price = #{basePrice},
+			benefit_price = #{benefitPrice},
+			stock = #{stock},
+			sell_count = #{sellCount},
+			base_unit_id = #{baseUnitId},
+			is_base = #{isBase},
+			content = #{content},
+			quota = #{quota},
+			quota_num = #{quotaNum},
+			recommend = #{recommend},
+			state = #{state},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE goods_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ========================代码生成分割线========================= -->
+	<!-- 获取每个商家推荐的3个商品 -->
+	<select id="getBusinessRecomendGoodsList" resultType="GoodsInfo">
+		 <if test="list.size() == 1">
+	  		<foreach item="item" index="index" collection="list">  
+			 SELECT <include refid="goodsInfoColumns"/> from goods_info a 
+			 	WHERE a.Del_Flag=0 AND a.State=1 AND a.Stock>0 AND a.Business_Info_ID=#{item.id} 
+			 	order by a.Recommend DESC,a.Create_Date DESC LIMIT 6
+		 	 </foreach> 
+		 </if>
+		 <if test="list.size() > 1">
+			 <foreach item="item" index="index" collection="list">  
+				 <if test="index > 0">
+				 	UNION ALL
+				 </if>
+				 (SELECT <include refid="goodsInfoColumns"/> from goods_info a 
+				 	WHERE a.Del_Flag=0 AND a.State=1 AND a.Stock>0 AND a.Business_Info_ID=#{item.id} 
+				 	order by a.Recommend DESC,a.Create_Date DESC LIMIT 3)
+			 </foreach> 
+		 </if>
+	</select>
+	<!-- 商家商品分类 -->
+	<select id="getBusinessSortInfoList" resultType="SortInfo">
+		SELECT a.* from sort_info a 
+		<where>
+			a.Del_Flag=0 AND a.Type=0 AND a.Business_Info_ID=#{businessInfoID}
+		</where>
+		ORDER BY a.Sort_Order
+	</select>
+	<!-- 获取某一分类的商品集合 -->
+	<select id="getGoodsInfoBySortList" resultType="GoodsInfo">
+	SELECT <include refid="goodsInfoColumns"/>
+		 FROM goods_info a 
+		 <where>
+		 	a.Del_Flag=0 AND a.State=1 AND a.Business_Info_ID=#{businessInfoID}
+		 	<if test="sortInfoID !=null and sortInfoID!=''">
+		 		AND a.Sort_Info_ID=#{sortInfoID} 
+		 	</if>
+		 </where>
+	</select>
+	<!-- 获取商品自定义单位 -->
+	<select id="getUnitNameCustom" resultType="string">
+		select a.name from business_unit a where a.id=#{id}
+	</select>
+	<!-- 获取商品公共单位 -->
+	<select id="getUnitNameSystem" resultType="string">
+		select a.label from sys_dict a where a.id=#{id}
+	</select>
+	
+	<update id="reduceGoodsInfoStock">
+		UPDATE goods_info a SET a.stock=a.stock-#{reduce},a.Sell_Count = a.Sell_Count + #{reduce}
+		 WHERE id=#{id} AND a.state='1' AND a.del_flag='0' AND a.stock>=#{reduce}
+	</update>
+	
+	<update id="reduceGoodsSkuPriceStock">
+		UPDATE goods_sku_price a SET a.stock=a.stock-#{reduce} WHERE id=#{id} AND a.del_flag='0' AND a.stock>=#{reduce}
+	</update>
+	
+	<!-- 更新商品库存，已售数量 -->
+	<update id="updateStockAndSellCount">
+		UPDATE Goods_Info a
+		SET a.Stock = a.Stock + #{count},
+		a.Sell_Count = a.Sell_Count - #{count}
+		WHERE
+			a.ID = #{goodsInfoId}
+		AND a.Del_Flag = '0'
+		AND a.Sell_Count >= #{count}
+	</update>
+</mapper>

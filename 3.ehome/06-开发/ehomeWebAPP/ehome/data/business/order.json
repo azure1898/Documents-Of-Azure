@@ -1,0 +1,54 @@
+{"code":1000,
+"data":{
+"totalMoney":"12.50",
+ "contactPerson":"普及小管家",
+ "contactPhone":"18536952240",
+ "contactAddress":"富力一城小区2栋405室",
+ "businessID":"",
+ "businessName":"镜湖城市店",
+ "deliveryFee":5,
+ "coupons":[{
+ "couponID":"",
+ "couponMoney":"2"
+
+ }],
+"commodities":[{
+"commodityID":"comm_1",
+"commodityImage":"../../images/pic2.jpg",
+"commodityName":"热销妃子笑荔枝/斤",
+"commodityNumber":"1",
+"commodityPrice":"5.50"
+},{
+"commodityID":"comm_2",
+"commodityImage":"../../images/pic2.jpg",
+"commodityName":"热销妃子笑荔枝/斤",
+"commodityNumber":"1",
+"commodityPrice":"5.50"
+},{
+"commodityID":"comm_3",
+"commodityImage":"../../images/pic2.jpg",
+"commodityName":"热销妃子笑荔枝/斤",
+"commodityNumber":"1",
+"commodityPrice":"5.50"
+}]
+
+  }
+  }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.BusinessServicetimeDao">
+    
+	<sql id="businessServicetimeColumns">
+		a.id AS "id",
+		a.businessinfo_id AS "businessinfoId",
+		a.timetype AS "timetype",
+		a.serial_number AS "serialNumber",
+		a.begin_hour AS "beginHour",
+		a.begin_minute AS "beginMinute",
+		a.end_hour AS "endHour",
+		a.end_minute AS "endMinute",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessServicetimeJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessServicetime">
+		SELECT 
+			<include refid="businessServicetimeColumns"/>
+		FROM business_servicetime a
+		<include refid="businessServicetimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessServicetime">
+		SELECT 
+			<include refid="businessServicetimeColumns"/>
+		FROM business_servicetime a
+		<include refid="businessServicetimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessServicetime">
+		SELECT 
+			<include refid="businessServicetimeColumns"/>
+		FROM business_servicetime a
+		<include refid="businessServicetimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_servicetime(
+			id,
+			businessinfo_id,
+			timetype,
+			serial_number,
+			begin_hour,
+			begin_minute,
+			end_hour,
+			end_minute,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessinfoId},
+			#{timetype},
+			#{serialNumber},
+			#{beginHour},
+			#{beginMinute},
+			#{endHour},
+			#{endMinute},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_servicetime SET 	
+			businessinfo_id = #{businessinfoId},
+			timetype = #{timetype},
+			serial_number = #{serialNumber},
+			begin_hour = #{beginHour},
+			begin_minute = #{beginMinute},
+			end_hour = #{endHour},
+			end_minute = #{endMinute},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_servicetime SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某商家某时段类型下的商家服务时段 -->
+	<select id="getByBusinessInfoID" resultType="BusinessServicetime">
+		SELECT
+			<include refid="businessServicetimeColumns" />
+		FROM business_servicetime a
+		WHERE a.businessinfo_id = #{businessInfoId} AND a.timetype = #{timeType} AND a.del_flag = 0
+		ORDER BY a.begin_hour
+	</select>
+</mapper>

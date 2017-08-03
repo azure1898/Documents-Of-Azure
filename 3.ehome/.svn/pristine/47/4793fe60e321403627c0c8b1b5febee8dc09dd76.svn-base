@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.AccountDao">
+    
+	<sql id="accountColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.phone_num AS "phoneNum",
+		a.nickname AS "nickname",
+		a.pwd AS "pwd",
+		a.photo AS "photo",
+		a.sex AS "sex",
+		a.height AS "height",
+		a.birth_year AS "birthYear",
+		a.weight AS "weight",
+		a.terminal_source AS "terminalSource",
+		a.certify_state AS "certifyState",
+		a.regist_date AS "registDate",
+		a.use_state AS "useState",
+		a.bind_bracelet_flag AS "bindBraceletFlag",
+		a.wallet_balance AS "walletBalance",
+		a.bracelet_num AS "braceletNum",
+		a.wallet_principal AS "walletPrincipal",
+		a.bracelet_name AS "braceletName",
+		a.create_by AS "createBy.id",
+		a.wallet_present AS "walletPresent",
+		a.face_recognition_flag AS "faceRecognitionFlag",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountJoins">
+	</sql>
+    
+	<select id="get" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO account(
+			id,
+			village_info_id,
+			phone_num,
+			nickname,
+			pwd,
+			photo,
+			sex,
+			height,
+			birth_year,
+			weight,
+			terminal_source,
+			certify_state,
+			regist_date,
+			use_state,
+			bind_bracelet_flag,
+			wallet_balance,
+			bracelet_num,
+			wallet_principal,
+			bracelet_name,
+			create_by,
+			wallet_present,
+			face_recognition_flag,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{phoneNum},
+			#{nickname},
+			#{pwd},
+			#{photo},
+			#{sex},
+			#{height},
+			#{birthYear},
+			#{weight},
+			#{terminalSource},
+			#{certifyState},
+			#{registDate},
+			#{useState},
+			#{bindBraceletFlag},
+			#{walletBalance},
+			#{braceletNum},
+			#{walletPrincipal},
+			#{braceletName},
+			#{createBy.id},
+			#{walletPresent},
+			#{faceRecognitionFlag},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE account SET 	
+			village_info_id = #{villageInfoId},
+			phone_num = #{phoneNum},
+			nickname = #{nickname},
+			pwd = #{pwd},
+			photo = #{photo},
+			sex = #{sex},
+			height = #{height},
+			birth_year = #{birthYear},
+			weight = #{weight},
+			terminal_source = #{terminalSource},
+			certify_state = #{certifyState},
+			regist_date = #{registDate},
+			use_state = #{useState},
+			bind_bracelet_flag = #{bindBraceletFlag},
+			wallet_balance = #{walletBalance},
+			bracelet_num = #{braceletNum},
+			wallet_principal = #{walletPrincipal},
+			bracelet_name = #{braceletName},
+			wallet_present = #{walletPresent},
+			face_recognition_flag = #{faceRecognitionFlag},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================== -->	
+	<select id="isExist" resultType="boolean">
+		SELECT count(id) FROM account
+		<where>
+			phone_num=#{phoneNum}
+		</where>
+	</select>
+	
+	<select id="getByPhoneNum" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		WHERE a.phone_num = #{phoneNum}
+	</select>
+	
+	<update id="saveAccountVillageID">
+		UPDATE account SET 
+			village_info_id = #{1} 
+		WHERE id = #{0}
+	</update>
+	
+</mapper>

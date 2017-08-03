@@ -1,0 +1,344 @@
+/**
+ * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
+ */
+package com.its.modules.operation.service;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.its.common.persistence.Page;
+import com.its.common.service.CrudService;
+import com.its.common.utils.StringUtils;
+import com.its.modules.operation.entity.GroupPurchase;
+import com.its.modules.operation.entity.GroupPurchasetime;
+import com.its.modules.operation.dao.GroupPurchaseDao;
+
+/**
+ * 团购管理Service
+ * @author caojing
+ * @version 2017-06-28
+ */
+@Service
+@Transactional(readOnly = true)
+public class GroupPurchaseService extends CrudService<GroupPurchaseDao, GroupPurchase> {
+
+	@Autowired
+	private GroupPurchaseDao groupPurchaseDao;
+	
+	@Autowired
+	private GroupPurchasetimeService groupPurchasetimeService;
+	
+	public GroupPurchase get(String id) {
+		return super.get(id);
+	}
+	
+	/**
+	 * 
+	 * @param groupPurchase
+	 * @return
+	 */
+	public List<GroupPurchase> findList(GroupPurchase groupPurchase) {
+		List<GroupPurchase> groupInfoList = new ArrayList<GroupPurchase>();
+		List<GroupPurchase> groupStartList = new ArrayList<GroupPurchase>();
+		List<GroupPurchase> groupEndList = new ArrayList<GroupPurchase>();
+		List<GroupPurchase> groupInList = new ArrayList<GroupPurchase>();
+		List<GroupPurchase> groupCancelList = new ArrayList<GroupPurchase>();
+		List<GroupPurchase> list = super.findList(groupPurchase);
+		
+		//取团购时间信息
+		for(GroupPurchase group : list){
+			GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+			groupPurchasetime.setGroupPurchaseId(group.getId());
+			groupPurchasetime.setStartTime(groupPurchase.getStartTime());
+			groupPurchasetime.setEndTime(groupPurchase.getEndTime());
+			//依据团购id，以及团购时间，查询团购时间信息
+			List<GroupPurchasetime> groupTimeList = groupPurchasetimeService.findList(groupPurchasetime);
+						
+			if(groupTimeList !=null && groupTimeList.size() > 0){
+				//设置开始时间和结束时间
+				group.setStartTime(groupTimeList.get(0).getStartTime());
+				group.setEndTime(groupTimeList.get(groupTimeList.size()-1).getEndTime());
+				
+				//总库存量
+				int stockNumTotal = 0;
+				
+				//设置总库存量
+				for(GroupPurchasetime groupTime : groupTimeList){
+					stockNumTotal=stockNumTotal+Integer.parseInt(groupTime.getStockNum());
+				}
+				group.setStockNum(stockNumTotal);				
+			}
+			groupInfoList.add(group);
+		}
+		
+		//团购：已撤销
+		if(groupPurchase != null && "3".equals(groupPurchase.getGroupPurcState())){
+			for(GroupPurchase group : groupInfoList){
+				group.setGroupPurcState("3");
+				groupCancelList.add(group);
+			}
+			return groupCancelList;
+		}
+		
+		//团购：已结束
+		if("2".equals(groupPurchase.getGroupPurcState())){
+			for(GroupPurchase group : groupInfoList){
+				GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+				groupPurchasetime.setGroupPurchaseId(group.getId());
+				List<GroupPurchasetime> groupTimeList = groupPurchasetimeService.findList(groupPurchasetime);
+				
+				//最后团购时间段为已结束，表示此团购已结束
+				if("2".equals(groupTimeList.get(groupTimeList.size()-1).getGroupState())){
+					group.setGroupPurcState("2");
+					groupEndList.add(group);
+				}			
+		    }
+			return groupEndList;
+		}
+		
+		//团购：进行中
+		if("1".equals(groupPurchase.getGroupPurcState())){
+			for(GroupPurchase group : groupInfoList){
+				GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+				groupPurchasetime.setGroupPurchaseId(group.getId());
+				List<GroupPurchasetime> groupTimeList = groupPurchasetimeService.findList(groupPurchasetime);
+		
+				//团购状态标识：1表示进行中
+				String stateFlag = null;
+				for(GroupPurchasetime groupTime : groupTimeList){
+					//团购：进行中
+					if(groupTime !=null && "1".equals(groupTime.getGroupState())){
+						stateFlag = "1";
+						break;
+					}
+				}
+				//团购：进行中
+				if("1".equals(groupPurchase.getGroupPurcState())){
+					if("1".equals(stateFlag)){
+						group.setGroupPurcState("1");
+						groupInList.add(group);
+					}
+				}
+			}
+			//按照排序标号进行排序
+			Collections.sort(groupInList,new Comparator<GroupPurchase>(){
+	            public int compare(GroupPurchase arg0, GroupPurchase arg1) {
+	                return arg0.getSortNum().compareTo(arg1.getSortNum());
+	            }
+	        });
+			return groupInList;
+		}
+		
+		//团购：待开始
+		if("0".equals(groupPurchase.getGroupPurcState())){
+			for(GroupPurchase group : groupInfoList){
+				GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+				groupPurchasetime.setGroupPurchaseId(group.getId());
+				List<GroupPurchasetime> groupTimeList = groupPurchasetimeService.findList(groupPurchasetime);
+
+				//团购状态标识：1表示进行中
+				String stateFlag = null;
+				for(GroupPurchasetime groupTime : groupTimeList){
+					//团购：进行中
+					if(groupTime !=null && "1".equals(groupTime.getGroupState())){
+						stateFlag = "1";
+						break;
+					}
+				}
+				
+				if(!"1".equals(stateFlag) && !"2".equals(groupTimeList.get(groupTimeList.size()-1).getGroupState())){
+					boolean editFlag = true;
+					for(GroupPurchasetime groupTime : groupTimeList){
+						//团购有部分时间段已结束，则不能编辑、删除
+						if("2".equals(groupTime.getGroupState())){
+							editFlag = false;
+							break;
+						}
+					}
+					
+					group.setEditFlag(editFlag);
+					group.setGroupPurcState("0");
+					groupStartList.add(group);
+				}
+			}
+			return groupStartList;
+		}
+		
+		return null;
+	}
+	
+	public Page<GroupPurchase> findPage(Page<GroupPurchase> page, GroupPurchase groupPurchase) {
+		return super.findPage(page, groupPurchase);
+	}
+	
+	/**
+	 * 团购管理中，依据模块的商户分类字典表ID，获取商家ID
+	 * @param groupPurchase
+	 * @return
+	 */
+	public List<GroupPurchase> getBusinessId (GroupPurchase groupPurchase){
+		return groupPurchaseDao.getBusinessId(groupPurchase);
+	}
+	
+	/**
+	 * 团购管理中，依据模块的商户ID，获取商家名称 
+	 * @param groupPurchase
+	 * @return
+	 */
+	public GroupPurchase getBusinessNameList(GroupPurchase groupPurchase){
+		return groupPurchaseDao.getBusinessNameList(groupPurchase);
+	}
+	
+	/**
+	 * 团购管理中，取全部商家 
+	 * @return
+	 */
+	public List<GroupPurchase> getAllBusinessList(){
+		return groupPurchaseDao.getAllBusinessList();
+	}
+	
+	/**
+	 * 
+	 * 团购管理中，依据团购ID，获取团购信息详情
+	 * @param id
+	 * @return
+	 */
+	public GroupPurchase getDetail(String id){
+		GroupPurchase groupPurchase = new GroupPurchase();
+		groupPurchase.setId(id);
+		return groupPurchaseDao.getDetail(groupPurchase);
+	}
+	
+	/**
+	 * 团购保存
+	 * @param groupPurchase
+	 */
+	@Transactional(readOnly = false)
+	public void save(GroupPurchase groupPurchase) {
+		super.save(groupPurchase);
+	}
+	
+	/**
+	 * 删除团购活动
+	 *  @param groupPurchase
+	 */
+	@Transactional(readOnly = false)
+	public void delete(GroupPurchase groupPurchase) {
+		
+		if(groupPurchase !=null){
+			
+			//删除团购活动主表记录
+			super.delete(groupPurchase);
+			
+			//删除团购活动时间信息
+			if(StringUtils.isNotBlank(groupPurchase.getId())){
+				GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+				groupPurchasetime.setGroupPurchaseId(groupPurchase.getId());
+				groupPurchasetimeService.deleteGroupPurchasetime(groupPurchasetime);
+			}			
+		}
+	}
+	
+	/**
+	 * 保存团购管理信息
+	 * @param groupPurchase
+	 * @throws ParseException 
+	 */
+	@Transactional(readOnly = false)
+	public int saveGroupPurchase(GroupPurchase groupPurchase) throws ParseException {
+		
+		//更新结果
+		int result = 0;
+		
+		//用户限购数
+		if(StringUtils.isBlank(groupPurchase.getRestrictionNumber())){
+			groupPurchase.setRestrictionNumber("0");
+		}
+		
+		//新增
+		if(StringUtils.isBlank(groupPurchase.getId())){
+			//设定排序序号
+			groupPurchase.setSortNum("0");
+			//团购状态
+			groupPurchase.setGroupPurcState("0");
+			
+			//插入前的准备
+			groupPurchase.preInsert();
+			//保存主表（团购管理）信息
+			int resultGroup = groupPurchaseDao.insert(groupPurchase);
+			//保存主表信息成功
+			if(resultGroup >0){
+				
+				//先删除，再插入团购活动时间信息
+				if(StringUtils.isNotBlank(groupPurchase.getId())){
+					GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+					groupPurchasetime.setGroupPurchaseId(groupPurchase.getId());
+					groupPurchasetimeService.deleteGroupPurchasetime(groupPurchasetime);
+				}
+				
+				//插入关联表（团购管理子表－团购时间）信息
+				int resultTime = groupPurchasetimeService.saveGroupPurchasetime(groupPurchase);
+				
+				if(resultTime > 0){
+					result = 1;
+				}
+			}
+		//修改
+		}else{
+			//更新前的准备
+			groupPurchase.preUpdate();
+			//更新主表（团购管理）信息
+			int resultGroup = groupPurchaseDao.update(groupPurchase);
+			
+			//保存主表信息成功
+			if(resultGroup >0){
+				//先删除，再插入团购活动时间信息
+				if(StringUtils.isNotBlank(groupPurchase.getId())){
+					GroupPurchasetime groupPurchasetime = new GroupPurchasetime();
+					groupPurchasetime.setGroupPurchaseId(groupPurchase.getId());
+					groupPurchasetimeService.deleteGroupPurchasetime(groupPurchasetime);
+				}
+				
+				//插入关联表（团购管理子表－团购时间）信息
+				int resultTime =groupPurchasetimeService.saveGroupPurchasetime(groupPurchase);
+				if(resultTime > 0){
+					result = 1;
+				}
+			}
+			
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 团购管理：团购下线
+	 * @param groupPurchase
+	 */
+	@Transactional(readOnly = false)
+	public int updateState(GroupPurchase groupPurchase){
+		//设置团购状态为：已撤销
+		groupPurchase.setGroupPurcState("3");
+		int result = groupPurchaseDao.updateState(groupPurchase);
+		return result;
+	}
+	
+	/**
+	 * 团购管理：保存排序
+	 * @param groupPurchase
+	 */
+	@Transactional(readOnly = false)
+	public int updateSortNum(GroupPurchase groupPurchase){
+		groupPurchase.preUpdate();
+		int result = groupPurchaseDao.updateSortNum(groupPurchase);
+		return result;
+	}
+
+}

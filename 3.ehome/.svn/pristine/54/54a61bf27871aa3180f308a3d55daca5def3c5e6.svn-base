@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.balance.dao.LogPropertyBalanceDao">
+    
+	<sql id="logPropertyBalanceColumns">
+		a.id AS "id",
+		a.operation_type AS "operationType",
+		a.batch_no AS "batchNo",
+		a.property_balance_id AS "propertyBalanceId",
+		a.property_company_id AS "propertyCompanyId",
+		a.balance_cycle AS "balanceCycle",
+		a.balance_start_time AS "balanceStartTime",
+		a.balance_end_time AS "balanceEndTime",
+		a.balance_model AS "balanceModel",
+		a.balance_state AS "balanceState",
+		a.order_money AS "orderMoney",
+		a.coupon_money AS "couponMoney",
+		a.deduction_money AS "deductionMoney",
+		a.pay_money AS "payMoney",
+		a.check_state AS "checkState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="logPropertyBalanceJoins">
+	</sql>
+    
+	<select id="get" resultType="LogPropertyBalance">
+		SELECT 
+			<include refid="logPropertyBalanceColumns"/>
+		FROM log_property_balance a
+		<include refid="logPropertyBalanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LogPropertyBalance">
+		SELECT 
+			<include refid="logPropertyBalanceColumns"/>
+		FROM log_property_balance a
+		<include refid="logPropertyBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="balanceStartTime != null and balanceStartTime != ''">
+				AND a.balance_start_time &gt;= #{balanceStartTime}
+			</if>
+			<if test="balanceEndTime != null and balanceEndTime != ''">
+				AND a.balance_end_time &lt;= #{balanceEndTime}
+			</if>
+			<if test="checkState != null and checkState != ''">
+				AND a.check_state = #{checkState}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LogPropertyBalance">
+		SELECT 
+			<include refid="logPropertyBalanceColumns"/>
+		FROM log_property_balance a
+		<include refid="logPropertyBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO log_property_balance(
+			id,
+			operation_type,
+			batch_no,
+			property_balance_id,
+			property_company_id,
+			balance_cycle,
+			balance_start_time,
+			balance_end_time,
+			balance_model,
+			balance_state,
+			order_money,
+			coupon_money,
+			deduction_money,
+			pay_money,
+			check_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{operationType},
+			#{batchNo},
+			#{propertyBalanceId},
+			#{propertyCompanyId},
+			#{balanceCycle},
+			#{balanceStartTime},
+			#{balanceEndTime},
+			#{balanceModel},
+			#{balanceState},
+			#{orderMoney},
+			#{couponMoney},
+			#{deductionMoney},
+			#{payMoney},
+			#{checkState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE log_property_balance SET 	
+			operation_type = #{operationType},
+			batch_no = #{batchNo},
+			property_balance_id = #{propertyBalanceId},
+			property_company_id = #{propertyCompanyId},
+			balance_cycle = #{balanceCycle},
+			balance_start_time = #{balanceStartTime},
+			balance_end_time = #{balanceEndTime},
+			balance_model = #{balanceModel},
+			balance_state = #{balanceState},
+			order_money = #{orderMoney},
+			coupon_money = #{couponMoney},
+			deduction_money = #{deductionMoney},
+			pay_money = #{payMoney},
+			check_state = #{checkState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE log_property_balance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

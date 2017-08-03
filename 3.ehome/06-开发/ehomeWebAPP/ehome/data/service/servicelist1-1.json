@@ -1,0 +1,13 @@
+{
+"code" : 1000,
+"data" : [{
+  "serviceID":"006",
+  "serviceName":"水晶美甲",
+  "serviceImage":"../../images/service/2-2.jpg",
+  "originalPrice":12,
+"discountedPrice":12,
+  "serviceUnit":"每台",
+  "url":"../../page/service/servicedetail.html?id=006"
+}],
+"message" : ""
+}
