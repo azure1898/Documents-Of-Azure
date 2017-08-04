@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.ModuleManageDao">
+    
+	<sql id="moduleManageColumns">
+		a.id AS "id",
+		a.module_name AS "moduleName",
+		a.module_type AS "moduleType",
+		a.module_url AS "moduleUrl",
+		a.module_icon AS "moduleIcon",
+		a.sort_num AS "sortNum",
+		a.business_category_dict_flag AS "businessCategoryDictFlag",
+		a.business_category_dict_id AS "businessCategoryDictId",
+		a.create_by AS "createBy.id",
+		a.phone_module_code AS "phoneModuleCode",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="moduleManageJoins">
+	</sql>
+    
+	<select id="get" resultType="ModuleManage">
+		SELECT 
+			<include refid="moduleManageColumns"/>
+		FROM module_manage a
+		<include refid="moduleManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ModuleManage">
+		SELECT 
+			<include refid="moduleManageColumns"/>
+		FROM module_manage a
+		<include refid="moduleManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ModuleManage">
+		SELECT 
+			<include refid="moduleManageColumns"/>
+		FROM module_manage a
+		<include refid="moduleManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO module_manage(
+			id,
+			module_name,
+			module_type,
+			module_url,
+			module_icon,
+			sort_num,
+			business_category_dict_flag,
+			business_category_dict_id,
+			create_by,
+			phone_module_code,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{moduleName},
+			#{moduleType},
+			#{moduleUrl},
+			#{moduleIcon},
+			#{sortNum},
+			#{businessCategoryDictFlag},
+			#{businessCategoryDictId},
+			#{createBy.id},
+			#{phoneModuleCode},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE module_manage SET 	
+			module_name = #{moduleName},
+			module_type = #{moduleType},
+			module_url = #{moduleUrl},
+			module_icon = #{moduleIcon},
+			sort_num = #{sortNum},
+			business_category_dict_flag = #{businessCategoryDictFlag},
+			business_category_dict_id = #{businessCategoryDictId},
+			phone_module_code = #{phoneModuleCode},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE module_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================================ -->
+	
+	<!-- 获取某楼盘下的模块列表（商户分类） -->
+	<select id="getModuleListByVillageInfoId" resultType="ModuleManage">
+		SELECT DISTINCT
+			<include refid="moduleManageColumns"/>
+		FROM
+			Module_Manage a
+		WHERE
+			a.del_flag = '0'
+		AND a.Business_Category_Dict_Flag = '1'
+		AND a.Business_Category_Dict_ID IN (
+			SELECT
+				b.Business_Category_Dict_ID
+			FROM
+				Business_CategoryInfo b
+			WHERE
+				b.del_flag = '0'
+			AND b.BusinessInfo_ID IN (
+				SELECT
+					c.BusinessInfo_ID
+				FROM
+					Business_ServiceScope c
+				WHERE
+					c.del_flag = '0'
+				AND c.Village_Info_ID = #{villageInfoId}
+			)
+		)
+		ORDER BY
+			a.Sort_Num
+	</select>
+	
+	<!-- 获取某商户某产品模式下的商户分类的模块ID -->
+	<select id="getModuleId" resultType="java.lang.String">
+		SELECT DISTINCT
+			c.ID
+		FROM
+			Module_Manage c
+		WHERE
+			c.Business_Category_Dict_Flag = 1
+		AND c.del_flag = 0
+		AND c.Business_Category_Dict_ID IN (
+			SELECT
+				e.ID
+			FROM
+				Business_CategoryInfo d,
+				Business_CategoryDict e
+			WHERE
+				d.Business_Category_Dict_ID = e.ID
+			AND d.del_flag = 0
+			AND e.del_flag = 0
+			AND e.Prod_Type = #{prodType}
+			AND d.BusinessInfo_ID = #{businessInfoId}
+		)
+	</select>
+	
+	<!-- 获取某楼盘下某种类型的模块推荐信息 -->
+	<select id="getModuleList" resultType="ModuleManage">
+		SELECT
+			<include refid="moduleManageColumns"/>
+		FROM
+			Module_Manage a
+		WHERE
+			a.del_flag = 0
+		AND a.ID IN (
+			SELECT
+				<if test="type == 0">
+					b.Maint_Recom_Module
+				</if>
+				<if test="type == 1">
+					b.Community_Recom_Module
+				</if>
+				<if test="type == 2">
+					b.Life_Recom_Module
+				</if>
+			FROM
+				Village_Line b
+			WHERE
+				b.del_flag = 0
+			AND b.Village_Info_ID = #{villageInfoId}
+			AND b.Product_Line = '0'
+			AND b.Set_State = '1'
+		)
+		LIMIT 4
+	</select>
+	
+	<!-- 获取某楼盘下某推荐位置的商家列表 -->
+	<select id="getRecommendBusinessList" resultType="java.util.Map">
+		SELECT
+			a.Describes AS recommendDes,
+			a.Pic_Url AS recommendPic,
+			c.ID AS businessId,
+			c.Business_Name AS businessName
+		FROM
+			Village_LineRecomModule a,
+			Village_Line b,
+			Business_Info c
+		WHERE
+			a.Village_Line_ID = b.ID
+		AND a.Recom_Business_ID = c.ID
+		AND a.del_flag = '0'
+		AND b.del_flag = '0'
+		AND c.del_flag = '0'
+		AND a.Recom_Position = #{recommendPosition}
+		AND a.Recom_Type = '0'
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND b.Product_Line = '0'
+		AND b.Set_State = '1'
+		ORDER BY
+			a.Sort_Num
+	</select>
+	<!-- 根据手机端模块编码获取模块信息 -->
+	<select id="getModuleByPhoneCode" resultType="ModuleManage">
+		SELECT 
+			<include refid="moduleManageColumns"/>
+		FROM module_manage a
+		WHERE a.del_flag = '0' AND a.phone_module_code = #{phoneModuleCode}
+	</select>
+</mapper>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>我的消息</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+				.i2_con2_1{
+			    background: url(../../images/m2.png) no-repeat;
+			    display: inline-block;
+			    width: 30px;
+			    height: 32px;
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<div class="grey_top">
+				我的消息
+			</div>
+			<div class="main_box" style="padding:0;">
+				<div class="my_message">
+					<div class="my_message_left"><img src="../../images/icon01.png" width="80" height="80">
+						<div class="my_message_left_t" v-if="mymessages.countAtMe>0"></div>
+					</div>
+					<div class="my_message_right">
+						<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;@我的
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message">
+					<div class="my_message_left"><img src="../../images/icon02.png" width="80" height="80">
+						<div class="my_message_left_t" v-if="mymessages.countComment>0"></div>
+					</div>
+					<div class="my_message_right">
+						<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;@我的
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" style="border-bottom:none;">
+					<div class="my_message_left"><img src="../../images/icon03.png" width="80" height="80">
+						<div class="my_message_left_t" v-if="mymessages.countPraise==1"></div>
+					</div>
+					<div class="my_message_right">
+						<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;@我的
+					</div>
+					<div class="clear"></div>
+				</div>
+
+			</div>
+			<div class="main_box mt10" style="border-top:solid 1px #ececec; padding:0;">
+				<div class="my_message">
+					<div class="my_message_left"><img src="../../images/icon04.png" width="80" height="80">
+						<div class="my_message_left_t"></div>
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;<span>06-01</span>
+							<font style="font-size:16px; color:#000;">订单通知</font>
+						</p>
+						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message">
+					<div class="my_message_left2"><img src="../../images/icon05.png" width="80" height="80">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">订单通知</font>
+						</p>
+						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<!--<div class="my_message">
+					<div class="my_message_left3">
+						<div class="my_message_left3_1"><img src="../../images/icon01.png" width="80" height="80"></div>
+						<div class="my_message_left3_2"><img src="../../images/icon02.png" width="80" height="80"></div>
+						<div class="my_message_left3_3"><img src="../../images/icon03.png" width="80" height="80"></div>
+						<div class="my_message_left3_4"><img src="../../images/pic01.jpg" width="80" height="80"></div>
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;<span>06-01</span>
+							<font style="font-size:16px; color:#000;">订单通知</font>
+						</p>
+						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" style="border-bottom:0;">
+					<div class="my_message_left3">
+						<div class="my_message_left3_1"><img src="../../images/icon01.png" width="80" height="80"></div>
+						<div class="my_message_left3_2"><img src="../../images/icon02.png" width="80" height="80"></div>
+						<div class="my_message_left3_3"><img src="../../images/icon03.png" width="80" height="80"></div>
+						<div class="my_message_left3_4"><img src="../../images/pic01.jpg" width="80" height="80"></div>
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;<span>06-01</span>
+							<font style="font-size:16px; color:#000;">订单通知</font>
+						</p>
+						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>-->
+
+				<div class="he100"></div>
+				<div class="foot2">
+					<div class="foot2_bg">
+						<ul>
+							<li> <a href="#"><i class="i2_con1"></i><span  style="display:block;">首页</span></a></li>
+							<li><a href="#"><i :class="unread==1?'i2_con2_2':'i2_con2_1'"></i><span class="index_redft" style="display:block;">消息</span></a></li>
+							<li style="width:24%; z-index:1000; margin-top:-0;">
+								<a href="#"><img src="../../images/index2_icon6.png"></a>
+							</li>
+							<li><a href="#"><i class="i2_con3_2"></i><span  style="display:block;">优家</span></a></li>
+							<li><a href="#"><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/mymessage.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

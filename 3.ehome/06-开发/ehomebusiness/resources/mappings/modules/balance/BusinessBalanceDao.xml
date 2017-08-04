@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.balance.dao.BusinessBalanceDao">
+    
+	<sql id="businessBalanceColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.balance_cycle AS "balanceCycle",
+		a.balance_start_time AS "balanceStartTime",
+		a.balance_end_time AS "balanceEndTime",
+		a.balance_model AS "balanceModel",
+		a.balance_state AS "balanceState",
+		a.order_money AS "orderMoney",
+		a.coupon_money AS "couponMoney",
+		a.deduction_money AS "deductionMoney",
+		a.pay_money AS "payMoney",
+		a.check_state AS "checkState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessBalanceJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessInfoId != null and businessInfoId != ''">
+				AND a.business_info_id = #{businessInfoId}
+			</if>
+			<if test="balanceCycle != null and balanceCycle != ''">
+				AND a.balance_cycle = #{balanceCycle}
+			</if>
+			
+            <if test="balanceStartTime != null and balanceStartTime != ''">
+                AND a.balance_start_time &gt; #{balanceStartTime}
+            </if>
+            <if test="balanceEndTime != null and balanceEndTime != ''">
+                AND a.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+			<if test="balanceState != null and balanceState != ''">
+				AND a.balance_state = #{balanceState}
+			</if>
+			<if test="checkState != null and checkState != ''">
+				AND a.check_state = #{checkState}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_balance(
+			id,
+			business_info_id,
+			balance_cycle,
+			balance_start_time,
+			balance_end_time,
+			balance_model,
+			balance_state,
+			order_money,
+			coupon_money,
+			deduction_money,
+			pay_money,
+			check_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{balanceCycle},
+			#{balanceStartTime},
+			#{balanceEndTime},
+			#{balanceModel},
+			#{balanceState},
+			#{orderMoney},
+			#{couponMoney},
+			#{deductionMoney},
+			#{payMoney},
+			#{checkState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_balance SET 	
+			business_info_id = #{businessInfoId},
+			balance_cycle = #{balanceCycle},
+			balance_start_time = #{balanceStartTime},
+			balance_end_time = #{balanceEndTime},
+			balance_model = #{balanceModel},
+			balance_state = #{balanceState},
+			order_money = #{orderMoney},
+			coupon_money = #{couponMoney},
+			deduction_money = #{deductionMoney},
+			pay_money = #{payMoney},
+			check_state = #{checkState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_balance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

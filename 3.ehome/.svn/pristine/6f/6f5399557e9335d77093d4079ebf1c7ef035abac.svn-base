@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.business.dao.BusinessCategorydictDao">
+    
+	<sql id="businessCategorydictColumns">
+		a.id AS "id",
+		a.category_name AS "categoryName",
+		a.prod_type AS "prodType",
+		a.category_introduce AS "categoryIntroduce",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessCategorydictJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessCategorydict">
+		SELECT 
+			<include refid="businessCategorydictColumns"/>
+		FROM business_categorydict a
+		<include refid="businessCategorydictJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessCategorydict">
+		SELECT 
+			<include refid="businessCategorydictColumns"/>
+		FROM business_categorydict a
+		<if test="businessInfo != null and businessInfo.id != null and businessInfo.id != ''">
+			JOIN business_categoryinfo b on a.ID=b.Business_Category_Dict_ID 
+		</if>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<if test="businessInfo != null and businessInfo.id != null and businessInfo.id != ''">
+			AND b.BusinessInfo_ID = #{businessInfo.id}
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessCategorydict">
+		SELECT 
+			<include refid="businessCategorydictColumns"/>
+		FROM business_categorydict a
+		<include refid="businessCategorydictJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_categorydict(
+			id,
+			category_name,
+			prod_type,
+			category_introduce,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{categoryName},
+			#{prodType},
+			#{categoryIntroduce},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_categorydict SET 	
+			category_name = #{categoryName},
+			prod_type = #{prodType},
+			category_introduce = #{categoryIntroduce},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_categorydict SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getBusinessCategoryByCategoryName" resultType="BusinessCategorydict">
+		SELECT 
+			<include refid="businessCategorydictColumns"/>
+		FROM business_categorydict a
+		WHERE a.category_name = #{categoryName}
+		AND a.del_flag = '0'
+	</select>
+  <!-- 通过商家ID获取分类列表 -->
+  <select id="getListBybusId" resultType="BusinessCategorydict">
+    SELECT
+    <include refid="businessCategorydictColumns" />
+    FROM business_categorydict a
+    JOIN business_categoryinfo b on a.ID=b.Business_Category_Dict_ID
+    <where>
+      a.del_flag = '0' AND b.BusinessInfo_ID = #{businessinfoId}  
+    </where>
+  </select>
+	
+</mapper>

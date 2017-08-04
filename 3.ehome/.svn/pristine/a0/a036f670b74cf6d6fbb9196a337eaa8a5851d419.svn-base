@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.module.dao.ModuleManageDao">
+
+  <sql id="moduleManageColumns">
+    a.id AS "id",
+    a.module_name AS "moduleName",
+    a.module_type AS "moduleType",
+    a.module_url AS "moduleUrl",
+    a.module_icon AS "moduleIcon",
+    a.create_by AS "createBy.id",
+    a.sort_num AS "sortNum",
+    a.create_date AS "createDate",
+    a.business_category_dict_flag AS "businessCategoryDictFlag",
+    a.update_by AS "updateBy.id",
+    a.business_category_dict_id AS "businessCategoryDictId",
+    a.update_date AS "updateDate",
+    a.remarks AS "remarks",
+    a.del_flag AS "delFlag"
+  </sql>
+
+  <sql id="moduleManageJoins">
+  </sql>
+
+  <select id="get" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    <include refid="moduleManageJoins" />
+    WHERE a.id = #{id}
+  </select>
+
+  <select id="findList" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    <include refid="moduleManageJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      AND (a.module_type = '${@com.its.modules.sys.utils.DictUtils@getDictValue("社区","module_type","1")}'
+      OR a.module_type = '${@com.its.modules.sys.utils.DictUtils@getDictValue("生活","module_type","2")}')
+      <if test="moduleName != null and moduleName != ''">
+        AND a.module_name LIKE
+        <if test="dbName == 'oracle'">'%'||#{moduleName}||'%'</if>
+        <if test="dbName == 'mssql'">'%'+#{moduleName}+'%'</if>
+        <if test="dbName == 'mysql'">concat('%',#{moduleName},'%')</if>
+      </if>
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.create_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findAllList" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    <include refid="moduleManageJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.create_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <!-- 团购管理中，获取模块列表 GroupPurchase -->
+  <select id="getLifeModuleList" resultType="ModuleManage">
+    SELECT
+    id AS id,
+    Module_Name AS moduleName,
+    Business_Category_Dict_ID AS businessCategoryDictId
+    FROM module_manage a
+    <where>
+      a.Module_Type = '2'
+      AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+  </select>
+
+  <!-- 团购管理中，获取模块的商户分类字典表IDGroupPurchase 设置管理中 获取生活面模块列表中也有用到（zhujiao） -->
+  <select id="getBusinessCategoryDictId" resultType="ModuleManage">
+    SELECT
+    id AS id,
+    Business_Category_Dict_ID AS businessCategoryDictId
+    FROM module_manage a
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="id != null and id != ''">
+        AND a.id = #{id}
+      </if>
+    </where>
+  </select>
+
+  <insert id="insert">
+    INSERT INTO module_manage(
+    id,
+    module_name,
+    module_type,
+    module_url,
+    module_icon,
+    create_by,
+    sort_num,
+    create_date,
+    business_category_dict_flag,
+    update_by,
+    business_category_dict_id,
+    update_date,
+    remarks,
+    del_flag
+    ) VALUES (
+    #{id},
+    #{moduleName},
+    #{moduleType},
+    #{moduleUrl},
+    #{moduleIcon},
+    #{createBy.id},
+    #{sortNum},
+    #{createDate},
+    #{businessCategoryDictFlag},
+    #{updateBy.id},
+    #{businessCategoryDictId},
+    #{updateDate},
+    #{remarks},
+    #{delFlag}
+    )
+  </insert>
+
+  <update id="update">
+    UPDATE module_manage SET
+    module_name = #{moduleName},
+    module_type = #{moduleType},
+    module_icon = #{moduleIcon},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate}
+    WHERE id = #{id}
+  </update>
+
+  <update id="delete">
+    UPDATE module_manage SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
+  </update>
+
+  <select id="findListByBusinessCategorydictId" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    where
+    a.del_flag = '0'
+    AND a.business_category_dict_flag = ${@com.its.common.config.Global@YES}
+    AND a.business_category_dict_id = #{businessCategoryDictId}
+    ORDER BY a.update_date DESC
+  </select>
+
+  <select id="getModuleByModuleName" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    WHERE a.module_name = #{moduleName}
+    AND a.del_flag = '0'
+  </select>
+
+  <!-- 优惠券管理中，获取服务品类列表 couponManage -->
+  <select id="getLifeModule" resultType="ModuleManage">
+    SELECT
+    <include refid="moduleManageColumns" />
+    FROM module_manage a
+    WHERE (a.module_type = '2' or a.module_name = '物业缴费')
+    AND a.del_flag = '0'
+  </select>
+
+  <!-- 设置管理中获取社区 模块的列表 add by zhujiao -->
+  <select id="getCommunityModuleList" resultType="ModuleManage">
+    SELECT
+    id AS id,
+    Module_Name AS moduleName,
+    Business_Category_Dict_ID AS businessCategoryDictId
+    FROM module_manage a
+    <where>
+      a.Module_Type = '1'
+      AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+  </select>
+  <!-- 推荐管理中获取选中的社区和生活 模块的列表 add by zhujiao -->
+  <select id="getSetModuleList" resultType="ModuleManage">
+    SELECT
+    id AS id,
+    Module_Name AS moduleName
+    FROM module_manage a
+    <where>
+      a.del_flag ='0'
+      AND a.id in
+      <foreach collection="list" item="moduleIds" index="index" open="(" close=")" separator=",">
+        #{moduleIds}
+      </foreach>
+    </where>
+    order by instr(
+    <foreach collection="list" item="moduleIds" index="index" open="'" close="'" separator=",">
+      ${moduleIds}
+    </foreach>
+    ,concat(ID));
+  </select>
+</mapper>

@@ -1,0 +1,19 @@
+/*�б��б�ѡ�е���*/
+tr.listRowSelected {
+ background-color: #eaedf1;
+}
+/*�б���δ��ѡ�е���*/
+tr.listRowUnSelected {
+ background-color: white;
+}
+
+.timelist {
+ width: 80px;
+}
+
+.lable-num {
+ padding-right: 7px;
+ padding-left: 7px;
+ border: 1px solid #ddd;
+ margin-right: 15px;
+}

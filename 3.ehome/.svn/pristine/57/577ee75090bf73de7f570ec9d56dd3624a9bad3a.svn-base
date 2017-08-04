@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>选择可见范围</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    	 a:link{text-decoration: none;}
+		a:visited{text-decoration: none;}
+		a:hover{text-decoration: none;}
+		[v-cloak] {
+			  display: none;
+			}
+    </style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="black_back"></a>
+				选择可见范围
+			</div>
+			<div class="main_box" style="padding:0;">
+				<div class="my_message">
+					<div class="my_message_left4" @click="choice(1)"><img :src="choose==1 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<a href="../home/forward.html?type=1"><p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">公开</font>
+						</p>
+						<p>&nbsp;&nbsp;所有人可见</p>
+						</a>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message">
+					<div class="my_message_left4" @click="choice(2)"><img :src="choose==2 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<a href="../home/forward.html?type=2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">粉丝可见</font>
+						</p>
+						<p>&nbsp;&nbsp;关注我的粉丝可见</p>
+						</a>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" style="border-bottom:none;">
+					<div class="my_message_left4" @click="choice(3)"><img :src="choose==3 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<a href="../home/forward.html?type=3">
+						
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">好友可见</font>
+						</p>
+						<p>&nbsp;&nbsp;相互关注好友可见</p>
+						</a>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/chooserange.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>
