@@ -300,8 +300,8 @@
 					</c:forEach>
 					<section class="z_file fl"
 						<c:if test="${fn:length(imgUrls) gt 4}">style="display: none;"</c:if>>
-						<img src="${ctxStatic}/images/a10.png" class="add-img"> <input
-							type="file" name="file" id="file" class="file" value=""
+						<img src="${ctxStatic}/images/a10.png" class="add-img"> 
+						<input type="file" name="file" id="file" class="file" value=""
 							accept="image/jpg,image/jpeg,image/png,image/bmp"
 							multiple="multiple" />
 					</section>
@@ -364,8 +364,7 @@
 			<div class="controls">
 				<form:textarea id="content" path="content" rows="4" maxlength="200"
 					style="width:1000px;height:400px" class="input-xlarge" htmlEscape="false"/>
-				<label for="content" class="error word_message" style="display: none;">超出最大长度，请适当缩减内容</label>
-				<label for="content" class="error word_message_min" style="display: none;">请输入公告内容</label>
+				<label for="content" class="custom-error word_message" style="display: none;">超出最大长度，请适当缩减内容</label>
 			</div>
 		</div>
 		<div class="control-group">
@@ -394,7 +393,7 @@
 		<div class="form-actions">
 				<input id="btnSubmit" class="btn btn-success" type="submit"
 					value="保 存" />&nbsp;
-            <a id="btnCancel" href="${ctx}/service/serviceInfo/list?sortItem=${serviceInfo.sortItem}&sort=${serviceInfo.sort}" class="btn btn-success"> 返 回</a>
+            <a id="btnCancel" href="${ctx}/service/serviceInfo/list?sortItem=${serviceInfo.sortItem}&sort=${serviceInfo.sort}" class="btn btn-success"> 取消</a>
 		</div>
 	</form:form>
 	<script src="${ctxStatic}/common/multiplefileUpload.js"></script>

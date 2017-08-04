@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>模块管理管理</title>
+	<title>图标管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -52,7 +52,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/module/moduleManage/form?id=${moduleManage.id}">模块管理<shiro:hasPermission name="module:moduleManage:edit">修改</shiro:hasPermission><shiro:lacksPermission name="module:moduleManage:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/module/moduleManage/form?id=${moduleManage.id}">图标<shiro:hasPermission name="module:moduleManage:edit">修改</shiro:hasPermission><shiro:lacksPermission name="module:moduleManage:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="moduleManage" action="${ctx}/module/moduleManage/save" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<form:hidden path="id"/>

@@ -35,13 +35,13 @@ color: #2dc78a;
 
 }
 .accordion-inner{padding:0px;}
-.accordion-group{-webkit-border-radius:0px;border-radius:0px;border:none; border-bottom:1px solid #ddd;  margin-bottom:0px;}
+.accordion-group{-webkit-border-radius:0px;border-radius:0px;border:none; border-bottom:1px solid #dee2ee;  margin-bottom:0px;}
 .accordion-inner .nav-list li a{ padding:0px 0px 0px 8px;}
 .accordion-inner ul li a i{display:none}
 .accordion-inner ul li.active a i{display:inline; float:right; line-height:24px; margin-right:5px}
 .accordion-heading{ border-radius:0px; height:30px;}
 .accordion-heading .accordion-toggle{ padding:0px 15px; line-height:30px;}
-.accordion-heading .accordion-toggle>i.fa{ float:right; margin-right:-3px; line-height:30px;}
+.accordion-heading .accordion-toggle>i.fa{ float:right; margin-right:-8px; line-height:30px;}
 #jerichotab .tab_pages>div.tabs{ border-bottom:2px solid #2dc78a; height:30px;}
 #jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a{background:none;}
 #jerichotab .tab_pages>div.tabs>ul>li.tab_unselect>div.tab_left>div.tab_close>a{margin-top:8px;}

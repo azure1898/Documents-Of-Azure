@@ -7,6 +7,7 @@
 		a.business_balance_id AS "businessBalanceId",
 		a.business_info_id AS "businessInfoId",
 		a.module_id AS "moduleId",
+        a.order_id AS "orderId",
 		a.order_no AS "orderNo",
 		a.prod_type AS "prodType",
 		a.order_group_no AS "orderGroupNo",
@@ -97,6 +98,7 @@
 			business_balance_id,
 			business_info_id,
 			module_id,
+			order_id,
 			order_no,
 			prod_type,
 			order_group_no,
@@ -119,6 +121,7 @@
 			#{businessBalanceId},
 			#{businessInfoId},
 			#{moduleId},
+			#{orderId},
 			#{orderNo},
 			#{prodType},
 			#{orderGroupNo},
@@ -144,6 +147,7 @@
 			business_balance_id = #{businessBalanceId},
 			business_info_id = #{businessInfoId},
 			module_id = #{moduleId},
+			order_id = #{orderId},
 			order_no = #{orderNo},
 			prod_type = #{prodType},
 			order_group_no = #{orderGroupNo},
@@ -172,6 +176,7 @@
 	   SELECT
 	        bi.id AS businessInfoId,
             o.module_manage_id AS moduleId,
+            o.id AS orderId, 
             o.order_no AS orderNo,
             o.Prod_Type AS prodType,
             o.order_no AS orderGroupNo,
@@ -208,6 +213,7 @@
        SELECT
             bi.id AS businessInfoId,
             o.module_manage_id AS moduleId,
+            o.id AS orderId,
             o.order_no AS orderNo,
             o.Prod_Type AS prodType,
             o.order_no AS orderGroupNo,
@@ -244,6 +250,7 @@
        SELECT
             bi.id AS businessInfoId,
             o.module_manage_id AS moduleId,
+            o.id AS orderId,
             o.order_no AS orderNo,
             o.Prod_Type AS prodType,
             o.order_no AS orderGroupNo,
@@ -280,6 +287,7 @@
        SELECT
             bi.id AS businessInfoId,
             o.module_manage_id AS moduleId,
+            o.id AS orderId,
             o.order_no AS orderNo,
             o.Prod_Type AS prodType,
             o.order_no AS orderGroupNo,
@@ -316,6 +324,7 @@
        SELECT
             bi.id AS businessInfoId,
             o.module_manage_id AS moduleId,
+            o.id AS orderId,
             o.order_no AS orderNo,
             o.Prod_Type AS prodType,
             ol.Group_Purc_Number AS orderGroupNo,
@@ -362,7 +371,7 @@
         WHERE order_no = #{orderNo}
     </update>
 
-    <update id="updateService">
+    <update id="updateOrderService">
         UPDATE 
             order_service
         SET

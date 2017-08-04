@@ -1,9 +1,7 @@
 package com.its.modules.app.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,25 +31,18 @@ import com.its.modules.sys.service.SysCodeMaxService;
 @Service
 @Transactional(readOnly = true)
 public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderGroupPurc> {
-
 	@Autowired
 	private BusinessInfoService businessInfoService;
-
 	@Autowired
 	private VillageInfoService villageInfoService;
-
 	@Autowired
 	private SysCodeMaxService sysCodeMaxService;
-
 	@Autowired
 	private OrderGroupPurcListService orderGroupPurcListService;
-
 	@Autowired
 	private OrderTrackService orderTrackService;
-
 	@Autowired
 	private GroupPurchaseService groupPurchaseService;
-
 	@Autowired
 	private GroupPurchasetimeService groupPurchasetimeService;
 
@@ -179,7 +170,7 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		// 修改团购已购数量
 		groupPurchasetimeService.updateSaleNum(payNumber, groupPurchaseBean.getGroupPurchaseTimeId());
 		// 插入订单追踪
-		OrderTrack orderTrack = new OrderTrack();
+		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_GROUP_PURCHASE, orderGroupPurcId, orderNo);
 
 		return orderGroupPurcId;
 	}
@@ -190,22 +181,7 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 	 * @return 团购券号
 	 */
 	public String getGroupPurcNumber() {
-		return DateFormatUtils.format(new Date(), "MMddHH") + ((int) (Math.random() * 900000) + 100000);
-	}
-
-	/**
-	 * 获取某用户某楼盘下的团购类订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderFieldBean>
-	 */
-	public List<OrderGroupPurcBean> getOrderGroupPurcList(String villageInfoId, String accountId, String moduleManageId) {
-		return dao.getOrderGroupPurcList(villageInfoId, accountId, moduleManageId);
+		return String.valueOf(((long) (Math.random() * 900000000000L) + 100000000000L));
 	}
 
 	/**
@@ -264,7 +240,6 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		// 插入订单追踪
 		OrderTrack orderTrack = new OrderTrack();
 		orderTrackService.save(orderTrack);
-
 		return true;
 	}
 }

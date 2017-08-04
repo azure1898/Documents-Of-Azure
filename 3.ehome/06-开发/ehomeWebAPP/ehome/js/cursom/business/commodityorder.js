@@ -37,7 +37,8 @@ var vm = new Vue({
 					var delivery = res.data.data.deliveryDate[0];
 					_this.deliveryDate.date = delivery.date;
 					
-					if(delivery.timePeriod && delivery.timePeriod.length >= 0){
+					if(delivery.timePeriod && delivery.timePeriod.length >0){
+//							if(delivery.timePeriod && delivery.timePeriod.length >=0){
 						_this.deliveryDate.isImmediate = delivery.timePeriod[0].isImmediate;
 						_this.deliveryDate.start = delivery.timePeriod[0].start;
 						_this.deliveryDate.end = delivery.timePeriod[0].end;

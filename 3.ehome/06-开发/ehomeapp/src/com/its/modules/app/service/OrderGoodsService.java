@@ -214,27 +214,11 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 		// 修改商品在购物车中的状态
 		shoppingCartDao.updateOrderState(accountID, villageInfoID, business.getId());
 		// 生成订单跟踪状态
-		//orderTrackService.createTrackSubmit(AppGlobal.MODEL_GOODS, order.getId(), orderNo);
+		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_GOODS, order.getId(), orderNo);
 		result.clear();
 		result.put("code", Global.CODE_SUCCESS);
 		result.put("message", order.getId());
 		return result;
-	}
-
-	/**
-	 * 
-	 * 获取某用户某楼盘下的商品类订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderGoodsBean>
-	 */
-	public List<OrderGoodsBean> getOrderGoodsList(String villageInfoId, String accountId, String moduleManageId) {
-		return dao.getOrderGoodsList(villageInfoId, accountId, moduleManageId);
 	}
 
 	/**
@@ -312,8 +296,7 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 					goodsInfoService.updateStockAndSellCount(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId());
 					// 如果商品有规格，更新对应规格库存
 					if (orderGoodsList.getSkuKeyId() != null && orderGoodsList.getSkuValueId() != null) {
-						goodsSkuPriceService.updateStock(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId(), orderGoodsList.getSkuKeyId(),
-								orderGoodsList.getSkuValueId());
+						goodsSkuPriceService.updateStock(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId(), orderGoodsList.getSkuKeyId(), orderGoodsList.getSkuValueId());
 					}
 				}
 			}

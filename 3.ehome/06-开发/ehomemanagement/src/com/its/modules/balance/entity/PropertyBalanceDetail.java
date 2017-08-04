@@ -24,6 +24,7 @@ public class PropertyBalanceDetail extends DataEntity<PropertyBalanceDetail> {
 	private String propertyCompanyId; // 物业公司ID
 	private String villageInfoId; // 楼盘ID
 	private String moduleId; // 模块ID
+	private String orderId; // 订单号
 	private String orderNo; // 订单号
 	private String orderGroupNo; // 订单号/团购券码
 	private Double orderMoney; // 订单金额
@@ -85,6 +86,14 @@ public class PropertyBalanceDetail extends DataEntity<PropertyBalanceDetail> {
 
 	public void setModuleId(String moduleId) {
 		this.moduleId = moduleId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Length(min = 0, max = 64, message = "订单号长度必须介于 0 和 64 之间")
@@ -236,13 +245,13 @@ public class PropertyBalanceDetail extends DataEntity<PropertyBalanceDetail> {
 	@Override
 	public String toString() {
 		return "PropertyBalanceDetail [propertyBalanceId=" + propertyBalanceId + ", propertyCompanyId="
-				+ propertyCompanyId + ", villageInfoId=" + villageInfoId + ", moduleId=" + moduleId + ", orderNo="
-				+ orderNo + ", orderGroupNo=" + orderGroupNo + ", orderMoney=" + orderMoney + ", couponMoney="
-				+ couponMoney + ", deductionMoney=" + deductionMoney + ", payMoney=" + payMoney + ", payType=" + payType
-				+ ", payOrg=" + payOrg + ", tradeCompleteTime=" + tradeCompleteTime + ", payCheckState=" + payCheckState
-				+ ", balanceStartTime=" + balanceStartTime + ", balanceEndTime=" + balanceEndTime + ", serialNum="
-				+ serialNum + ", companyName=" + companyName + ", villageName=" + villageName + ", moduleName="
-				+ moduleName + "]";
+				+ propertyCompanyId + ", villageInfoId=" + villageInfoId + ", moduleId=" + moduleId + ", orderId="
+				+ orderId + ", orderNo=" + orderNo + ", orderGroupNo=" + orderGroupNo + ", orderMoney=" + orderMoney
+				+ ", couponMoney=" + couponMoney + ", deductionMoney=" + deductionMoney + ", payMoney=" + payMoney
+				+ ", payType=" + payType + ", payOrg=" + payOrg + ", tradeCompleteTime=" + tradeCompleteTime
+				+ ", payCheckState=" + payCheckState + ", balanceStartTime=" + balanceStartTime + ", balanceEndTime="
+				+ balanceEndTime + ", serialNum=" + serialNum + ", companyName=" + companyName + ", villageName="
+				+ villageName + ", moduleName=" + moduleName + "]";
 	}
 
 }

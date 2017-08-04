@@ -158,19 +158,6 @@ public class OrderGroupPurcController extends BaseController {
 		return "modules/order/orderGroupPurcForm";
 	}
 
-	/**
-	 * 验券消费
-	 * 
-	 * @param OrderGroupPurc
-	 * @param model
-	 * @return
-	 */
-	// @RequiresPermissions("order:OrderGroupPurc:checkout")
-	@RequestMapping(value = "checkout")
-	public String checkout(OrderGroupPurcList orderGroupPurcList, Model model) {
-		// 迁移至验券页面
-		return "modules/order/orderGroupPurcCheckout";
-	}
 
 	@RequiresPermissions("order:OrderGroupPurc:view")
 	@RequestMapping(value = { "export" })
@@ -197,14 +184,11 @@ public class OrderGroupPurcController extends BaseController {
 			for (OrderGroupPurc orderGroupPurcExcelData : orderGroupPurcList) {
 				// 时间
 				StringBuffer time = new StringBuffer();
-				if (StringUtils
-						.isNotBlank(
-								DateUtils.formatDate(orderGroupPurcExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"))) {
+				if (orderGroupPurcExcelData.getCreateDate()!=null) {
 					time.append("下单：");
 					time.append(DateUtils.formatDate(orderGroupPurcExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"));
 				}
-				if (StringUtils
-						.isNotBlank(DateUtils.formatDate(orderGroupPurcExcelData.getPayTime(), "yyyy-MM-dd HH:mm"))) {
+				if (orderGroupPurcExcelData.getPayTime()!=null) {
 					time.append((char) 10);
 					time.append("支付：");
 					time.append(DateUtils.formatDate(orderGroupPurcExcelData.getPayTime(), "yyyy-MM-dd HH:mm"));
@@ -218,10 +202,11 @@ public class OrderGroupPurcController extends BaseController {
 			return null;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			addMessage(model, "导出服务订单数据！失败信息：" + e.getMessage());
 			model.addAttribute("type", "error");
 		}
 		// 迁移至服务订单列表页面
-		return "modules/order/orderServiceList";
+		return "modules/order/orderGroupPurcList";
 	}
 }

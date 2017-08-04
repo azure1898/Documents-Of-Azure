@@ -17,4 +17,13 @@ import com.its.modules.business.entity.BusinessCategorydict;
 @MyBatisDao
 public interface BusinessCategorydictDao extends CrudDao<BusinessCategorydict> {
     public List<BusinessCategorydict> getBusinessCategoryByCategoryName(String categoryname);
+    /**
+     * 通过商家ID获取分类列表 （设置推荐中用到）
+     * @param businessId
+     * @return
+     * @return List<BusinessCategorydict>
+     * @author zhujiao   
+     * @date 2017年8月3日 下午7:43:41
+     */
+    public List<BusinessCategorydict> getListBybusId(String businessinfoId);
 }

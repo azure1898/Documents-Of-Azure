@@ -5,7 +5,10 @@ var vm = new Vue({
 		forwardingReason:"",
 		commentIcon:"../../images/gx_01.png",
 		commentIcon2:"../../images/gx_02.png",
-		isComment:0
+		isComment:0,
+		choose:1,
+		chooseUrl:"../../images/gx.png",
+		chooseUrl2:"../../images/gx02.png"
 
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
@@ -35,6 +38,19 @@ var vm = new Vue({
 				_this.isComment=0;
 			}
 			
+		},
+		choice:function(type){//1公开、2、粉丝可见 3、好友可见
+			var _this = this;
+			_this.choose=type;
+		},
+		yema:function(ye){
+			if(ye==1){
+				$("#ye1").hide()
+				$("#ye2").show()
+			}else{
+				$("#ye2").hide()
+				$("#ye1").show()
+			}
 		}
 	}
 });

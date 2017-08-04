@@ -26,7 +26,7 @@ public class LessonInfo extends DataEntity<LessonInfo> {
 	private String imgs;		// 轮播图片
 	private Double basePrice;		// 原价
 	private Double benefitPrice;		// 优惠价
-	private Integer peopleLimit;		// 人数限制
+	private Integer peopleLimit;		// 人数限制（库存）
 	private Integer lessonCount;		// 课次
 	private Integer sellCount;		// 已售数量
 	private Date startTime;		// 上课开始时间

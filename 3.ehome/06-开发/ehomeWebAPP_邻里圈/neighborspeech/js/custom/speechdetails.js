@@ -74,7 +74,7 @@ var vm = new Vue({
 		praiseOne:function(comment,type){
 			var _this = this;
 			if(comment.isPraise==1){//取消点赞
-				comment.isPraise=2;
+				comment.isPraise=0;
 				comment.countPraise-=1;
 //				 this.$http.post("/speak/praise"{
 //				 	id:comment.id,

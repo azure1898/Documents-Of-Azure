@@ -66,6 +66,18 @@
                 },
             },
             submitHandler : function(form) {
+               //给社区模块赋值
+                var communtyIds="";
+                $("#addCommunityModule").find(".community").each(function(i,dom){
+                    communtyIds+= $(dom).attr("id")+",";
+                })
+                $("#communityModule").val(communtyIds);
+                //给生活模块赋值
+                var lifeIds="";
+                $("#addLifeModule").find(".life").each(function(i,dom){
+                    lifeIds+= $(dom).attr("id")+",";
+                })
+                $("#lifeModule").val(lifeIds);
                 loading('正在提交，请稍等...');
                 form.submit();
             },
@@ -83,23 +95,29 @@
         $("input[name='communityModuleIds']").click(function() {
             console.log();
             var id = $(this).val();
-            var total = $("#addCommunityModuleIds").children().size() + 1;
+            var total = $("#addCommunityModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                var domRow = '<span class="community" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
                 $("#addCommunityModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('community');
             }
+            var communtyIds="";
+            $("#addCommunityModule").find(".community").each(function(i,dom){
+                communtyIds+= $(dom).attr("id")+",";
+            })
+            console.log(communtyIds);
         })
+        
         $("input[name='lifeModuleIds']").click(function() {
             console.log();
             var id = $(this).val();
             var total = $("#addLifeModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                var domRow = '<span class="life" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
                 $("#addLifeModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('life');
             }
         })
     });
@@ -167,6 +185,9 @@
     </ul>
     <form:form id="inputForm" modelAttribute="villageLine" action="${ctx}/module/villageLine/batchSetModule" method="post" class="form-horizontal">
         <form:hidden path="id" />
+        
+        <input id="communityModule" type="hidden" name="communityModule" value="${villageLine.communityModule}">
+        <input id="lifeModule" type="hidden" name="lifeModule" value="${villageLine.lifeModule}">
         <sys:message content="${message}" />
         <div class="control-group">
             <label class="control-label">产品线：</label>

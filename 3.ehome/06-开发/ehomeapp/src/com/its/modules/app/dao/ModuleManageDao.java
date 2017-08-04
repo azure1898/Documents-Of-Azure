@@ -61,4 +61,10 @@ public interface ModuleManageDao extends CrudDao<ModuleManage> {
 	 * @return List<Map<String, Object>>
 	 */
 	public List<Map<String, Object>> getRecommendBusinessList(@Param("recommendPosition") String recommendPosition, @Param("villageInfoId") String villageInfoId);
+	/**
+	 * 根据手机端模块编码获取模块信息
+	 * @param phoneModuleCode
+	 * @return
+	 */
+	public ModuleManage getModuleByPhoneCode(@Param("phoneModuleCode")String phoneModuleCode);
 }

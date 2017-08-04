@@ -74,6 +74,7 @@
 					<div class="details_spgm_left">商品购买</div>
 					<div class="clear"></div>
 				</div>
+				
 				<div v-if="item1.groupBuy&&item1.groupBuy.length>0">
 					<div class="xq_jstitle">商家团购</div>
 					<div>
@@ -101,13 +102,16 @@
 						<div class="order_whitebox" id="openMore" style="text-align:center;" v-if="item1.groupBuy&&item1.groupBuy.length>=2" @Click="openMore()">查看更多团购</div>
 					</div>
 				</div>
+				
+				
+				
 				<div class="xq_jstitle">商家信息</div>
 				<div class="details_sjxx">
 					<p>.营业时间：{{item1.businessHours}}</p>
 					<p>.商家标签：<span v-for="item3  in item1.businessLabels">{{item3.labelName}},</span></p>
 				</div>
 				<div class="details_sjxx">
-					<p>.详细介绍：{{item1.businessDesc}}</p>
+					<p>.详细介绍：<span v-html="item1.businessDesc"></span></p>
 				</div>
 			</div>
 		</div>

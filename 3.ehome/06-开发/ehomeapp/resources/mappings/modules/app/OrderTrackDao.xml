@@ -4,9 +4,14 @@
     
 	<sql id="orderTrackColumns">
 		a.id AS "id",
+		a.order_id AS "orderId",
 		a.order_no AS "orderNo",
+		a.order_type AS "orderType",
 		a.state_msg AS "stateMsg",
 		a.handle_msg AS "handleMsg",
+		a.state_msg_phone AS "stateMsgPhone",
+		a.handle_msg_phone AS "handleMsgPhone",
+		a.create_name AS "createName",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -33,9 +38,6 @@
 		<include refid="orderTrackJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="orderNo != null and orderNo != ''">
-				AND a.order_no = #{orderNo}
-			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -68,9 +70,14 @@
 	<insert id="insert">
 		INSERT INTO order_track(
 			id,
+			order_id,
 			order_no,
+			order_type,
 			state_msg,
 			handle_msg,
+			state_msg_phone,
+			handle_msg_phone,
+			create_name,
 			create_by,
 			create_date,
 			update_by,
@@ -79,9 +86,14 @@
 			del_flag
 		) VALUES (
 			#{id},
+			#{orderId},
 			#{orderNo},
+			#{orderType},
 			#{stateMsg},
 			#{handleMsg},
+			#{stateMsgPhone},
+			#{handleMsgPhone},
+			#{createName},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -93,9 +105,14 @@
 	
 	<update id="update">
 		UPDATE order_track SET 	
+			order_id = #{orderId},
 			order_no = #{orderNo},
+			order_type = #{orderType},
 			state_msg = #{stateMsg},
 			handle_msg = #{handleMsg},
+			state_msg_phone = #{stateMsgPhone},
+			handle_msg_phone = #{handleMsgPhone},
+			create_name = #{createName},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -107,5 +124,113 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
+	<!-- My_Order_View -->
+	<sql id="myOrderViewColumns">
+		a.id AS "orderId",
+		a.order_no AS "orderNo",
+		a.pay_money AS "payMoney",
+		a.village_info_id AS "villageInfoId",
+		a.account_id AS "accountId",
+		a.module_manage_id AS "moduleManageId",
+		a.order_type AS "orderType",
+		a.time_label AS "timeLabel",
+		a.order_time AS "orderTime",
+		a.create_date AS "createDate",
+		a.show_name AS "showName",
+		a.business_pic AS "businessPic"
+	</sql>
+	
+	<!-- 获取某用户某楼盘某模块下的订单 -->
+	<select id="getMyOrderViewList" resultType="com.its.modules.app.bean.MyOrderViewBean">
+		SELECT
+			<include refid="myOrderViewColumns" />
+		FROM
+			My_Order_View a
+		WHERE
+			a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		<if test="moduleManageId == -1">
+			AND a.Order_Type = 5
+		</if>
+		<if test="moduleManageId != 0 and moduleManageId != -1">
+			AND a.Module_Manage_ID = #{moduleManageId}
+		</if>
+		ORDER BY
+			a.Create_Date DESC
+	</select>
+	
+	<!-- 获取某用户某楼盘下的最新两条订单 -->
+	<select id="getRecentMyOrderView" resultType="com.its.modules.app.bean.MyOrderViewBean">
+		SELECT
+			<include refid="myOrderViewColumns" />
+		FROM
+			My_Order_View a
+		WHERE
+			a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		ORDER BY
+			a.Create_Date DESC
+		LIMIT 2
+	</select>
+	
+	<!-- 获取某订单最新的状态信息 -->
+	<select id="getRecentOrderStatus" resultType="OrderTrack">
+		SELECT
+			<include refid="orderTrackColumns"/>
+		FROM
+			Order_Track a
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Order_ID = #{orderId}
+		ORDER BY
+			a.Create_Date DESC
+		LIMIT 1
+	</select>
+	
+	<!-- Order_Track_View -->
+	<sql id="orderTrackViewColumns">
+		a.main_order_id AS "mainOrderId",
+		a.main_order_no AS "mainOrderNo",
+		a.business_info_id AS "businessInfoId",
+		a.phone_num AS "phoneNum",
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_no AS "orderNo",
+		a.order_type AS "orderType",
+		a.state_msg AS "stateMsg",
+		a.handle_msg AS "handleMsg",
+		a.state_msg_phone AS "stateMsgPhone",
+		a.handle_msg_phone AS "handleMsgPhone",
+		a.create_name AS "createName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<resultMap type="com.its.modules.app.bean.OrderTrackViewBean" id="orderTrackViewBeanMapOne">
+		<result property="mainOrderNo" column="mainOrderNo" />
+		<result property="phoneNum" column="phoneNum" />
+		<collection property="orderTracks" ofType="OrderTrack">
+			<result property="stateMsgPhone" column="stateMsgPhone" />
+			<result property="handleMsgPhone" column="handleMsgPhone" />
+			<result property="createDate" column="createDate" />
+		</collection>
+	</resultMap>
+	
+	<!-- 获取某订单的订单追踪信息 -->
+	<select id="getOrderTrackViewBean" resultMap="orderTrackViewBeanMapOne">
+		SELECT DISTINCT
+			<include refid="orderTrackViewColumns" />
+		FROM
+			Order_Track_View a
+		WHERE
+			a.Main_Order_ID = #{orderId}
+		ORDER BY
+			a.Create_Date DESC
+	</select>
 	
 </mapper>

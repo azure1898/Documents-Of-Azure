@@ -5,13 +5,15 @@
 <title>订单-团购类管理</title>
 <meta name="decorator" content="default" />
 <script type="text/javascript">
-
+	function home(){
+		window.location.href="${ctx}/order/orderGroupPurc/";
+	}
 </script>
 </head>
 <body>
 	<div style="text-align: right; margin: 20px 50px 20px 0px;">
 		<input id="btnBack" class="btn" type="button" value="返回"
-			style="width: 200px;" onclick="history.go(-1)" />
+			style="width: 200px;" onclick="home()" />
 	</div>
 	<div class="form-actions">
 		<p style="font-weight: bold;">团购订单</p>
@@ -96,8 +98,7 @@
                         </c:otherwise>
                     </c:choose></td>
 						<td><c:if test="${orderGroupPurcList.groupPurcState == 0}">
-								<a id="btuElemComplete" class="btn btn-primary" href="${ctx}/coupon/testCoupon/?id=${orderGroupPurcList.id}&groupPurcNumber=${orderGroupPurcList.groupPurcNumber }"><i
-									class="icon-ok-circle icon-custom"></i>验券消费</a>
+								<a id="btuElemComplete" class="btn btn-primary" onclick="showModal('${orderGroupPurcList.id }')" href="javascript:void(0)"><i class="icon-ok-circle icon-custom"></i>验券消费</a>
 							</c:if></td>
 					</tr>
 				</c:forEach>
@@ -178,7 +179,38 @@
 	
 	<div style="text-align: right; margin: 20px 50px 20px 0px;">
 		<input id="btnBack" class="btn" type="button" value="返回"
-			style="width: 200px;" onclick="history.go(-1)" />
+			style="width: 200px;" onclick="home()" />
 	</div>
+	
+	
+<!-- Modal -->
+<div class="modal fade modal-md" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="width: 800px;">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content" >
+     	<div class="modal-body" style="max-height: 600px;height:600px;overflow:hidden;">
+     		<!-- 遮挡页头 -->
+     		<div style="width: 800px;height: 24px;position:absolute;z-index:5; background-color: #fff;">
+     			<h4>验券消费</h4> 
+     		</div>
+     		<iframe id="mbi" style="border: 0px;width: 100%;height: 100%;" src="${ctx}/coupon/testCoupon/"></iframe>
+     	 </div>
+   	 	<div class="modal-footer">
+       	 <button type="button" class="btn btn-default" data-dismiss="modal">完成</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+	//弹出窗口 加载页面 
+	function showModal(id){
+		$("#mbi").attr("src","${ctx}/coupon/testCoupon/?id="+id);
+		$('#myModal').modal('toggle');
+	}
+	//一波操作后要刷新的页面
+	$('#myModal').on('hidden.bs.modal', function (e) {
+		window.location.href = '${ctx}/order/orderGroupPurc/form?id=${orderGroupPurc.id}'
+	})
+</script>
+	
 </body>
 </html>

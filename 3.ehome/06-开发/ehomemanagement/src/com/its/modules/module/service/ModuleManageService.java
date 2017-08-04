@@ -147,25 +147,33 @@ public class ModuleManageService extends CrudService<ModuleManageDao, ModuleMana
     public ModuleManage getBusinessCategoryDictId(ModuleManage moduleManage) {
         return moduleManageDao.getBusinessCategoryDictId(moduleManage);
     }
+
     /**
      * 设置管理中 获取社区模块的列表
+     * 
      * @return
      * @return ModuleManage
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年7月25日 下午2:41:02
      */
     public List<ModuleManage> getCommunityModuleList() {
         return moduleManageDao.getCommunityModuleList(new ModuleManage());
     }
+
     /**
      * 设置管理中 获取社区模块的列表
+     * 
      * @return
      * @return List<ModuleManage>
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年7月26日 上午11:03:20
      */
     public List<ModuleManage> getSetModuleList(List<String> moduleIds) {
-        return moduleManageDao.getSetModuleList(moduleIds);
+        if (moduleIds.size() > 0) {
+            return moduleManageDao.getSetModuleList(moduleIds);
+        } else {
+            return null;
+        }
     }
-    
+
 }

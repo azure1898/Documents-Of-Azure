@@ -32,6 +32,11 @@
                 },
             },
             submitHandler : function(form) {
+                var lifeRecomIds="";
+                $("#addLifeRecomModule").find(".lifeRecom").each(function(i,dom){
+                    lifeRecomIds+= $(dom).attr("id")+",";
+                })
+                $("#lifeRecomModule").val(lifeRecomIds);
                 loading('正在提交，请稍等...');
                 form.submit();
             },
@@ -51,19 +56,17 @@
             var id = $(this).val();
             var total = $("#addLifeRecomModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                var domRow = '<span class="lifeRecom" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
                 $("#addLifeRecomModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('lifeRecom');
             }
         })
-
-        $("input[name='lifeRecomModuleIds']:checked").each(function() {
-            // 默认选中的社区模块 
-            var total = $("#addLifeRecomModule").children().size() + 1;
-            var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+        var alist=${fns:toJson(getlifeList)};
+        for (var i=0; i<alist.length; i++){
+            var domRow = '<span class="lifeRecom" id="' +alist[i].id + '"><lable>' +alist[i].moduleName + '</lable><lable class="lable-num">' + (i+1) + '</lable></span>';
             $("#addLifeRecomModule").append($(domRow));
-        })
+        }
         var len = $("#addLifeRecomModule").children().size();
         if (len > 0) {
             $("#addLifeRecomModule").show();
@@ -110,6 +113,7 @@
         domRow+='<div id="recomModuleList'+index+'" style="padding-top: 10px;">'
             +'    <lable>推荐一</lable>'
             +'     <select id="module'+index+'" onchange="getBuslist(this,'+index+')"  name="recomModuleList['+index+'].recomModuleId" class="input-medium">'
+            +'         <option value="" >模块选择</option>'
             +'         <c:forEach items="${moduleList}" var="module">'
             +'             <option value="${module.id}" >${module.moduleName}</option>'
             +'         </c:forEach>'
@@ -281,7 +285,7 @@
     }
     //专题推荐 移除
     function removeRowSpecial(obj,index_num) {
-        var total = $("#recomOne").find(".controls").size();//
+        var total = $("#recomTwo").find(".controls").size();//
         console.log($("#recomSpecialFlag"+index_num).val());
         if($("#recomSpecialFlag"+index_num).val()!=""&&$("#recomSpecialFlag"+index_num).val()!=null){
             $(obj).parent().addClass("hide");
@@ -310,6 +314,66 @@
                var recomType=data[i].recomSpecialDetailList[j].recomType;
                $(":radio[name='recomSpecialList["+i+"].recomSpecialDetailList["+j+"].recomType'][value='" + recomType + "']").prop("checked", "checked").trigger("change");
             }
+        }
+    }
+    //添加商家推荐2
+    function addBusType(){
+        var total=$("#recomThree").find(".controls").size();
+        var domRow='<div class="controls" id="recomBusType'+total+'" style="border: 1px solid #ccc; margin-top: 10px; padding: 20px;">'
+              +'      <div id="recomBusTypeList'+total+'" style="padding-top: 10px;">'
+              +'        <lable>推荐一</lable>'
+              +'        <select id="recomTypeBusId'+total+'" onchange="getTypeList(this,'+total+')" name="recomModuleList[0].recomBusinessId" class="input-medium">'
+              +'          <option value="">商家名称</option>'
+              +'          <c:forEach items="${allBusList}" var="bus">'
+              +'             <option value="${bus.id}" >${bus.businessName}</option>'
+              +'          </c:forEach>'
+              +'        </select>'
+              +'    </div>'
+              +'</div>';
+         domRow+='<div class="add-remove" style="float: right; margin-top: -20px; margin-right: -60px;"><a onclick="addBusType()">添加</a>  <a onclick="removeRowBusType(this,'+total+')">删除</a></div>';
+        $("#recomThree").append($(domRow));
+    }
+    function getTypeList(obj,index_num){
+        var businessinfoId=$(obj).val();
+        $.ajax({
+            type : "POST",
+            url : ctx + "/module/villageLine/getTypeList",
+            data : {
+                businessinfoId : businessinfoId
+            },
+            dataType : "JSON",
+            success : function(data) {
+                //添加之前移除分类信息
+                $(obj).nextAll().remove();             
+                //开始添加分类信息
+                var domRow='';
+                $.each(data, function(indx, item) {
+                    domRow+='<div id="recomBusTypeDetailList'+index_num+indx+'" style="margin-top: 10px;">'
+                          +'  <input  id="cbType'+index_num+indx+'" type="checkbox">'
+                          +'  <span>'+item.categoryName+'</span>'
+                          +'  <input id="rodType'+index_num+indx+'" name="recomBusType['+index_num+'].recomBusTypeDetailList['+indx+'].rodType"'
+                          +'  <input type="file" name="busTyefile_'+index_num+'_'+indx+'" >'
+                          +'  <input type="radio" name="recomBusType['+index_num+'].recomBusTypeDetailList[0].defaultFlag" ><span>设置默认</span>'
+                          +'</div>'
+                })
+                console.log($(domRow))
+                $("#recomBusTypeList"+index_num).append($(domRow));
+            }
+        })
+    }
+    //商家推荐2 移除
+    function removeRowBusType(obj,index_num) {
+        var total = $("#recomThree").find(".controls").size();//
+        
+    }
+    //绑定商家推荐2
+    function initRecomBusType(){
+        var data= ${fns:toJson(villageLine.recomSpecialList)};
+        for (var i=0; i<data.length-1; i++){
+            addBusType();
+        }
+        for (var i=0; i<data.length; i++){
+           
         }
     }
     //模块的change事件 
@@ -347,8 +411,8 @@
         addSpecial();
         //初始话专题推荐1的数据
         initRecomSpecial();
-        
-       
+        //初始化商家推荐2的模块
+        addBusType();
     })
 </script>
 </head>
@@ -374,6 +438,7 @@
     </ul>
     <form:form id="inputForm" style="margin: 0 50px;" modelAttribute="villageLine" action="${ctx}/module/villageLine/updateLifeRecomModule" method="post" class="form-horizontal" enctype="multipart/form-data">
         <form:hidden path="id" />
+        <input id="lifeRecomModule" type="hidden" name="lifeRecomModule" value="${villageLine.lifeRecomModule}">
         <sys:message content="${message}" />
         <div class="control-group">
             <label class="control-label">楼盘名称</label>
@@ -403,7 +468,10 @@
         <div class="control-group" style="margin-right: 60px" id="recomTwo">
             <label class="control-label">专题推荐</label>
         </div>
-    
+        <!-- 商家推荐2 -->
+        <div class="control-group" style="margin-right: 60px" id="recomThree">
+            <label class="control-label">商家推荐2</label>
+        </div>
         <div class="form-actions">
             <shiro:hasPermission name="module:villageLine:batchSetModule">
                 <input id="btnSubmit" class="btn btn-success" type="submit" value="保 存" />&nbsp;

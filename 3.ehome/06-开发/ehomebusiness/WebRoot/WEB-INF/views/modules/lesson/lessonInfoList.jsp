@@ -15,12 +15,12 @@
         	return false;
         }
         
-		/**
-		 * 课程/培训信息表排序
-		 * sortItem ： 排序项目
-		 * src ： 排序图标路径
-		 */
-		function dataTableSort(sortItem,src) {
+// 		/**
+// 		 * 课程/培训信息表排序
+// 		 * sortItem ： 排序项目
+// 		 * src ： 排序图标路径
+// 		 */
+// 		function dataTableSort(sortItem,src) {
 // 			// 根据路径判断取得当前的排序图标
 // 			var arr = src.split('/');
 // 			var srcImgName = (arr[arr.length-1].split('.'))[0];
@@ -37,7 +37,7 @@
 //                 $("#sort").val("ASC");
 // 			}
 // 			$("#searchForm").submit();
-		}
+// 		}
 		
 		/**
 		 * 课程/培训信息全选
@@ -132,7 +132,7 @@
 		    <form:hidden id="sort" path="sort" htmlEscape="false" />
 		    </li>
             <li class="btns">
-            <a id="btnMuliDelete" href="" onclick="return muliDelete()" class="btn btn-primary"><i class="icon-trash icon-custom"></i> 删除</a>
+            <a id="btnMuliDelete" href="#" onclick="return muliDelete()" class="btn btn-primary"><i class="icon-trash icon-custom"></i> 删除</a>
             </li>
             <li class="btns">
             <input id="btnMuliGrounding" class="btn btn-primary" type="button" onclick="muliGrounding()" value="上架"/>
@@ -164,19 +164,19 @@
 	      <sys:message content="${message}"/>
 	  </c:otherwise>
  	</c:choose>
-	<table id="contentTable" class="table able-bordered table-condensed">
+	<table id="contentTable" class="table table-bordered table-condensed">
 		<thead>
 			<tr>
 			    <th style="width : 5%"><input type="checkbox" id="allCheck" onclick="allCheck(this)">全选</th>
 			    <th style="width : 5%">编号
-			    <c:choose> 
-                    <c:when test="${lessonInfo.sortItem == 'a.create_date' && lessonInfo.sort == 'DESC'}">
-                        <img id="sortInfoSortImg" src="${ctxStatic}/images/u766.png" onclick="dataTableSort('createDate',this.src)">
-                    </c:when>
-                    <c:otherwise>
-                        <img id="sortInfoSortImg" src="${ctxStatic}/images/u765.png" onclick="dataTableSort('createDate',this.src)">
-                    </c:otherwise>
-                </c:choose>
+<%-- 			    <c:choose>  --%>
+<%--                     <c:when test="${lessonInfo.sortItem == 'a.create_date' && lessonInfo.sort == 'DESC'}"> --%>
+<%--                         <img id="sortInfoSortImg" src="${ctxStatic}/images/u766.png" onclick="dataTableSort('createDate',this.src)"> --%>
+<%--                     </c:when> --%>
+<%--                     <c:otherwise> --%>
+<%--                         <img id="sortInfoSortImg" src="${ctxStatic}/images/u765.png" onclick="dataTableSort('createDate',this.src)"> --%>
+<%--                     </c:otherwise> --%>
+<%--                 </c:choose> --%>
 			    </th>
 				<th style="width : 20%">名称</th>
 				<th style="width : 10%">上课时间</th>
@@ -201,6 +201,7 @@
                 </td>
 				<td>
 				    <span><fmt:formatDate value="${lessonInfoTemp.startTime}" pattern="yyyy-MM-dd"/>~</span>
+				    <br/>
 				    <span><fmt:formatDate value="${lessonInfoTemp.endTime}" pattern="yyyy-MM-dd"/></span>
 				</td>
 				<td>

@@ -4,6 +4,7 @@ package com.its.modules.app.common;
  * 订单字典类
  */
 public class OrderGlobal {
+
 	/* <==============================团购券状态==============================> */
 	/** 团购券状态:未消费 */
 	public static final String GROUP_PURHCASE_STATE_UNCONSUME = "0";
@@ -100,33 +101,30 @@ public class OrderGlobal {
 
 	/* <==============================订单类型定义==============================> */
 	/** 商品订单 */
-	public static final int ORDER_GOODS = 1;
+	public static final String ORDER_GOODS = "0";
+	/** 服务订单 */
+	public static final String ORDER_SERVICE = "1";
+	/** 课程订单 */
+	public static final String ORDER_LESSON = "2";
+	/** 场地订单 */
+	public static final String ORDER_FIELD = "3";
+	/** 团购订单 */
+	public static final String ORDER_GROUP_PURCHASE = "4";
 	/** 商品时间标签 */
 	public static final String ORDER_GOODS_TIME_LABEL = "配送时间";
-
-	/** 服务订单 */
-	public static final int ORDER_SERVICE = 2;
 	/** 服务时间标签 */
 	public static final String ORDER_SERVICE_TIME_LABEL = "预约时间";
-
-	/** 课程订单 */
-	public static final int ORDER_LESSON = 3;
 	/** 课程时间标签 */
 	public static final String ORDER_LESSON_TIME_LABEL = "上课时间";
-
-	/** 场地订单 */
-	public static final int ORDER_FIELD = 4;
 	/** 场地时间标签 */
 	public static final String ORDER_FIELD_TIME_LABEL = "预约时间";
-
-	/** 团购订单 */
-	public static final int ORDER_GROUP_PURCHASE = 5;
 	/** 团购时间标签 */
 	public static final String ORDER_GROUP_PURCHASE_TIME_LABEL = "下单时间";
 
 	/* <=========================前台订单状态对应的文案描述=========================> */
 	/** 前台文案描述-待支付 */
-	public static final String FRONT_UNPAY = "订单提交成功，等待付款";
+	public static final String FRONT_UNPAY = "待支付";
+	public static final String FRONT_UNPAY_DESC = "订单提交成功，等待付款";
 	/** 前台文案描述-待受理 */
 	public static final String FRONT_UNCHECK = "付款成功，等待商家受理";
 	/** 前台文案描述-已受理 */
@@ -148,7 +146,8 @@ public class OrderGlobal {
 
 	/* <=========================后台订单状态对应的文案描述=========================> */
 	/** 后台文案描述-提交订单 */
-	public static final String BACK_UNPAY = "订单提交成功，等待付款";
+	public static final String BACK_UNPAY = "提交订单";
+	public static final String BACK_UNPAY_DESC = "订单提交成功，等待付款";
 	/** 后台文案描述-已付款 */
 	public static final String BACK_UNCHECK = "已成功付款，等待商家受理";
 	/** 后台文案描述-已受理 */
@@ -163,4 +162,13 @@ public class OrderGlobal {
 	public static final String BACK_ACCOUNT_CANCELED = "商家取消订单（自动退款）";
 	/** 后台文案描述-已退款 */
 	public static final String BACK_REFUNDED = "自动退款";
+
+	/* <===========================订单状态跟踪操作账号===========================> */
+	/** 订单状态跟踪操作账号-用户 */
+	public static final String CREATE_NAME_ACCOUNT = "-";
+	/** 订单状态跟踪操作账号-系统 */
+	public static final String CREATE_NAME_SYSTEM = "系统";
+	/** 订单状态跟踪操作账号-商家账户 */
+	public static final String CREATE_NAME_BUSINESS = "商家账户";
+
 }

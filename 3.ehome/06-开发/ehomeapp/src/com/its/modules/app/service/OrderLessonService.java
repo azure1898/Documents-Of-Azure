@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.OrderLessonBean;
 import com.its.modules.app.common.CommonGlobal;
@@ -188,25 +187,8 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 		lessonInfo.setSellCount(ValidateUtil.validateInteger(lessonInfo.getSellCount()) + 1);
 		lessonInfoService.update(lessonInfo);
 		// 插入订单追踪
-		OrderTrack orderTrack = new OrderTrack();
-		orderTrackService.save(orderTrack);
-
+		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_LESSON, orderLessonId, orderNo);
 		return orderLessonId;
-	}
-
-	/**
-	 * 获取某用户某楼盘下的课程培训订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderLessonBean>
-	 */
-	public List<OrderLessonBean> getOrderLessonList(String villageInfoId, String accountId, String moduleManageId) {
-		return dao.getOrderLessonList(villageInfoId, accountId, moduleManageId);
 	}
 
 	/**

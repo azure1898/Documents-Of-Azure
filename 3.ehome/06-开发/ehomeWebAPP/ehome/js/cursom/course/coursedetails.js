@@ -56,29 +56,36 @@
 				
 			}
 		//收藏
-		,collection:function(status,id){
+		,	collection:function(status,id){
 					var _this = this;
 					var businessid=id;
+					 if(status==0){
+					 	  $("#collection").removeClass().addClass("collection_btn");
 					$("#collection").bind("click",function(){
-					   if(status==0){
+					  
 					    layer.open({
 					    content: '收藏成功'
 					    ,skin: 'msg'
 					    ,time: 2 //2秒后自动关闭
 					  });
-					    $(this).removeClass().addClass("collection_btn2");
-					   _this.add_collections(path_add,businessid);							
+					   _this.add_collections(path_add,businessid);	
+					  $(this).removeClass().addClass("collection_btn2");
+					  
+					}) 
+					  						
 						}
-					  else if(status==1){							
+					  else if(status==1){	
+					  	$("#collection").removeClass().addClass("collection_btn2");
+					  	$("#collection").bind("click",function(){
 					    layer.open({
 					    content: '取消收藏'
 					    ,skin: 'msg'
 					    ,time: 2 //2秒后自动关闭
 					  });
-						$(this).removeClass().addClass("collection_btn");
-					     _this.cancel_collections(path_cancle,businessid);							
-						}
-                 })			
+					   _this.cancel_collections(path_cancle,businessid);			
+					  $(this).removeClass().addClass("collection_btn");
+					   });					    				
+						}                 		
 		},
 		add_collections:function(path,id){
 			var _this = this;			

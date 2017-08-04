@@ -21,6 +21,7 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	private String businessBalanceId; // 商户结算信息表ID
 	private String businessInfoId; // 商户ID
 	private String moduleId; // 模块ID
+	private String orderId; // 订单ID
 	private String orderNo; // 订单号
 	private String prodType; // 产品模式：0商品购买 1服务预约 2课程购买 3场地预约
 	private String orderGroupNo; // 订单号/团购券码
@@ -73,6 +74,14 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 
 	public void setModuleId(String moduleId) {
 		this.moduleId = moduleId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Length(min = 0, max = 64, message = "订单号长度必须介于 0 和 64 之间")
@@ -226,11 +235,12 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	@Override
 	public String toString() {
 		return "BusinessBalanceDetail [businessBalanceId=" + businessBalanceId + ", businessInfoId=" + businessInfoId
-				+ ", moduleId=" + moduleId + ", orderNo=" + orderNo + ", prodType=" + prodType + ", orderGroupNo="
-				+ orderGroupNo + ", orderMoney=" + orderMoney + ", couponMoney=" + couponMoney + ", deductionMoney="
-				+ deductionMoney + ", payMoney=" + payMoney + ", payType=" + payType + ", payOrg=" + payOrg
-				+ ", tradeCompleteTime=" + tradeCompleteTime + ", payCheckState=" + payCheckState
-				+ ", balanceStartTime=" + balanceStartTime + ", balanceEndTime=" + balanceEndTime + "]";
+				+ ", moduleId=" + moduleId + ", orderId=" + orderId + ", orderNo=" + orderNo + ", prodType=" + prodType
+				+ ", orderGroupNo=" + orderGroupNo + ", orderMoney=" + orderMoney + ", couponMoney=" + couponMoney
+				+ ", deductionMoney=" + deductionMoney + ", payMoney=" + payMoney + ", payType=" + payType + ", payOrg="
+				+ payOrg + ", tradeCompleteTime=" + tradeCompleteTime + ", payCheckState=" + payCheckState
+				+ ", balanceStartTime=" + balanceStartTime + ", balanceEndTime=" + balanceEndTime + ", serialNum="
+				+ serialNum + ", businessName=" + businessName + ", moduleName=" + moduleName + "]";
 	}
 
 }

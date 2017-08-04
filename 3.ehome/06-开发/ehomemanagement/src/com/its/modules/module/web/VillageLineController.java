@@ -3,7 +3,6 @@
  */
 package com.its.modules.module.web;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,15 +12,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,6 +29,8 @@ import com.its.common.persistence.Page;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
+import com.its.modules.business.entity.BusinessCategorydict;
+import com.its.modules.business.service.BusinessCategorydictService;
 import com.its.modules.business.service.BusinessInfoService;
 import com.its.modules.module.entity.VillageLinerecommodule;
 import com.its.modules.module.entity.VillageLinerecomspecialdetail;
@@ -59,6 +59,8 @@ public class VillageLineController extends BaseController {
     private PropertyCompanyService propertyCompanyService;
     @Autowired
     private BusinessInfoService businessInfoService;
+    @Autowired
+    private BusinessCategorydictService businessCategorydictService;
 
     @ModelAttribute
     public VillageLine get(@RequestParam(required = false) String id) {
@@ -94,6 +96,12 @@ public class VillageLineController extends BaseController {
     @RequestMapping(value = "form")
     public String form(VillageLine villageLine, Model model) {
         model.addAttribute("villageLine", villageLine);
+        // 获取排序之后生活和社区模块
+        List<String> moduleIds = getModuleIds(villageLine.getCommunityModule());
+        model.addAttribute("getCommunityModuleList", moduleManageService.getSetModuleList(moduleIds));
+        List<String> LifeoduleIds = getModuleIds(villageLine.getLifeModule());
+        model.addAttribute("getLifeModuleList", moduleManageService.getSetModuleList(LifeoduleIds));
+
         model.addAttribute("lifeModuleList", moduleManageService.getLifeModule());
         model.addAttribute("communityModuleList", moduleManageService.getCommunityModuleList());
         return "modules/module/setModule";
@@ -103,6 +111,12 @@ public class VillageLineController extends BaseController {
     @RequestMapping(value = "batchFrom")
     public String batchFrom(VillageLine villageLine, Model model) {
         model.addAttribute("villageLine", villageLine);
+        // 获取排序之后生活和社区模块
+        List<String> moduleIds = getModuleIds(villageLine.getCommunityModule());
+        model.addAttribute("getCommunityModuleList", moduleManageService.getSetModuleList(moduleIds));
+        List<String> LifeoduleIds = getModuleIds(villageLine.getLifeModule());
+        model.addAttribute("getLifeModuleList", moduleManageService.getSetModuleList(LifeoduleIds));
+
         model.addAttribute("lifeModuleList", moduleManageService.getLifeModule());
         model.addAttribute("communityModuleList", moduleManageService.getCommunityModuleList());
         return "modules/module/batchSetModule";
@@ -193,6 +207,10 @@ public class VillageLineController extends BaseController {
     @RequestMapping(value = "mainRecomFrom")
     public String mainRecomFrom(VillageLine villageLine, Model model) {
         model.addAttribute("villageLine", villageLine);
+        // 获取排序之后首页推荐模块
+        List<String> mainRecomIds = getModuleIds(villageLine.getMaintRecomModule());
+        model.addAttribute("getMainList", moduleManageService.getSetModuleList(mainRecomIds));
+
         List<String> moduleIds = getModuleIds(villageLine.getCommunityModule() + villageLine.getLifeModule());
         model.addAttribute("moduleList", moduleManageService.getSetModuleList(moduleIds));
         return "modules/module/mainRecomModule";
@@ -217,21 +235,25 @@ public class VillageLineController extends BaseController {
         addMessage(redirectAttributes, "保存首页设置成功");
         return "redirect:" + Global.getAdminPath() + "/module/villageLine/recommendList";
     }
-    
-    
+
     /**
      * 设置推荐 -社区推荐页面
+     * 
      * @param villageLine
      * @param model
      * @return
      * @return String
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年8月2日 下午6:25:01
      */
     @RequiresPermissions("module:villageLine:mainRecom")
     @RequestMapping(value = "communityRecomFrom")
     public String communityRecomFrom(VillageLine villageLine, Model model) {
         model.addAttribute("villageLine", villageLine);
+        // 获取排序之后社区推荐模块
+        List<String> communityRecomIds = getModuleIds(villageLine.getCommunityRecomModule());
+        model.addAttribute("getCommunityList", moduleManageService.getSetModuleList(communityRecomIds));
+
         List<String> moduleIds = getModuleIds(villageLine.getCommunityModule());
         model.addAttribute("moduleList", moduleManageService.getSetModuleList(moduleIds));
         return "modules/module/communityRecomModule";
@@ -239,12 +261,13 @@ public class VillageLineController extends BaseController {
 
     /**
      * 推荐管理 - 社区推荐保存修改
+     * 
      * @param villageLine
      * @param model
      * @param redirectAttributes
      * @return
      * @return String
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年8月2日 下午6:26:18
      */
     @RequiresPermissions("module:villageLine:mainRecom")
@@ -270,6 +293,11 @@ public class VillageLineController extends BaseController {
     @RequestMapping(value = "lifeRecomFrom")
     public String lifeRecomFrom(VillageLine villageLine, Model model, HttpServletRequest request) {
         model.addAttribute("villageLine", villageLine);
+
+        // 获取排序之后生活推荐模块
+        List<String> lifeRecomIds = getModuleIds(villageLine.getLifeRecomModule());
+        model.addAttribute("getlifeList", moduleManageService.getSetModuleList(lifeRecomIds));
+
         List<String> moduleIds = getModuleIds(villageLine.getLifeModule());
         model.addAttribute("lifeModuleList", moduleManageService.getSetModuleList(moduleIds));
         model.addAttribute("allBusList", businessInfoService.findAllList());
@@ -326,6 +354,20 @@ public class VillageLineController extends BaseController {
         villageLineService.updateLifeRecomModule(villageLine);
         addMessage(redirectAttributes, "保存首页设置成功");
         return "redirect:" + Global.getAdminPath() + "/module/villageLine/recommendList";
+    }
+
+    /**
+     * 通过商家ID获取分类列表 （设置推荐中用到）
+     * @param businessinfoId
+     * @return
+     * @return List<BusinessCategorydict>
+     * @author zhujiao   
+     * @date 2017年8月3日 下午7:47:02
+     */
+    @ResponseBody
+    @RequestMapping(value = "getTypeList")
+    public List<BusinessCategorydict> getTypeList(String businessinfoId) {
+        return businessCategorydictService.getListBybusId(businessinfoId);
     }
 
     /**

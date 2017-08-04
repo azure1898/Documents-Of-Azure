@@ -39,22 +39,47 @@ public class AppGlobal {
 	 * 模块ID：生活
 	 */
 	public static final String MODULE_LIVE = "2";
+	
+	/**
+	 * 模块ID：邻里圈
+	 */
+	public static final String MODULE_NEIGHBORHOOD = "10";
 	/**
 	 * 模块ID：智加手环
 	 */
 	public static final String MODULE_BRACELET = "11";
 	/**
-	 * 模块ID：投诉建议
+	 * 模块ID：我的投诉
 	 */
 	public static final String MODULE_COMPLAINT = "12";
 	/**
-	 * 模块ID：房屋保修
+	 * 模块ID：我的报修
 	 */
 	public static final String MODULE_REPAIRS = "13";
 	/**
-	 * 模块ID：手机开门
+	 * 模块ID：访客邀请
 	 */
 	public static final String MODULE_PHONE_OPEN_DOOR = "14";
+	/**
+	 * 模块ID：我的订单
+	 */
+	public static final String MODULE_MY_ORDER = "15";
+	/**
+	 * 模块ID：我的购物车
+	 */
+	public static final String MODULE_MY_CART = "16";
+	/**
+	 * 模块ID：商家收藏
+	 */
+	public static final String MODULE_MY_COLLECT = "17";
+	/**
+	 * 模块ID：社区服务
+	 */
+	public static final String MODULE_VILLAGE_SERVICE = "18";
+	/**
+	 * 模块ID：房间梆定
+	 */
+	public static final String MODULE_ROOM_BINDING = "19";
 
 	/**
 	 * 订单状态：待受理

@@ -118,5 +118,16 @@ public class BusinessCategorydictService extends CrudService<BusinessCategorydic
 		}
 		return BusinessCategorydictList;
 	}
+	/**
+	 * 通过商家ID获取分类列表 （设置推荐中用到）
+	 * @param businessinfoId
+	 * @return
+	 * @return List<BusinessCategorydict>
+	 * @author zhujiao   
+	 * @date 2017年8月3日 下午7:47:12
+	 */
+	public List<BusinessCategorydict> getListBybusId(String businessinfoId){
+	    return businessCategorydictDao.getListBybusId(businessinfoId);
+	}
 
 }

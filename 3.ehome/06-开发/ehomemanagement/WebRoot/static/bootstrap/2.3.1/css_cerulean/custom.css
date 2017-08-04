@@ -1,8 +1,8 @@
-/*ÁÐ±íÖÐ±»Ñ¡ÖÐµÄÐÐ*/
+/*ï¿½Ð±ï¿½ï¿½Ð±ï¿½Ñ¡ï¿½Ðµï¿½ï¿½ï¿½*/
 tr.listRowSelected {
- background-color: #FFFF81;
+ background-color: #eaedf1;
 }
-/*ÁÐ±íÖÐÎ´±»Ñ¡ÖÐµÄÐÐ*/
+/*ï¿½Ð±ï¿½ï¿½ï¿½Î´ï¿½ï¿½Ñ¡ï¿½Ðµï¿½ï¿½ï¿½*/
 tr.listRowUnSelected {
  background-color: white;
 }

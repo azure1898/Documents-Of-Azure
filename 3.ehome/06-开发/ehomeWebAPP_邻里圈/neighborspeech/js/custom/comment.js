@@ -39,15 +39,33 @@ var vm = new Vue({
 			
 		},
 		sendOut:function(){
-			var _this = this;
-			if($.trim(_this.commentContent)==""){
+			var sTest=$('#editable').text();
+			var sHtml=$('#editable').html();
+			if($.trim(sTest).length<5){
 				layer.open({
-					    content: '内容不能为空'
+					    content: '内容不能少于五个字符'
 					    ,skin: 'msg'
 					    ,time: 2 //2秒后自动关闭
 				  });
+				  return;
 			}
+			$('#results').html(sHtml);
+			$('#results .atlink').each(function(i,e){
+				$(e).attr('href','http://www.baidu.com?id='+$(e).attr('data-atid'));
+			})
+
+//			var _this = this;
+//			if($.trim(_this.commentContent)==""){
+//				layer.open({
+//					    content: '内容不能为空'
+//					    ,skin: 'msg'
+//					    ,time: 2 //2秒后自动关闭
+//				  });
+//			}
 			
 		}
 	}
 });
+function addat(){
+	$('#editable').append('&nbsp;<a href="#" data-atid="1" class="atlink" contentEditable="false">@张三</a>&nbsp;');
+}

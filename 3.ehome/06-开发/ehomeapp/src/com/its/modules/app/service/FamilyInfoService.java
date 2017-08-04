@@ -3,30 +3,31 @@
  */
 package com.its.modules.app.service;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.StringUtils;
+import com.its.modules.app.dao.FamilyInfoDao;
 import com.its.modules.app.entity.FamilyInfo;
 
 import net.sf.json.JSONObject;
 
-import com.its.modules.app.dao.FamilyInfoDao;
-
 /**
  * 家属成员信息Service
+ * 
  * @author like
  * @version 2017-07-21
  */
@@ -37,71 +38,96 @@ public class FamilyInfoService extends CrudService<FamilyInfoDao, FamilyInfo> {
 	public FamilyInfo get(String id) {
 		return super.get(id);
 	}
-	
+
 	public List<FamilyInfo> findList(FamilyInfo familyInfo) {
 		return super.findList(familyInfo);
 	}
-	
+
 	public Page<FamilyInfo> findPage(Page<FamilyInfo> page, FamilyInfo familyInfo) {
 		return super.findPage(page, familyInfo);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void save(FamilyInfo familyInfo) {
 		super.save(familyInfo);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void delete(FamilyInfo familyInfo) {
 		super.delete(familyInfo);
 	}
-	
+
 	/**
 	 * 获取房间的家属集合
+	 * 
 	 * @param roomId
 	 * @return
 	 */
-	public List<FamilyInfo> getRoomFamilies(String roomId){
+	public List<FamilyInfo> getRoomFamilies(String roomId) {
 		return dao.getRoomFamilies(roomId);
 	}
-	
+
 	/**
-	 * 添加家属信息是，远程提交
-	 * @param contactNumber	家属电话号码
-	 * @param name	客户姓名
-	 * @param customerId	客户id
-	 * @param roomId	房间id
-	 * @throws HttpException
-	 * @throws IOException
+	 * 新增家庭成员接口
+	 * 
+	 * @param contactNumber
+	 * @param name
+	 * @param customerId
+	 * @param roomId
 	 */
-	public void submitRemoteFamily(String contactNumber,String name,String customerId,String roomId) throws HttpException, IOException{
-		JSONObject custom = new JSONObject();
-		custom.accumulate("contactNumber", contactNumber);
-		custom.accumulate("name", name);
-		custom.accumulate("customerId", customerId);
-		custom.accumulate("roomId", roomId);
-		
-		JSONObject jsonObject = new JSONObject();
-		
-		JSONObject jsonParams = new JSONObject();
-		jsonParams.accumulate("json", custom);
-		jsonObject.accumulate("params", jsonParams);
-		String sendUrl = "/propertyAPI/family.do";
-		String result = submitUrl(jsonObject, sendUrl);
-		
+	@Async
+	public void submitRemoteFamily(String contactNumber, String name, String customerId, String roomId) {
+		if (StringUtils.isBlank(contactNumber) || StringUtils.isBlank(name) || StringUtils.isBlank(customerId) || StringUtils.isBlank(roomId)) {
+			return;
+		}
+		String url = Global.getConfig("familyPath");
+		logger.info("url:" + url);
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		try {
+			StringBuilder builder = new StringBuilder();
+			builder.append("json={").append("\"contactNumber\" :").append("\"").append(contactNumber).append("\",").append("\"name\" :").append("\"")
+					.append(name).append("\",").append("\"customerId\" :").append("\"").append(customerId).append("\",").append("\"roomId\" :").append("\"")
+					.append(roomId).append("\"}");
+			String villagePara = builder.toString();
+			HttpPost req = new HttpPost(url);
+			req.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+			StringEntity content = new StringEntity(villagePara, "UTF-8");
+			req.setEntity(content);
+			CloseableHttpResponse response = httpClient.execute(req);
+			HttpEntity entity = response.getEntity();
+			String results = EntityUtils.toString(entity, "UTF-8");
+			logger.info("---------查询客户信息接口的返回result列表：results-----------");
+			logger.info(results);
+			System.out.println(results);
+			// 使用JSONObject
+			JSONObject jsonResults = JSONObject.fromObject(results);
+			// 返回状态
+			boolean isSuccess = jsonResults.getBoolean("isSuccess");
+			// 错误信息
+			String msg = jsonResults.getString("msg");
+			// 状态码
+			String code = jsonResults.getString("code");
+			// 数据信息字段
+			// String data = jsonResults.getString("data");
+
+			// 查询楼栋接口成功
+			if (isSuccess && "2000".equals(code)) {
+
+				logger.info("新增家庭成员接口成功");
+			} else {
+				logger.warn("状态码:" + code + ";错误信息:" + msg);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
-	@SuppressWarnings("deprecation")
-	public static String submitUrl(JSONObject jsonobject,String url) throws IOException, HttpException {
-		HttpClient httpClient = new HttpClient();
-		PostMethod method = new PostMethod(url);
-		method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
-		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-        httpClient.getHttpConnectionManager().getParams().setSoTimeout(300000);
-		
-		RequestEntity requestEntity=new StringRequestEntity(jsonobject.toString());
-		method.setRequestEntity(requestEntity);
-		httpClient.executeMethod(method);
-		String result = method.getResponseBodyAsString();
-		return result;
-	}
+
 }

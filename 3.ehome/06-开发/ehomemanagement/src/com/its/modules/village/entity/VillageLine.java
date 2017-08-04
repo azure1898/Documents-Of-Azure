@@ -184,9 +184,9 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-    public void setCommunityModuleIds(String[] communityModuleIds) {
+   /* public void setCommunityModuleIds(String[] communityModuleIds) {
         this.communityModule = StringUtils.arrToStr(communityModuleIds);
-    }
+    }*/
 
     // 生活模块数组集合
     public String[] getLifeModuleIds() {
@@ -197,9 +197,9 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-    public void setLifeModuleIds(String[] lifeModuleIds) {
+    /*public void setLifeModuleIds(String[] lifeModuleIds) {
         this.lifeModule = StringUtils.arrToStr(lifeModuleIds);
-    }
+    }*/
 
     // 首页推荐模块集合
     public String[] getMaintRecomModuleIds() {
@@ -210,9 +210,9 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-    public void setMaintRecomModuleIds(String[] maintRecomModuleIds) {
+/*    public void setMaintRecomModuleIds(String[] maintRecomModuleIds) {
         this.maintRecomModule = StringUtils.arrToStr(maintRecomModuleIds);
-    }
+    }*/
 
     // 优家推荐模块集合
     public String[] getLifeRecomModuleIds() {
@@ -223,9 +223,9 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-    public void setLifeRecomModuleIds(String[] lifeRecomModuleIds) {
+   /* public void setLifeRecomModuleIds(String[] lifeRecomModuleIds) {
         this.lifeRecomModule = StringUtils.arrToStr(lifeRecomModuleIds);
-    }
+    }*/
     // 社区推荐模块集合
     public String[] getCommunityRecomModuleIds() {
         if (communityRecomModule != null) {
@@ -235,9 +235,9 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
     
-    public void setCommunityRecomModuleIds(String[] communityRecomModuleIds) {
+  /*  public void setCommunityRecomModuleIds(String[] communityRecomModuleIds) {
         this.communityRecomModule = StringUtils.arrToStr(communityRecomModuleIds);
-    }
+    }*/
     // # add by zhujiao ---end
 
     public VillageLinerecombusitype getRecomBusType() {

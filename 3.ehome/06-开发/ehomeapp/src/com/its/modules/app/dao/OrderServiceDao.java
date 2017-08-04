@@ -1,7 +1,5 @@
 package com.its.modules.app.dao;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
@@ -47,19 +45,6 @@ public interface OrderServiceDao extends CrudDao<OrderService> {
 	 * @return OrderService
 	 */
 	public OrderService getByOrderNo(String orderNo);
-
-	/**
-	 * 获取某用户某楼盘下的服务类订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderServiceBean>
-	 */
-	public List<OrderServiceBean> getOrderServiceList(@Param("villageInfoId") String villageInfoId, @Param("accountId") String accountId, @Param("moduleManageId") String moduleManageId);
 
 	/**
 	 * 根据订单ID和用户ID获取订单信息

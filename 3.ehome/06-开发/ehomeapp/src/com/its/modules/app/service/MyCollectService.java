@@ -69,6 +69,9 @@ public class MyCollectService extends CrudService<MyCollectDao, MyCollect> {
 		return dao.findMyCollectOfAccount(accountId, villageInfoId);
 	}
 
+	public MyCollect hasCollect(String accountId, String villageInfoId, String businessInfoId) {
+		return dao.hasCollect(accountId, villageInfoId, businessInfoId);
+	}
 	/**
 	 * 判断用户是否收藏商家
 	 * 
@@ -81,6 +84,6 @@ public class MyCollectService extends CrudService<MyCollectDao, MyCollect> {
 		if (StringUtils.isBlank(accountId) || StringUtils.isBlank(villageInfoId) || StringUtils.isBlank(businessInfoId)) {
 			return 0;
 		}
-		return dao.isCollect(accountId, villageInfoId, businessInfoId) > 0 ? 1 : 0;
+		return dao.hasCollect(accountId, villageInfoId, businessInfoId) != null ? 1 : 0;
 	}
 }

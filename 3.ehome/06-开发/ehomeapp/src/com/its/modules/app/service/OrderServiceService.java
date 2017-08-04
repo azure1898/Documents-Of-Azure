@@ -125,8 +125,7 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 	 * 保存预约服务订单和预约服务清单
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	public String createOrderService(Account account, String contactPerson, String contactPhone, String contactAddress, ServiceInfo serviceInfo, int appointNum,
-			int isImmediate, String serviceStart, String serviceEnd, CouponManageBean couponManageBean, String leaveMessage) {
+	public String createOrderService(Account account, String contactPerson, String contactPhone, String contactAddress, ServiceInfo serviceInfo, int appointNum, int isImmediate, String serviceStart, String serviceEnd, CouponManageBean couponManageBean, String leaveMessage) {
 		BusinessInfo businessInfo = businessInfoService.get(serviceInfo.getBusinessInfoId());
 		VillageInfo villageInfo = villageInfoService.get(account.getVillageInfoId());
 		double totalMoney = appointNum * serviceInfoService.getServicePrice(serviceInfo);
@@ -230,24 +229,9 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 		serviceInfo.setSellCount(ValidateUtil.validateInteger(serviceInfo.getSellCount()) + appointNum);
 		serviceInfoService.update(serviceInfo);
 		// 插入订单追踪
-		OrderTrack orderTrack = new OrderTrack();
+		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_SERVICE, orderServiceId, orderNo);
 
 		return orderServiceId;
-	}
-
-	/**
-	 * 获取某用户某楼盘下的服务类订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderServiceBean>
-	 */
-	public List<OrderServiceBean> getOrderServiceList(String villageInfoId, String accountId, String moduleManageId) {
-		return dao.getOrderServiceList(villageInfoId, accountId, moduleManageId);
 	}
 
 	/**

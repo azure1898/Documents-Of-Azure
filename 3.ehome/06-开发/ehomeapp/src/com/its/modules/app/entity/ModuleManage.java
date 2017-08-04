@@ -10,7 +10,7 @@ import com.its.common.persistence.DataEntity;
 /**
  * 模块管理Entity
  * @author sushipeng
- * @version 2017-07-31
+ * @version 2017-08-03
  */
 public class ModuleManage extends DataEntity<ModuleManage> {
 	
@@ -22,6 +22,7 @@ public class ModuleManage extends DataEntity<ModuleManage> {
 	private Integer sortNum;		// 排序序号
 	private String businessCategoryDictFlag;		// 是否来源于商户分类
 	private String businessCategoryDictId;		// 商户分类字典表ID
+	private String phoneModuleCode;		// 手机端模块编码
 	
 	public ModuleManage() {
 		super();
@@ -91,6 +92,15 @@ public class ModuleManage extends DataEntity<ModuleManage> {
 
 	public void setBusinessCategoryDictId(String businessCategoryDictId) {
 		this.businessCategoryDictId = businessCategoryDictId;
+	}
+	
+	@Length(min=0, max=2, message="手机端模块编码长度必须介于 0 和 2 之间")
+	public String getPhoneModuleCode() {
+		return phoneModuleCode;
+	}
+
+	public void setPhoneModuleCode(String phoneModuleCode) {
+		this.phoneModuleCode = phoneModuleCode;
 	}
 	
 }

@@ -170,15 +170,15 @@ public class LessonInfoController extends BaseController {
 			Model model) {
 		// 特殊字符转换
 		// 课程名称
-		if (StringUtils.isBlank(lessonInfo.getName())) {
+		if (StringUtils.isNotBlank(lessonInfo.getName())) {
 			lessonInfo.setName(StringEscapeUtils.unescapeHtml4(lessonInfo.getName()));
 		}
 		// 上课地点
-		if (StringUtils.isBlank(lessonInfo.getAddress())) {
+		if (StringUtils.isNotBlank(lessonInfo.getAddress())) {
 			lessonInfo.setAddress(StringEscapeUtils.unescapeHtml4(lessonInfo.getAddress()));
 		}
 		// 课程介绍
-		if (StringUtils.isBlank(lessonInfo.getContent())) {
+		if (StringUtils.isNotBlank(lessonInfo.getContent())) {
 			lessonInfo.setContent(StringEscapeUtils.unescapeHtml4(lessonInfo.getContent()));
 		}
 		

@@ -75,7 +75,7 @@ public class ShoppingCartController extends BaseController {
 			// 判断限购数量
 			if ("1".equals(goods.getQuota())) {
 				ShoppingCart sc = shoppingCartService.getGoodsOfShoopingCart(userID, buildingID, businessID, commodityID, specificationID);
-				if (sc.getNumber() >= goods.getQuotaNum()) {
+				if (sc != null && sc.getNumber() >= goods.getQuotaNum()) {
 					return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"已达限购数量\"}";
 				}
 			}

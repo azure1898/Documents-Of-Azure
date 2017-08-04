@@ -55,12 +55,15 @@ public class MyCollectController extends BaseController {
 			if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(businessID)) {
 				return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数错误\"}";
 			}
-			MyCollect my = new MyCollect();
-			my.setAccountId(userID);
-			my.setVillageInfoId(buildingID);
-			my.setBusinessInfoId(businessID);
-			my.setCollectDate(new Date());
-			myCollectService.save(my);
+			MyCollect my = myCollectService.hasCollect(userID, buildingID, businessID);
+			if (my == null) {
+				my = new MyCollect();
+				my.setAccountId(userID);
+				my.setVillageInfoId(buildingID);
+				my.setBusinessInfoId(businessID);
+				my.setCollectDate(new Date());
+				myCollectService.save(my);
+			}
 			return "{\"code\":" + Global.CODE_SUCCESS + ",\"message\":\"收藏成功\"}";
 		} catch (Exception e) {
 			e.printStackTrace();

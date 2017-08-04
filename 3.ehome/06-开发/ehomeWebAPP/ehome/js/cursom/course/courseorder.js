@@ -70,10 +70,7 @@
            
          }
           else if(xx.test(name)&&!reg.test(name)){
-        	
-        	
-        		
-        		layer.open({
+                  layer.open({
 						
 						   content: '请输入正确联系人',
 						  btn: '确定',
@@ -88,9 +85,7 @@
 						    content: '请输入正确的手机号',
 						  btn: '确定',
 						  shadeClose: false,
-						  });
-	                
-          	  
+						 });  
           }
           else{
         			var _this = this;

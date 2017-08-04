@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +100,7 @@ public class AccountService extends CrudService<AccountDao, Account> {
 	 * @param villageInfoId
 	 *            楼盘ID
 	 */
+	@Async
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public void certifyCustomer(Account account) {
 		if (account == null || StringUtils.isBlank(account.getPhoneNum()) || StringUtils.isBlank(account.getVillageInfoId())

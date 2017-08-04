@@ -26,7 +26,8 @@
 			            	$(".word_message").hide();
 			            }
 			            
-			            console.log("afterChange");
+			            console.log("KindEditorLength：" + KindEditor.instances[0].html().length);
+			            console.log("KindEditorHtml：" + KindEditor.instances[0].html());
 			            if(!firstKindEditorLoadFlag && this.count() <= minLength) {
 			                $(".word_message_min").show();
 			            } else {

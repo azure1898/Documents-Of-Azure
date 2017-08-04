@@ -161,8 +161,10 @@
 					<c:if test="${groupPurchase.groupPurcState == 1}">
 						<td>
 		    				<a href="${ctx}/operation/groupPurchase/offLine?id=${groupPurchase.id}" onclick="return confirmx('活动还没有结束，确认下线吗？下线的团购无法再进行上线', this.href)">下线</a>
-		    				<a href="#" class="upbtn"><i class="icon-circle-arrow-up"></i></a>
-		    				<a href="#" class="downbtn"><i class="icon-circle-arrow-down"></i></a>	    				
+				    		<a href="#" class="up" id="up${status.count}"><i class="icon-arrow-up"></i></a>
+				    		<label id="upHid${status.count}" class="upHid" style="width:15px;display:none;"></label>
+				    		<label id="downHid${status.count}" class="downHid" style="width:15px;display:none;"></label>
+		                    <a href="#" class="down" id="down${status.count}"><i class="icon-arrow-down"></i></a>    				
 						</td>
 					</c:if>				
 				</shiro:hasPermission>
@@ -179,10 +181,36 @@
 	<!--<div class="pagination">${page}</div>  -->
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$("#up1").css("display","none");
+			$("#upHid1").css("display","");
+			$("#down"+'${listSize}').css("display","none");
+			$("#downHid"+ '${listSize}').css("display","");
+			
 			//上移
-			$('.upbtn').click(function(){			
+			$('.up').click(function(){
+				var trLength = '${listSize}'; 
 		        $(this).each(function(){
 		            var $tr = $(this).parents("tr");
+		            if($tr.index() == trLength-1){
+		            	var $aDown=$tr.find(".down");
+		            	var $aDownHid=$tr.find(".downHid");
+		            	var $aPrevDown=$tr.prev().find(".down");
+		            	var $aPrevDownHid=$tr.prev().find(".downHid");
+		            	$("#"+$aDown.attr("id")).css("display","");
+		            	$("#"+$aDownHid.attr("id")).css("display","none");
+		            	$("#"+$aPrevDown.attr("id")).css("display","none");
+		            	$("#"+$aPrevDownHid.attr("id")).css("display","");
+		            }
+		            if($tr.index() == 1){
+		            	var $aUp=$tr.find(".up");
+		            	var $aUpHid=$tr.find(".upHid");
+		            	var $aPrevUp=$tr.prev().find(".up");
+		            	var $aPrevUpHid=$tr.prev().find(".upHid");
+		            	$("#" + $aUp.attr("id")).css("display","none");
+		            	$("#" + $aUpHid.attr("id")).css("display","");
+		            	$("#" + $aPrevUp.attr("id")).css("display","");
+		            	$("#" + $aPrevUpHid.attr("id")).css("display","none");	
+		            }
 		            if($tr.index() != 0){
 		            	$tr.fadeOut().fadeIn();
 		                $tr.prev().before($tr);
@@ -191,14 +219,36 @@
 		    });
 
 			//下移
-		    $('.downbtn').click(function(){
-		         var trLength = '${listSize}'; 
+		    $('.down').click(function(){
+		        var trLength = '${listSize}'; 
 		        $(this).each(function(){
-		            var $tr = $(this).parents("tr"); 		            
-		            if ($tr.index() != trLength) { 
+		            var $tr = $(this).parents("tr"); 
+                    if($tr.index() == 0 && '${listSize}' > 1){
+                    	var $aUp=$tr.find(".up");
+                    	var $aUpHid=$tr.find(".upHid");
+		            	var $aNextUp=$tr.next().find(".up");
+		            	var $aNextUpHid=$tr.next().find(".upHid");
+		            	$("#" + $aUp.attr("id")).css("display","");
+		            	$("#" + $aUpHid.attr("id")).css("display","none");
+		            	$("#" + $aNextUp.attr("id")).css("display","none");
+		            	$("#" + $aNextUpHid.attr("id")).css("display","");
+		            }
+                    if(trLength > 1 && $tr.index() == trLength-2){
+		            	var $aDown=$tr.find(".down");
+		            	var $aDownHid=$tr.find(".downHid");
+		            	var $aNextDown=$tr.next().find(".down");
+		            	var $aNextDownHid=$tr.next().find(".downHid");
+		            	$("#"+$aDown.attr("id")).css("display","none");
+		            	$("#"+$aDownHid.attr("id")).css("display","");
+		            	$("#"+$aNextDown.attr("id")).css("display","");
+		            	$("#"+$aNextDownHid.attr("id")).css("display","none");
+		            }
+		            if ($tr.index() != trLength-1) {
 		            	$tr.fadeOut().fadeIn();
 		                $tr.next().after($tr);
 		            }
+		            
+		            
 		        });
 		    });
 			

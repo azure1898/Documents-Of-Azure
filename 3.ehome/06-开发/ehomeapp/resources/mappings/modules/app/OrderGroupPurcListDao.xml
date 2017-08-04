@@ -167,4 +167,16 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 获取某团购订单中某种状态的团购券列表 -->
+	<select id="getOrderGroupPurcList" resultType="OrderGroupPurcList">
+		SELECT
+			<include refid="orderGroupPurcListColumns"/>
+		FROM
+			Order_Group_Purc_List a
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Order_Group_Purc_ID = #{orderGroupPurcId}
+		AND a.Group_Purc_State = #{groupPurcState}
+	</select>
+	
 </mapper>

@@ -12,6 +12,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.FieldPartitionBean;
 import com.its.modules.app.bean.OrderFieldBean;
@@ -153,26 +154,11 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
 			}
 		}
 		// 生成订单跟踪状态
-		orderTrackService.createTrackSubmit(AppGlobal.MODEL_FIELD, order.getId(), orderNo);
+		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_FIELD, order.getId(), orderNo);
 		result.clear();
 		result.put("code", Global.CODE_SUCCESS);
 		result.put("message", order.getId());
 		return result;
-	}
-
-	/**
-	 * 获取某用户某楼盘下的场地预约订单
-	 * 
-	 * @param villageInfoId
-	 *            楼盘ID
-	 * @param accountId
-	 *            用户ID
-	 * @param moduleManageId
-	 *            模块ID
-	 * @return List<OrderFieldBean>
-	 */
-	public List<OrderFieldBean> getOrderFieldList(String villageInfoId, String accountId, String moduleManageId) {
-		return dao.getOrderFieldList(villageInfoId, accountId, moduleManageId);
 	}
 
 	/**

@@ -116,5 +116,15 @@
 		WHERE a.category_name = #{categoryName}
 		AND a.del_flag = '0'
 	</select>
+  <!-- 通过商家ID获取分类列表 -->
+  <select id="getListBybusId" resultType="BusinessCategorydict">
+    SELECT
+    <include refid="businessCategorydictColumns" />
+    FROM business_categorydict a
+    JOIN business_categoryinfo b on a.ID=b.Business_Category_Dict_ID
+    <where>
+      a.del_flag = '0' AND b.BusinessInfo_ID = #{businessinfoId}  
+    </where>
+  </select>
 	
 </mapper>

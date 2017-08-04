@@ -41,6 +41,18 @@
                 }
             },
             submitHandler : function(form) {
+              //给社区模块赋值
+                var communtyIds="";
+                $("#addCommunityModule").find(".community").each(function(i,dom){
+                    communtyIds+= $(dom).attr("id")+",";
+                })
+                $("#communityModule").val(communtyIds);
+                //给生活模块赋值
+                var lifeIds="";
+                $("#addLifeModule").find(".life").each(function(i,dom){
+                    lifeIds+= $(dom).attr("id")+",";
+                })
+                $("#lifeModule").val(lifeIds);
                 loading('正在提交，请稍等...');
                 form.submit();
             },
@@ -57,38 +69,44 @@
         $("input[name='communityModuleIds']").click(function() {
             console.log();
             var id = $(this).val();
-            var total = $("#addCommunityModuleIds").children().size() + 1;
+            var total = $("#addCommunityModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                var domRow = '<span class="community" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
                 $("#addCommunityModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('community');
             }
+            var communtyIds="";
+            $("#addCommunityModule").find(".community").each(function(i,dom){
+                communtyIds+= $(dom).attr("id")+",";
+            })
+            console.log(communtyIds);
         })
-        $("input[name='communityModuleIds']:checked").each(function() {
-            //默认选中的社区模块 
-            var total = $("#addCommunityModule").children().size() + 1;
-            var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+        var alist=${fns:toJson(getCommunityModuleList)};
+        console.log(alist);
+        for (var i=0; i<alist.length; i++){
+            var domRow = '<span class="community" id="' +alist[i].id + '"><lable>' +alist[i].moduleName + '</lable><lable class="lable-num">' + (i+1) + '</lable></span>';
             $("#addCommunityModule").append($(domRow));
-        })
+        }
+        
         $("input[name='lifeModuleIds']").click(function() {
             console.log();
             var id = $(this).val();
             var total = $("#addLifeModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                var domRow = '<span class="life" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
                 $("#addLifeModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('life');
             }
         })
 
-        $("input[name='lifeModuleIds']:checked").each(function() {
-            // 默认选中的社区模块 
-            var total = $("#addLifeModule").children().size() + 1;
-            var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+        var blist=${fns:toJson(getLifeModuleList)};
+        console.log(alist);
+        for (var i=0; i<blist.length; i++){
+            var domRow = '<span class="life" id="' +blist[i].id + '"><lable>' +blist[i].moduleName + '</lable><lable class="lable-num">' + (i+1) + '</lable></span>';
             $("#addLifeModule").append($(domRow));
-        })
+        }
     });
 </script>
 </head>
@@ -102,8 +120,8 @@
     <form:form id="inputForm" modelAttribute="villageLine" action="${ctx}/module/villageLine/setModule" method="post" class="form-horizontal">
         <form:hidden path="id" />
         <input id="mainNavigation" type="hidden" value="${villageLine.mainNavigation}">
-        <input id="communityModule" type="hidden" value="${villageLine.communityModule}">
-        <input id="lifeModule" type="hidden" value="${villageLine.lifeModule}">
+        <input id="communityModule" type="hidden" name="communityModule" value="${villageLine.communityModule}">
+        <input id="lifeModule" type="hidden" name="lifeModule" value="${villageLine.lifeModule}">
         <sys:message content="${message}" />
         <div class="control-group">
             <label class="control-label">主导航</label>

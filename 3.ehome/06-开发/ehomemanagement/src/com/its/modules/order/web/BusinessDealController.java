@@ -16,7 +16,6 @@ import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -117,15 +116,18 @@ public class BusinessDealController extends BaseController {
 
     @RequiresPermissions("order:OrderBusinessDeal:view")
     @RequestMapping(value = { "list", "" })
-    public String list(BusinessDeal OrderBusinessDeal, HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<BusinessDeal> page = businessDealService.findPage(new Page<BusinessDeal>(request, response), OrderBusinessDeal);
+    public String list(BusinessDeal businessDeal, HttpServletRequest request, HttpServletResponse response, Model model) {
+    	
+    	 /* 总计*/
+        model.addAttribute("total",businessDealService.getTotal(businessDeal));
+        
+        
+        Page<BusinessDeal> page = businessDealService.findPage(new Page<BusinessDeal>(request, response), businessDeal);
         model.addAttribute("page", page);
+        System.out.println(page);
         
         /*模块下拉列表*/
         model.addAttribute("allModule", moduleManageService.findAllList());
-        
-       /* 总计*/
-        model.addAttribute("total",businessDealService.getTotal(OrderBusinessDeal));
         
         return "modules/order/businessDealList";
     }

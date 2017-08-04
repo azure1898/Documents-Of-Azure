@@ -82,20 +82,32 @@ public class GoodsInfoController extends BaseController {
 				map.put("commodityID", g.getId());
 				map.put("commodityName", g.getName());
 				map.put("commodityImage", goodsInfoService.getGoodsPicUrl(g, request));
-				map.put("originalPrice", g.getBasePrice() != null ? g.getBasePrice() : 0);
-				map.put("discountedPrice", g.getBenefitPrice() != null ? g.getBenefitPrice() : 0);
-				int cartNum = 0;// 该商品加入购物车的数量
-				for (ShoppingCart cart : cartList) {
-					if (g.getId().equals(cart.getGoodsInfoId())) {
-						cartNum += cart.getNumber();
-					}
-				}
-				map.put("commodityNumber", cartNum);
 				// 商品多规格
 				List<GoodsSkuBean> gsbList = goodsInfoService.getGoodsSkuList(g.getId());
 				map.put("isMoreSpe", gsbList.size() > 0 ? 1 : 0);
 				map.put("speCategory", gsbList.size() > 0 ? gsbList.get(0).getSkuKeyName() : "");
 				map.put("currentSpeID", gsbList.size() > 0 ? gsbList.get(0).getId() : "");
+				if (gsbList.size() > 0) {
+					map.put("originalPrice", gsbList.get(0).getBasePrice() != null ? gsbList.get(0).getBasePrice() : 0);
+					map.put("discountedPrice", gsbList.get(0).getBenefitPrice() != null ? gsbList.get(0).getBenefitPrice() : 0);
+					int cartNum = 0;// 该商品加入购物车的数量
+					for (ShoppingCart cart : cartList) {
+						if (g.getId().equals(cart.getGoodsInfoId()) && gsbList.get(0).getId().equals(cart.getGoodsSkuPriceId())) {
+							cartNum += cart.getNumber();
+						}
+					}
+					map.put("commodityNumber", cartNum);
+				} else {
+					map.put("originalPrice", g.getBasePrice() != null ? g.getBasePrice() : 0);
+					map.put("discountedPrice", g.getBenefitPrice() != null ? g.getBenefitPrice() : 0);
+					int cartNum = 0;// 该商品加入购物车的数量
+					for (ShoppingCart cart : cartList) {
+						if (g.getId().equals(cart.getGoodsInfoId())) {
+							cartNum += cart.getNumber();
+						}
+					}
+					map.put("commodityNumber", cartNum);
+				}
 				List<Map<String, Object>> specifications = new ArrayList<Map<String, Object>>();
 				for (GoodsSkuBean bean : gsbList) {
 					Map<String, Object> beanMap = new HashMap<>();

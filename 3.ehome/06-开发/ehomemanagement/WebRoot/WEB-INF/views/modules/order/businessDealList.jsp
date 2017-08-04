@@ -6,7 +6,7 @@
 <meta name="decorator" content="default" />
 <script type="text/javascript">
     $(document).ready(function() {
-        fillPro();//加载全部省市区数据；
+    //    fillPro();//加载全部省市区数据；
     });
     function page(n, s) {
         $("#pageNo").val(n);
@@ -78,6 +78,7 @@
     <form:form id="searchForm" modelAttribute="businessDeal" action="${ctx}/order/businessDeal/" method="post" class="breadcrumb form-search">
         <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}" />
         <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}" />
+        <input type="hidden" id="checkeIds" value=""/>
         <ul class="ul-form">
             <li>
                 <input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" value="<fmt:formatDate value="${businessDeal.beginCreateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" />
@@ -141,8 +142,7 @@
 		</ol>
 	</div>
     <sys:message content="${message}" />
-    <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    	<input type="hidden" id="checkeIds" value=""/>
+    <table id="contentTable" class="table table-bordered table-condensed"> 	
         <thead>
             <tr>
                 <th>序号</th>
@@ -201,5 +201,8 @@
         </tbody>
     </table>
     <div class="pagination">${page}</div>
+    <script type="text/javascript">
+    	console.log('${page}');
+    </script>
 </body>
 </html>

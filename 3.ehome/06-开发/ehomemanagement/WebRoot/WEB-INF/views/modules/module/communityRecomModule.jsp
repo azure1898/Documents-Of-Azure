@@ -41,6 +41,11 @@
                 },
             },
             submitHandler : function(form) {
+                var communityRecomIds="";
+                $("#addCommunityRecomModule").find(".communityRecom").each(function(i,dom){
+                    communityRecomIds+= $(dom).attr("id")+",";
+                })
+                $("#communityRecomModule").val(communityRecomIds);
                 loading('正在提交，请稍等...');
                 form.submit();
             },
@@ -56,28 +61,27 @@
         });
 
         $("input[name='communityRecomModuleIds']").click(function() {
-            $("#addMaintRecomModule").show();
+            $("#addCommunityRecomModule").show();
             var id = $(this).val();
-            var total = $("#addMaintRecomModule").children().size() + 1;
+            var total = $("#addCommunityRecomModule").children().size() + 1;
             if ($(this).attr('checked') == "checked") {
-                var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
-                $("#addMaintRecomModule").append($(domRow));
+                var domRow = '<span class="communityRecom" id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
+                $("#addCommunityRecomModule").append($(domRow));
             } else {
-                $("span[id=" + id + "]").remove();
+                $("span[id=" + id + "]").hide().removeClass('communityRecom');
             }
         })
-
-        $("input[name='communityRecomModuleIds']:checked").each(function() {
-            // 默认选中的社区模块 
-            var total = $("#addMaintRecomModule").children().size() + 1;
-            var domRow = '<span id="' + $(this).val() + '"><lable>' + $(this).next().text() + '</lable><lable class="lable-num">' + total + '</lable></span>';
-            $("#addMaintRecomModule").append($(domRow));
-        })
-        var len=$("#addMaintRecomModule").children().size();
+        var alist=${fns:toJson(getCommunityList)};
+        for (var i=0; i<alist.length; i++){
+            var domRow = '<span class="communityRecom" id="' +alist[i].id + '"><lable>' +alist[i].moduleName + '</lable><lable class="lable-num">' + (i+1) + '</lable></span>';
+            $("#addCommunityRecomModule").append($(domRow));
+        }
+        
+        var len=$("#addCommunityRecomModule").children().size();
         if(len>0){
-            $("#addMaintRecomModule").show();
+            $("#addCommunityRecomModule").show();
         }else{
-            $("#addMaintRecomModule").hide();
+            $("#addCommunityRecomModule").hide();
         }
     });
 </script>
@@ -102,6 +106,7 @@
     </ul>
     <form:form id="inputForm" modelAttribute="villageLine" action="${ctx}/module/villageLine/updateCommunityRecomModule" method="post" class="form-horizontal">
         <form:hidden path="id" />
+        <input id="communityRecomModule" type="hidden" name="communityRecomModule" value="${villageLine.communityRecomModule}">
         <sys:message content="${message}" />
         <div class="control-group">
             <label class="control-label">楼盘名称</label>
@@ -112,7 +117,7 @@
         <div class="control-group">
             <label class="control-label">社区推荐模块</label>
             <div class="controls" style="border: 1px solid #ccc; padding: 5px;">
-                <div style="border: 1px solid #ccc; padding: 20px" id="addMaintRecomModule"></div>
+                <div style="border: 1px solid #ccc; padding: 20px" id="addCommunityRecomModule"></div>
                 <div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
                     <form:checkboxes items="${moduleList}" path="communityRecomModuleIds" itemLabel="moduleName" itemValue="id" class="required" />
                     <span class="help-inline"><font color="red">*</font> </span>

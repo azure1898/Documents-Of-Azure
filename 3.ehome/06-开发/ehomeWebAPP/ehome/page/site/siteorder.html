@@ -93,7 +93,7 @@
   					<div class="fl" >预约时段/价格</div><br>
   					<div v-for="item1 in items.detail">
   						<div class="fl" ><span class="font14">{{item1.timePeriod}}</span></div>
-  						<div class="fr"style="clear: both;"><span class="font14">{{item1.price}}</span></div>
+  						<div class="fr"style="clear: both;"><span class="font14">{{item1.price|formatDecimal}}</span></div>
   					</div>
   				</div>
   			</div>
@@ -118,7 +118,7 @@
   		</div>
   		<div class="business_bottom">
   			<span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{items.totalMoney|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
-  			<span class="ft12">优惠：<font class="font_orange">￥12.00</font></span>
+  			<!--<span class="ft12">优惠：<font class="font_orange">{{money|formatDecimal}}</font></span>-->
   			<div class="business_zbtn"><a href="#" @click="affirm()">提交订单</a></div>
   		</div>
   		

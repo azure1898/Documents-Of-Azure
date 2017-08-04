@@ -56,8 +56,8 @@
 
 	<body>
 		<div id="app" v-cloak>
-
-			<div class="grey_top">
+			<div id="ye1">
+				<div class="grey_top">
 				<a href="#" class="fl font12" style="margin-left:10px;" onclick="javascript :history.go(-1);">取消</a> 转发
 				<a href="#" class="topic_list_btn2">发送</a>
 			</div>
@@ -81,7 +81,9 @@
 						<td width="6%"><img :src="isComment==0?commentIcon:commentIcon2" width="15" height="15" @click="meanwhile()"></td>
 						<td width="67%">同时转发</td>
 						<td width="27%">
-							<div class="topic_list_btn3">可见公开</div>
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==1">可见公开</div>
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==2">粉丝可见</div>
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==3">好友可见</div>
 						</td>
 					</tr>
 				</table>
@@ -96,6 +98,49 @@
 					<li><span v-text="textnum"></span></li>
 				</ul>
 			</div>
+			</div>
+			<div id="ye2" style="display: none;" >
+				<div class="grey_top">
+				<a href="#" class="black_back" @click="yema(2)"></a>
+				选择可见范围
+			</div>
+			<div class="main_box" style="padding:0;">
+				<div class="my_message" @click="choice(1);yema(2)">
+					<div class="my_message_left4" ><img :src="choose==1 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">公开</font>
+						</p>
+						<p>&nbsp;&nbsp;所有人可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" @click="choice(2);yema(2)">
+					<div class="my_message_left4" ><img :src="choose==2 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">粉丝可见</font>
+						</p>
+						<p>&nbsp;&nbsp;关注我的粉丝可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" style="border-bottom:none;"  @click="choice(3);yema(2)">
+					<div class="my_message_left4"><img :src="choose==3 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">好友可见</font>
+						</p>
+						<p>&nbsp;&nbsp;相互关注好友可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			</div>
+			
 		</div>
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

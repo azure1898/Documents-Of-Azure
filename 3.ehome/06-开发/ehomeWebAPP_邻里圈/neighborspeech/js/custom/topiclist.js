@@ -21,7 +21,7 @@ var vm = new Vue({
 		praiseOne:function(releaseDetail,type){
 			var _this = this;
 			if(releaseDetail.isPraise==1){//取消点赞
-				releaseDetail.isPraise=2;
+				releaseDetail.isPraise=0;
 				releaseDetail.countPraise-=1;
 //				 this.$http.post("/speak/saveComment"{
 //				 	id:releaseDetail.id,

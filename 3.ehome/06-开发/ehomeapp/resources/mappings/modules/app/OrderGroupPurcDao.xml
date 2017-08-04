@@ -244,43 +244,6 @@
 			a.Order_No = #{orderNo}
 	</select>
 	
-	<resultMap type="OrderGroupPurcBean" id="orderGroupPurcBeanMapOne">
-		<id property="id" column="id" />
-		<result property="name" column="name" />
-		<result property="payMoney" column="payMoney" />
-		<result property="orderState" column="orderState" />
-		<result property="payState" column="payState" />
-		<result property="createDate" column="createDate" />
-		<association property="businessInfo" javaType="BusinessInfo">
-			<id property="id" column="Business_Info_Id" />
-			<result property="businessName" column="Business_Name" />
-			<result property="businessPic" column="Business_Pic" />
-		</association>
-	</resultMap>
-	
-	<!-- 获取某用户某楼盘下的团购类订单 -->
-	<select id="getOrderGroupPurcList" resultMap="orderGroupPurcBeanMapOne">
-		SELECT DISTINCT
-			<include refid="orderGroupPurcColumns"/>,
-			b.ID AS Business_Info_Id,
-			b.Business_Name,
-			b.Business_Pic
-		FROM
-			Order_Group_Purc a,
-			Business_Info b
-		WHERE
-			a.Business_Info_ID = b.ID
-		AND a.Del_Flag = 0
-		AND b.del_flag = 0
-		AND a.Village_Info_ID = #{villageInfoId}
-		AND a.Account_ID = #{accountId}
-		<if test="moduleManageId != 0 and moduleManageId != -1">
-			AND a.Module_Manage_ID = #{moduleManageId}
-		</if>
-		ORDER BY
-			a.Create_Date DESC
-	</select>
-	
 	<resultMap type="OrderGroupPurcBean" id="orderGroupPurcBeanMapTwo">
 		<id property="id" column="id" />
 		<result property="payMoney" column="payMoney" />

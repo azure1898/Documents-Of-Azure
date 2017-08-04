@@ -44,5 +44,5 @@ public interface MyCollectDao extends CrudDao<MyCollect> {
 	 * @param businessInfoId
 	 * @return
 	 */
-	public int isCollect(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId, @Param("businessInfoId") String businessInfoId);
+	public MyCollect hasCollect(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId, @Param("businessInfoId") String businessInfoId);
 }

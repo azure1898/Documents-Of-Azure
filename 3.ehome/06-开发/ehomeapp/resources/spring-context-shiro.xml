@@ -14,8 +14,18 @@
 	<bean name="shiroFilterChainDefinitions" class="java.lang.String">
 		<constructor-arg>
 			<value>
-				${appPath}/account/login = anon
-				${appPath}/account/quickLogin = anon
+				/static/** = anon
+				/userfiles/** = anon
+				${adminPath}/cas = cas
+				${adminPath}/login = authc
+				${adminPath}/logout = logout
+				${adminPath}/** = user
+				/act/rest/service/editor/** = perms[act:model:edit]
+				/act/rest/service/model/** = perms[act:model:edit]
+				/act/rest/service/** = user
+				/ReportServer/** = user
+				${appPath}/account/login = authc
+				${appPath}/account/quickLogin = authc
 				${appPath}/account/** = anon
 				${appPath}/** = anon
 			</value>
@@ -24,12 +34,12 @@
 	
 	<!-- 安全认证过滤器 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="securityManager" ref="securityManager" />
-		<!-- <property name="loginUrl" value="${cas.server.url}?service=${cas.project.url}${adminPath}/cas" />
+		<property name="securityManager" ref="securityManager" /><!-- 
+		<property name="loginUrl" value="${cas.server.url}?service=${cas.project.url}${adminPath}/cas" /> -->
 		<property name="loginUrl" value="${adminPath}/login" />
 		<property name="successUrl" value="${adminPath}?login" />
-		<property name="loginUrl" value="${appPath}/account/loginFailure" />
-		<property name="successUrl" value="${appPath}?account/loginFailure" /> -->
+		<!-- <property name="loginUrl" value="${appPath}/account/login" />
+		<property name="successUrl" value="${appPath}?account/login" />-->
 		<property name="filters">
             <map>
                 <entry key="cas" value-ref="casFilter"/>
@@ -102,4 +112,5 @@
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
     	<property name="securityManager" ref="securityManager"/>
 	</bean>
+	
 </beans>

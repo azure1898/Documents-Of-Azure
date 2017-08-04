@@ -254,7 +254,7 @@ public class AccountController extends BaseController {
 		System.out.println(session.getId());
 		// System.out.println(session.getHost());
 		// System.out.println(session.getTimeout());
-		accountService.certifyCustomer(account);//认证客户
+		//accountService.certifyCustomer(account);//认证客户
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("userID", account.getId());
 		data.put("token", "");
@@ -309,7 +309,7 @@ public class AccountController extends BaseController {
 		Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
 		// System.out.println(session.getId());
-		accountService.certifyCustomer(account);//认证客户
+		//accountService.certifyCustomer(account);//认证客户
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("userID", account.getId());
 		data.put("token", "");

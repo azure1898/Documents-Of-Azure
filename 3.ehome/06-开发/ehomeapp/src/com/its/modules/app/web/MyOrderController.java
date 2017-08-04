@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.its.common.config.Global;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.web.BaseController;
-import com.its.modules.app.bean.MyOrderBean;
+import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.bean.OrderFieldBean;
 import com.its.modules.app.bean.OrderGoodsBean;
 import com.its.modules.app.bean.OrderGroupPurcBean;
@@ -35,12 +35,12 @@ import com.its.modules.app.entity.OrderServiceList;
 import com.its.modules.app.entity.OrderTrack;
 import com.its.modules.app.service.AccountService;
 import com.its.modules.app.service.ModuleManageService;
-import com.its.modules.app.service.MyOrderService;
 import com.its.modules.app.service.OrderFieldService;
 import com.its.modules.app.service.OrderGoodsService;
 import com.its.modules.app.service.OrderGroupPurcService;
 import com.its.modules.app.service.OrderLessonService;
 import com.its.modules.app.service.OrderServiceService;
+import com.its.modules.app.service.OrderTrackService;
 
 /**
  * 我的订单Controller
@@ -72,7 +72,7 @@ public class MyOrderController extends BaseController {
 	private OrderGroupPurcService orderGroupPurcService;
 
 	@Autowired
-	private MyOrderService myOrderService;
+	private OrderTrackService orderTrackService;
 
 	@Autowired
 	private ModuleManageService moduleManageService;
@@ -102,8 +102,8 @@ public class MyOrderController extends BaseController {
 			toJson.put("message", "用户不存在");
 			return toJson;
 		}
-		List<MyOrderBean> myOrderBeans = myOrderService.getMyOrderBean(account.getId(), buildingID, moudleID, request);
-		if (myOrderBeans == null || myOrderBeans.size() == 0) {
+		List<MyOrderViewBean> myOrderViewBeans = orderTrackService.getMyOrderViewList(buildingID, userID, moudleID);
+		if (myOrderViewBeans == null || myOrderViewBeans.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无数据");
 			return toJson;
@@ -111,17 +111,18 @@ public class MyOrderController extends BaseController {
 
 		/* Data数据开始 */
 		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-		for (MyOrderBean myOrderBean : myOrderBeans) {
+		for (MyOrderViewBean myOrderViewBean : myOrderViewBeans) {
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("orderID", myOrderBean.getOrderId());
-			data.put("name", myOrderBean.getName());
-			data.put("businessImage", myOrderBean.getBusinessImage());
-			data.put("orderType", myOrderBean.getOrderType());
-			data.put("timeLabel", myOrderBean.getTimeLabel());
-			data.put("time", myOrderBean.getTime());
-			data.put("orderMoney", myOrderBean.getOrderMoney());
-			data.put("orderStatus", myOrderBean.getOrderStatus());
-			data.put("createDate", DateFormatUtils.format(myOrderBean.getCreateDate(), "yyyy-MM-dd HH:mm:ss"));
+			data.put("orderID", myOrderViewBean.getOrderId());
+			data.put("name", myOrderViewBean.getShowName());
+			data.put("businessImage", ValidateUtil.getImageUrl(myOrderViewBean.getBusinessPic(), ValidateUtil.ZERO, request));
+			data.put("orderType", myOrderViewBean.getOrderType());
+			data.put("timeLabel", myOrderViewBean.getTimeLabel());
+			data.put("time", orderTrackService.getOrderTime(myOrderViewBean));
+			data.put("orderMoney", ValidateUtil.validateDouble(myOrderViewBean.getPayMoney()));
+			OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(myOrderViewBean.getOrderId());
+			data.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
+			data.put("createDate", DateFormatUtils.format(myOrderViewBean.getCreateDate(), "yyyy-MM-dd HH:mm:ss"));
 
 			datas.add(data);
 		}
@@ -156,12 +157,6 @@ public class MyOrderController extends BaseController {
 			toJson.put("message", "用户不存在");
 			return toJson;
 		}
-		List<ModuleManage> moduleManages = moduleManageService.getModuleListByVillageInfoId(buildingID);
-		if (moduleManages == null || moduleManages.size() == 0) {
-			toJson.put("code", Global.CODE_SUCCESS);
-			toJson.put("message", "暂无数据");
-			return toJson;
-		}
 
 		/* Data数据开始 */
 		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
@@ -170,22 +165,22 @@ public class MyOrderController extends BaseController {
 		first.put("moduleID", CommonGlobal.ALL_ORDER_MODULEID);
 		first.put("moduleName", CommonGlobal.ALL_ORDER_DESC);
 		datas.add(first);
-
-		/* 关联在产品模式下的模块 */
-		for (ModuleManage moduleManage : moduleManages) {
-			Map<String, Object> middle = new HashMap<String, Object>();
-			middle.put("moduleID", moduleManage.getId());
-			middle.put("moduleName", moduleManage.getModuleName());
-
-			datas.add(middle);
-		}
-		/* 关联在产品模式下的模块 */
-
 		// 精品团购
 		Map<String, Object> last = new HashMap<String, Object>();
 		last.put("moduleID", CommonGlobal.GROUP_PURCHASE_MODULEID);
 		last.put("moduleName", CommonGlobal.GROUP_PURCHASE_DESC);
 		datas.add(last);
+
+		List<ModuleManage> moduleManages = moduleManageService.getModuleListByVillageInfoId(buildingID);
+		if (moduleManages != null && moduleManages.size() != 0) {
+			for (ModuleManage moduleManage : moduleManages) {
+				Map<String, Object> middle = new HashMap<String, Object>();
+				middle.put("moduleID", moduleManage.getId());
+				middle.put("moduleName", moduleManage.getModuleName());
+
+				datas.add(middle);
+			}
+		}
 		/* Data数据结束 */
 
 		toJson.put("code", Global.CODE_SUCCESS);
@@ -222,15 +217,14 @@ public class MyOrderController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderGoodsBean.getId());
 		data.put("orderStatus", null);
-		List<OrderTrack> orderTracks = orderGoodsBean.getOrderTracks();
-		if (orderTracks == null || orderTracks.size() == 0) {
+		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
+		if (orderTrack == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "订单状态不明");
 			return toJson;
 		}
-		OrderTrack orderTrack = orderTracks.get(0);
-		data.put("statusName", orderTrack.getStateMsg());
-		data.put("statusDesc", orderTrack.getHandleMsg());
+		data.put("statusName", orderTrack.getStateMsgPhone());
+		data.put("statusDesc", orderTrack.getHandleMsgPhone());
 		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
 		data.put("businessID", orderGoodsBean.getBusinessInfoId());
 		data.put("businessPhone", orderGoodsBean.getBusinessInfo().getPhoneNum());
@@ -307,15 +301,14 @@ public class MyOrderController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderServiceBean.getId());
 		data.put("orderStatus", null);
-		List<OrderTrack> orderTracks = orderServiceBean.getOrderTracks();
-		if (orderTracks == null || orderTracks.size() == 0) {
+		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
+		if (orderTrack == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "订单状态不明");
 			return toJson;
 		}
-		OrderTrack orderTrack = orderTracks.get(0);
-		data.put("statusName", orderTrack.getStateMsg());
-		data.put("statusDesc", orderTrack.getHandleMsg());
+		data.put("statusName", orderTrack.getStateMsgPhone());
+		data.put("statusDesc", orderTrack.getHandleMsgPhone());
 		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
 		data.put("businessID", orderServiceBean.getBusinessInfoId());
 		data.put("businessPhone", orderServiceBean.getBusinessInfo().getPhoneNum());
@@ -385,15 +378,14 @@ public class MyOrderController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderLessonBean.getId());
 		data.put("orderStatus", null);
-		List<OrderTrack> orderTracks = orderLessonBean.getOrderTracks();
-		if (orderTracks == null || orderTracks.size() == 0) {
+		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
+		if (orderTrack == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "订单状态不明");
 			return toJson;
 		}
-		OrderTrack orderTrack = orderTracks.get(0);
-		data.put("statusName", orderTrack.getStateMsg());
-		data.put("statusDesc", orderTrack.getHandleMsg());
+		data.put("statusName", orderTrack.getStateMsgPhone());
+		data.put("statusDesc", orderTrack.getHandleMsgPhone());
 		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
 		data.put("businessID", orderLessonBean.getBusinessInfoId());
 		data.put("businessPhone", orderLessonBean.getBusinessInfo().getPhoneNum());
@@ -455,15 +447,14 @@ public class MyOrderController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderFieldBean.getId());
 		data.put("orderStatus", null);
-		List<OrderTrack> orderTracks = orderFieldBean.getOrderTracks();
-		if (orderTracks == null || orderTracks.size() == 0) {
+		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
+		if (orderTrack == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "订单状态不明");
 			return toJson;
 		}
-		OrderTrack orderTrack = orderTracks.get(0);
-		data.put("statusName", orderTrack.getStateMsg());
-		data.put("statusDesc", orderTrack.getHandleMsg());
+		data.put("statusName", orderTrack.getStateMsgPhone());
+		data.put("statusDesc", orderTrack.getHandleMsgPhone());
 		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
 		data.put("businessID", orderFieldBean.getBusinessInfoId());
 		data.put("businessPhone", orderFieldBean.getBusinessInfo().getPhoneNum());
@@ -592,7 +583,6 @@ public class MyOrderController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, userID, String.valueOf(orderType), orderID)) {
 			return toJson;
 		}
-
 		// 根据订单类型调用对应的取消订单接口
 		boolean flag = true;
 		switch (orderType) {
@@ -616,7 +606,6 @@ public class MyOrderController extends BaseController {
 			toJson.put("message", "参数有误");
 			return toJson;
 		}
-
 		// 判断订单是否可取消
 		if (!flag) {
 			toJson.put("code", Global.CODE_PROMOT);

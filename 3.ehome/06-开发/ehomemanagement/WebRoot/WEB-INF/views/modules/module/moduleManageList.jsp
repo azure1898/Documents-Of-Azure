@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>模块管理管理</title>
+	<title>图标管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -18,7 +18,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/module/moduleManage/">模块管理列表</a></li>
+		<li class="active"><a href="${ctx}/module/moduleManage/">图标列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="moduleManage" action="${ctx}/module/moduleManage/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

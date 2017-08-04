@@ -29,9 +29,9 @@ var vm = new Vue({
 			var _this = this;
 					
 			this.$http.get(interfaceUrl + "/live/getCommodityDetail",
-			{ buildingID: userInfo.buildingID, businessID: getQueryString("bid"),commodityID: getQueryString("id")}).then(function(res){
+			{userID:userInfo.userID, buildingID: userInfo.buildingID, businessID: getQueryString("bid"),commodityID: getQueryString("id")}).then(function(res){
 				_this.commodity = res.data.data;
-				
+				_this.collection(_this.commodity.isCollection,_this.commodity.businessID)
 				_this.getShoppingCart();
 			})
 		},
@@ -166,7 +166,56 @@ var vm = new Vue({
 			this.commodity.currentSpeID = this.currentSpecification.specificationID;
 			
 			$("#moreSpeModal").modal('toggle');
-		}
+		},
+			collection:function(status,id){
+					var _this = this;
+					var businessid=id;
+					 if(status==0){
+					 	  $("#collection").removeClass().addClass("collection_btn");
+					$("#collection").bind("click",function(){
+					  
+					    layer.open({
+					    content: '收藏成功'
+					    ,skin: 'msg'
+					    ,time: 2 //2秒后自动关闭
+					  });
+					   _this.add_collections(path_add,businessid);	
+					  $(this).removeClass().addClass("collection_btn2");
+					  
+					}) 
+					  						
+						}
+					  else if(status==1){	
+					  	$("#collection").removeClass().addClass("collection_btn2");
+					  	$("#collection").bind("click",function(){
+					    layer.open({
+					    content: '取消收藏'
+					    ,skin: 'msg'
+					    ,time: 2 //2秒后自动关闭
+					  });
+					   _this.cancel_collections(path_cancle,businessid);			
+					  $(this).removeClass().addClass("collection_btn");
+					   });					    				
+						}                 		
+		},
+		add_collections:function(path,id){
+			var _this = this;			
+			this.$http.post(path,
+				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:id},
+				{emulateJSON: true}).then(function(res){
+                  _this.item = res.data.data;
+                        console.log(res.status);})
+			
+		},
+		cancel_collections:function(path,id){
+			var _this = this;
+			this.$http.post(path,
+				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:id},
+				{emulateJSON: true}).then(function(res){
+                  _this.item = res.data.data;
+                        console.log(res.status);})
+			
+		}	
 	}
 });
 

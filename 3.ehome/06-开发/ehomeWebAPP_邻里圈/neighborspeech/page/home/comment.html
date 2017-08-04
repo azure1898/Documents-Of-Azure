@@ -52,6 +52,16 @@
     		width: 30px;
     		height: 30px;
     	}
+		.pholder:empty:before{
+		    content: attr(data-placeholder);
+		    color:#bbb;
+		}
+		.pholder:focus:before{
+		    content:none;
+		}
+		.atlink{
+			color: #337ab7;
+		}
     </style>
 	</head>
 
@@ -63,7 +73,8 @@
 			</div>
 			<div class="main_box">
 				<div class="fyxq_main2">
-					<textarea name="" cols="" rows="" class="fyxq" v-model="commentContent" placeholder="写下您的评论吧…"></textarea>
+					<!--<textarea name="" cols="" rows="" class="fyxq" v-model="commentContent" placeholder="写下您的评论吧…"></textarea>-->
+					<div id="editable" class="fyxq pholder" contentEditable="true" data-placeholder="写下您的评论吧…"></div>
 				</div>
 				<table width="100" border="0" style="margin-left:10px;">
 					<tr>
@@ -72,11 +83,12 @@
 					</tr>
 				</table>
 			</div>
+			<div id="results"></div>
 			<div class="bottom">
 				<ul>
 					<li><img src="../../images/photo.png"/></li>
 					<li><img src="../../images/icon.png"/></li>
-					<li><img src="../../images/icon2.png"/></li>
+					<li><img src="../../images/icon2.png" onclick="addat();"/></li>
 					<li><img src="../../images/xiaolian.png"/></li>
 					<li><span v-text="textnum"></span></li>
 				</ul>

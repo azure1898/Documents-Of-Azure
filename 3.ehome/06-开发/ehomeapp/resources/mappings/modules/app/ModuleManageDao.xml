@@ -12,6 +12,7 @@
 		a.business_category_dict_flag AS "businessCategoryDictFlag",
 		a.business_category_dict_id AS "businessCategoryDictId",
 		a.create_by AS "createBy.id",
+		a.phone_module_code AS "phoneModuleCode",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
@@ -77,6 +78,7 @@
 			business_category_dict_flag,
 			business_category_dict_id,
 			create_by,
+			phone_module_code,
 			create_date,
 			update_by,
 			update_date,
@@ -92,6 +94,7 @@
 			#{businessCategoryDictFlag},
 			#{businessCategoryDictId},
 			#{createBy.id},
+			#{phoneModuleCode},
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
@@ -109,6 +112,7 @@
 			sort_num = #{sortNum},
 			business_category_dict_flag = #{businessCategoryDictFlag},
 			business_category_dict_id = #{businessCategoryDictId},
+			phone_module_code = #{phoneModuleCode},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -232,5 +236,11 @@
 		ORDER BY
 			a.Sort_Num
 	</select>
-	
+	<!-- 根据手机端模块编码获取模块信息 -->
+	<select id="getModuleByPhoneCode" resultType="ModuleManage">
+		SELECT 
+			<include refid="moduleManageColumns"/>
+		FROM module_manage a
+		WHERE a.del_flag = '0' AND a.phone_module_code = #{phoneModuleCode}
+	</select>
 </mapper>

@@ -89,6 +89,7 @@ var vm = new Vue({
 			_this.timePeriod = delivery.timePeriod;
 			_this.serviceDate.date = delivery.date;
 			_this.serviceDate.desc = delivery.desc;
+			console.log(_this.serviceDate.date);
 		},
 		timeSelected: function(period) {
 			var _this = this;

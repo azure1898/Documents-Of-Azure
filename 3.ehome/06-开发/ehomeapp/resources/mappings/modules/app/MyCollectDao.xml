@@ -128,8 +128,8 @@
 			ORDER BY a.update_date DESC
 	</select>
 	
-	<select id="isCollect" resultType="int">
-		SELECT count(a.id) 
+	<select id="hasCollect" resultType="MyCollect">
+		SELECT <include refid="myCollectColumns"/>
 		FROM my_collect a
 		<where>
 			a.del_flag = 0 

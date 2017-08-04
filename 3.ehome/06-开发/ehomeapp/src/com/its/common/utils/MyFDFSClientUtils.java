@@ -26,7 +26,7 @@ public class MyFDFSClientUtils {
 	private static final String fdfsConfigFilename = "etc/fdfs_client.conf";
 	private static final String fdhtConfigFilename = "etc/fdht_client.conf";
 	private static final String fdhtNamespace = "fdfs";
-	public static final String FDFS_URL = "http://192.168.1.81:8888/";
+	public static final String FDFS_URL = "http://218.28.28.186:9092/";
 
 	public MyFDFSClientUtils() {
 	}

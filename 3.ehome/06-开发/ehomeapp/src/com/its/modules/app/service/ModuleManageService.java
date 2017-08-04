@@ -3,6 +3,7 @@ package com.its.modules.app.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +93,14 @@ public class ModuleManageService extends CrudService<ModuleManageDao, ModuleMana
 	 */
 	public List<Map<String, Object>> getRecommendBusinessList(String recommendPosition, String villageInfoId) {
 		return dao.getRecommendBusinessList(recommendPosition, villageInfoId);
+	}
+	
+	/**
+	 * 根据手机端模块编码获取模块信息
+	 * @param phoneModuleCode
+	 * @return
+	 */
+	public ModuleManage getModuleByPhoneCode(String phoneModuleCode){
+		return dao.getModuleByPhoneCode(phoneModuleCode);
 	}
 }

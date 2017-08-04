@@ -75,6 +75,10 @@ public class FamilyInfoController extends BaseController {
 		if (account == null) {
 			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"用戶不存在\"}";
 		}
+		RoomCertify room = roomCertifyService.get(roomID);
+		if (room == null || !userID.equals(room.getAccountId()) || !buildingID.equals(room.getVillageInfoId())) {
+			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
+		}
 		FamilyInfo info = new FamilyInfo();
 		info.setVillageInfoId(buildingID);
 		info.setRoomCertifyId(roomID);
@@ -82,6 +86,8 @@ public class FamilyInfoController extends BaseController {
 		info.setPhoneNum(memberPhone);
 		info.setCertifyState("0");
 		familyInfoService.save(info);
+		// 调用新增家庭成员接口
+		familyInfoService.submitRemoteFamily(memberPhone, memberName, room.getCustomerId(), roomID);
 		Map<String, Object> json = new HashMap<String, Object>();
 		json.put("code", Global.CODE_SUCCESS);
 		json.put("message", "添加成功");
@@ -105,11 +111,11 @@ public class FamilyInfoController extends BaseController {
 		}
 		// 判断业主是否已认证
 		RoomCertify room = roomCertifyService.get(roomID);
-		if(room == null || !userID.equals(room.getAccountId()) || !buildingID.equals(room.getVillageInfoId()) || !"0".equals(room.getCustomerType())){
+		if (room == null || !userID.equals(room.getAccountId()) || !buildingID.equals(room.getVillageInfoId()) || !"0".equals(room.getCustomerType())) {
 			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"仅房间业主有操作权限\"}";
 		}
 		FamilyInfo info = familyInfoService.get(memberID);
-		if(info != null){
+		if (info != null) {
 			familyInfoService.delete(info);
 		}
 		Map<String, Object> json = new HashMap<String, Object>();
