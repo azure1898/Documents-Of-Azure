@@ -110,7 +110,7 @@ public class VillageLinerecomspecialService extends CrudService<VillageLinerecom
                         // 如果删除标记为1 则删除数据专题数据
                         super.delete(recomSpecial);
                         // 连带删除专题详情数据
-                        recomspecialdetailService.deleteByLine(recomSpecial.getId());
+                        recomspecialdetailService.deleteBySpecialId(recomSpecial.getId());
                     }
                 }
             }

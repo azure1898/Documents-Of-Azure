@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
-
 import com.its.modules.app.bean.OrderGoodsBean;
 import com.its.modules.app.entity.OrderGoods;
 
@@ -17,7 +16,6 @@ import com.its.modules.app.entity.OrderGoods;
  */
 @MyBatisDao
 public interface OrderGoodsDao extends CrudDao<OrderGoods> {
-
 	/**
 	 * 根据订单号获取订单信息
 	 * 
@@ -45,15 +43,7 @@ public interface OrderGoodsDao extends CrudDao<OrderGoods> {
 	 *            订单ID
 	 * @param accountId
 	 *            用户ID
-	 * @return OrderGoodsBean
+	 * @return OrderGoods
 	 */
-	public OrderGoodsBean judgeOrderGoodsByOrderIdAndAccountId(@Param("orderId") String orderId, @Param("accountId") String accountId);
-
-	/**
-	 * 更新商品订单状态
-	 * 
-	 * @param orderGoodsBean
-	 *            商品订单信息
-	 */
-	public void updateState(OrderGoodsBean orderGoodsBean);
+	public OrderGoods judgeOrderGoodsCancelAble(@Param("orderId") String orderId, @Param("accountId") String accountId);
 }

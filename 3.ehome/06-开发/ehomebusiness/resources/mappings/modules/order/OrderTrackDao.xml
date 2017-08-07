@@ -40,6 +40,7 @@
 		<include refid="orderTrackJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+	    AND a.state_msg is not null
 			<if test="orderNo != null and orderNo != ''">
 				AND a.order_no = #{orderNo}
 			</if>

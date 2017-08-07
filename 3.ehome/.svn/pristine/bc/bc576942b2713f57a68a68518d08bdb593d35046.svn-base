@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+			
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>转发</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+      <style type="text/css">
+      	a:link{text-decoration: none;}
+		a:visited{text-decoration: none;}
+		a:hover{text-decoration: none;}
+		[v-cloak] {
+			  display: none;
+			}
+			.bottom{
+    		width: 100%;
+    		height:50px;
+    		line-height: 50px;
+    		background:#EEEEEE;
+    		position: fixed;
+    		left: 0;
+    		bottom: 0;
+    		padding: 0 10px;
+    	}
+    	.bottom li{
+    		float: left;
+    		padding: 10px;
+    	}
+    	.bottom li:last-child{
+    		float: right;
+    		font-size: 22px;
+    		padding: 0;
+    	}
+    	.bottom li img{
+    		float: left;
+    		width: 30px;
+    		height: 30px;
+    	}
+      </style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div id="ye1">
+				<div class="grey_top">
+				<a href="#" class="fl font12" style="margin-left:10px;" onclick="javascript :history.go(-1);">取消</a> 转发
+				<a href="#" class="topic_list_btn2">发送</a>
+				</div>
+			<div class="main_box">
+
+				<div class="fyxq_main2">
+					<textarea name="" cols="" rows="" class="fyxq2" v-model="forwardingReason" placeholder="说说您转发的理由吧!"></textarea>
+				</div>
+				<div class="fyxq_main_l2">
+					<div class="fyxq_main_l2_img"><img :src="forwardData.imgUrl" width="110" height="110"></div>
+					<div class="fyxq_main_l_title2">
+						<p>{{forwardData.userName}}</p>
+						<p><span><font class="ftcred" v-for="(subject,index) in forwardData.subjectList" :key="index">{{subject.subName}}</font>{{forwardData.speakContent}}</span></p>
+					</div>
+				</div>
+				<div class="fyxq_main_r"></div>
+				<div class="clear"></div>
+
+				<table width="100%" border="0" style="margin-left:10px;">
+					<tr>
+						<td width="6%"><img :src="isComment==0?commentIcon:commentIcon2" width="15" height="15" @click="meanwhile()"></td>
+						<td width="67%">同时转发</td>
+						<td width="27%">
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==1">可见公开</div>
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==2">粉丝可见</div>
+							<div class="topic_list_btn3" @click="yema(1)" v-if="choose==3">好友可见</div>
+						</td>
+					</tr>
+				</table>
+
+			</div>
+			<div class="bottom">
+				<ul>
+					<li><img src="../../images/photo.png"/></li>
+					<li><img src="../../images/icon.png"/></li>
+					<li><img src="../../images/icon2.png"/></li>
+					<li><img src="../../images/xiaolian.png"/></li>
+					<li><span v-text="textnum"></span></li>
+				</ul>
+			</div>
+			</div>
+			<div id="ye2" style="display: none;" >
+				<div class="grey_top">
+				<a href="#" class="black_back" @click="yema(2)"></a>
+				选择可见范围
+			</div>
+			<div class="main_box" style="padding:0;">
+				<div class="my_message" @click="choice(1);yema(2)">
+					<div class="my_message_left4" ><img :src="choose==1 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">公开</font>
+						</p>
+						<p>&nbsp;&nbsp;所有人可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" @click="choice(2);yema(2)">
+					<div class="my_message_left4" ><img :src="choose==2 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">粉丝可见</font>
+						</p>
+						<p>&nbsp;&nbsp;关注我的粉丝可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="my_message" style="border-bottom:none;"  @click="choice(3);yema(2)">
+					<div class="my_message_left4"><img :src="choose==3 ? chooseUrl : chooseUrl2" width="32" height="32">
+					</div>
+					<div class="my_message_right2">
+						<p>&nbsp;&nbsp;
+							<font style="font-size:16px; color:#000;">好友可见</font>
+						</p>
+						<p>&nbsp;&nbsp;相互关注好友可见</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			</div>
+			
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/forward.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

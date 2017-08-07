@@ -32,7 +32,7 @@
 	
 	<select id="findList" resultType="SocialSpeak">
 		SELECT 
-			<include refid="socialSpeakColumns"/>, vi.village_name AS "villageinfoname", ss.subname AS "subjectname", 
+			<include refid="socialSpeakColumns"/>, vi.village_name AS "villageinfoname", ss.subname AS "subjectname" ,
 			(select count(*) from social_forward sf where sf.speakId = a.id) as sumforward,
 			(select count(*) from social_comment sc where sc.speakId = a.id) as sumcomment,
 			(select su.name from sys_user su where su.id = a.userid) as username
@@ -68,6 +68,9 @@
 			<if test="delflag != null and delflag != ''">
 				AND a.delflag = ${delflag} 
 			</if>
+			<if test="id != null and id != ''">
+				AND a.id = ${id} 
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -77,6 +80,20 @@
 				ORDER BY a.istop desc, a.createtime desc
 			</otherwise>
 		</choose>
+	</select>
+	
+	<select id="findById" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>, vi.village_name AS "villageinfoname", ss.subname AS "subjectname", ss.id AS "subjectid",
+			(select count(*) from social_forward sf where sf.speakId = a.id) as sumforward,
+			(select count(*) from social_comment sc where sc.speakId = a.id) as sumcomment,
+			(select su.name from sys_user su where su.id = a.userid) as username
+		FROM village_info vi 
+			RIGHT JOIN social_speak a on vi.id = a.villageinfoid 
+			LEFT JOIN social_sub_relation ssr on a.id=ssr.speakId 
+			LEFT JOIN social_subject ss ON ssr.subjectId = ss.id 
+		<include refid="socialSpeakJoins"/>
+		WHERE a.id = '${id}'
 	</select>
 	
 	<select id="findAllList" resultType="SocialSpeak">

@@ -13,6 +13,7 @@ var vm = new Vue({
 			start: "",
 			end: ""
 		},
+		totalMoney:0,
 		leaveWords:"",
 		affirmOrder:{},
 		errorMessage:"",
@@ -77,6 +78,7 @@ var vm = new Vue({
 				}
 				
 				_this.timePeriod = res.data.data.serviceDate[0].timePeriod;
+				_this.totalMoney=_this.order.servicePrice;
 			})
 			
 		},
@@ -137,6 +139,7 @@ var vm = new Vue({
 		changeMoney_add: function(order) {	
 			if(order.serviceNumber<order.stockNumber){
 				order.serviceNumber++;
+				
 				if(order.serviceNumber>1){
 						$("#num_jian").css("background-image","url(../../images/service/num_jian2.png)");
 					if (order.serviceNumber == order.stockNumber) {
@@ -144,11 +147,13 @@ var vm = new Vue({
 					}
 				}
 			}
+			this.caleMoney(order,order.serviceNumber);
 		}
 		,
 		changeMoney_reduce: function(order) {
 			if(order.serviceNumber>1){
 				order.serviceNumber--;
+				
 				$(".order_tip").css("display", "none");
 				 if(order.serviceNumber==1){
 
@@ -159,7 +164,14 @@ var vm = new Vue({
          
 			
 			
-			
+			this.caleMoney(order,order.serviceNumber);
+		},
+		//计算价格
+		caleMoney:function(order,num){
+			var _this=this;
+			this.totalMoney=0;
+			this.totalMoney=order.servicePrice*num;
+
 		},
 		//生成订单
 		affirm:function(){

@@ -3,65 +3,88 @@
  */
 package com.its.modules.module.entity;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 
+import com.google.common.collect.Lists;
 import com.its.common.persistence.DataEntity;
 
 /**
  * 楼盘产品线推荐商家模式Entity
+ * 
  * @author zhujiao
  * @version 2017-07-27
  */
 public class VillageLinerecombusitype extends DataEntity<VillageLinerecombusitype> {
-	
-	private static final long serialVersionUID = 1L;
-	private String villageLineId;		// 楼盘产品线ID
-	private String recomPosition;		// 推荐位置：00 首页推荐  10 社区推荐   20 生活商家推荐2
-	private String sortNum;		// 排序序号
-	private String recomBusinessId;		// 推荐商家ID
-	
-	public VillageLinerecombusitype() {
-		super();
-	}
 
-	public VillageLinerecombusitype(String id){
-		super(id);
-	}
+    private static final long serialVersionUID = 1L;
+    private String villageLineId; // 楼盘产品线ID
+    private String recomPosition; // 推荐位置：00 首页推荐 10 社区推荐 20 生活商家推荐2
+    private String sortNum; // 排序序号
+    private String recomBusinessId; // 推荐商家ID
 
-	@Length(min=0, max=64, message="楼盘产品线ID长度必须介于 0 和 64 之间")
-	public String getVillageLineId() {
-		return villageLineId;
-	}
+    private VillageLinerecombusitypedetail recomBusTypeDetail;// 楼盘产品线推荐商家模式明细
+    private List<VillageLinerecombusitypedetail> recomBusTypeDetailList = Lists.newArrayList();// 楼盘产品线推荐商家模式明细列表
 
-	public void setVillageLineId(String villageLineId) {
-		this.villageLineId = villageLineId;
-	}
-	
-	@Length(min=0, max=2, message="推荐位置：00 首页推荐  10 社区推荐   20 生活商家推荐2长度必须介于 0 和 2 之间")
-	public String getRecomPosition() {
-		return recomPosition;
-	}
+    public VillageLinerecombusitype() {
+        super();
+    }
 
-	public void setRecomPosition(String recomPosition) {
-		this.recomPosition = recomPosition;
-	}
-	
-	@Length(min=0, max=11, message="排序序号长度必须介于 0 和 11 之间")
-	public String getSortNum() {
-		return sortNum;
-	}
+    public VillageLinerecombusitype(String id) {
+        super(id);
+    }
 
-	public void setSortNum(String sortNum) {
-		this.sortNum = sortNum;
-	}
-	
-	@Length(min=0, max=64, message="推荐商家ID长度必须介于 0 和 64 之间")
-	public String getRecomBusinessId() {
-		return recomBusinessId;
-	}
+    @Length(min = 0, max = 64, message = "楼盘产品线ID长度必须介于 0 和 64 之间")
+    public String getVillageLineId() {
+        return villageLineId;
+    }
 
-	public void setRecomBusinessId(String recomBusinessId) {
-		this.recomBusinessId = recomBusinessId;
-	}
-	
+    public void setVillageLineId(String villageLineId) {
+        this.villageLineId = villageLineId;
+    }
+
+    @Length(min = 0, max = 2, message = "推荐位置：00 首页推荐  10 社区推荐   20 生活商家推荐2长度必须介于 0 和 2 之间")
+    public String getRecomPosition() {
+        return recomPosition;
+    }
+
+    public void setRecomPosition(String recomPosition) {
+        this.recomPosition = recomPosition;
+    }
+
+    @Length(min = 0, max = 11, message = "排序序号长度必须介于 0 和 11 之间")
+    public String getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(String sortNum) {
+        this.sortNum = sortNum;
+    }
+
+    @Length(min = 0, max = 64, message = "推荐商家ID长度必须介于 0 和 64 之间")
+    public String getRecomBusinessId() {
+        return recomBusinessId;
+    }
+
+    public void setRecomBusinessId(String recomBusinessId) {
+        this.recomBusinessId = recomBusinessId;
+    }
+
+    public VillageLinerecombusitypedetail getRecomBusTypeDetail() {
+        return recomBusTypeDetail;
+    }
+
+    public void setRecomBusTypeDetail(VillageLinerecombusitypedetail recomBusTypeDetail) {
+        this.recomBusTypeDetail = recomBusTypeDetail;
+    }
+
+    public List<VillageLinerecombusitypedetail> getRecomBusTypeDetailList() {
+        return recomBusTypeDetailList;
+    }
+
+    public void setRecomBusTypeDetailList(List<VillageLinerecombusitypedetail> recomBusTypeDetailList) {
+        this.recomBusTypeDetailList = recomBusTypeDetailList;
+    }
+
 }

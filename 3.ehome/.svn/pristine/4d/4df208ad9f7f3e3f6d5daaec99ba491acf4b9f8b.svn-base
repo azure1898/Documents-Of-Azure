@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>全部应用</title>
+
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+<div class="grey_top">
+   <a href="#" class="black_back"></a>
+   全部应用
+  </div>
+  <div class="choose_title2"><span>完成</span>常用应用<font class="font12">（点击编辑可自动选择应用）</font></div>
+  <div class="main_box" style="border-bottom:none;">
+ <div class="choose_cont" >
+ <ul>
+ <li><div class="tupian"><img src="../../images/yy_icon1.png"></div>
+ <p>手机开门</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon2.png"></div>
+ <p>智能家居</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon3.png"></div>
+ <p>物业缴费</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon4.png"></div>
+ <p>社区商城</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon5.png"></div>
+ <p>社区新闻</p>
+ </li>
+ <div class="clear"></div>
+ </ul>
+ </div>
+
+
+ </div>
+  <div class="choose_title2">优家</div>
+ <div class="main_box" style="border-bottom:none;">
+ 
+<div class="choose_cont" >
+ <ul>
+ <li><div class="tupian"><img src="../../images/yy_icon6.png"></div>
+ <p>餐饮美食</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon4.png"></div>
+ <p>社区商城</p>
+ </li>
+<li><div class="tupian"><img src="../../images/yy_icon8.png"></div>
+ <p>服务预订</p>
+ </li>
+<li><div class="tupian"><img src="../../images/yy_icon9.png"></div>
+ <p>课程培训</p>
+ </li>
+
+ <div class="clear"></div>
+ </ul>
+ </div>
+
+ </div>
+ 
+<div class="choose_title2">社区应用</div>
+ <div class="main_box" style="border-bottom:none;">
+ 
+<div class="choose_cont" >
+ <ul>
+ <li><div class="tupian"><img src="../../images/yy_icon10.png"></div>
+ <p>社区公告</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon11.png"></div>
+ <p>房屋报修</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon12.png"></div>
+ <p>投诉建议</p>
+ </li>
+ <li><div class="tupian"><img src="../../images/yy_icon13.png"></div>
+ <p>致加手环</p>
+ </li>
+ <div class="clear"></div>
+ </ul>
+ </div>
+
+ </div>
+ 
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/common/bootstrap.min.js"></script>
+  </body>
+</html>

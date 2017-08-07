@@ -57,7 +57,7 @@ public class BusinessBalanceService extends CrudService<BusinessBalanceDao, Busi
 		businessBalanceDetail.setBalanceStartTime(businessBalance.getBalanceStartTime());
 		businessBalanceDetail.setBalanceEndTime(businessBalance.getBalanceEndTime());
 		List<BusinessBalanceDetail> businessBalanceDetailList = new ArrayList<BusinessBalanceDetail>();
-		businessBalanceDetailList = businessBalanceDetailService.findListByOrderType(businessBalanceDetail, orderType);
+//		businessBalanceDetailList = businessBalanceDetailService.findListByOrderType(businessBalanceDetail, orderType);
 
 		for (BusinessBalanceDetail bbd : businessBalanceDetailList) {
 			bbd.setBusinessBalanceId(businessBalanceId);
@@ -65,7 +65,7 @@ public class BusinessBalanceService extends CrudService<BusinessBalanceDao, Busi
 
 			// 3.根据订单号(order_no)、订单表表名，修改订单-商品类的结算状态为已结算
 			logger.warn("商家结算子表对象：" + bbd.toString());
-			businessBalanceDetailService.updateCheckStateByOrderType(bbd, orderType);
+//			businessBalanceDetailService.updateCheckStateByOrderType(bbd, orderType);
 		}
 
 	}

@@ -4,6 +4,7 @@
     
 	<sql id="adverManageColumns">
 		a.id AS "id",
+		a.open_screen_flag AS "openScreenFlag",
 		a.position_id AS "positionId",
 		a.skip_time AS "skipTime",
 		a.display_type AS "displayType",
@@ -15,6 +16,7 @@
 		a.link_url AS "linkUrl",
 		a.module_id AS "moduleId",
 		a.businessinfo_id AS "businessinfoId",
+		a.category_id AS "categoryId",
 		a.goods_id AS "goodsId",
 		a.starttime AS "starttime",
 		a.end_time AS "endTime",
@@ -79,6 +81,7 @@
 	<insert id="insert">
 		INSERT INTO adver_manage(
 			id,
+			open_screen_flag,
 			position_id,
 			skip_time,
 			display_type,
@@ -90,6 +93,7 @@
 			link_url,
 			module_id,
 			businessinfo_id,
+			category_id,
 			goods_id,
 			starttime,
 			end_time,
@@ -101,6 +105,7 @@
 			del_flag
 		) VALUES (
 			#{id},
+			#{openScreenFlag},
 			#{positionId},
 			#{skipTime},
 			#{displayType},
@@ -112,6 +117,7 @@
 			#{linkUrl},
 			#{moduleId},
 			#{businessinfoId},
+			#{categoryId},
 			#{goodsId},
 			#{starttime},
 			#{endTime},
@@ -126,6 +132,7 @@
 	
 	<update id="update">
 		UPDATE adver_manage SET 	
+			open_screen_flag = #{openScreenFlag},
 			position_id = #{positionId},
 			skip_time = #{skipTime},
 			display_type = #{displayType},
@@ -137,6 +144,7 @@
 			link_url = #{linkUrl},
 			module_id = #{moduleId},
 			businessinfo_id = #{businessinfoId},
+			category_id = #{categoryId},
 			goods_id = #{goodsId},
 			starttime = #{starttime},
 			end_time = #{endTime},
@@ -152,24 +160,38 @@
 		WHERE id = #{id}
 	</update>
 	
-	<!-- 获取某个位置下投放中的广告列表 -->
-	<select id="getAdverManageByPositionId" resultType="AdverManage">
+	<!-- 获取某楼盘产品线某个位置下投放中的广告列表 -->
+	<select id="getAdverManageList" resultType="AdverManage">
 		SELECT
 			<include refid="adverManageColumns"/>
 		FROM
 			Adver_Manage a,
-			Adver_Position b
+			Adver_Position b,
+			Adver_Building c
 		WHERE
 			a.Position_ID = b.ID
+		AND c.Adv_ID = a.ID
 		AND a.del_flag = '0'
 		AND b.del_flag = '0'
+		AND c.del_flag = '0'
 		AND a.StartTime <![CDATA[<=]]> NOW()
 		AND a.End_Time <![CDATA[>]]> NOW()
 		AND b.module_code = '0'
 		AND b.ID = #{adverPositionId}
+		AND c.Village_Line_ID = (
+			SELECT
+				d.ID
+			FROM
+				Village_Line d
+			WHERE
+				d.del_flag = '0'
+			AND d.Village_Info_ID = #{villageInfoId}
+			AND d.Product_Line = '0'
+			AND d.Set_State = '1'
+		)
 		ORDER BY
 			a.update_date DESC
-		LIMIT 5
+		LIMIT #{showCount}
 	</select>
 	
 </mapper>

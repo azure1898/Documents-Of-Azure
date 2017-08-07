@@ -43,8 +43,8 @@
 	</script>
 </head>
 <body>
-    <div class="form-actions" style="text-align:right;">
-    <div style=" margin-right:200px;">
+    <div class="form-actions" style="text-align:right;width:95.5%">
+    <div style="margin-left:15px;">
     <c:if test="${orderLesson.payState ==  '0' && orderLesson.orderState ==  '0'}">
         <input id="btnElemCancel" class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal" value="取消" />
     </c:if>
@@ -85,7 +85,7 @@
     <input id="btnBack" class="btn" type="button" value="返回" onclick="history.go(-1)"/>
     </div>
     </div>
-    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:1500px;">
+    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>订单号</th>
@@ -139,7 +139,7 @@
         </tbody>
     </table>
     <p style="font-weight:bold;">支付信息</p>
-    <table style="border:0;width:1500px;">
+    <table style="border:0;width:98.3%">
         <tr>
             <td style="width:25%">
                 <p style="padding-left: 20px;">支付方式：${fns:getDictLabel(orderLesson.payType, 'pay_type', "")}</p>
@@ -170,7 +170,7 @@
         </c:if>
     </table>
     <p style="font-weight:bold;">订单跟踪</p>
-    <table  class="table table-striped table-bordered table-condensed" style="width:1500px;">
+    <table  class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>订单状态</th>
@@ -201,8 +201,8 @@
         </c:forEach>
         </tbody>
     </table>
-    <div class="form-actions" style="text-align:right">
-    <div style=" margin-right:200px;">
+    <div class="form-actions" style="text-align:right;width:95.5%">
+    <div style="margin-left:15px;">
     <c:if test="${orderLesson.payState ==  '0' && orderLesson.orderState ==  '0'}">
         <input id="btnElemCancelDown" class="btn btn-success" type="button" value="取消" data-toggle="modal" data-target="#myModal"/>
     </c:if>

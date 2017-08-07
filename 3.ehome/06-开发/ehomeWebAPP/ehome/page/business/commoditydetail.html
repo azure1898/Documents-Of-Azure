@@ -120,10 +120,12 @@
   		<div class="details_title_box mt10">
   			<div class="plr10 clearfix">
   				<div class="shop_name">
+  					
   					<img v-bind:src="urlList.business">{{commodity.businessName}}
   				</div>
   				<div class="shop_call">
-  					<img v-bind:src="urlList.contactbusiness">联系商家
+  					<a :href="'tel:'+commodity.businessPhone">
+  					<img v-bind:src="urlList.contactbusiness"></a>联系商家
   				</div>
   			</div>
   			<div class="detail_twobtn">
@@ -183,8 +185,10 @@
     <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../../js/static/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>  
     <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/bootstrap.min.js"></script>	
+    <script src="../../js/s" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/static/vue.js"></script>
 		<script src="../../js/static/vue-resource.js"></script>
 		<script src="../../js/cursom/common/common.js" type="text/javascript"></script>

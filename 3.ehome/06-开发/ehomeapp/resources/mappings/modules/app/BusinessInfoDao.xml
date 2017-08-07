@@ -368,5 +368,13 @@
 			a.create_date DESC
 		LIMIT 5
 	</select>
-	
+	<!-- 根据商家分类字典表，获取商家的商品模式 -->
+	<select id="getProdTypeByCategoryDictId" resultType="string">
+		SELECT a.prod_type 
+		FROM Business_CategoryDict a
+		<where>
+			a.del_flag = '0'
+			AND a.id=#{id}
+		</where>
+	</select>
 </mapper>

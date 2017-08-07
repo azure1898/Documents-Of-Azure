@@ -254,6 +254,12 @@
 	    		}
 	    	});
 	    }
+	  //手动清掉err信息
+	    function clearError(obj){
+		    if ($("label[for="+obj.name+"]") != undefined && obj.value != "") {
+		        $("label[for="+obj.name+"]").remove();
+		    }
+	    }
 	</script>
 </head>
 <body>
@@ -280,7 +286,7 @@
 			<div class="control-group">
 				<label class="control-label">商品分类：</label>
 				<div class="controls">
-					<form:select path="sortInfoId" class="input-xlarge required" onkeydown="sortInfoRefresh()" onmousedown = "sortInfoRefresh()">
+					<form:select path="sortInfoId" class="input-xlarge required" onkeydown="sortInfoRefresh()" onmousedown = "sortInfoRefresh()" onchange="clearError(this);">
 						<form:option value="" label="" />
 						<form:options items="${sortInfoList}" itemLabel="name"
 							itemValue="id" htmlEscape="false" />

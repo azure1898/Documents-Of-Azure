@@ -169,7 +169,7 @@
 				for (var i = hNum + shortTime; i <= maxHour; i += shortTime) {
 					if (mNum != 30) {
                         endTime.append("<option value=\"" + i + ":00\">" + i + ":00</option>");
-					} else if (i != 24 && mNum == 30) {
+					} else if (i != 24 && mNum == 30 && i < maxHour) {
                         endTime.append("<option value=\"" + i + ":30\">" + i + ":30</option>");
 					}
 				}
@@ -455,6 +455,7 @@
         $("select[name='fieldInfoPrices[0].endOpenTime']").live("change",function () {
             if(!checkWeekTime(0)){
                 $(this).val("");
+                $("#fieldInfoPrices0_startOpenTime").val("");
                 $(this).empty();
                 $(this).prev().find(".select2-chosen").empty();
                 alertx("您设置的时段有重复，请仔细检查");
@@ -463,7 +464,8 @@
 
         $("select[name='fieldInfoPrices[1].endOpenTime']").live("change",function () {
             if(!checkWeekTime(1)){
-                $(this).val("");
+            	$(this).val("");
+            	$("#fieldInfoPrices1_startOpenTime").val("");
                 $(this).empty();
                 $(this).prev().find(".select2-chosen").empty();
                 alertx("您设置的时段有重复，请仔细检查");
@@ -473,6 +475,7 @@
         $("select[name='fieldInfoPrices[2].endOpenTime']").live("change",function () {
             if(!checkWeekTime(2)){
                 $(this).val("");
+                $("#fieldInfoPrices2_startOpenTime").val("");
                 $(this).empty();
                 $(this).prev().find(".select2-chosen").empty();
                 alertx("您设置的时段有重复，请仔细检查");
@@ -482,6 +485,7 @@
         $("select[name='fieldInfoPrices[3].endOpenTime']").live("change",function () {
             if(!checkWeekTime(3)){
                 $(this).val("");
+                $("#fieldInfoPrices3_startOpenTime").val("");
                 $(this).empty();
                 $(this).prev().find(".select2-chosen").empty();
                 alertx("您设置的时段有重复，请仔细检查");
@@ -491,6 +495,7 @@
         $("select[name='fieldInfoPrices[4].endOpenTime']").live("change",function () {
             if(!checkWeekTime(4)){
                 $(this).val("");
+                $("#fieldInfoPrices4_startOpenTime").val("");
                 $(this).empty();
                 $(this).prev().find(".select2-chosen").empty();
                 alertx("您设置的时段有重复，请仔细检查");

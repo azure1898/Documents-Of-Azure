@@ -28,6 +28,7 @@ public class FieldPartitionPrice extends DataEntity<FieldPartitionPrice> {
 
 
 	private boolean outTimeState;//结束时段 是否超过当前日期
+	
 	public FieldPartitionPrice() {
 		super();
 	}

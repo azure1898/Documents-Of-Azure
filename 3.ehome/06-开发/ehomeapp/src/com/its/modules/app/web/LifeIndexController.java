@@ -55,48 +55,6 @@ public class LifeIndexController extends BaseController {
 	private BusinessInfoService businessInfoService;
 
 	/**
-	 * 生活首页顶部广告
-	 * 
-	 * @param userID
-	 *            用户ID（可空）
-	 * @param buildingID
-	 *            楼盘ID（不可空）
-	 * @return Map<String, Object>
-	 */
-	@RequestMapping(value = "getTopAdSlot")
-	@ResponseBody
-	public Map<String, Object> getTopAdSlot(String userID, String buildingID, HttpServletRequest request) {
-		// 验证接收到的参数
-		Map<String, Object> toJson = new HashMap<String, Object>();
-		if (ValidateUtil.validateParams(toJson, buildingID)) {
-			return toJson;
-		}
-		List<AdverManage> adverManages = adverManageService.getAdverManageByPositionId("固定值");
-		if (adverManages == null || adverManages.size() == 0) {
-			toJson.put("code", Global.CODE_SUCCESS);
-			toJson.put("message", "暂无数据");
-			return toJson;
-		}
-
-		/* Data数据开始 */
-		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-		for (AdverManage adverManage : adverManages) {
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("adID", adverManage.getId());
-			data.put("adImage", ValidateUtil.getImageUrl(adverManage.getAdverPic(), ValidateUtil.ZERO, request));
-			data.put("adUrl", adverManage.getLinkUrl());
-
-			datas.add(data);
-		}
-		/* Data数据结束 */
-
-		toJson.put("code", Global.CODE_SUCCESS);
-		toJson.put("data", datas);
-		toJson.put("message", "信息已获取");
-		return toJson;
-	}
-
-	/**
 	 * 生活首页模块推荐
 	 * 
 	 * @param userID

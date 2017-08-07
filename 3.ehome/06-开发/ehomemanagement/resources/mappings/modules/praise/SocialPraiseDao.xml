@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.praise.dao.SocialPraiseDao">
+    
+	<sql id="socialPraiseColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.praisetime AS "praisetime",
+		a.pid AS "pid",
+		a.type AS "type",
+		a.touserid AS "touserid",
+		a.state AS "state"
+	</sql>
+	
+	<sql id="socialPraiseJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="praisetime != null and praisetime != ''">
+				AND a.praisetime = #{praisetime}
+			</if>
+			<if test="pid != null and pid != ''">
+				AND a.pid = #{pid}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="touserid != null and touserid != ''">
+				AND a.touserid = #{touserid}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findBySpeakId" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>, su.name AS username
+		FROM social_praise a , sys_user su
+		<include refid="socialPraiseJoins"/>
+		<where>
+			a.type = '${type}' AND a.pid = '${pid}' AND a.userid = su.id
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_praise(
+			id,
+			userid,
+			praisetime,
+			pid,
+			type,
+			touserid,
+			state
+		) VALUES (
+			#{id},
+			#{userid},
+			#{praisetime},
+			#{pid},
+			#{type},
+			#{touserid},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_praise SET 	
+			userid = #{userid},
+			praisetime = #{praisetime},
+			pid = #{pid},
+			type = #{type},
+			touserid = #{touserid},
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_praise
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

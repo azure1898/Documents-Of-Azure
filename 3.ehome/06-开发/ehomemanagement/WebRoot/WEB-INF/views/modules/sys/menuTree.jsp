@@ -30,7 +30,7 @@
 	<div class="accordion" id="menu-${param.parentId}"><c:set var="menuList" value="${fns:getMenuList()}"/><c:set var="firstMenu" value="true"/><c:forEach items="${menuList}" var="menu" varStatus="idxStatus"><c:if test="${menu.parent.id eq (not empty param.parentId ? param.parentId:1)&&menu.isShow eq '1'}">
 		<div class="accordion-group">
 		    <div class="accordion-heading">
-		    	<a class="accordion-toggle" data-toggle="collapse" data-parent="#menu-${param.parentId}" data-href="#collapse-${menu.id}" href="#collapse-${menu.id}" title="${menu.remarks}"><span class="icon ${not empty menu.icon ? menu.icon : 'icon-book'}" ></span>&nbsp;${menu.name}&nbsp;&nbsp;<i class="fa fa-caret-${not empty firstMenu && firstMenu ? 'down' : 'right'}"></i></a>
+		    	<a class="accordion-toggle" data-toggle="collapse" data-parent="#menu-${param.parentId}" data-href="#collapse-${menu.id}" href="#collapse-${menu.id}" title="${menu.remarks}"><span class="ehomeicon ${not empty menu.icon ? menu.icon : 'icon-book'}" ></span>&nbsp;${menu.name}&nbsp;&nbsp;<i class="fa fa-caret-${not empty firstMenu && firstMenu ? 'down' : 'right'}"></i></a>
 		    </div>
 		    <div id="collapse-${menu.id}" class="accordion-body collapse ${not empty firstMenu && firstMenu ? 'in' : ''}">
 				<div class="accordion-inner">

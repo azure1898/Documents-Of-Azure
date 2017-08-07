@@ -122,7 +122,8 @@
 
                 });
                 top.$.jBox.close();
-                return page();
+                $("#searchForm").submit();
+            	return false;
 			};
 
 			top.$.jBox(html, { title: "预约场地", submit: submit , buttons: { '确定':true,'取消':false }});
@@ -261,7 +262,8 @@
                return;
 		   }
             $("#appointmentTime").val(addDate(date,days));
-            return page();
+            $("#searchForm").submit();
+            return false;
         }
         function getMaxDate(){
             var now = new Date();
@@ -319,8 +321,9 @@
 					${fieldInfo.name}
 				</td>
 				<td style="text-align: left;">
-					<c:if test="${empty fieldInfo.fieldPartitionPriceList}">暂无数据</c:if>
-					<c:forEach items="${fieldInfo.fieldPartitionPriceList}" var="fieldPartitionPrice" >
+					<c:if test="${empty fieldInfo.fieldPartitionPriceList}">数据未生成</c:if>
+					<c:forEach items="${fieldInfo.fieldPartitionPriceList}" var="fieldPartitionPrice" varStatus="status">
+						<c:if test="${status.count%8==0 }"><br/></c:if>
 						<c:if test="${fieldPartitionPrice.state==0}">
 							<span class="field_green"
 								  onclick="alertAddField('${fieldInfo.name}',
@@ -361,7 +364,6 @@
 						</c:if>
 
 					</c:forEach>
-
 				</td>
 				<td>
 					${fieldInfo.shortTime}小时
@@ -373,11 +375,16 @@
 					<shiro:hasPermission name="field:fieldInfo:edit">
 						<a href="${ctx}/field/fieldInfo/form?id=${fieldInfo.id}">编辑场地</a>
 					</shiro:hasPermission>
-					<c:if test="${fieldInfo.state=='0'}">
-					<shiro:hasPermission name="field:fieldInfo:suspend">
-						<a href="${ctx}/field/fieldInfo/suspend?id=${fieldInfo.id}" onclick="return confirmx('确认暂停<span style=\'color:red;\'>“${fieldInfo.name}”</span>的预约吗？点击“确定”，我们将暂停该场地的预约，未完成的预约订单需要继续完成或手动取消预约，为避免纠纷，请先行联系已预订的客户进行告知。', this.href)">暂停预约</a>
-					</shiro:hasPermission>
-					</c:if>
+						
+						<c:if test="${fieldInfo.state=='0'}">
+						<shiro:hasPermission name="field:fieldInfo:suspend">
+						<c:if test="${not empty fieldInfo.fieldPartitionPriceList}">
+							<a href="${ctx}/field/fieldInfo/suspend?id=${fieldInfo.id}" onclick="return confirmx('确认暂停<span style=\'color:red;\'>“${fieldInfo.name}”</span>的预约吗？点击“确定”，我们将暂停该场地的预约，未完成的预约订单需要继续完成或手动取消预约，为避免纠纷，请先行联系已预订的客户进行告知。', this.href)">暂停预约</a>
+						</c:if>
+						</shiro:hasPermission>
+						</c:if>
+				
+					
 					<c:if test="${fieldInfo.state=='1'}">
 						<shiro:hasPermission name="field:fieldInfo:recovery">
 							<a href="${ctx}/field/fieldInfo/recovery?id=${fieldInfo.id}" onclick="return confirmx('确定恢复<span style=\'color:red;\'>“${fieldInfo.name}”</span>的预约吗？点击“确定”，我们将重新生成该场地可预约场次，前端应用将可以预约未来7日内场次', this.href)">恢复预约</a>

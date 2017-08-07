@@ -16,6 +16,7 @@ import com.its.common.config.Global;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
+
 import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.common.AppGlobal;
 import com.its.modules.app.common.ValidateUtil;
@@ -139,12 +140,7 @@ public class ModuleManageController extends BaseController {
 							m.put("orderTime", myOrderViewBean.getCreateDate());
 							m.put("orderMoney", ValidateUtil.validateDouble(myOrderViewBean.getPayMoney()));
 							OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(myOrderViewBean.getOrderId());
-							if (orderTrack == null) {
-								toJson.put("code", Global.CODE_PROMOT);
-								toJson.put("message", "订单状态不明");
-								return toJson;
-							}
-							m.put("orderStatus", orderTrack.getStateMsgPhone());
+							m.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
 							orders.add(m);
 						}
 					}
@@ -154,7 +150,7 @@ public class ModuleManageController extends BaseController {
 					ModuleManage cartModule = moduleManageService.getModuleByPhoneCode(AppGlobal.MODULE_MY_CART);
 					Map<String, Object> cart = new HashMap<>();
 					if (cartModule != null) {
-						cart.put("appName", StringUtils.value(orderModule.getModuleName()));
+						cart.put("appName", StringUtils.value(cartModule.getModuleName()));
 					} else {
 						cart.put("appName", "我的购物车");
 					}
@@ -164,7 +160,7 @@ public class ModuleManageController extends BaseController {
 					ModuleManage collectModule = moduleManageService.getModuleByPhoneCode(AppGlobal.MODULE_MY_COLLECT);
 					Map<String, Object> collect = new HashMap<>();
 					if (collectModule != null) {
-						cart.put("appName", StringUtils.value(orderModule.getModuleName()));
+						collect.put("appName", StringUtils.value(collectModule.getModuleName()));
 					} else {
 						collect.put("appName", "商家收藏");
 					}

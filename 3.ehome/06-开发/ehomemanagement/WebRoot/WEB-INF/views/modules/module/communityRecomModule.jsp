@@ -36,7 +36,8 @@
             },
             messages : {
                 communityRecomModuleIds : {
-                    checkMinSize : "首页推荐模块推荐个数不足4个",
+                    required : "请选择模块",
+                    checkMinSize : "社区推荐模块推荐个数不足4个",
                     checkMaxSize : "最多只能勾选4个模块"
                 },
             },

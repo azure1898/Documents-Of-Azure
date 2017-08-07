@@ -22,7 +22,7 @@ public class MyOrderViewBean implements Serializable {
 	private String showName; 			// 名称：商家名称或团购活动名称
 	private String businessPic; 		// 商家图片
 
-	@Length(min = 1, max = 64, message = "id长度必须介于 1 和 64 之间")
+	@Length(min = 1, max = 64, message = "orderId长度必须介于 1 和 64 之间")
 	public String getOrderId() {
 		return orderId;
 	}

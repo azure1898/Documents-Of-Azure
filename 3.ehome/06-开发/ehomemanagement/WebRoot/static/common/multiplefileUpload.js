@@ -149,10 +149,10 @@ $(function() {
                     // 类型符合，可以上传
                     if (file.size >= defaults.fileSize) {
                         alertx('您这个"' + file.name + '"图片大小超过1M。');
-                    } else if (img.height > 563) {
-                        alertx('您这个"' + file.name + '"图片高度超过563像素。');
-                    } else if (img.width > 750) {
-                        alertx('您这个"' + file.name + '"图片宽度超过750像素。');
+                    } else if (img.height > 1024) {
+                        alertx('您这个"' + file.name + '"图片高度超过1024像素。');
+                    } else if (img.width > 1024) {
+                        alertx('您这个"' + file.name + '"图片宽度超过1024像素。');
                     } else {
                         arrFiles.push(file);
                     }
@@ -177,10 +177,10 @@ $(function() {
             var file = files[i];
             if (file.size >= defaults.fileSize) {
                 alertx('您这个"' + file.name + '"图片大小超过1M。');
-            } else if (arrImgs[i].height > 563) {
-                alertx('您这个"' + file.name + '"图片高度超过563像素。');
-            } else if (arrImgs[i].width > 750) {
-                alertx('您这个"' + file.name + '"图片宽度超过750像素。');
+            } else if (arrImgs[i].height > 1024) {
+                alertx('您这个"' + file.name + '"图片高度超过1024像素。');
+            } else if (arrImgs[i].width > 1024) {
+                alertx('您这个"' + file.name + '"图片宽度超过1024像素。');
             } else {
                 arrFiles.push(file);
             }

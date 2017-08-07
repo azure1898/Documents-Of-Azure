@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
-
 import com.its.modules.app.entity.ModuleManage;
 
 /**

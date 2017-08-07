@@ -43,8 +43,8 @@
     </script>
 </head>
 <body>
-    <div class="form-actions" style="text-align:right;">
-    <div style=" margin-right:200px;">
+    <div class="form-actions" style="text-align:right;width:95.5%">
+    <div style="margin-left:15px;">
     <c:if test="${orderService.payState == '1' && orderService.orderState ==  '0'}">
         <input id="btnElemAccept" class="btn btn-success" type="button" value="受理" onclick="window.location.href='${ctx}/order/orderService/accept?orderNo=${orderService.orderNo}&updateDate=${orderService.updateDateString}'"/>
     </c:if>
@@ -91,7 +91,7 @@
     <input id="btnBack" class="btn" type="button" value="返回" onclick="history.go(-1)"/>
     </div>
     </div>
-    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:1500px;">
+    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>订单号</th>
@@ -153,7 +153,7 @@
         </tbody>
     </table>
     <p style="font-weight:bold;">买家信息</p>
-    <table style="border:0;width:1500px;">
+    <table style="border:0;width:98.3%;">
         <tr>
             <td style="width:10%">
                 <p style="padding-left: 20px;">联系人姓名：</p>
@@ -184,7 +184,7 @@
         </tr>
     </table>
     <p style="font-weight:bold;">服务描述</p>
-    <table  class="table table-striped table-bordered table-condensed" style="width:1500px;">
+    <table  class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>编号</th>
@@ -264,7 +264,7 @@
         </tbody>
     </table>
     <p style="font-weight:bold;">支付信息</p>
-    <table style="border:0;width:1500px;">
+    <table style="border:0;width:98.3%;">
         <tr>
             <td style="width:25%">
                 <p style="padding-left: 20px;">支付方式：${fns:getDictLabel(orderService.payType, 'pay_type', "")}</p>
@@ -295,7 +295,7 @@
         </c:if>
     </table>
     <p style="font-weight:bold;">服务信息</p>
-    <table style="border:0;width:1500px;">
+    <table style="border:0;width:98.3%;">
         <tr>
             <td style="width:30%">
                 <p style="padding-left: 20px;">服务方式：${fns:getDictLabel(orderService.serviceType, 'order_service_type', "")}</p>
@@ -318,7 +318,7 @@
         </tr>
     </table>
     <p style="font-weight:bold;">订单跟踪</p>
-    <table  class="table table-striped table-bordered table-condensed" style="width:1500px;">
+    <table  class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>订单状态</th>
@@ -349,8 +349,8 @@
         </c:forEach>
         </tbody>
     </table>
-    <div class="form-actions" style="text-align:right">
-    <div style=" margin-right:200px;">
+    <div class="form-actions" style="text-align:right;width:95.5%">
+    <div style="margin-left:15px;">
     <c:if test="${orderService.payState == '1' && orderService.orderState ==  '0'}">
         <input id="btnElemAcceptDown" class="btn btn-success" type="button" value="受理" onclick="window.location.href='${ctx}/order/orderService/accept?orderNo=${orderService.orderNo}&updateDate=${orderService.updateDateString}'"/>
     </c:if>

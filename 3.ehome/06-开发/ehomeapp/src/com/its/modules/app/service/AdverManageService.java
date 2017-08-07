@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-import com.its.modules.app.entity.AdverManage;
 import com.its.modules.app.dao.AdverManageDao;
+import com.its.modules.app.entity.AdverManage;
 
 /**
  * 广告管理Service
@@ -43,13 +43,17 @@ public class AdverManageService extends CrudService<AdverManageDao, AdverManage>
 	}
 
 	/**
-	 * 获取某个位置下投放中的广告列表
+	 * 获取某楼盘产品线某个位置下投放中的广告列表
 	 * 
 	 * @param adverPositionId
 	 *            广告位置ID
+	 * @param villageInfoId
+	 *            楼盘ID
+	 * @param showCount
+	 *            展示数量
 	 * @return List<AdverManage>
 	 */
-	public List<AdverManage> getAdverManageByPositionId(String adverPositionId) {
-		return dao.getAdverManageByPositionId(adverPositionId);
+	public List<AdverManage> getAdverManageList(String adverPositionId, String villageInfoId, int showCount) {
+		return dao.getAdverManageList(adverPositionId, villageInfoId, showCount);
 	}
 }

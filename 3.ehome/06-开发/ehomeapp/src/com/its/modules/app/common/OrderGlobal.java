@@ -5,26 +5,42 @@ package com.its.modules.app.common;
  */
 public class OrderGlobal {
 
+	/* <=============================订单退款状态=============================> */
+	/** 订单退款状态-待退款 */
+	public static final String ORDER_REFUND_STATE_UNREFUND = "0";
+	/** 订单退款状态-退款中 */
+	public static final String ORDER_REFUND_STATE_REFUNDING = "1";
+	/** 订单退款状态-退款成功 */
+	public static final String ORDER_REFUND_STATE_SUCCESS = "2";
+	/** 订单退款状态-退款失败 */
+	public static final String ORDER_REFUND_STATE_FAILED = "3";
+
+	/* <=============================订单取消类型=============================> */
+	/** 订单取消类型-超时取消 */
+	public static final String CANCEL_TYPE_OVERTIME = "0";
+	/** 订单取消类型-用户取消 */
+	public static final String CANCEL_TYPE_ACCOUNT = "1";
+
 	/* <==============================团购券状态==============================> */
-	/** 团购券状态:未消费 */
+	/** 团购券状态-未消费 */
 	public static final String GROUP_PURHCASE_STATE_UNCONSUME = "0";
-	/** 团购券状态:已消费 */
+	/** 团购券状态-已消费 */
 	public static final String GROUP_PURHCASE_STATE_CONSUMED = "1";
-	/** 团购券状态:退款中 */
+	/** 团购券状态-退款中 */
 	public static final String GROUP_PURHCASE_STATE_REFUNDING = "2";
-	/** 团购券状态:已退款 */
+	/** 团购券状态-已退款 */
 	public static final String GROUP_PURHCASE_STATE_REFUNDED = "3";
 
 	/* <==============================订单产品模式==============================> */
-	/** 产品模式：商品购买 */
+	/** 产品模式-商品购买 */
 	public static final String MODEL_GOODS = "0";
-	/** 产品模式：服务预约 */
+	/** 产品模式-服务预约 */
 	public static final String MODEL_SERVICE = "1";
-	/** 产品模式：课程购买 */
+	/** 产品模式-课程购买 */
 	public static final String MODEL_LESSON = "2";
-	/** 产品模式：场地预约 */
+	/** 产品模式-场地预约 */
 	public static final String MODEL_FIELD = "3";
-	/** 产品模式：团购 */
+	/** 产品模式-团购 */
 	public static final String MODEL_GROUP = "4";
 
 	/* <==============================商品订单状态==============================> */
@@ -76,17 +92,17 @@ public class OrderGlobal {
 	public static final String ORDER_GROUP_PURHCASE_CANCELED = "3";
 
 	/* <==============================支付对账状态==============================> */
-	/** 支付对账状态：未对账 */
+	/** 支付对账状态-未对账 */
 	public static final String ORDER_CHECK_STATE_UNDO = "0";
-	/** 支付对账状态：正常 */
+	/** 支付对账状态-正常 */
 	public static final String ORDER_CHECK_STATE_NORMAL = "1";
-	/** 支付对账状态：异常 */
+	/** 支付对账状态-异常 */
 	public static final String ORDER_CHECK_STATE_ABNORMAL = "2";
 
 	/* <==============================订单结算状态==============================> */
-	/** 订单结算状态：未结算 */
+	/** 订单结算状态-未结算 */
 	public static final String ORDER_SETTLE_STATE_UNDO = "0";
-	/** 订单结算状态：已结算 */
+	/** 订单结算状态-已结算 */
 	public static final String ORDER_SETTLE_STATE_DONE = "1";
 
 	/* <==============================通用支付状态==============================> */
@@ -124,23 +140,38 @@ public class OrderGlobal {
 	/* <=========================前台订单状态对应的文案描述=========================> */
 	/** 前台文案描述-待支付 */
 	public static final String FRONT_UNPAY = "待支付";
+	/** 前台文案描述-待支付文案描述 */
 	public static final String FRONT_UNPAY_DESC = "订单提交成功，等待付款";
+
 	/** 前台文案描述-待受理 */
-	public static final String FRONT_UNCHECK = "付款成功，等待商家受理";
+	public static final String FRONT_UNCHECK = "待受理";
+	/** 前台文案描述-待受理文案描述 */
+	public static final String FRONT_UNCHECK_DESC = "付款成功，等待商家受理";
+
+	/** 前台文案描述-预约成功 */
+	public static final String FRONT_APPOINTED = "预约成功";
+	/** 前台文案描述-预约成功文案描述 */
+	public static final String FRONT_APPOINTED_DESC = "付款成功，等待消费";
+
 	/** 前台文案描述-已受理 */
 	public static final String FRONT_CHECKED = "商家已受理，等待商家服务";
 	/** 前台文案描述-配送中 */
 	public static final String FRONT_DISPATCHING = "商家开始配送，等待送达";
 	/** 前台文案描述-已完成 */
 	public static final String FRONT_COMPLETED = "感谢您的订购";
-	/** 前台文案描述-预约成功 */
-	public static final String FRONT_APPOINTED = "付款成功，等待消费";
-	/** 前台文案描述-已取消（超时取消） */
-	public static final String FRONT_OVERTIME_CANCELED = "付款超时，订单自动关闭";
-	/** 前台文案描述-已取消（用户取消） */
-	public static final String FRONT_ACCOUNT_CANCELED = "订单已成功取消";
+
+	/** 前台文案描述-已取消 */
+	public static final String FRONT_CANCELED = "已取消";
+	/** 前台文案描述-超时取消文案描述 */
+	public static final String FRONT_OVERTIME_CANCELED_DESC = "付款超时，订单自动关闭";
+	/** 前台文案描述-用户取消文案描述 */
+	public static final String FRONT_ACCOUNT_CANCELED_DESC = "订单已成功取消";
+
 	/** 前台文案描述-退款中 */
-	public static final String FRONT_REFUNDING = "订单开始退款，等待退款";
+	public static final String FRONT_REFUNDING = "退款中";
+	/** 前台文案描述-退款中文案描述 */
+	public static final String FRONT_REFUNDING_DESC = "订单开始退款，等待退款";
+
 	/** 前台文案描述-已退款 */
 	public static final String FRONT_REFUNDED = "订单退款完成";
 
@@ -148,6 +179,7 @@ public class OrderGlobal {
 	/** 后台文案描述-提交订单 */
 	public static final String BACK_UNPAY = "提交订单";
 	public static final String BACK_UNPAY_DESC = "订单提交成功，等待付款";
+
 	/** 后台文案描述-已付款 */
 	public static final String BACK_UNCHECK = "已成功付款，等待商家受理";
 	/** 后台文案描述-已受理 */
@@ -156,10 +188,15 @@ public class OrderGlobal {
 	public static final String BACK_DISPATCHING = "上门/配送/等待自提中";
 	/** 后台文案描述-已完成 */
 	public static final String BACK_COMPLETED = "完成服务/送达/已自提";
+
 	/** 后台文案描述-已取消（超时取消） */
+	public static final String BACK__CANCELED = "已取消";
 	public static final String BACK_OVERTIME_CANCELED = "30分钟未付款，自动取消";
 	/** 后台文案描述-已取消（用户取消） */
-	public static final String BACK_ACCOUNT_CANCELED = "商家取消订单（自动退款）";
+	public static final String BACK_ACCOUNT_CANCELED = "买家取消预订（自动退款）";
+	/** 后台文案描述-已取消（商家取消） */
+	public static final String BACK_BUSINESS_CANCELED = "商家取消订单（自动退款）";
+
 	/** 后台文案描述-已退款 */
 	public static final String BACK_REFUNDED = "自动退款";
 

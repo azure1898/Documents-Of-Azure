@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialPraiseDao">
+    
+	<sql id="socialPraiseColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.praisetime AS "praisetime",
+		a.pid AS "pid",
+		a.type AS "type",
+		a.touserid AS "touserid",
+		a.state AS "state"
+	</sql>
+	
+	<sql id="socialPraiseJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="praisetime != null and praisetime != ''">
+				AND a.praisetime = #{praisetime}
+			</if>
+			<if test="pid != null and pid != ''">
+				AND a.pid = #{pid}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="touserid != null and touserid != ''">
+				AND a.touserid = #{touserid}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_praise(
+			id,
+			userid,
+			praisetime,
+			pid,
+			type,
+			touserid,
+			state
+		) VALUES (
+			#{id},
+			#{userid},
+			#{praisetime},
+			#{pid},
+			#{type},
+			#{touserid},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_praise SET 	
+			userid = #{userid},
+			praisetime = #{praisetime},
+			pid = #{pid},
+			type = #{type},
+			touserid = #{touserid},
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_praise
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据socialPraise查询条件 查询包含头像信息的praisebean 对象 -->
+	<select id="findPraiseBeanList" resultType="SocialPraiseBean">
+		SELECT 
+			<include refid="socialPraiseColumns"/>,
+			ac.Nickname as nickName,
+			ac.photo as photo
+		FROM social_praise a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialPraise!=null and socialPraise.type != null and socialPraise.type != ''">
+				AND a.type = #{socialPraise.type}
+			</if>
+			<if test="socialPraise!=null and socialPraise.pid != null and socialPraise.pid != ''">
+				AND a.pid = #{socialPraise.pid}
+			</if>
+		order by a.praisetime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 非首次点赞 及 取消点赞 -->
+	<update id="updateSocialPraise">
+		UPDATE social_praise SET 	
+			userid = #{socialPraise.userid},
+			praisetime = #{socialPraise.praisetime},
+			pid = #{socialPraise.pid},
+			type = #{socialPraise.type},
+			touserid = #{socialPraise.touserid},
+			state = #{socialPraise.state}
+		WHERE 1=1 
+			<if test="socialPraise!=null and socialPraise.userid != null and socialPraise.userid != ''">
+				AND userid = #{socialPraise.userid}
+			</if>
+			<if test="socialPraise!=null and socialPraise.pid != null and socialPraise.pid != ''">
+				AND pid = #{socialPraise.pid}
+			</if>
+			<if test="socialPraise!=null and socialPraise.touserid != null and socialPraise.touserid != ''">
+				AND touserid = #{socialPraise.touserid}
+			</if>
+	</update>
+</mapper>

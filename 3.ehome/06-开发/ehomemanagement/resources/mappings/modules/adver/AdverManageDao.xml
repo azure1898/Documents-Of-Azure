@@ -221,9 +221,9 @@
     </select>
     <!-- add by zhujiao  添加广告楼盘关联数据 -->
     <insert id="insertAdverBuilding">
-        INSERT INTO adver_building(Adv_ID, Village_Line_ID)
+        INSERT INTO adver_building(Adv_ID, Village_Line_ID,del_flag)
         <foreach collection="villageList" item="village" separator=" union all ">
-            SELECT #{id}, #{village.id} FROM dual
+            SELECT #{id}, #{village.id},#{DEL_FLAG_NORMAL} FROM dual
         </foreach>
     </insert>
     <!-- add by zhujiao  删除广告楼盘关联数据-->

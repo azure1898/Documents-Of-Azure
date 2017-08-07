@@ -235,7 +235,6 @@
 	<resultMap type="OrderLessonBean" id="orderLessonBeanMapTwo">
 		<id property="id" column="id" />
 		<result property="businessInfoId" column="businessInfoId" />
-		<result property="sumMoney" column="sumMoney" />
 		<result property="couponMoney" column="couponMoney" />
 		<result property="payMoney" column="payMoney" />
 		<result property="accountName" column="accountName" />
@@ -248,14 +247,15 @@
 			<result property="businessName" column="Business_Name" />
 			<result property="phoneNum" column="Phone_Num" />
 		</association>
-		<collection property="orderLessonLists" ofType="OrderLessonList">
+		<association property="orderLessonList" javaType="OrderLessonList">
 			<result property="lessonInfoId" column="Lesson_Info_ID" />
 			<result property="name" column="Lesson_Name" />
 			<result property="lessonCount" column="Lesson_Count" />
 			<result property="startTime" column="Start_Time" />
 			<result property="endTime" column="End_Time" />
 			<result property="address" column="Lesson_Address" />
-		</collection>
+			<result property="paySumMoney" column="Pay_Sum_Money" />
+		</association>
 	</resultMap>
 	
 	<!-- 根据订单ID和用户ID获取订单信息 -->
@@ -269,7 +269,8 @@
 			c.Lesson_Count,
 			c.Start_Time,
 			c.End_Time,
-			c.Address AS Lesson_Address
+			c.Address AS Lesson_Address,
+			c.Pay_Sum_Money
 		FROM
 			Order_Lesson a,
 			Business_Info b,

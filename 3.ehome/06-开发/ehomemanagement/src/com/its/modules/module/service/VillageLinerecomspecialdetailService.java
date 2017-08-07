@@ -123,7 +123,7 @@ public class VillageLinerecomspecialdetailService extends CrudService<VillageLin
      * @date 2017年7月28日 上午9:51:15
      */
     @Transactional(readOnly = false)
-    public void deleteByLine(String specialId) {
+    public void deleteBySpecialId(String specialId) {
         recomspecialdetailDao.deleteBySpecialId(specialId);
     };
 

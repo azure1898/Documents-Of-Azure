@@ -117,12 +117,17 @@ public class OrderGoodsController extends BaseController {
 
         Page<OrderGoods> page = orderGoodsService.findPage(new Page<OrderGoods>(request, response), orderGoods);
 
-        // 当画面输入检索条件，并检索时
+        // 当画面输入检索条件，并检索没有结果
         if (StringUtils.isNotBlank(orderGoods.getSearchFlg())
                 && (page.getList() == null || page.getList().size() == 0)) {
-            if (StringUtils.isNotBlank(orderGoods.getOrderNo())) {
+            // 当检索条件只有订单号时
+            if (StringUtils.isNotBlank(orderGoods.getOrderNo()) && null == orderGoods.getEndCreateDate()
+                    && null == orderGoods.getBeginCreateDate() && StringUtils.isBlank(orderGoods.getAddressType())
+                    && StringUtils.isBlank(orderGoods.getOrderState())
+                    && StringUtils.isBlank(orderGoods.getPayState())) {
                 addMessage(model, "请确定您输入的订单号是否正确");
                 model.addAttribute("type", "error");
+            // 除了订单号作为检索条件，还存在别的条件时
             } else {
                 addMessage(model, "您查询的订单未找到");
                 model.addAttribute("type", "error");
@@ -345,13 +350,11 @@ public class OrderGoodsController extends BaseController {
             for (OrderGoods orderGoodsExcelData : orderGoodsList) {
                 // 时间
                 StringBuffer time = new StringBuffer();
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderGoodsExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderGoodsExcelData.getCreateDate()) {
                     time.append("下单：");
                     time.append(DateUtils.formatDate(orderGoodsExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"));
                 }
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderGoodsExcelData.getPayTime(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderGoodsExcelData.getPayTime()) {
                     time.append((char) 10);
                     time.append("支付：");
                     time.append(DateUtils.formatDate(orderGoodsExcelData.getPayTime(), "yyyy-MM-dd HH:mm"));
@@ -368,6 +371,6 @@ public class OrderGoodsController extends BaseController {
             model.addAttribute("type", "error");
         }
         // 迁移至服务订单列表页面
-        return "modules/order/orderServiceList";
+        return "modules/order/orderGoodsList";
     }
 }

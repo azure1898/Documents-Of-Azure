@@ -32,6 +32,7 @@ import com.its.common.web.BaseController;
 import com.its.modules.business.entity.BusinessCategorydict;
 import com.its.modules.business.service.BusinessCategorydictService;
 import com.its.modules.business.service.BusinessInfoService;
+import com.its.modules.module.entity.VillageLinerecombusitypedetail;
 import com.its.modules.module.entity.VillageLinerecommodule;
 import com.its.modules.module.entity.VillageLinerecomspecialdetail;
 import com.its.modules.module.service.ModuleManageService;
@@ -323,7 +324,7 @@ public class VillageLineController extends BaseController {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
         for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
-            if (entity.getKey().startsWith("file")) {
+            if (entity.getKey().startsWith("file")) {//模块推荐的图片上传
                 int index = Integer.parseInt(entity.getKey().replace("file", ""));
                 VillageLinerecommodule villageLinerecommodule = villageLine.getRecomModuleList().get(index);
                 // 上传文件名
@@ -334,9 +335,9 @@ public class VillageLineController extends BaseController {
                         villageLinerecommodule.setPicUrl(picUrl);
                     }
                 } catch (Exception ex) {
-                    addMessage(redirectAttributes, "上传失败");
+                    addMessage(redirectAttributes, "上传模块推荐图片失败");
                 }
-            } else if (entity.getKey().startsWith("specialFile")) {
+            } else if (entity.getKey().startsWith("specialFile")) {//专题推荐的图片上传
                 String[] indexArr = entity.getKey().split("_");
                 // 上传文件名
                 MultipartFile mf = entity.getValue();
@@ -347,7 +348,21 @@ public class VillageLineController extends BaseController {
                         recomSpecialDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(picUrl);
                     }
                 } catch (Exception ex) {
-                    addMessage(redirectAttributes, "上传失败");
+                    addMessage(redirectAttributes, "上传专题推荐明细图片失败");
+                }
+            }else if (entity.getKey().startsWith("busTyefile")) {//商家分类推荐的图片上传
+                String[] indexArr = entity.getKey().split("_");
+                // 上传文件名
+                MultipartFile mf = entity.getValue();
+                //获取商家分类明细推荐的List
+                List<VillageLinerecombusitypedetail> recomBusTypeDetailList = villageLine.getRecomBusTypeList().get(Integer.parseInt(indexArr[1])).getRecomBusTypeDetailList();
+                try {
+                    if (mf.getSize() != 0) {
+                        String picUrl = MyFDFSClientUtils.get_fdfs_file_url(request, MyFDFSClientUtils.uploadFile(request, mf));
+                        recomBusTypeDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(picUrl);
+                    }
+                } catch (Exception ex) {
+                    addMessage(redirectAttributes, "上传商家分类明细图片失败");
                 }
             }
         }

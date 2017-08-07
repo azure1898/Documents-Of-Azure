@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.module.dao.VillageLinerecombusitypedetailDao">
+
+  <sql id="villageLinerecombusitypedetailColumns">
+    a.id AS "id",
+    a.village_line_recom_busi_type_id AS "villageLineRecomBusiTypeId",
+    a.sort_num AS "sortNum",
+    a.prod_type AS "prodType",
+    a.describes AS "describes",
+    a.pic_url AS "picUrl",
+    a.default_flag AS "defaultFlag",
+    a.create_by AS "createBy.id",
+    a.create_date AS "createDate",
+    a.update_by AS "updateBy.id",
+    a.update_date AS "updateDate",
+    a.remarks AS "remarks",
+    a.del_flag AS "delFlag"
+  </sql>
+
+  <sql id="villageLinerecombusitypedetailJoins">
+  </sql>
+
+  <select id="get" resultType="VillageLinerecombusitypedetail">
+    SELECT
+    <include refid="villageLinerecombusitypedetailColumns" />
+    FROM village_linerecombusitypedetail a
+    <include refid="villageLinerecombusitypedetailJoins" />
+    WHERE a.id = #{id}
+  </select>
+
+  <select id="findList" resultType="VillageLinerecombusitypedetail">
+    SELECT
+    <include refid="villageLinerecombusitypedetailColumns" />
+    FROM village_linerecombusitypedetail a
+    <include refid="villageLinerecombusitypedetailJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findAllList" resultType="VillageLinerecombusitypedetail">
+    SELECT
+    <include refid="villageLinerecombusitypedetailColumns" />
+    FROM village_linerecombusitypedetail a
+    <include refid="villageLinerecombusitypedetailJoins" />
+    <where>
+      a.del_flag = #{DEL_FLAG_NORMAL}
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <insert id="insert">
+    INSERT INTO village_linerecombusitypedetail(
+    id,
+    village_line_recom_busi_type_id,
+    sort_num,
+    prod_type,
+    describes,
+    pic_url,
+    default_flag,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remarks,
+    del_flag
+    ) VALUES (
+    #{id},
+    #{villageLineRecomBusiTypeId},
+    #{sortNum},
+    #{prodType},
+    #{describes},
+    #{picUrl},
+    #{defaultFlag},
+    #{createBy.id},
+    #{createDate},
+    #{updateBy.id},
+    #{updateDate},
+    #{remarks},
+    #{delFlag}
+    )
+  </insert>
+
+  <update id="update">
+    UPDATE village_linerecombusitypedetail SET
+    village_line_recom_busi_type_id = #{villageLineRecomBusiTypeId},
+    sort_num = #{sortNum},
+    prod_type = #{prodType},
+    describes = #{describes},
+    pic_url = #{picUrl},
+    default_flag = #{defaultFlag},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate},
+    remarks = #{remarks}
+    WHERE id = #{id}
+  </update>
+
+  <update id="delete">
+    UPDATE village_linerecombusitypedetail SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
+  </update>
+  <!-- 通过商家ID删除推荐商家分类详情信息 add by zhujiao -->
+  <delete id="deleteByBusId">
+    DELETE FROM village_linerecombusitypedetail WHERE village_line_recom_busi_type_id = #{businessInfoId}
+  </delete>
+  <!-- 通过专题ID获取推荐专题详情列表 add by zhujiao -->
+  <select id="getRecomBusTypeDetailList" resultType="VillageLinerecombusitypedetail">
+    SELECT
+    <include refid="villageLinerecombusitypedetailColumns" />
+    FROM village_linerecombusitypedetail a
+    <where>
+      a.del_flag = '0' AND a.village_line_recom_busi_type_id = #{businessInfoId}
+    </where>
+    ORDER BY a.sort_num ASC
+  </select>
+</mapper>

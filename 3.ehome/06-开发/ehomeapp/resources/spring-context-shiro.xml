@@ -24,8 +24,8 @@
 				/act/rest/service/model/** = perms[act:model:edit]
 				/act/rest/service/** = user
 				/ReportServer/** = user
-				${appPath}/account/login = authc
-				${appPath}/account/quickLogin = authc
+				${appPath}/account/login = anon
+				${appPath}/account/quickLogin = anon
 				${appPath}/account/** = anon
 				${appPath}/** = anon
 			</value>

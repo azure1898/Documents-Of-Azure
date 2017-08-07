@@ -431,13 +431,12 @@
             a.pay_check_state AS payCheckState
         FROM
             (SELECT @rownum := 0) r,
-            business_balance_detail a,
-            business_info b,
-            module_manage c
+            business_balance_detail a
+        LEFT JOIN module_manage c ON a.module_id = c.id,
+            business_info b
         <where>
             a.del_flag = #{DEL_FLAG_NORMAL}
             AND a.business_info_id = b.id
-            AND a.module_id = c.id
             <if test="businessBalanceId != null and businessBalanceId != ''">
                 AND a.business_balance_Id = #{businessBalanceId}
             </if>

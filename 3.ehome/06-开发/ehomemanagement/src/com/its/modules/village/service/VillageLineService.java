@@ -3,22 +3,19 @@
  */
 package com.its.modules.village.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-import com.its.common.utils.MyFDFSClientUtils;
-import com.its.common.utils.StringUtils;
-import com.its.modules.adver.entity.AdverManage;
+import com.its.modules.module.entity.VillageLinerecombusitype;
 import com.its.modules.module.entity.VillageLinerecommodule;
 import com.its.modules.module.entity.VillageLinerecomspecial;
+import com.its.modules.module.service.VillageLinerecombusitypeService;
 import com.its.modules.module.service.VillageLinerecommoduleService;
 import com.its.modules.module.service.VillageLinerecomspecialService;
 import com.its.modules.village.dao.VillageLineDao;
@@ -40,6 +37,8 @@ public class VillageLineService extends CrudService<VillageLineDao, VillageLine>
     private VillageLinerecommoduleService recommoduleService;
     @Autowired
     private VillageLinerecomspecialService recomspecialService;
+    @Autowired
+    private VillageLinerecombusitypeService recomBusTypeService;
 
     public VillageLine get(String id) {
         return super.get(id);
@@ -149,11 +148,13 @@ public class VillageLineService extends CrudService<VillageLineDao, VillageLine>
     public void updateMaintRecomModule(VillageLine villageLine) {
         villageLineDao.updateMaintRecomModule(villageLine);
     }
+
     /**
      * 推荐设置-设置社区推荐
+     * 
      * @param villageLine
      * @return void
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年8月2日 下午7:02:48
      */
     @Transactional(readOnly = false)
@@ -178,6 +179,8 @@ public class VillageLineService extends CrudService<VillageLineDao, VillageLine>
             recommoduleService.saveRecomModule(villageLine);
             // 保存-修改-删除 推荐专题数据
             recomspecialService.saveSpecialModule(villageLine);
+            //保存-修改-删除 推荐商家数据
+            recomBusTypeService.saveBusTypeModule(villageLine);
         } catch (Exception e) {
             System.out.println("保存生活推荐异常：" + e.getMessage());
         }
@@ -194,17 +197,23 @@ public class VillageLineService extends CrudService<VillageLineDao, VillageLine>
      */
     public VillageLine getModel(String id) {
         VillageLine model = villageLineDao.get(id);
-        try {
+        try {// 获取楼盘相关的推荐模块信息
             List<VillageLinerecommodule> recomModuleList = recommoduleService.getRecomModuleList(model.getId());
             model.setRecomModuleList(recomModuleList);
         } catch (Exception e) {
             System.out.println("获取推荐模块异常：" + e.getMessage());
         }
-        try {
+        try {// 获取楼盘相关的推荐专题信息
             List<VillageLinerecomspecial> recomSpecialList = recomspecialService.getRecomSpecialList(model.getId());
             model.setRecomSpecialList(recomSpecialList);
         } catch (Exception e) {
             System.out.println("获取推荐专题异常：" + e.getMessage());
+        }
+        try {// 获取楼盘相关的推荐商家类型信息
+            List<VillageLinerecombusitype> recomBusType = recomBusTypeService.getRecomBusTypeList(model.getId());
+            model.setRecomBusTypeList(recomBusType);
+        } catch (Exception e) {
+            System.out.println("获取推荐商家信息异常：" + e.getMessage());
         }
         return model;
     }

@@ -28,7 +28,7 @@ public class BusinessBalanceTask extends BaseController {
 	/**
 	 * 定时卡点计算。每天凌晨 02:00 执行一次
 	 */ 
-	@Scheduled(cron = "5 * * * * *")
+	@Scheduled(cron = "0 0 2 * * *")
 	public void createBusinessBalanceTask() {
 		logger.warn("---------商品类 商家结算 开始-----------");
 		// 1.根据订单-商品类生成商家结算信息；

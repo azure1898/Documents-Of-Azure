@@ -103,7 +103,7 @@
             <a href="${ctx}/adver/adverManage/form?id=" class="btn btn-primary"><i class="icon-plus icon-custom"></i> 添加</a>
          </shiro:hasPermission>
          <shiro:hasPermission name="adver:adverManage:edit">
-            <a id="btuElemEdit"  href="${ctx}/adver/adverManage/form?id=" class="btn btn-primary" onclick="return elemEdit()"><i class="icon-edit icon-custom"></i>修改</a>
+            <a id="btuElemEdit"  href="${ctx}/adver/adverManage/form?id=" class="btn btn-primary" onclick="return elemEdit()"><i class="icon-edit icon-custom"></i>编辑</a>
          </shiro:hasPermission>
          <shiro:hasPermission name="adver:adverManage:delete">
             <a id="btuElemDelete" href="${ctx}/adver/adverManage/delete?id=" class="btn btn-primary" onclick="return elemDelete('位置信息')"><i class="icon-trash icon-custom"></i>删除</a>

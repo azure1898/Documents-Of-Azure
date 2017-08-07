@@ -1,0 +1,9 @@
+{
+"code" : 1000,
+"data" : {
+  "countAtMe":1,
+  "countComment":0,
+  "countPraise":1
+},
+"message" : ""
+}

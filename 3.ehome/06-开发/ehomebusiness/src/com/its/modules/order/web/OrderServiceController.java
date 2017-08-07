@@ -163,13 +163,11 @@ public class OrderServiceController extends BaseController {
                         DictUtils.getDictLabel(orderServiceExcelData.getOrderState(), "order_service_state", ""));
                 // 时间
                 StringBuffer time = new StringBuffer();
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderServiceExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderServiceExcelData.getCreateDate()) {
                     time.append("下单：");
                     time.append(DateUtils.formatDate(orderServiceExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"));
                 }
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderServiceExcelData.getPayTime(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderServiceExcelData.getPayTime()) {
                     time.append((char) 10);
                     time.append("支付：");
                     time.append(DateUtils.formatDate(orderServiceExcelData.getPayTime(), "yyyy-MM-dd HH:mm"));

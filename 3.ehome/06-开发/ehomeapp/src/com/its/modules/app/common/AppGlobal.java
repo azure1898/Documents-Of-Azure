@@ -277,4 +277,24 @@ public class AppGlobal {
 	 * 短信验证码的类型：忘记密码
 	 */
 	public static final String VERIFY_CODE_TYPE_FORGET = "1";
+	/**
+	 * 广告类型：0-图文广告
+	 */
+	public static final String ADVER_TYPE_IMAGE_TEXT = "0";
+	/**
+	 * 广告类型：1-外链广告
+	 */
+	public static final String ADVER_TYPE_OUT_LINK = "1";
+	/**
+	 * 广告类型：2-模块链接
+	 */
+	public static final String ADVER_TYPE_MODULE_LINK = "2";
+	/**
+	 * 广告类型：3-商家链接
+	 */
+	public static final String ADVER_TYPE_BUSINESS_LINK = "3";
+	/**
+	 * 广告类型：4-产品链接
+	 */
+	public static final String ADVER_TYPE_GOODS_LINK = "4";
 }

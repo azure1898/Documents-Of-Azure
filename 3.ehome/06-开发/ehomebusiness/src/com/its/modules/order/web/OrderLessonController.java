@@ -205,19 +205,17 @@ public class OrderLessonController extends BaseController {
                 addMessage(model, "当前检索条件下订单未找到");
                 model.addAttribute("type", "error");
                 // 迁移至服务订单列表页面
-                return "modules/order/orderGoodsList";
+                return "modules/order/orderLessonList";
             }
             // 数据编辑
             for (OrderLesson orderLessonExcelData : orderLessonList) {
                 // 时间
                 StringBuffer time = new StringBuffer();
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderLessonExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderLessonExcelData.getCreateDate()) {
                     time.append("下单：");
                     time.append(DateUtils.formatDate(orderLessonExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"));
                 }
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderLessonExcelData.getPayTime(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderLessonExcelData.getPayTime()) {
                     time.append((char) 10);
                     time.append("支付：");
                     time.append(DateUtils.formatDate(orderLessonExcelData.getPayTime(), "yyyy-MM-dd HH:mm"));
@@ -234,6 +232,6 @@ public class OrderLessonController extends BaseController {
             model.addAttribute("type", "error");
         }
         // 迁移至服务订单列表页面
-        return "modules/order/orderServiceList";
+        return "modules/order/orderLessonList";
     }
 }

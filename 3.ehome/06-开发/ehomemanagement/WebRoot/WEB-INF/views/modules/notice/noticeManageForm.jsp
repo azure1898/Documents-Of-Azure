@@ -112,7 +112,36 @@
 		    	    }	
 	    		}
     		});
+    		
+    		// 更改摘要字数显示
+// 			$("#noticeAbstract").keyup(function(){
+//     			$("span#fontLength").text($("#noticeAbstract").val().length);
+//     		});
+    
+			// 初始化摘要字数位置
+// 			$("span#fontLength").parent().css("left", $("#noticeAbstract").css("width"));
+// 			$("span#fontLength").parent().css("top", $("#noticeAbstract").css("height") - $("span#fontLength").parent().css("height") - 10);
+    		// 初始化摘要字数显示
+// 			$("span#fontLength").text($("#noticeAbstract").val().length);
 		});
+		
+// 		function cssPropertyCalc(arg1, arg2, mode){
+//    			var patt = /e/;
+//     		var value1 = patt.exec(arg1);
+//    			var value2 = patt.exec(arg2);
+//    			var unit = 
+//    			if (value1 != null && value2 != null) {
+// 	    		if (mode == "+") {
+	        		
+// 	    		} else if (mode == "-") {
+	        		
+// 	    		} else if (mode == "*") {
+	        		
+// 	    		} else if (mode == "/") {
+	        		
+// 	    		}
+//    			}
+// 		}
 	</script>
 </head>
 <body>
@@ -156,7 +185,10 @@
 		<div class="control-group">
 			<label class="control-label">摘要：</label>
 			<div class="controls">
-				<form:textarea path="noticeAbstract" htmlEscape="false" rows="4" maxlength="60" class="input-xxlarge"/>
+				<form:textarea path="noticeAbstract" htmlEscape="false" rows="4" maxlength="60" class="input-xxlarge" style="resize: none;"/>
+<!-- 				<div style="width: 50px;height: 20px;position: absolute;top: 230px;left: 600px;"> -->
+<!-- 					(<span id="fontLength">0</span>/60) -->
+<!-- 				</div> -->
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

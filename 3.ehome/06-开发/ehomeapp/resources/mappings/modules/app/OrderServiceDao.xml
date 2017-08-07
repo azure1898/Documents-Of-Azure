@@ -220,7 +220,6 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
 	<!-- 获取某预约服务已购数量 -->
 	<select id="getCountByServiceInfoId" resultType="java.lang.Integer">
 		SELECT
@@ -271,7 +270,7 @@
 	<resultMap type="OrderServiceBean" id="orderServiceBeanMapTwo">
 		<id property="id" column="id" />
 		<result property="businessInfoId" column="businessInfoId" />
-		<result property="sumMoney" column="sumMoney" />
+		<result property="benefitMoney" column="benefitMoney" />
 		<result property="couponMoney" column="couponMoney" />
 		<result property="payMoney" column="payMoney" />
 		<result property="accountName" column="accountName" />
@@ -288,12 +287,13 @@
 			<result property="businessName" column="Business_Name" />
 			<result property="phoneNum" column="Phone_Num" />
 		</association>
-		<collection property="orderServiceLists" ofType="OrderServiceList">
+		<association property="orderServiceList" javaType="OrderServiceList">
 			<result property="serviceInfoId" column="Service_Info_ID" />
 			<result property="name" column="Service_Name" />
 			<result property="baseUnit" column="Base_Unit" />
 			<result property="payCount" column="Pay_Count" />
-		</collection>
+			<result property="paySumMoney" column="Pay_Sum_Money" />
+		</association>
 	</resultMap>
 	
 	<!-- 根据订单ID和用户ID获取订单信息 -->
@@ -305,7 +305,8 @@
 			c.Service_Info_ID,
 			c.Name AS Service_Name,
 			c.Base_Unit,
-			c.Pay_Count
+			c.Pay_Count,
+			c.Pay_Sum_Money
 		FROM
 			Order_Service a,
 			Business_Info b,
@@ -338,5 +339,4 @@
 			)
 		)
 	</select>
-	
 </mapper>

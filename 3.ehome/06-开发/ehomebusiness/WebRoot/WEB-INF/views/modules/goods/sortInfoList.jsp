@@ -125,7 +125,7 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="goods:sortInfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保存分类"/>&nbsp;</shiro:hasPermission>
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保存分类"/>&nbsp;
 		</div>
 	</form:form>
             </div>

@@ -60,4 +60,10 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 		return resultNum;
 	}
 	
+	@Transactional(readOnly = false)
+	public SocialSpeak findById(SocialSpeak socialSpeak) {
+		return socialSpeakDao.findById(socialSpeak);
+		
+	}
+	
 }

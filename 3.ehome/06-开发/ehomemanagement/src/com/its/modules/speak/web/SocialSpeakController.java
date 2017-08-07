@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.csource.common.MyException;
+import org.jasig.cas.client.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,13 @@ import com.its.common.persistence.Page;
 import com.its.common.web.BaseController;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
+import com.its.modules.comment.entity.SocialComment;
+import com.its.modules.comment.service.SocialCommentService;
+import com.its.modules.forward.entity.SocialForward;
+import com.its.modules.forward.service.SocialForwardService;
 import com.its.modules.goods.entity.GoodsInfo;
+import com.its.modules.praise.entity.SocialPraise;
+import com.its.modules.praise.service.SocialPraiseService;
 import com.its.modules.speak.entity.SocialSpeak;
 import com.its.modules.speak.entity.SocialSpeakPic;
 import com.its.modules.speak.service.SocialSpeakService;
@@ -51,6 +58,15 @@ public class SocialSpeakController extends BaseController {
 	@Autowired
 	private SocialSubRelationService socialSubRelationService;
 	
+	@Autowired
+	private SocialCommentService socialCommentService;
+	
+	@Autowired
+	private SocialForwardService socialForwardService;
+	
+	@Autowired
+	private SocialPraiseService socialPraiseService;
+	
 	@ModelAttribute
 	public SocialSpeak get(@RequestParam(required=false) String id) {
 		SocialSpeak entity = null;
@@ -67,7 +83,7 @@ public class SocialSpeakController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SocialSpeak socialSpeak, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SocialSpeak> page = socialSpeakService.findPage(new Page<SocialSpeak>(request, response), socialSpeak); 
-		 // 图片显示编辑
+		// 图片显示编辑
         for (SocialSpeak goodsItem : page.getList()) {
             if (StringUtils.isNotBlank(goodsItem.getImages())) {
                 String[] imageNames = goodsItem.getImages().split(",");
@@ -93,6 +109,56 @@ public class SocialSpeakController extends BaseController {
 	public String form(SocialSpeak socialSpeak, Model model) {
 		model.addAttribute("socialSpeak", socialSpeak);
 		return "modules/speak/socialSpeakForm";
+	}
+	
+	@RequiresPermissions("speak:socialSpeak:view")
+	@RequestMapping(value = "detail")
+	public String detail(String id, Model model, HttpServletRequest request) {
+		SocialSpeak socialSpeak = new SocialSpeak();
+		socialSpeak.setId(id);
+		SocialSpeak speak = socialSpeakService.findById(socialSpeak);
+		speak.setReadnum((Integer.parseInt(speak.getReadnum())+1)+"");
+		socialSpeakService.save(speak);
+		SocialComment socialComment = new SocialComment();
+		socialComment.setSpeakid(id);
+		List<SocialComment> commentList = socialCommentService.findBySpeakId(socialComment);
+		List<SocialComment> socialCommentList = new ArrayList<SocialComment>();
+		for(SocialComment comment : commentList) {
+			socialCommentList.add(comment);
+			List<SocialComment> replyComment = socialCommentService.findChildComment(comment);
+			socialCommentList.addAll(replyComment);
+		}
+		SocialForward socialForward = new SocialForward();
+		socialForward.setSpeakid(id);
+		List<SocialForward> forward = socialForwardService.findBySpeakId(socialForward);
+		SocialPraise socialPraise = new SocialPraise();
+		socialPraise.setPid(id);
+		socialPraise.setType("1");
+		List<SocialPraise> praise = socialPraiseService.findBySpeakId(socialPraise);
+		
+		// 图片显示编辑
+       
+        if (StringUtils.isNotBlank(speak.getImages())) {
+            String[] imageNames = speak.getImages().split(",");
+            speak.setPicSize(imageNames.length);
+            // 图片url集合
+            List<String> imageUrls = new ArrayList<String>();
+            try {
+            	for(int i=0; i<imageNames.length; i++) {
+            		imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[i] + "_compress2"));
+            	}
+            } catch (IOException | MyException e) {
+            }
+            speak.setImageUrls(imageUrls);
+        }
+		model.addAttribute("socialSpeak", speak);
+		model.addAttribute("socialComment", socialCommentList);
+		model.addAttribute("commentSize", socialCommentList.size());
+		model.addAttribute("socialForward", forward);
+		model.addAttribute("fowardSize", forward.size());
+		model.addAttribute("socialPraise", praise);
+		model.addAttribute("praiseSize", praise.size());
+		return "modules/speak/socialSpeakDetail";
 	}
 
 	@RequiresPermissions("speak:socialSpeak:edit")

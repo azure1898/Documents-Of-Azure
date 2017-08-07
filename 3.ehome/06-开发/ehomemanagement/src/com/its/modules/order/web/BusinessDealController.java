@@ -124,7 +124,6 @@ public class BusinessDealController extends BaseController {
         
         Page<BusinessDeal> page = businessDealService.findPage(new Page<BusinessDeal>(request, response), businessDeal);
         model.addAttribute("page", page);
-        System.out.println(page);
         
         /*模块下拉列表*/
         model.addAttribute("allModule", moduleManageService.findAllList());

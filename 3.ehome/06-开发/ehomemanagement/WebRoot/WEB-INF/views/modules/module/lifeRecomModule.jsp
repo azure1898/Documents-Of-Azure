@@ -19,17 +19,25 @@
                 return true;
             }
         }, "最多只能勾选4个模块");
+        
+        
         $("#inputForm").validate({
             rules : {
                 lifeRecomModuleIds : {
                     checkMaxSize : "param"
-                }
+                },
+                rodType: {
+                    required: true,
+                 },
             },
             messages : {
                 lifeRecomModuleIds : {
                     required : "请选择模块",
                     checkMaxSize : "最多只能勾选4个模块"
                 },
+                rodType: {
+                    required:"请至少选择一项",
+                 },
             },
             submitHandler : function(form) {
                 var lifeRecomIds="";
@@ -112,7 +120,7 @@
         domRow+='<div class="controls"  id="moduleRow'+total+'" style="border: 1px solid #ccc;margin-top:10px;  padding: 20px;">';
         domRow+='<div id="recomModuleList'+index+'" style="padding-top: 10px;">'
             +'    <lable>推荐一</lable>'
-            +'     <select id="module'+index+'" onchange="getBuslist(this,'+index+')"  name="recomModuleList['+index+'].recomModuleId" class="input-medium">'
+            +'     <select id="module'+index+'" onchange="getBuslist(this,'+index+')"  name="recomModuleList['+index+'].recomModuleId" class="input-medium required">'
             +'         <option value="" >模块选择</option>'
             +'         <c:forEach items="${moduleList}" var="module">'
             +'             <option value="${module.id}" >${module.moduleName}</option>'
@@ -122,14 +130,15 @@
             +'             <option value="">商家名称</option>'
             +'     </select> <input id="HidBusinessinfoId'+(index)+'" type="hidden"/>'
             +'     <input id="describes'+index+'" name="recomModuleList['+index+'].describes" type="text"  value="'+describes1+'"  maxlength="8" class="min:0 input-small required"/>'
-            +'     <span> 不超过8个字 </span><input type="file" name="file'+index+'"  />'
+            +'     <span> 不超过8个字 </span><input type="file" name="file'+index+'" />'
             +'     <img id="moduleImg'+(index)+'" src="" style="width:45px; height:45;">'
             +'     <input id="recomModuleFlag'+index+'" type="hidden" name="recomModuleList['+index+'].delFlag"  />'
             +'     <input id="recomModuleId'+index+'" type="hidden" name="recomModuleList['+index+'].id"  />'
             +'  </div>';
          domRow+='<div id="recomModuleList'+(index+1)+'" style="padding-top: 10px;">'
             +'    <lable>推荐二</lable>'
-            +'     <select id="module'+(index+1)+'" onchange="getBuslist(this,'+(index+1)+')"  name="recomModuleList['+(index+1)+'].recomModuleId" class="input-medium">'
+            +'     <select id="module'+(index+1)+'" onchange="getBuslist(this,'+(index+1)+')"  name="recomModuleList['+(index+1)+'].recomModuleId" class="input-medium required">'
+            +'         <option value="" >模块选择</option>'
             +'         <c:forEach items="${moduleList}" var="module">'
             +'             <option value="${module.id}" >${module.moduleName}</option>'
             +'         </c:forEach>'
@@ -204,7 +213,7 @@
                 +'          <select id="recomSpecialModule'+total+0+'"  name="recomSpecialList['+total+'].recomSpecialDetailList[0].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select> <input id="HidRecomBusinessModuleId'+total+'0" type="hidden"/>'
-                +'          <input id="specialDescribes0" name="recomSpecialList['+total+'].recomSpecialDetailList[0].describes" class="input-small" type="text" />'
+                +'          <input id="specialDescribes0" name="recomSpecialList['+total+'].recomSpecialDetailList[0].describes" maxlength="8" class="min:0 input-small" type="text" />'
                 +'          <span> 不超过8个字 </span> <input type="file" name="specialFile_'+total+'_0" /> '
                 +'          <img id="specialImg'+total+'0" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -218,7 +227,7 @@
                 +'          <select  id="recomSpecialModule'+total+1+'" name="recomSpecialList['+total+'].recomSpecialDetailList[1].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select>  <input id="HidRecomBusinessModuleId'+total+'1" type="hidden"/>'
-                +'          <input id="specialDescribes1" name="recomSpecialList['+total+'].recomSpecialDetailList[1].describes" class="input-small" type="text" />'
+                +'          <input id="specialDescribes1" name="recomSpecialList['+total+'].recomSpecialDetailList[1].describes" maxlength="8" class="min:0 input-small" type="text" />'
                 +'          <span> 不超过8个字 </span> <input type="file" name="specialFile_'+total+'_1" /> '
                 +'          <img id="specialImg'+total+'1" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -232,7 +241,7 @@
                 +'          <select  id="recomSpecialModule'+total+2+'" name="recomSpecialList['+total+'].recomSpecialDetailList[2].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select> <input id="HidRecomBusinessModuleId'+total+'2" type="hidden"/>'
-                +'          <input id="specialDescribes2" name="recomSpecialList['+total+'].recomSpecialDetailList[2].describes" class="input-small" type="text" />'
+                +'          <input id="specialDescribes2" name="recomSpecialList['+total+'].recomSpecialDetailList[2].describes" maxlength="8" class="min:0 input-small" type="text" />'
                 +'          <span> 不超过8个字 </span>  <input type="file" name="specialFile_'+total+'_2" /> '
                 +'          <img id="specialImg'+total+'2" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -246,7 +255,7 @@
                 +'          <select  id="recomSpecialModule'+total+3+'" name="recomSpecialList['+total+'].recomSpecialDetailList[3].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select>  <input id="HidRecomBusinessModuleId'+total+'3" type="hidden"/>'
-                +'          <input id="specialDescribes3" name="recomSpecialList['+total+'].recomSpecialDetailList[3].describes" class="input-small"  type="text" />'
+                +'          <input id="specialDescribes3" name="recomSpecialList['+total+'].recomSpecialDetailList[3].describes" maxlength="8" class="min:0 input-small"  type="text" />'
                 +'          <span> 不超过8个字 </span> <input type="file" name="specialFile_'+total+'_3" />'
                 +'          <img id="specialImg'+total+'3" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -260,7 +269,7 @@
                 +'          <select  id="recomSpecialModule'+total+4+'" name="recomSpecialList['+total+'].recomSpecialDetailList[4].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select>  <input id="HidRecomBusinessModuleId'+total+'4" type="hidden"/>'
-                +'          <input id="specialDescribes4" name="recomSpecialList['+total+'].recomSpecialDetailList[4].describes" class="input-small"  type="text" />'
+                +'          <input id="specialDescribes4" name="recomSpecialList['+total+'].recomSpecialDetailList[4].describes" maxlength="8" class="min:0 input-small"  type="text" />'
                 +'          <span> 不超过8个字 </span>  <input type="file" name="specialFile_'+total+'_4" />'
                 +'          <img id="specialImg'+total+'4" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -274,7 +283,7 @@
                 +'          <select  id="recomSpecialModule'+total+5+'" name="recomSpecialList['+total+'].recomSpecialDetailList[5].recomBusinessModuleId" class="input-medium">'
                 +'             <option value="">模块/商家</option>'
                 +'          </select> <input id="HidRecomBusinessModuleId'+total+'5" type="hidden"/>'
-                +'          <input id="specialDescribes5" name="recomSpecialList['+total+'].recomSpecialDetailList[5].describes" class="input-small"  type="text" />'
+                +'          <input id="specialDescribes5" name="recomSpecialList['+total+'].recomSpecialDetailList[5].describes" maxlength="8" class="min:0 input-small"  type="text" />'
                 +'          <span> 不超过8个字 </span>  <input type="file" name="specialFile_'+total+'_5" />'
                 +'          <img id="specialImg'+total+'5" src="" style="width:45px; height:45;">'
                 +'      </div>'
@@ -316,23 +325,25 @@
             }
         }
     }
+    
     //添加商家推荐2
     function addBusType(){
         var total=$("#recomThree").find(".controls").size();
-        var domRow='<div class="controls" id="recomBusType'+total+'" style="border: 1px solid #ccc; margin-top: 10px; padding: 20px;">'
-              +'      <div id="recomBusTypeList'+total+'" style="padding-top: 10px;">'
+        var domRow='<div class="controls" id="recomBusTypeModule'+total+'" style="border: 1px solid #ccc; margin-top: 10px; padding: 20px;">'
+              +'      <div id="recomBusTypeList'+total+'" >'
               +'        <lable>推荐一</lable>'
-              +'        <select id="recomTypeBusId'+total+'" onchange="getTypeList(this,'+total+')" name="recomModuleList[0].recomBusinessId" class="input-medium">'
+              +'        <select id="recomTypeBusId'+total+'" onchange="getTypeList(this,'+total+')" name="recomBusTypeList[0].recomBusinessId" class="input-medium">'
               +'          <option value="">商家名称</option>'
               +'          <c:forEach items="${allBusList}" var="bus">'
               +'             <option value="${bus.id}" >${bus.businessName}</option>'
               +'          </c:forEach>'
               +'        </select>'
-              +'    </div>'
-              +'</div>';
+              +'      </div> <input id="recomBusTypeFlag'+total+'" type="hidden" name="recomBusTypeList['+total+'].delFlag"  />'
+              +'    </div>';
          domRow+='<div class="add-remove" style="float: right; margin-top: -20px; margin-right: -60px;"><a onclick="addBusType()">添加</a>  <a onclick="removeRowBusType(this,'+total+')">删除</a></div>';
         $("#recomThree").append($(domRow));
     }
+    var busData= ${fns:toJson(villageLine.recomBusTypeList)};
     function getTypeList(obj,index_num){
         var businessinfoId=$(obj).val();
         $.ajax({
@@ -349,32 +360,82 @@
                 var domRow='';
                 $.each(data, function(indx, item) {
                     domRow+='<div id="recomBusTypeDetailList'+index_num+indx+'" style="margin-top: 10px;">'
-                          +'  <input  id="cbType'+index_num+indx+'" type="checkbox">'
+                          +'  <input value="'+item.prodType+'" onclick="getBusTypeId(this,\''+index_num+indx+'\')" id="cbType'+index_num+indx+'" type="checkbox" name="rodType" class="min:1" >'
+                          +'  <input id="prodTypeId'+index_num+indx+'" class="hide" name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].prodType">'
                           +'  <span>'+item.categoryName+'</span>'
-                          +'  <input id="rodType'+index_num+indx+'" name="recomBusType['+index_num+'].recomBusTypeDetailList['+indx+'].rodType"'
                           +'  <input type="file" name="busTyefile_'+index_num+'_'+indx+'" >'
-                          +'  <input type="radio" name="recomBusType['+index_num+'].recomBusTypeDetailList[0].defaultFlag" ><span>设置默认</span>'
+                          +'  <input disabled="disabled" onclick="getDefaultFlagId(this,\''+index_num+indx+'\')" id="defaultFlag'+index_num+indx+'" type="radio" value="1"  name="defaultFlag"><span>设置默认</span>'
+                          +'  <input id="defaultFlag_'+index_num+indx+'" class="hide"  name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].defaultFlag">'
                           +'</div>'
                 })
-                console.log($(domRow))
                 $("#recomBusTypeList"+index_num).append($(domRow));
+                initBusType();
             }
         })
     }
+    //根据商家分类的选中状态  修改默认状态的显示状态- 获取商家分类的ID  
+    function getBusTypeId(obj,index_num){
+        console.log($(obj).attr('checked'))
+        if($(obj).attr('checked')=='checked'){
+            $("#prodTypeId"+index_num).val($(obj).val());
+            $("#defaultFlag"+index_num).prop("disabled","");
+        }else{
+            $("#prodTypeId"+index_num).val('');
+            $("#defaultFlag"+index_num).prop("disabled","disabled");
+            $("#defaultFlag"+index_num).prop("checked","")
+        }
+    }
+    //给设置默认赋值
+    function getDefaultFlagId(obj,index_num){
+        $("#defaultFlag_"+index_num).val($(obj).val());
+        $("#recomBusTypeDetailList"+index_num).find("input:radio").each(function(){
+            console.log($(this).val());
+        })
+        $("#defaultFlag_"+index_num).val();
+    }
+    
     //商家推荐2 移除
     function removeRowBusType(obj,index_num) {
         var total = $("#recomThree").find(".controls").size();//
+        if($("#recomBusTypeFlag"+index_num).val()!=""&&$("#recomSpecialFlag"+index_num).val()!=null){
+            $(obj).parent().addClass("hide");
+            $("#recomBusTypeModule"+index_num).addClass("hide");
+            $("#recomBusTypeFlag"+index_num).val("1");
+        }else{
+            $(obj).parent().remove();
+            $("#recomBusTypeModule"+index_num).remove();
+        }
         
     }
     //绑定商家推荐2
     function initRecomBusType(){
-        var data= ${fns:toJson(villageLine.recomSpecialList)};
-        for (var i=0; i<data.length-1; i++){
+        for (var i=0; i<busData.length-1; i++){
             addBusType();
         }
-        for (var i=0; i<data.length; i++){
-           
+        for (var i=0; i<busData.length; i++){
+           $("#recomTypeBusId"+i).val(busData[i].recomBusinessId).trigger("change");
         }
+    }
+    //绑定商家分类数据
+    function initBusType(){
+        for (var i=0; i<busData.length; i++){
+            var soreNum="",defaultFlag="";
+            for (var j=0; j<busData[i].recomBusTypeDetailList.length; j++){
+               soreNum+=busData[i].recomBusTypeDetailList[j].sortNum+","
+               defaultFlag+=busData[i].recomBusTypeDetailList[j].defaultFlag+","
+            }
+            var sortNumArr=soreNum.split(",")
+            var defaultFlagArr=defaultFlag.split(",");
+            for(var h=0;h<sortNumArr.length;h++){
+               var num=sortNumArr[h];
+               $("#cbType"+i+num).prop("checked","checked");
+               $("#defaultFlag"+i+num).prop("disabled","");
+               $("#prodTypeId"+i+num).val($("#cbType"+i+num).val());
+               if(defaultFlagArr[h]==1){
+                  $("#defaultFlag"+i+num).prop("checked","checked");
+               }
+            }
+         }
     }
     //模块的change事件 
     function getSpecialModule(obj,type,count) {
@@ -413,6 +474,8 @@
         initRecomSpecial();
         //初始化商家推荐2的模块
         addBusType();
+        //初始化商家推荐2的数据
+        initRecomBusType();
     })
 </script>
 </head>

@@ -24,6 +24,7 @@ import com.its.modules.app.dao.ShoppingCartDao;
 import com.its.modules.app.entity.BusinessInfo;
 import com.its.modules.app.entity.OrderGoods;
 import com.its.modules.app.entity.OrderGoodsList;
+import com.its.modules.app.entity.OrderRefundInfo;
 import com.its.modules.app.entity.OrderTrack;
 import com.its.modules.sys.service.SysCodeMaxService;
 
@@ -37,6 +38,7 @@ import com.its.modules.sys.service.SysCodeMaxService;
 @Service
 @Transactional(readOnly = true)
 public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
+
 	@Autowired
 	private BusinessInfoService businessInfoService;
 
@@ -57,6 +59,9 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 
 	@Autowired
 	private OrderTrackService orderTrackService;
+
+	@Autowired
+	private OrderRefundInfoService orderRefundInfoService;
 
 	@Autowired
 	private ShoppingCartDao shoppingCartDao;
@@ -93,23 +98,13 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 
 	/**
 	 * 根据订单号获取订单信息
-	 * 
-	 * @param orderNo
-	 * @return
 	 */
 	public OrderGoods getByOrderNo(String orderNo) {
 		return dao.getByOrderNo(orderNo);
 	}
 
 	/**
-	 * 生成订单
-	 * 
-	 * @param order
-	 * @param business
-	 * @param accountID
-	 * @param villageInfoID
-	 * @param moduleID
-	 * @param couponID
+	 * 生成商品订单
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public Map<String, String> createOderGoods(OrderGoods order, BusinessInfo business, String accountID, String villageInfoID, CouponManageBean couponManage) {
@@ -241,20 +236,10 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 	 *            订单ID
 	 * @param accountId
 	 *            用户ID
-	 * @return OrderGoodsBean
+	 * @return OrderGoods
 	 */
-	public OrderGoodsBean judgeOrderGoodsByOrderIdAndAccountId(String orderId, String accountId) {
-		return dao.judgeOrderGoodsByOrderIdAndAccountId(orderId, accountId);
-	}
-
-	/**
-	 * 更新商品订单状态
-	 * 
-	 * @param orderGoodsBean
-	 *            商品订单信息
-	 */
-	public void updateState(OrderGoodsBean orderGoodsBean) {
-		dao.updateState(orderGoodsBean);
+	public OrderGoods judgeOrderGoodsCancelAble(String orderId, String accountId) {
+		return dao.judgeOrderGoodsCancelAble(orderId, accountId);
 	}
 
 	/**
@@ -264,47 +249,87 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 	 *            订单ID
 	 * @param accountId
 	 *            用户ID
+	 * @param cancelType
+	 *            取消类型：0超时取消 1用户取消
 	 * @return 取消成功返回true，失败返回false
 	 */
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	public boolean cancelOrder(String orderId, String accountId) {
+	public boolean cancelOrder(String orderId, String accountId, String cancelType) {
 		// 判断订单是否可取消
-		OrderGoodsBean orderGoodsBean = this.judgeOrderGoodsByOrderIdAndAccountId(orderId, accountId);
-		if (orderGoodsBean == null) {
+		OrderGoods orderGoods = this.judgeOrderGoodsCancelAble(orderId, accountId);
+		if (orderGoods == null) {
 			return false;
 		}
 
-		int state = 0;
-		if (OrderGlobal.ORDER_PAY_STATE_UNPAY.equals(orderGoodsBean.getPayState())) {
-			// 待支付——取消订单——已取消
-			state = 0;
-			orderGoodsBean.setOrderState(OrderGlobal.ORDER_GOODS_CANCELED);
+		OrderTrack orderTrack = new OrderTrack();
+		orderTrack.setOrderId(orderId);
+		orderTrack.setOrderNo(orderGoods.getOrderNo());
+		orderTrack.setOrderType(OrderGlobal.ORDER_GOODS);
+		if (OrderGlobal.ORDER_PAY_STATE_UNPAY.equals(orderGoods.getPayState())) {
+			// 订单状态"待支付"——取消订单——订单状态"已取消"
+			orderGoods.setOrderState(OrderGlobal.ORDER_GOODS_CANCELED);
+			// 恢复商品库存
+			List<OrderGoodsList> orderGoodsLists = orderGoodsListService.getOrderGoodsLists(orderGoods.getId());
+			for (OrderGoodsList orderGoodsList : orderGoodsLists) {
+				// 更新商品库存，已售数量
+				goodsInfoService.updateStockAndSellCount(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId());
+				// 如果商品有规格，更新对应规格库存
+				if (orderGoodsList.getSkuKeyId() != null && orderGoodsList.getSkuValueId() != null) {
+					goodsSkuPriceService.updateStock(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId(), orderGoodsList.getSkuKeyId(), orderGoodsList.getSkuValueId());
+				}
+			}
+			if (OrderGlobal.CANCEL_TYPE_OVERTIME.equals(cancelType)) {
+				// 超时取消
+				orderTrack.setStateMsg(OrderGlobal.BACK__CANCELED);
+				orderTrack.setHandleMsg(OrderGlobal.BACK_UNPAY_DESC);
+				orderTrack.setStateMsgPhone(OrderGlobal.FRONT_CANCELED);
+				orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_OVERTIME_CANCELED_DESC);
+				orderTrack.setCreateName(OrderGlobal.CREATE_NAME_SYSTEM);
+			} else {
+				// 用户取消
+				orderTrack.setStateMsg(OrderGlobal.BACK__CANCELED);
+				orderTrack.setHandleMsg(OrderGlobal.BACK_UNPAY_DESC);
+				orderTrack.setStateMsgPhone(OrderGlobal.FRONT_CANCELED);
+				orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_ACCOUNT_CANCELED_DESC);
+				orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
+			}
 		} else {
-			// 待处理——取消订单——退款中
-			state = 1;
-			orderGoodsBean.setPayState(OrderGlobal.ORDER_PAY_STATE_REFUNDING);
+			// 订单状态"待受理"——用户取消订单——订单状态"退款中"
+			orderGoods.setPayState(OrderGlobal.ORDER_PAY_STATE_REFUNDING);
+
+			// 插入退款信息
+			OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
+			orderRefundInfo.setOrderId(orderGoods.getId());
+			orderRefundInfo.setOrderNo(orderGoods.getOrderNo());
+			orderRefundInfo.setTransactionId(null);
+			orderRefundInfo.setOrderType(OrderGlobal.ORDER_GOODS);
+			orderRefundInfo.setPayType(orderGoods.getPayType());
+			orderRefundInfo.setOrderMoney(orderGoods.getPayMoney());
+			orderRefundInfo.setType(orderGoods.getType());
+			orderRefundInfo.setModuleManageId(orderGoods.getModuleManageId());
+			orderRefundInfo.setProdType(orderGoods.getProdType());
+			orderRefundInfo.setRefundMoney(orderGoods.getPayMoney());
+			orderRefundInfo.setRefundNo(null);
+			orderRefundInfo.setRefundTransactionId(null);
+			orderRefundInfo.setRefundType(null);
+			orderRefundInfo.setRefundState(OrderGlobal.ORDER_REFUND_STATE_UNREFUND);
+			orderRefundInfo.setRefundOverTime(null);
+			orderRefundInfo.setRefundOrderGroupPurcListIds(null);
+			orderRefundInfo.setRefundReason(null);
+			orderRefundInfo.setRefundDescribe(null);
+			orderRefundInfoService.save(orderRefundInfo);
+
+			orderTrack.setStateMsg(OrderGlobal.BACK__CANCELED);
+			orderTrack.setHandleMsg(OrderGlobal.BACK_UNPAY_DESC);
+			orderTrack.setStateMsgPhone(OrderGlobal.FRONT_REFUNDING);
+			orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_REFUNDING_DESC);
+			orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
 		}
 
 		// 更新订单主表
-		this.updateState(orderGoodsBean);
-		// 恢复商品库存
-		if (state == 0) {
-			List<OrderGoodsList> orderGoodsLists = orderGoodsBean.getOrderGoodsLists();
-			if (orderGoodsLists != null && orderGoodsLists.size() != 0) {
-				for (OrderGoodsList orderGoodsList : orderGoodsLists) {
-					// 更新商品库存，已售数量
-					goodsInfoService.updateStockAndSellCount(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId());
-					// 如果商品有规格，更新对应规格库存
-					if (orderGoodsList.getSkuKeyId() != null && orderGoodsList.getSkuValueId() != null) {
-						goodsSkuPriceService.updateStock(orderGoodsList.getGoodsSum(), orderGoodsList.getGoodsInfoId(), orderGoodsList.getSkuKeyId(), orderGoodsList.getSkuValueId());
-					}
-				}
-			}
-		}
+		this.update(orderGoods);
 		// 插入订单追踪
-		OrderTrack orderTrack = new OrderTrack();
 		orderTrackService.save(orderTrack);
-
 		return true;
 	}
 }

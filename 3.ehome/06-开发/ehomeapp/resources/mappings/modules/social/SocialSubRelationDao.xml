@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialSubRelationDao">
+    
+	<sql id="socialSubRelationColumns">
+		a.id AS "id",
+		a.subjectid AS "subjectid",
+		a.speakid AS "speakid",
+		a.forwardid AS "forwardid",
+		a.commentid AS "commentid"
+	</sql>
+	
+	<sql id="socialSubRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialSubRelation">
+		SELECT 
+			<include refid="socialSubRelationColumns"/>
+		FROM social_sub_relation a
+		<include refid="socialSubRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialSubRelation">
+		SELECT 
+			<include refid="socialSubRelationColumns"/>
+		FROM social_sub_relation a
+		<include refid="socialSubRelationJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="subjectid != null and subjectid != ''">
+				AND a.subjectid = #{subjectid}
+			</if>
+			<if test="speakid != null and speakid != ''">
+				AND a.speakid = #{speakid}
+			</if>
+			<if test="forwardid != null and forwardid != ''">
+				AND a.forwardid = #{forwardid}
+			</if>
+			<if test="commentid != null and commentid != ''">
+				AND a.commentid = #{commentid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialSubRelation">
+		SELECT 
+			<include refid="socialSubRelationColumns"/>
+		FROM social_sub_relation a
+		<include refid="socialSubRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_sub_relation(
+			id,
+			subjectid,
+			speakid,
+			forwardid,
+			commentid
+		) VALUES (
+			#{id},
+			#{subjectid},
+			#{speakid},
+			#{forwardid},
+			#{commentid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_sub_relation SET 	
+			subjectid = #{subjectid},
+			speakid = #{speakid},
+			forwardid = #{forwardid},
+			commentid = #{commentid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_sub_relation
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

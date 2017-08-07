@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>商家首页</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- page -->
+    <link href="../../css/cursom/business.css" rel="stylesheet">
+    <style type="text/css">
+		a:hover{
+			text-decoration: none;
+		}
+		.pointer
+    {
+    	cursor: pointer;	
+    }
+	</style>
+  </head>
+<body>
+	<div id="app" v-cloak>
+		<div class="details_top" v-bind:style="{'backgroundImage':'url('+business.businessImage+')'}">
+			<div class="container-fluid">
+				<div class="h20"></div>
+				<div class="topbtn_region">
+					<div class="fl">
+						<span class="back_btn" onclick="javascript :history.go(-1)"></span>
+					</div>
+					<div class="fr">
+						<span class="collection_btn" id="collection">&nbsp;</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mt20 clearfix">
+			<div class="details_add_main">
+				<div class="details_add_tel">
+					<a :href="'tel:'+business.businessPhone"><img v-bind:src="urlList.phoneicon" width="25" height="25"></a>
+				</div>
+				<div class="details_add_left">
+					<div class="details_add_left_title">
+						<a href="#">{{business.businessName}}</a>
+					</div>
+					<div class="details_add_left_text">
+						<a href="#">{{business.businessAddress}}</a>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="mt10"></div>
+			<div class="details_spgm">
+				<div class="details_spgm_right">
+					<a v-bind:href="urlList.list + business.businessID">
+						<img v-bind:src="urlList.goicon" width="9" height="16">
+					</a>
+				</div>
+				<div class="details_spgm_left">商品购买</div>
+				<div class="clear"></div>
+			</div>
+			<div v-if="business.groupBuy && business.groupBuy.length > 0">
+				<div class="xq_jstitle">商家团购</div>
+				<div class="line_ec"></div>
+				<div class="plr10 sort_list" v-for="item in business.groupBuy">
+					<a v-bind:href="urlList.groupbuy + item.groupBuyID" style="color:black;">
+						<div class="goods_list">
+							<div class="goods_pic"><img v-bind:src="item.groupBuyImage"></div>
+							<div class="goods_right">
+								<div class="goods_name">{{item.groupBuyName}}</div>
+								<div class="">
+									<div class="fl mt10">
+										<div class="font_orange fl">{{item.groupBuyPrice | formatDecimal}}</div>
+										<div class="font14 fl ml10"><del>{{item.marketPrice | formatDecimal}}</del></div>
+									</div>
+									<div class="goods_num fr">已售{{item.soldNum}}件</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="order_whitebox pointer" style="text-align:center;" v-on:click="getMore(business)">查看更多团购</div>
+			</div>
+			<div class="xq_jstitle">商家信息</div>
+			<div class="details_sjxx">
+				<p>.营业时间：{{business.businessHours}}</p>
+				<p>.商家标签：<span v-for="(label,index) in business.businessLabels"><span v-if="index > 0">,</span>{{label.labelName}}</span></p>
+				<p v-if="business.sendMoney > 0">.起&nbsp;&nbsp;送&nbsp;&nbsp;价：{{business.sendMoney | formatDecimal}}</p>
+				<p v-if="business.deliveryFee > 0">.配&nbsp;&nbsp;送&nbsp;&nbsp;费：{{business.deliveryFee | formatDecimal}}</p>
+				<p v-if="business.activities && business.activities > 0">.活动优惠：<span v-for="activity in business.activities">满减 {{activity.desc}}</span></p>
+			</div>
+			<div class="details_sjxx">
+				<p>.详细介绍：<span v-html="business.businessDesc"></span></p>
+			</div>
+		</div>
+	</div>
+	<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/bootstrap.min.js"></script>	
+	<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/cursom/common/common.js" type="text/javascript"></script>
+	<script src="../../js/cursom/business/businessindex.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

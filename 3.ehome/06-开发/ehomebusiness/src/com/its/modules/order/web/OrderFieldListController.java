@@ -6,11 +6,8 @@ package com.its.modules.order.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.its.common.utils.JedisUtils;
-import com.its.modules.field.entity.FieldPartitionPrice;
 import com.its.modules.field.service.FieldPartitionPriceService;
 import com.its.modules.order.service.OrderFieldService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -131,7 +128,7 @@ public class OrderFieldListController extends BaseController {
 	@RequestMapping(value = "cancelOrderFieldList")
 	public String cancelOrderFieldList(String id, RedirectAttributes redirectAttributes){
 		OrderFieldList orderFieldList=orderFieldService.getOrderFieldListByFieldPartitionPriceId(id);
-		orderFieldListService.cancelOrderFieldList(orderFieldList.getOrderNo(),id);
+		orderFieldListService.cancelOrderFieldList(orderFieldList.getOrderFieldId(),orderFieldList.getOrderNo(),id);
 		return "取消预约成功！";
 	}
 }

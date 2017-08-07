@@ -48,12 +48,12 @@
 		}
 </style>
 <body>
-<div id="app">
+<div id="app" v-cloak>
 
 <div class="grey_top">优家</div>
-<!--<div class="index2_ad" v-for=" item1 in topAd"  v-if="topAd&&topAd.length>0"   v-bind:data-id="item1.adID"><a :href="item1.adUrl"><img v-bind:src="item1.adImage"></a></div>-->
+<div class="index2_ad" v-for=" item1 in topAd"  v-if="topAd"   v-bind:data-id="item1.adID"><a :href="item1.adUrl"><img v-bind:src="item1.adImage"></a></div>
 <!--头部广告-->
-<!--<div class="index2_topmain" v-if="topModule&topModule.length>0">
+<div class="index2_topmain" v-if="topModule">
 <div class="index2_menu">
   <ul>
     <li v-for="item2 in topModule" onclick="javascript:location.href='item2.moduleUrl'"><img v-bind:src="item2.moduleIcon">
@@ -62,10 +62,10 @@
   </ul>
   <div class="clear"></div>
 </div>
-</div>-->
+</div>
 <!--模块推荐-->
 
-<!--<div class="index2_topmain2 mt10" v-if="topBusiness&&topBusiness.length>0">
+<div class="index2_topmain2 mt10" v-if="topBusiness">
 	
 <div class="media" style="margin-right:2%" v-for="item3 in topBusiness">
   <div class="media-body">
@@ -79,11 +79,11 @@
   </div>
 </div>
 <div class="clear"></div>
-</div>-->
+</div>
 
 <!--顶部商家推荐-->
 
-<div class="goods_list" v-for="item in groupBuy" v-if="groupBuy && groupBuy.length>0">
+<div class="goods_list" v-if="groupBuy && groupBuy.length>0">
 
 <div class="goods_right" style="margin-left:0" >
 <div class="goods_pic" style="border:none; margin-top:8px;"><a :href="item.groupBuyUrl"><img v-bind:src="item.groupBuyImage"></a></div>
@@ -148,19 +148,22 @@
 			</div>
 
 <!--图腾-->
-<!--<div class="Boutique_buy" v-if="middleBusiness && middleBusiness.length>0">
-<div class="xq_jstitle" style="padding-top:10px;">实地会所</div>
-  <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=1915b262a28c42edab0d3899f11831c1'">
-    <div class="Boutique_buy_main_tupian"><img src="../../images/pic9.jpg"> </div>  
-  </div>  
+<!--<div class="Boutique_buy" v-if="middleBusiness">
   <div class="xq_jstitle" style="padding-top:10px;"v-for="item5 in middleBusiness" v-bind:data-id="item5.businessID">{{item5.businessName}}</div>
   <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=1915b262a28c42edab0d3899f11831c1'">
     <div class="Boutique_buy_main_tupian" v-for="item6 in item5.modes"><img v-bind:src="item6.modeImage"> </div>  
   </div>  
 </div>-->
+<div class="Boutique_buy">
+<div class="xq_jstitle" style="padding-top:10px;">实地会所</div>
+  <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=1915b262a28c42edab0d3899f11831c1'">
+    <div class="Boutique_buy_main_tupian"><img src="../../images/pic9.jpg"> </div>  
+  </div>  
+  </div>  
+
 <!--实地会所-->
-<div class="xq_jstitle" style="background:#fff; margin-bottom:0; padding:10px 0; border-bottom:1px solid #edecec;" v-if="footerBusiness&&footerBusiness.length>0">推荐商家</div>
-<div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;" v-for="item7 in footerBusiness" v-if="footerBusiness&&footerBusiness.length>0">
+<div class="xq_jstitle" style="background:#fff; margin-bottom:0; padding:10px 0; border-bottom:1px solid #edecec;" v-if="footerBusiness">推荐商家</div>
+<div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;" v-for="item7 in footerBusiness" v-if="footerBusiness">
   <div class="sortlist_top2">
     <div class="business_price_box">
       <div class="business_pic75 fl"><img v-bind:src="item7.businessImage"></div>

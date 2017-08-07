@@ -61,6 +61,7 @@ var vm = new Vue({
 					});
 				}
 			});	
+			
 		},
 		getShoppingCart:function(){
 			var _this = this;
@@ -75,7 +76,7 @@ var vm = new Vue({
 					_this.shoppingcart.commodities = res.data.data.commodities;
 					_this.shoppingcart.totalMoney = res.data.data.totalMoney;
 					_this.shoppingcart.num = res.data.data.totalNumber;
-
+                            
 					if(_this.business.sendMoney > 0){
 						if(_this.business.sendMoney > _this.shoppingcart.totalMoney){
 							_this.shoppingcart.lessMoney = _this.business.sendMoney - _this.shoppingcart.totalMoney;
@@ -174,9 +175,13 @@ var vm = new Vue({
 		},
 		clearShoppingCart:function(){
 			var _this = this;
-			
-			this.$http.get(interfaceUrl + "/live/emptiedShoppingCart",
-			{ userID: userInfo.userID,buildingID: userInfo.buildingID,
+			layer.open({
+					    content: '确定要清空购物车？'
+					    ,btn:['确定','取消']
+					    ,time: 0 //2秒后自动关闭
+					    ,yes:function(index){	
+					_this.$http.get(interfaceUrl + "/live/emptiedShoppingCart",
+			   { userID: userInfo.userID,buildingID: userInfo.buildingID,
 				businessID:getQueryString("id")}).then(function(res){
 				_this.shoppingcart.totalMoney = 0;
 				_this.shoppingcart.num = 0;
@@ -187,7 +192,18 @@ var vm = new Vue({
 				}
 				
 				_this.getShoppingCart();
+				
+				
 			});
+					    		
+					    	layer.close(index);
+					    _this.closeShoppingCart()
+					    }
+
+					  });
+			
+			
+			
 		},
 		openMoreSpe:function(commodity){
 			this.currentCommodity = commodity;

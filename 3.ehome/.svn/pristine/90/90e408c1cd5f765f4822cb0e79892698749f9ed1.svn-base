@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.adver.dao.AdverManageDao">
+    <resultMap id="adverResult" type="AdverManage">
+        <id property="id" column="id" />
+        <result property="openScreenFlag" column="openScreenFlag" />
+        <result property="positionId" column="positionId" />
+        <result property="skipTime" column="skipTime" />
+        <result property="displayType" column="displayType" />
+        <result property="displayTimeInterval" column="displayTimeInterval" />
+        <result property="advertTitle" column="advertTitle" />
+        <result property="adverPic" column="adverPic" />
+        <result property="adverType" column="adverType" />
+        <result property="adverContent" column="adverContent" />
+        <result property="linkUrl" column="linkUrl" />
+        <result property="moduleId" column="moduleId" />
+        <result property="categoryId" column="categoryId" />  <!-- new  add -->
+        <result property="businessinfoId" column="businessinfoId" />
+        <result property="goodsId" column="goodsId" />
+        <result property="starttime" column="starttime" />
+        <result property="endTime" column="endTime" />
+        <result property="adverPosition.id" column="adverPosition.id" />
+        <collection property="villageList" ofType="villageInfo">
+            <id property="id" column="villageList.id" />
+        </collection>
+    </resultMap>
+    <sql id="adverManageColumns">
+        a.id AS "id",
+        a.open_screen_flag AS "openScreenFlag",
+        a.position_id AS "positionId",
+        a.skip_time AS "skipTime",
+        a.display_type AS "displayType",
+        a.display_time_interval AS "displayTimeInterval",
+        a.advert_title AS "advertTitle",
+        a.adver_pic AS "adverPic",
+        a.adver_type AS "adverType",
+        a.adver_content AS "adverContent",
+        a.link_url AS "linkUrl",
+        a.module_id AS "moduleId",
+        a.category_id AS "categoryId", <!-- new  add -->
+        a.businessinfo_id AS "businessinfoId",
+        a.goods_id AS "goodsId",
+        a.starttime AS "starttime",
+        a.end_time AS "endTime",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+        
+    </sql>
+    
+    <sql id="adverManageJoins">
+    </sql>
+    
+    <select id="get" resultMap="adverResult">
+        SELECT 
+            <include refid="adverManageColumns"/>,
+            b.Village_Line_ID AS "villageList.id",
+            c.module_code AS "adverPosition.id"
+        FROM adver_manage a
+        LEFT JOIN adver_building b on a.ID=b.Adv_ID
+        LEFT JOIN adver_position c on a.Position_ID=c.id
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="AdverManage">
+        SELECT 
+            <include refid="adverManageColumns"/>,
+            b.position_name AS "adverPosition.positionName",
+            GROUP_CONCAT(d.Village_Name) AS "villageInfo.villageName",
+            CONCAT(GROUP_CONCAT(f.name),',') AS "villageInfo.addrCity",
+            CONCAT(GROUP_CONCAT(h.name),',') AS "villageInfo.addrPro"
+        FROM adver_manage a
+        LEFT JOIN adver_position b on a.Position_ID=b.id
+        LEFT JOIN adver_building c on a.ID=c.Adv_ID
+        LEFT JOIN village_line g on c.Village_Line_ID=g.ID
+        LEFT JOIN village_info d on d.ID=g.Village_Info_ID
+        LEFT JOIN sys_area f on d.Addr_City=f.id
+        LEFT JOIN sys_area h on d.addr_Pro=h.id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="positionId != null and positionId != ''">
+                AND a.position_id = #{positionId}
+            </if>
+            <if test="villageInfo != null and villageInfo.id != null and villageInfo.id != ''">
+                AND d.id = #{villageInfo.id}
+            </if>
+            <if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
+                AND d.Addr_Pro = #{villageInfo.addrPro}
+            </if>
+            <if test="villageInfo != null and villageInfo.addrCity != null and villageInfo.addrCity != ''">
+                AND d.Addr_City = #{villageInfo.addrCity}
+            </if>
+            <if test="villageLineId != null and villageLineId != '' ">
+                AND g.Product_Line = #{villageLineId}
+            </if>
+            <if test="positionId != null  and positionId != ''">
+                AND a.position_id= #{positionId}
+            </if> 
+        </where>
+        GROUP BY a.Advert_Title
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="AdverManage">
+        SELECT 
+            <include refid="adverManageColumns"/>
+        FROM adver_manage a
+        <include refid="adverManageJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO adver_manage(
+            id,
+            open_screen_flag,
+            position_id,
+            skip_time,
+            display_type,
+            display_time_interval,
+            advert_title,
+            adver_pic,
+            adver_type,
+            adver_content,
+            link_url,
+            module_id,
+            category_id, <!-- new  add -->
+            businessinfo_id,
+            goods_id,
+            starttime,
+            end_time,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{openScreenFlag},
+            #{positionId},
+            #{skipTime},
+            #{displayType},
+            #{displayTimeInterval},
+            #{advertTitle},
+            #{adverPic},
+            #{adverType},
+            #{adverContent},
+            #{linkUrl},
+            #{moduleId},
+            #{categoryId}, <!-- new  add -->
+            #{businessinfoId},
+            #{goodsId},
+            #{starttime},
+            #{endTime},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE adver_manage SET     
+            open_screen_flag = #{openScreenFlag},
+            position_id = #{positionId},
+            skip_time = #{skipTime},
+            display_type = #{displayType},
+            display_time_interval = #{displayTimeInterval},
+            advert_title = #{advertTitle},
+            <if test="adverPic != null and adverPic != ''">
+            adver_pic = #{adverPic},
+            </if>
+            adver_type = #{adverType},
+            adver_content = #{adverContent},
+            link_url = #{linkUrl},
+            module_id = #{moduleId},
+            category_id = #{categoryId}, <!-- new  add -->
+            businessinfo_id = #{businessinfoId},
+            goods_id = #{goodsId},
+            starttime = #{starttime},
+            end_time = #{endTime},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="delete">
+        UPDATE adver_manage SET 
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+    <!--add by zhujiao  验证广告标题是否有效 -->
+    <select id="getModelByName" resultType="AdverManage">
+        SELECT
+            <include refid="adverManageColumns"/>
+        FROM adver_manage a
+        WHERE a.advert_title = #{advertTitle} AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+    <!-- add by zhujiao  添加广告楼盘关联数据 -->
+    <insert id="insertAdverBuilding">
+        INSERT INTO adver_building(Adv_ID, Village_Line_ID,del_flag)
+        <foreach collection="villageList" item="village" separator=" union all ">
+            SELECT #{id}, #{village.id},#{DEL_FLAG_NORMAL} FROM dual
+        </foreach>
+    </insert>
+    <!-- add by zhujiao  删除广告楼盘关联数据-->
+    <delete id="deleteAdverBuilding">
+        DELETE FROM adver_building WHERE Adv_ID = #{id}
+    </delete>
+</mapper>

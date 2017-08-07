@@ -27,7 +27,7 @@
 
 	<sys:message content="${message}"/>
 	<p style="font-weight:bold;font-size:18px;margin-left:10px;">团购活动</p>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98%">
 		<thead>
 			<tr>
 			    <th>序号</th>

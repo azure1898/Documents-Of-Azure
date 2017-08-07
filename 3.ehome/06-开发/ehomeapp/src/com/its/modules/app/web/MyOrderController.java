@@ -1,6 +1,7 @@
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
-import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.bean.OrderFieldBean;
@@ -23,7 +23,9 @@ import com.its.modules.app.bean.OrderGoodsBean;
 import com.its.modules.app.bean.OrderGroupPurcBean;
 import com.its.modules.app.bean.OrderLessonBean;
 import com.its.modules.app.bean.OrderServiceBean;
+import com.its.modules.app.common.AppUtils;
 import com.its.modules.app.common.CommonGlobal;
+import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
 import com.its.modules.app.entity.ModuleManage;
@@ -34,6 +36,7 @@ import com.its.modules.app.entity.OrderLessonList;
 import com.its.modules.app.entity.OrderServiceList;
 import com.its.modules.app.entity.OrderTrack;
 import com.its.modules.app.service.AccountService;
+import com.its.modules.app.service.BusinessInfoService;
 import com.its.modules.app.service.ModuleManageService;
 import com.its.modules.app.service.OrderFieldService;
 import com.its.modules.app.service.OrderGoodsService;
@@ -52,6 +55,9 @@ import com.its.modules.app.service.OrderTrackService;
 @Controller
 @RequestMapping(value = "${appPath}/my")
 public class MyOrderController extends BaseController {
+
+	@Autowired
+	private BusinessInfoService businessInfoService;
 
 	@Autowired
 	private AccountService accountService;
@@ -122,7 +128,6 @@ public class MyOrderController extends BaseController {
 			data.put("orderMoney", ValidateUtil.validateDouble(myOrderViewBean.getPayMoney()));
 			OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(myOrderViewBean.getOrderId());
 			data.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
-			data.put("createDate", DateFormatUtils.format(myOrderViewBean.getCreateDate(), "yyyy-MM-dd HH:mm:ss"));
 
 			datas.add(data);
 		}
@@ -216,16 +221,7 @@ public class MyOrderController extends BaseController {
 		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderGoodsBean.getId());
-		data.put("orderStatus", null);
-		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
-		if (orderTrack == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单状态不明");
-			return toJson;
-		}
-		data.put("statusName", orderTrack.getStateMsgPhone());
-		data.put("statusDesc", orderTrack.getHandleMsgPhone());
-		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
+		this.getOrderStatus(data, orderID);
 		data.put("businessID", orderGoodsBean.getBusinessInfoId());
 		data.put("businessPhone", orderGoodsBean.getBusinessInfo().getPhoneNum());
 		data.put("businessName", orderGoodsBean.getBusinessInfo().getBusinessName());
@@ -233,29 +229,28 @@ public class MyOrderController extends BaseController {
 		/* 商品列表开始 */
 		List<Map<String, Object>> commodities = new ArrayList<Map<String, Object>>();
 		List<OrderGoodsList> orderGoodsLists = orderGoodsBean.getOrderGoodsLists();
-		if (orderGoodsLists != null && orderGoodsLists.size() != 0) {
-			for (OrderGoodsList orderGoodsList : orderGoodsLists) {
-				Map<String, Object> commodity = new HashMap<String, Object>();
-				commodity.put("commodityID", orderGoodsList.getGoodsInfoId());
-				commodity.put("commodityName", orderGoodsList.getName());
-				commodity.put("commodityImage", MyFDFSClientUtils.get_fdfs_file_url(request, orderGoodsList.getImgs()));
-				commodity.put("commodityMoney", orderGoodsList.getPaySumMoney());
-				commodity.put("commodityNumber", orderGoodsList.getGoodsSum());
+		for (OrderGoodsList orderGoodsList : orderGoodsLists) {
+			Map<String, Object> commodity = new HashMap<String, Object>();
+			commodity.put("commodityID", orderGoodsList.getGoodsInfoId());
+			commodity.put("commodityName", orderGoodsList.getName());
+			commodity.put("commodityImage", ValidateUtil.getImageUrl(orderGoodsList.getImgs(), ValidateUtil.ZERO, request));
+			commodity.put("commodityMoney", ValidateUtil.validateDouble(orderGoodsList.getPaySumMoney()));
+			commodity.put("commodityNumber", ValidateUtil.validateInteger(orderGoodsList.getGoodsSum()));
 
-				commodities.add(commodity);
-			}
+			commodities.add(commodity);
 		}
 		data.put("commodities", commodities);
 		/* 商品列表结束 */
 
 		data.put("deliveryFee", ValidateUtil.validateDouble(orderGoodsBean.getAddressMoney()) - ValidateUtil.validateDouble(orderGoodsBean.getAddressBenefit()));
 		data.put("activityReduce", ValidateUtil.validateDouble(orderGoodsBean.getBenefitMoney()) + ValidateUtil.validateDouble(orderGoodsBean.getCouponMoney()));
-		data.put("orderMoney", orderGoodsBean.getPayMoney());
+		data.put("orderMoney", ValidateUtil.validateDouble(orderGoodsBean.getPayMoney()));
 		data.put("contactPerson", orderGoodsBean.getAccountName());
 		data.put("contactPhone", orderGoodsBean.getAccountPhoneNumber());
 		data.put("contactAddress", orderGoodsBean.getAddress());
 		String deliveryDate = null;
-		if ("1".equals(orderGoodsBean.getIsStart())) {
+		// 是否立即配送
+		if (CommonGlobal.YES.equals(orderGoodsBean.getIsStart())) {
 			deliveryDate = orderGoodsBean.getEndTime();
 		} else {
 			deliveryDate = orderGoodsBean.getStartTime() + "~" + orderGoodsBean.getEndTime();
@@ -300,45 +295,30 @@ public class MyOrderController extends BaseController {
 		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderServiceBean.getId());
-		data.put("orderStatus", null);
-		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
-		if (orderTrack == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单状态不明");
-			return toJson;
-		}
-		data.put("statusName", orderTrack.getStateMsgPhone());
-		data.put("statusDesc", orderTrack.getHandleMsgPhone());
-		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
+		this.getOrderStatus(data, orderID);
 		data.put("businessID", orderServiceBean.getBusinessInfoId());
 		data.put("businessPhone", orderServiceBean.getBusinessInfo().getPhoneNum());
 		data.put("businessName", orderServiceBean.getBusinessInfo().getBusinessName());
-		List<OrderServiceList> orderServiceLists = orderServiceBean.getOrderServiceLists();
-		if (orderServiceLists == null || orderServiceLists.size() == 0) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单清单数据暂无");
-			return toJson;
-		}
-		OrderServiceList orderServiceList = orderServiceLists.get(0);
+		OrderServiceList orderServiceList = orderServiceBean.getOrderServiceList();
 		data.put("serviceID", orderServiceList.getServiceInfoId());
 		data.put("serviceName", orderServiceList.getName());
-		data.put("unit", orderServiceList.getBaseUnit());
-		data.put("serviceMoney", orderServiceBean.getSumMoney());
-		// 上门服务，是否立即服务：0否 1是
-		String serviceDate = null;
-		if ("0".equals(orderServiceBean.getServiceType())) {
-			serviceDate = orderServiceBean.getStartTime() + "~" + orderServiceBean.getEndTime();
-		} else {
-			serviceDate = orderServiceBean.getEndTime();
-		}
-		data.put("serviceDate", serviceDate);
-		data.put("serviceNumber", orderServiceList.getPayCount());
-		data.put("activityReduce", orderServiceBean.getCouponMoney());
-		data.put("orderMoney", orderServiceBean.getPayMoney());
+		data.put("unit", businessInfoService.getUnit(orderServiceList.getBaseUnit()));
+		data.put("serviceMoney", ValidateUtil.validateDouble(orderServiceList.getPaySumMoney()));
+		data.put("serviceNumber", ValidateUtil.validateInteger(orderServiceList.getPayCount()));
+		data.put("activityReduce", ValidateUtil.validateDouble(orderServiceBean.getBenefitMoney()) + ValidateUtil.validateDouble(orderServiceBean.getCouponMoney()));
+		data.put("orderMoney", ValidateUtil.validateDouble(orderServiceBean.getPayMoney()));
 		data.put("contactPerson", orderServiceBean.getAccountName());
 		data.put("contactPhone", orderServiceBean.getAccountPhoneNumber());
 		data.put("contactAddress", orderServiceBean.getServiceAddress());
-		data.put("leaveMessage", orderServiceBean.getId());
+		// 是否立即上门
+		String serviceDate = null;
+		if (CommonGlobal.YES.equals(orderServiceBean.getIsStart())) {
+			serviceDate = orderServiceBean.getEndTime();
+		} else {
+			serviceDate = orderServiceBean.getStartTime() + "~" + orderServiceBean.getEndTime();
+		}
+		data.put("serviceDate", serviceDate);
+		data.put("leaveMessage", orderServiceBean.getAccountMsg());
 		data.put("orderCode", orderServiceBean.getOrderNo());
 		data.put("orderTime", DateFormatUtils.format(orderServiceBean.getCreateDate(), "yyyy-MM-dd HH:mm"));
 		data.put("paidMethod", orderServiceBean.getPayType());
@@ -377,34 +357,19 @@ public class MyOrderController extends BaseController {
 		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderLessonBean.getId());
-		data.put("orderStatus", null);
-		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
-		if (orderTrack == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单状态不明");
-			return toJson;
-		}
-		data.put("statusName", orderTrack.getStateMsgPhone());
-		data.put("statusDesc", orderTrack.getHandleMsgPhone());
-		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
+		this.getOrderStatus(data, orderID);
 		data.put("businessID", orderLessonBean.getBusinessInfoId());
 		data.put("businessPhone", orderLessonBean.getBusinessInfo().getPhoneNum());
 		data.put("businessName", orderLessonBean.getBusinessInfo().getBusinessName());
-		List<OrderLessonList> orderLessonLists = orderLessonBean.getOrderLessonLists();
-		if (orderLessonLists == null || orderLessonLists.size() == 0) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单清单数据暂无");
-			return toJson;
-		}
-		OrderLessonList orderLessonList = orderLessonLists.get(0);
+		OrderLessonList orderLessonList = orderLessonBean.getOrderLessonList();
 		data.put("courseID", orderLessonList.getLessonInfoId());
 		data.put("courseName", orderLessonList.getName());
-		data.put("coursePrice", orderLessonBean.getSumMoney());
-		data.put("classNumber", orderLessonList.getLessonCount());
+		data.put("coursePrice", ValidateUtil.validateDouble(orderLessonList.getPaySumMoney()));
+		data.put("classNumber", ValidateUtil.validateInteger(orderLessonList.getLessonCount()));
 		data.put("classTime", DateFormatUtils.format(orderLessonList.getStartTime(), "yyyy-MM-dd") + "至" + DateFormatUtils.format(orderLessonList.getEndTime(), "MM-dd"));
 		data.put("classLocation", orderLessonList.getAddress());
-		data.put("activityReduce", orderLessonBean.getCouponMoney());
-		data.put("orderMoney", orderLessonBean.getPayMoney());
+		data.put("activityReduce", ValidateUtil.validateDouble(orderLessonBean.getCouponMoney()));
+		data.put("orderMoney", ValidateUtil.validateDouble(orderLessonBean.getPayMoney()));
 		data.put("contactPerson", orderLessonBean.getAccountName());
 		data.put("contactPhone", orderLessonBean.getAccountPhoneNumber());
 		data.put("leaveMessage", orderLessonBean.getAccountMsg());
@@ -446,44 +411,31 @@ public class MyOrderController extends BaseController {
 		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("orderID", orderFieldBean.getId());
-		data.put("orderStatus", null);
-		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderID);
-		if (orderTrack == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单状态不明");
-			return toJson;
-		}
-		data.put("statusName", orderTrack.getStateMsgPhone());
-		data.put("statusDesc", orderTrack.getHandleMsgPhone());
-		data.put("statusTime", DateFormatUtils.format(orderTrack.getCreateDate(), "MM-dd HH:mm"));
+		this.getOrderStatus(data, orderID);
 		data.put("businessID", orderFieldBean.getBusinessInfoId());
 		data.put("businessPhone", orderFieldBean.getBusinessInfo().getPhoneNum());
 		data.put("businessName", orderFieldBean.getBusinessInfo().getBusinessName());
 		List<OrderFieldList> orderFieldLists = orderFieldBean.getOrderFieldLists();
-		if (orderFieldLists == null || orderFieldLists.size() == 0) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单清单数据暂无");
-			return toJson;
-		}
 		OrderFieldList orderFieldList = orderFieldLists.get(0);
 		data.put("siteID", orderFieldList.getFieldInfoId());
 		data.put("siteName", orderFieldList.getName());
-		data.put("reservationDate", orderFieldList.getAppointmentTime());
+		String appointmentTime = DateFormatUtils.format(orderFieldList.getAppointmentTime(), "yyyy-MM-dd");
+		data.put("reservationDate", appointmentTime + " " + AppUtils.formatDateWeek(appointmentTime));
 
 		/* 场地预约时段开始 */
 		List<Map<String, Object>> details = new ArrayList<Map<String, Object>>();
 		for (OrderFieldList field : orderFieldLists) {
 			Map<String, Object> detail = new HashMap<String, Object>();
-			detail.put("timePeriod", DateFormatUtils.format(field.getStartTime(), "HH:mm") + "~" + DateFormatUtils.format(field.getStartTime(), "HH:mm"));
-			detail.put("price", field.getSumMoney());
+			detail.put("timePeriod", DateFormatUtils.format(field.getStartTime(), "HH:mm") + "~" + DateFormatUtils.format(field.getEndTime(), "HH:mm"));
+			detail.put("price", ValidateUtil.validateDouble(field.getSumMoney()));
 
 			details.add(detail);
 		}
 		data.put("detail", details);
 		/* 场地预约时段结束 */
 
-		data.put("activityReduce", orderFieldBean.getCouponMoney());
-		data.put("orderMoney", orderFieldBean.getPayMoney());
+		data.put("activityReduce", ValidateUtil.validateDouble(orderFieldBean.getCouponMoney()));
+		data.put("orderMoney", ValidateUtil.validateDouble(orderFieldBean.getPayMoney()));
 		data.put("contactPerson", orderFieldBean.getAccountName());
 		data.put("contactPhone", orderFieldBean.getAccountPhoneNumber());
 		data.put("leaveMessage", orderFieldBean.getAccountMsg());
@@ -526,16 +478,11 @@ public class MyOrderController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("businessPhone", orderGroupPurcBean.getBusinessInfo().getPhoneNum());
 		List<OrderGroupPurcList> orderGroupPurcLists = orderGroupPurcBean.getOrderGroupPurcLists();
-		if (orderGroupPurcLists == null || orderGroupPurcLists.size() == 0) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "订单清单数据暂无");
-			return toJson;
-		}
 		OrderGroupPurcList orderGroupPurcList = orderGroupPurcLists.get(0);
 		data.put("groupBuyID", orderGroupPurcList.getOrderGroupPurcId());
 		data.put("groupBuyName", orderGroupPurcList.getName());
 		data.put("groupBuyEndTime", DateFormatUtils.format(orderGroupPurcList.getEndTime(), "yyyy-MM-dd"));
-		data.put("groupBuyImage", MyFDFSClientUtils.get_fdfs_file_url(request, orderGroupPurcList.getImgs()));
+		data.put("groupBuyImage", ValidateUtil.getImageUrl(orderGroupPurcList.getImgs(), ValidateUtil.ZERO, request));
 		data.put("groupBuyNumber", orderGroupPurcLists.size());
 		data.put("orderMoney", orderGroupPurcBean.getPayMoney());
 
@@ -587,7 +534,7 @@ public class MyOrderController extends BaseController {
 		boolean flag = true;
 		switch (orderType) {
 		case 1:
-			flag = orderGoodsService.cancelOrder(orderID, userID);
+			flag = orderGoodsService.cancelOrder(orderID, userID, OrderGlobal.CANCEL_TYPE_ACCOUNT);
 			break;
 		case 2:
 			flag = orderServiceService.cancelOrder(orderID, userID);
@@ -603,7 +550,7 @@ public class MyOrderController extends BaseController {
 			break;
 		default:
 			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "参数有误");
+			toJson.put("message", "订单类型有误");
 			return toJson;
 		}
 		// 判断订单是否可取消
@@ -616,5 +563,13 @@ public class MyOrderController extends BaseController {
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("message", "订单取消成功");
 		return toJson;
+	}
+
+	public void getOrderStatus(Map<String, Object> data, String orderId) {
+		OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(orderId);
+		data.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
+		data.put("statusName", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
+		data.put("statusDesc", orderTrack == null ? "" : orderTrack.getHandleMsgPhone());
+		data.put("statusTime", DateFormatUtils.format(orderTrack == null ? new Date() : orderTrack.getCreateDate(), "MM-dd HH:mm"));
 	}
 }

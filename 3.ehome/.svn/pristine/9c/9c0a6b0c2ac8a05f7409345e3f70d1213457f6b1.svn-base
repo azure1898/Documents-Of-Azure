@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.BusinessInfoDao">
+    
+	<sql id="businessInfoColumns">
+		a.id AS "id",
+		a.business_name AS "businessName",
+		a.business_pic AS "businessPic",
+		a.contact_person AS "contactPerson",
+		a.phone_num AS "phoneNum",
+		a.addr_pro AS "addrPro",
+		a.addr_city AS "addrCity",
+		a.addr_area AS "addrArea",
+		a.addr_detail AS "addrDetail",
+		a.longitude AS "longitude",
+		a.latitude AS "latitude",
+		a.business_label AS "businessLabel",
+		a.business_hours AS "businessHours",
+		a.recom_flag AS "recomFlag",
+		a.online_flag AS "onlineFlag",
+		a.group_purchase_flag AS "groupPurchaseFlag",
+		a.balance_model AS "balanceModel",
+		a.collect_fees AS "collectFees",
+		a.balance_cycle AS "balanceCycle",
+		a.business_introduce AS "businessIntroduce",
+		a.business_state AS "businessState",
+		a.stop_business_begin_time AS "stopBusinessBeginTime",
+		a.stop_business_end_time AS "stopBusinessEndTime",
+		a.service_model AS "serviceModel",
+		a.service_time_interval AS "serviceTimeInterval",
+		a.service_charge AS "serviceCharge",
+		a.shortest_time AS "shortestTime",
+		a.distribute_model AS "distributeModel",
+		a.distribute_time_interval AS "distributeTimeInterval",
+		a.shortest_arrive_time AS "shortestArriveTime",
+		a.distribute_charge AS "distributeCharge",
+		a.full_distribute_flag AS "fullDistributeFlag",
+		a.full_distribute_money AS "fullDistributeMoney",
+		a.free_distribute_flag AS "freeDistributeFlag",
+		a.free_distribute_money AS "freeDistributeMoney",
+		a.deposit_bank AS "depositBank",
+		a.account_name AS "accountName",
+		a.bank_account AS "bankAccount",
+		a.promotion_flag AS "promotionFlag",
+		a.create_by AS "createBy.id",
+		a.use_state AS "useState",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessInfo">
+		SELECT 
+			<include refid="businessInfoColumns"/>
+		FROM business_info a
+		<include refid="businessInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessInfo">
+		SELECT 
+			<include refid="businessInfoColumns"/>
+		FROM business_info a
+		<include refid="businessInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+			</if>
+			<if test="businessPic != null and businessPic != ''">
+				AND a.business_pic = #{businessPic}
+			</if>
+			<if test="addrPro != null and addrPro != ''">
+				AND a.addr_pro = #{addrPro}
+			</if>
+			<if test="addrCity != null and addrCity != ''">
+				AND a.addr_city = #{addrCity}
+			</if>
+			<if test="addrArea != null and addrArea != ''">
+				AND a.addr_area = #{addrArea}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessInfo">
+		SELECT 
+			<include refid="businessInfoColumns"/>
+		FROM business_info a
+		<include refid="businessInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_info(
+			id,
+			business_name,
+			business_pic,
+			contact_person,
+			phone_num,
+			addr_pro,
+			addr_city,
+			addr_area,
+			addr_detail,
+			longitude,
+			latitude,
+			business_label,
+			business_hours,
+			recom_flag,
+			online_flag,
+			group_purchase_flag,
+			balance_model,
+			collect_fees,
+			balance_cycle,
+			business_introduce,
+			business_state,
+			stop_business_begin_time,
+			stop_business_end_time,
+			service_model,
+			service_time_interval,
+			service_charge,
+			shortest_time,
+			distribute_model,
+			distribute_time_interval,
+			shortest_arrive_time,
+			distribute_charge,
+			full_distribute_flag,
+			full_distribute_money,
+			free_distribute_flag,
+			free_distribute_money,
+			deposit_bank,
+			account_name,
+			bank_account,
+			promotion_flag,
+			create_by,
+			use_state,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessName},
+			#{businessPic},
+			#{contactPerson},
+			#{phoneNum},
+			#{addrPro},
+			#{addrCity},
+			#{addrArea},
+			#{addrDetail},
+			#{longitude},
+			#{latitude},
+			#{businessLabel},
+			#{businessHours},
+			#{recomFlag},
+			#{onlineFlag},
+			#{groupPurchaseFlag},
+			#{balanceModel},
+			#{collectFees},
+			#{balanceCycle},
+			#{businessIntroduce},
+			#{businessState},
+			#{stopBusinessBeginTime},
+			#{stopBusinessEndTime},
+			#{serviceModel},
+			#{serviceTimeInterval},
+			#{serviceCharge},
+			#{shortestTime},
+			#{distributeModel},
+			#{distributeTimeInterval},
+			#{shortestArriveTime},
+			#{distributeCharge},
+			#{fullDistributeFlag},
+			#{fullDistributeMoney},
+			#{freeDistributeFlag},
+			#{freeDistributeMoney},
+			#{depositBank},
+			#{accountName},
+			#{bankAccount},
+			#{promotionFlag},
+			#{createBy.id},
+			#{useState},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_info SET 	
+			business_name = #{businessName},
+			business_pic = #{businessPic},
+			contact_person = #{contactPerson},
+			phone_num = #{phoneNum},
+			addr_pro = #{addrPro},
+			addr_city = #{addrCity},
+			addr_area = #{addrArea},
+			addr_detail = #{addrDetail},
+			longitude = #{longitude},
+			latitude = #{latitude},
+			business_label = #{businessLabel},
+			business_hours = #{businessHours},
+			recom_flag = #{recomFlag},
+			online_flag = #{onlineFlag},
+			group_purchase_flag = #{groupPurchaseFlag},
+			balance_model = #{balanceModel},
+			collect_fees = #{collectFees},
+			balance_cycle = #{balanceCycle},
+			business_introduce = #{businessIntroduce},
+			business_state = #{businessState},
+			stop_business_begin_time = #{stopBusinessBeginTime},
+			stop_business_end_time = #{stopBusinessEndTime},
+			service_model = #{serviceModel},
+			service_time_interval = #{serviceTimeInterval},
+			service_charge = #{serviceCharge},
+			shortest_time = #{shortestTime},
+			distribute_model = #{distributeModel},
+			distribute_time_interval = #{distributeTimeInterval},
+			shortest_arrive_time = #{shortestArriveTime},
+			distribute_charge = #{distributeCharge},
+			full_distribute_flag = #{fullDistributeFlag},
+			full_distribute_money = #{fullDistributeMoney},
+			free_distribute_flag = #{freeDistributeFlag},
+			free_distribute_money = #{freeDistributeMoney},
+			deposit_bank = #{depositBank},
+			account_name = #{accountName},
+			bank_account = #{bankAccount},
+			promotion_flag = #{promotionFlag},
+			use_state = #{useState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================生成分割线=========================== -->
+	
+	<sql id="businessSalesColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.money AS "money",
+		a.benefit_money AS "benefitMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<select id="getBusinessSales" resultType="BusinessSales">
+		SELECT 
+			<include refid="businessSalesColumns"/>
+		FROM business_sales a
+		<where>
+			a.del_flag = 0 AND a.business_info_id = #{businessInfoID}
+		</where>
+		ORDER BY a.money ASC
+	</select>
+	
+	<!-- 获取某种模式下某楼盘的所有的正常商家 -->
+	<select id="getBusinessList" resultType="BusinessInfo">
+		SELECT DISTINCT 
+			<include refid="businessInfoColumns"/>
+		FROM business_info a,business_servicescope b,business_categoryinfo c
+		WHERE
+			a.del_flag=0 AND b.del_flag=0 AND c.del_flag=0
+			AND a.ID=b.BusinessInfo_ID AND a.ID=c.BusinessInfo_ID 
+			AND a.Use_State=0 
+			AND c.Business_Category_Dict_ID	in(SELECT d.id FROM business_categorydict d WHERE d.Prod_Type=#{prodType} AND d.del_flag=0)
+			AND b.Village_Info_ID=#{villageInfoID}
+		<if test="sort == 1">
+			ORDER BY a.recom_flag DESC,a.create_date DESC
+		</if>
+		<if test="sort == 2">
+			<if test="prodType == 0"><!-- 商品模式 -->
+				ORDER BY (SELECT SUM(e.sell_count) FROM goods_info e where e.business_info_id=a.id) DESC,a.create_date DESC
+			</if>
+			<if test="prodType == 1"><!-- 服务模式 -->
+				ORDER BY (SELECT SUM(e.sell_count) FROM service_info e where e.business_info_id=a.id) DESC,a.create_date DESC
+			</if>
+			<if test="prodType == 2"><!-- 课程模式 -->
+				ORDER BY (SELECT SUM(e.sell_count) FROM lesson_info e where e.business_info_id=a.id) DESC,a.create_date DESC
+			</if>
+			<if test="prodType == 3"><!-- 场地模式 -->
+				ORDER BY (SELECT SUM(e.sell_count) FROM field_info e where e.business_info_id=a.id) DESC,a.create_date DESC
+			</if>
+		</if>
+		<if test="sort == 3">
+			ORDER BY a.create_date DESC
+		</if>
+	</select>
+	
+	<!-- 获取商家某自定义单位 -->
+	<select id="getCustomUnit" resultType="java.lang.String">
+		SELECT
+			a.Name
+		FROM
+			Business_Unit a
+		WHERE
+			a.ID = #{businessUnit}
+	</select>
+	
+	<!-- 获取字典表中某单位 -->
+	<select id="getDictUnit" resultType="java.lang.String">
+		SELECT
+			a.label
+		FROM
+			sys_dict a
+		WHERE
+			a.type = 'goods_units'
+		AND a.value = #{value}
+	</select>
+	
+	<!-- 获取某楼盘下所有正常的商家 -->
+	<select id="getNormalBusinessList" resultType="BusinessInfo">
+		SELECT
+			<include refid="businessInfoColumns"/>
+		FROM
+			Business_Info a,
+			Business_ServiceScope b
+		WHERE
+			a.ID = b.BusinessInfo_ID
+		AND a.del_flag = '0'
+		AND b.del_flag = '0'
+		AND b.Village_Info_ID = #{villageInfoId}
+		AND a.Business_State = '1'
+		AND a.Use_State = '0'
+		ORDER BY
+			a.Recom_Flag DESC,
+			a.create_date DESC
+		LIMIT 5
+	</select>
+	<!-- 根据商家分类字典表，获取商家的商品模式 -->
+	<select id="getProdTypeByCategoryDictId" resultType="string">
+		SELECT a.prod_type 
+		FROM Business_CategoryDict a
+		<where>
+			a.del_flag = '0'
+			AND a.id=#{id}
+		</where>
+	</select>
+</mapper>

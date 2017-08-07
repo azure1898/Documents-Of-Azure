@@ -129,7 +129,7 @@
             <li class="clearfix"></li>
         </ul>
     </form:form>
-   <div style="text-align: left; margin: 20px 50px 20px 20px;">
+   <div style="text-align: left;margin:-12px 0px -12px 0px;">
    		
 		<ol class="breadcrumb" style="background-color: #FFF;border: 0px none #fff;">
 		  	<li >

@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.entity;
 
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +8,9 @@ import com.its.common.persistence.DataEntity;
 
 /**
  * 订单-课程培训类子表-课程培训清单Entity
+ * 
  * @author sushipeng
+ * 
  * @version 2017-07-12
  */
 public class OrderLessonList extends DataEntity<OrderLessonList> {
@@ -169,5 +168,4 @@ public class OrderLessonList extends DataEntity<OrderLessonList> {
 	public void setPaySumMoney(Double paySumMoney) {
 		this.paySumMoney = paySumMoney;
 	}
-	
 }

@@ -111,15 +111,15 @@
             </select>
         </li>
     </ul>
-    <form:form id="searchForm" modelAttribute="orderService" action="${ctx}/order/orderService/" method="post" class="breadcrumb form-search">
+    <form:form id="searchForm" modelAttribute="orderService" action="${ctx}/order/orderService/" method="post" class="breadcrumb form-search" style="width:95.5%">
         <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
         <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
         <ul class="ul-form">
             <li><label>时间：</label>
-                <input name="beginCreateDate" id="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                <input name="beginCreateDate" id="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
                     value="<fmt:formatDate value="${orderService.beginCreateDate}" pattern="yyyy-MM-dd"/>"
                     onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/> - 
-                <input name="endCreateDate" id="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                <input name="endCreateDate" id="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
                     value="<fmt:formatDate value="${orderService.endCreateDate}" pattern="yyyy-MM-dd"/>"
                     onclick="WdatePicker({minDate:beginCreateDate.value,dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
             </li>
@@ -127,19 +127,19 @@
                 <form:input path="orderNo" htmlEscape="false" maxlength="64" class="input-medium"/>
             </li>
             <li>
-                <form:select path="serviceType" class="input-medium">
+                <form:select path="serviceType" class="input-mini">
                     <form:option value="" label="服务方式"/>
                     <form:options items="${fns:getDictList('order_service_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
             </li>
             <li>
-                <form:select path="payState" class="input-medium">
+                <form:select path="payState" class="input-mini">
                     <form:option value="" label="支付状态"/>
                     <form:options items="${fns:getDictList('pay_goods_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
             </li>
             <li>
-                <form:select path="orderState" class="input-medium">
+                <form:select path="orderState" class="input-mini">
                     <form:option value="" label="订单状态"/>
                     <form:options items="${fns:getDictList('order_service_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
@@ -152,7 +152,7 @@
         </ul>
     </form:form>
     <sys:message content="${message}"/>
-    <table id="contentTable" class="table table-striped table-bordered table-condensed">
+    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th>订单号</th>
@@ -209,8 +209,7 @@
                     </shiro:hasPermission>
                     <shiro:hasPermission name="order:orderService:complete">
                     <c:if test="${orderService.payState == '1' && orderService.orderState ==  '1'}">
-                        <a id="btuElemComplete" class="btn btn-primary" href="${ctx}/order/orderService/complete?id=${orderService.id}&updateDate=${orderService.updateDateString}"><i class="icon-ok-circle icon-custom"></i>完成</a>
-                        <br/>
+                        <a id="btuElemComplete" class="btn btn-primary" href="${ctx}/order/orderService/complete?id=${orderService.id}&updateDate=${orderService.updateDateString}"><i class="icon-ok-circle icon-custom"></i>完成</a><br/>
                     </c:if>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="order:orderService:cancel">

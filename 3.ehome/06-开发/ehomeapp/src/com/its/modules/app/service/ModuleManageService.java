@@ -63,7 +63,6 @@ public class ModuleManageService extends CrudService<ModuleManageDao, ModuleMana
 	 *            产品模式：0商品购买 1服务预约 2课程购买 3场地预约
 	 * @param businessInfoId
 	 *            商户ID
-	 * @return 模块ID
 	 */
 	public String getModuleId(String prodType, String businessInfoId) {
 		return dao.getModuleId(prodType, businessInfoId);

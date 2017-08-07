@@ -12,6 +12,7 @@ import com.its.common.utils.DateUtils;
 import com.its.common.utils.StringUtils;
 import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.bean.OrderTrackViewBean;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.OrderTrackDao;
@@ -57,13 +58,13 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 	 * @param accountId
 	 *            用户ID
 	 * @param moduleManageId
-	 *            模块ID：0全部订单 -1精品团购 else产品模式下的模块
+	 *            模块ID：-1全部订单 -2精品团购 else产品模式下的模块
 	 * @return List<MyOrderViewBean>
 	 */
 	public List<MyOrderViewBean> getMyOrderViewList(String villageInfoId, String accountId, String moduleManageId) {
 		return dao.getMyOrderViewList(villageInfoId, accountId, moduleManageId);
 	}
-	
+
 	/**
 	 * 获取某用户某楼盘下的最新两条订单
 	 * 
@@ -93,7 +94,8 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 		String[] orderTimes = orderTime.replaceAll("，", ",").split(",");
 		if (orderType == 1 || orderType == 2) {
 			if (orderTimes.length == 3) {
-				if ("1".equals(orderTimes[0])) {
+				// 是否立即上门
+				if (CommonGlobal.YES.equals(orderTimes[0])) {
 					return orderTimes[orderTimes.length - 1];
 				} else {
 					return orderTimes[orderTimes.length - 2] + "~" + orderTimes[orderTimes.length - 1];
@@ -104,7 +106,7 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 			}
 		} else if (orderType == 3) {
 			if (orderTimes.length == 2) {
-				return orderTimes[0] + "至" + orderTimes[1];
+				return orderTimes[0] + "至" + orderTimes[orderTimes.length - 1];
 			} else {
 				return "";
 			}

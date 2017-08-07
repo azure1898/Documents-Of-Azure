@@ -65,4 +65,10 @@ public interface BusinessInfoDao extends CrudDao<BusinessInfo> {
 	 * @return List<BusinessInfo>
 	 */
 	public List<BusinessInfo> getNormalBusinessList(String villageInfoId);
+	/**
+	 * 根据商家分类字典表，获取商家的商品模式
+	 * @param id	商家分类字典表ID
+	 * @return
+	 */
+	public String getProdTypeByCategoryDictId(String id);
 }

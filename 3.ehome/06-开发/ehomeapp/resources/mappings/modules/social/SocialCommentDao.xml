@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialCommentDao">
+    
+	<sql id="socialCommentColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.createtime AS "createtime",
+		a.content AS "content",
+		a.iscomment AS "iscomment",
+		a.fid AS "fid",
+		a.speakid AS "speakid",
+		a.subjectid AS "subjectid",
+		a.delflag AS "delflag"
+	</sql>
+	
+	<sql id="socialCommentJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialComment">
+		SELECT 
+			<include refid="socialCommentColumns"/>
+		FROM social_comment a
+		<include refid="socialCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialComment">
+		SELECT 
+			<include refid="socialCommentColumns"/>
+		FROM social_comment a
+		<include refid="socialCommentJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="iscomment != null and iscomment != ''">
+				AND a.iscomment = #{iscomment}
+			</if>
+			<if test="fid != null and fid != ''">
+				AND a.fid = #{fid}
+			</if>
+			<if test="speakid != null and speakid != ''">
+				AND a.speakid = #{speakid}
+			</if>
+			<if test="subjectid != null and subjectid != ''">
+				AND a.subjectid = #{subjectid}
+			</if>
+			<if test="delflag != null and delflag != ''">
+				AND a.delflag = #{delflag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialComment">
+		SELECT 
+			<include refid="socialCommentColumns"/>
+		FROM social_comment a
+		<include refid="socialCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_comment(
+			id,
+			userid,
+			createtime,
+			content,
+			iscomment,
+			fid,
+			speakid,
+			subjectid,
+			delflag
+		) VALUES (
+			#{id},
+			#{userid},
+			#{createtime},
+			#{content},
+			#{iscomment},
+			#{fid},
+			#{speakid},
+			#{subjectid},
+			#{delflag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_comment SET 	
+			userid = #{userid},
+			createtime = #{createtime},
+			content = #{content},
+			iscomment = #{iscomment},
+			fid = #{fid},
+			speakid = #{speakid},
+			subjectid = #{subjectid},
+			delflag = #{delflag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_comment
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据socialComment查询条件 查询包含头像信息的commentbean 对象 -->
+	<select id="findCommentBeanList" resultType="SocialCommentBean">
+		SELECT 
+			<include refid="socialCommentColumns"/>,
+			(SELECT COUNT(*) FROM social_praise pr WHERE pr.pid = a.id AND pr.state = 1) AS countPraise ,
+			(SELECT COUNT(*) FROM social_praise p WHERE p.userId = #{userId} AND p.pid = a.id  AND p.state = 1) AS isPraise,
+			ac.Nickname as nickName,
+			ac.photo as photo
+		FROM social_comment a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialComment!=null and socialComment.speakid != null and socialComment.speakid != ''">
+				AND a.speakid = #{socialComment.speakid}
+			</if>
+			<if test="socialComment!=null and socialComment.delflag != null and socialComment.delflag != ''">
+				AND a.delflag = #{socialComment.delflag}
+			</if>
+		order by a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 获取二级评论数量 -->
+	<select id="getSecCmtCount" resultType="int">
+		select count(id) from social_comment where 1=1
+		<if test="commentId !=null and commentId != ''">
+			and fid = #{commentId}
+		</if>
+	</select>
+</mapper>

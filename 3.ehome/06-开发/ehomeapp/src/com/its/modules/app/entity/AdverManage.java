@@ -12,11 +12,12 @@ import com.its.common.persistence.DataEntity;
 /**
  * 广告管理Entity
  * @author like
- * @version 2017-07-28
+ * @version 2017-08-04
  */
 public class AdverManage extends DataEntity<AdverManage> {
 	
 	private static final long serialVersionUID = 1L;
+	private String openScreenFlag;		// 是否开屏广告
 	private String positionId;		// 广告位置ID
 	private String skipTime;		// 开屏广告页面跳过时间
 	private String displayType;		// 开屏广告显示频次类型：0每天显示1次  1间隔指定小时显示1次
@@ -28,6 +29,7 @@ public class AdverManage extends DataEntity<AdverManage> {
 	private String linkUrl;		// 外链地址
 	private String moduleId;		// 模块ID
 	private String businessinfoId;		// 商家ID
+	private String categoryId;		// category_id
 	private String goodsId;		// 商品ID
 	private Date starttime;		// 投放开始时间
 	private Date endTime;		// 投放结束时间
@@ -40,6 +42,15 @@ public class AdverManage extends DataEntity<AdverManage> {
 		super(id);
 	}
 
+	@Length(min=0, max=1, message="是否开屏广告长度必须介于 0 和 1 之间")
+	public String getOpenScreenFlag() {
+		return openScreenFlag;
+	}
+
+	public void setOpenScreenFlag(String openScreenFlag) {
+		this.openScreenFlag = openScreenFlag;
+	}
+	
 	@Length(min=0, max=64, message="广告位置ID长度必须介于 0 和 64 之间")
 	public String getPositionId() {
 		return positionId;
@@ -135,6 +146,15 @@ public class AdverManage extends DataEntity<AdverManage> {
 
 	public void setBusinessinfoId(String businessinfoId) {
 		this.businessinfoId = businessinfoId;
+	}
+	
+	@Length(min=0, max=64, message="category_id长度必须介于 0 和 64 之间")
+	public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
 	
 	@Length(min=0, max=64, message="商品ID长度必须介于 0 和 64 之间")

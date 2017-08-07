@@ -28,7 +28,7 @@ public interface OrderTrackDao extends CrudDao<OrderTrack> {
 	 * @param accountId
 	 *            用户ID
 	 * @param moduleManageId
-	 *            模块ID：0全部订单 -1精品团购 else产品模式下的模块
+	 *            模块ID：-1全部订单 -2精品团购 else产品模式下的模块
 	 * @return List<MyOrderViewBean>
 	 */
 	public List<MyOrderViewBean> getMyOrderViewList(@Param("villageInfoId") String villageInfoId, @Param("accountId") String accountId, @Param("moduleManageId") String moduleManageId);

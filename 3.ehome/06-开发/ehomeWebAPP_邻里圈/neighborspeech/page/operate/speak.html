@@ -1,69 +1,223 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>发言_上传图片</title>
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
-    <link href="css/common.css" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+		
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>发言_上传图片</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
-<div class="grey_top">
-   <a href="#"  class="fl font12" style="margin-left:10px;">取消</a>
-   发言
-  <a href="#" class="topic_list_btn2">发送</a>
-  </div>
- <div class="main_box">
+		<style type="text/css">
+			a:link {
+				text-decoration: none;
+			}
+			
+			a:visited {
+				text-decoration: none;
+			}
+			
+			a:hover {
+				text-decoration: none;
+			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+			.bottom {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				background: #EEEEEE;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				padding: 0 10px;
+			}
+			
+			.bottom li {
+				float: left;
+				padding: 10px;
+			}
+			
+			.bottom li:last-child {
+				float: right;
+				font-size: 22px;
+				padding: 0;
+			}
+			
+			.bottom li img {
+				float: left;
+				width: 30px;
+				height: 30px;
+			}
+		</style>
+	</head>
 
-<div class="fyxq_main2">
-<textarea name="" cols="" rows="" class="fyxq2">分享社区的新鲜事!</textarea>
-</div>
-<div class="speak_main">
-<ul>
-<li>
-  <div class="tupian"><img src="images/pic01.jpg" width="110" height="110"></div>
-  <div class="close"><img src="images/close3.png" width="30" height="30"></div>
-   </li>
-   <li>
-  <div class="tupian"><img src="images/pic01.jpg" width="110" height="110"></div>
-  <div class="close"><img src="images/close3.png" width="30" height="30"></div>
-   </li>
-   <li>
-  <div class="wetianjia"></div>
-   </li>
-</ul>
-</div>
+	<body>
+		<div id="app" v-cloak>
 
-<div class="fyxq_main_r"></div>
-<div class="clear"></div>
+			<!--speak第一页-->
+			<div id="ye1">
+				<div class="grey_top">
+					<a href="#" class="fl font12" style="margin-left:10px;">取消</a> 发言
+					<a href="#" class="topic_list_btn2">发送</a>
+				</div>
+				<div class="main_box">
 
-<table width="100%" border="0" style="margin-left:10px;">
-  <tr>
-    <td width="6%">&nbsp;</td>
-    <td width="67%">&nbsp;</td>
-     <td width="27%"><div class="topic_list_btn3">可见公开</div></td>
-  </tr>
-</table>
+					<div class="fyxq_main2">
+						<textarea name="" cols="" rows="" class="fyxq2">分享社区的新鲜事!</textarea>
+					</div>
+					<div class="speak_main" v-if="uploadImage.length>0">
+						<ul>
+							<li v-for="(image,index) in uploadImage">
+								<div class="tupian"><img :src="image.url" width="110" height="110"></div>
+								<div class="close"><img src="../../images/close3.png" width="30" height="30" @click="deleteImg(index)"></div>
+							</li>
+							<!--<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="close"><img src="../../images/close3.png" width="30" height="30"></div>
+							</li>-->
+							<li>
+								<div class="wetianjia" @click="yema(3)"></div>
+							</li>
+						</ul>
+					</div>
 
- </div>
- 
+					<div class="fyxq_main_r"></div>
+					<div class="clear"></div>
 
- 
- 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-  </body>
+					<table width="100%" border="0" style="margin-left:10px;">
+						<tr>
+							<td width="6%">&nbsp;</td>
+							<td width="67%">&nbsp;</td>
+							<td width="27%">
+								<div class="topic_list_btn3" @click="yema(2)" v-if="choose==1">可见公开</div>
+								<div class="topic_list_btn3" @click="yema(2)" v-if="choose==2">粉丝可见</div>
+								<div class="topic_list_btn3" @click="yema(2)" v-if="choose==3">好友可见</div>
+							</td>
+						</tr>
+					</table>
+					<div class="bottom">
+						<ul>
+							<li><img src="../../images/photo.png" @click="yema(3)"/></li>
+							<li><img src="../../images/icon.png" /></li>
+							<li><img src="../../images/icon2.png" /></li>
+							<li><img src="../../images/xiaolian.png" /></li>
+							<li><span v-text="textnum"></span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!--选择可见范围-->
+			<div id="ye2" style="display: none;">
+				<div class="grey_top">
+					<a href="#" class="black_back" @click="yema(1)"></a>
+					选择可见范围
+				</div>
+				<div class="main_box" style="padding:0;">
+					<div class="my_message" @click="choice(1);yema(1)">
+						<div class="my_message_left4"><img :src="choose==1 ? chooseUrl : chooseUrl2" width="32" height="32">
+						</div>
+						<div class="my_message_right2">
+							<p>&nbsp;&nbsp;
+								<font style="font-size:16px; color:#000;">公开</font>
+							</p>
+							<p>&nbsp;&nbsp;所有人可见</p>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="my_message" @click="choice(2);yema(1)">
+						<div class="my_message_left4"><img :src="choose==2 ? chooseUrl : chooseUrl2" width="32" height="32">
+						</div>
+						<div class="my_message_right2">
+							<p>&nbsp;&nbsp;
+								<font style="font-size:16px; color:#000;">粉丝可见</font>
+							</p>
+							<p>&nbsp;&nbsp;关注我的粉丝可见</p>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="my_message" style="border-bottom:none;" @click="choice(3);yema(1)">
+						<div class="my_message_left4"><img :src="choose==3 ? chooseUrl : chooseUrl2" width="32" height="32">
+						</div>
+						<div class="my_message_right2">
+							<p>&nbsp;&nbsp;
+								<font style="font-size:16px; color:#000;">好友可见</font>
+							</p>
+							<p>&nbsp;&nbsp;相互关注好友可见</p>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<!--选择照片-->
+			<div id="ye3" style="display: none;">
+				<div class="grey_top">
+					<a href="#" class="fl font12" style="margin-left:10px;" @click="yema(1)">取消</a> 上传图片
+					<a href="#" class="topic_list_btn4" @click="yema(1);confirm()" >发送</a>
+					<div class="topic_list_btn4_tip" v-if="uploadImageNum!=0" >{{uploadImageNum}}</div>
+				</div>
+				<div class="main_box">
+					<div class="speak_main2">
+						<ul>
+							<li>
+								<div class="xiangji"></div>
+							</li>
+							<li v-for="img in speakData" @click="choiceImg(img)">
+								<div class="tupian"><img :src="img.url" width="110" height="110"></div>
+								<div class="xuanze"><img :src="img.isactive==0 ? choiceIcon:choiceIcon2" width="32" height="32"></div>
+							</li>
+							<!--<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="xuanze"><img src="../../images/gx_no.png" width="36" height="36"></div>
+							</li>
+							<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="xuanze"><img src="../../images/gx.png" width="32" height="32"></div>
+							</li>
+							<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="xuanze"><img src="../../images/gx_no.png" width="36" height="36"></div>
+							</li>
+							<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="xuanze"><img src="../../images/gx.png" width="32" height="32"></div>
+							</li>
+							<li>
+								<div class="tupian"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+								<div class="xuanze"><img src="../../images/gx_no.png" width="36" height="36"></div>
+							</li>-->
+						</ul>
+					</div>
+
+					<div class="fyxq_main_r"></div>
+					<div class="clear"></div>
+
+				</div>
+			</div>
+
+		</div>
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/speak.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
 </html>

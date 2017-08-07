@@ -35,8 +35,9 @@ var vm = new Vue({
 				
 				if(res.data.data.deliveryDate && res.data.data.deliveryDate.length > 0){
 					var delivery = res.data.data.deliveryDate[0];
+					var delivery2 = res.data.data.deliveryDate[1];
 					_this.deliveryDate.date = delivery.date;
-					
+					_this.deliveryDate.date = delivery2.date;
 					if(delivery.timePeriod && delivery.timePeriod.length >0){
 //							if(delivery.timePeriod && delivery.timePeriod.length >=0){
 						_this.deliveryDate.isImmediate = delivery.timePeriod[0].isImmediate;
@@ -50,6 +51,21 @@ var vm = new Vue({
 							_this.deliveryDate.label = "预计"+this.deliveryDate.desc+" "+delivery.timePeriod[0].start+'~'+delivery.timePeriod[0].end+"送达";
 						}	
 					}		
+				else{
+					_this.deliveryDate.isImmediate = delivery2.timePeriod[0].isImmediate;
+						_this.deliveryDate.start = delivery2.timePeriod[0].start;
+						_this.deliveryDate.end = delivery2.timePeriod[0].end;
+					
+						if(delivery2.timePeriod[0].isImmediate == 1){
+							_this.deliveryDate.label = "立即配送（预计"+delivery2.timePeriod[0].end+"送达）";
+						}
+						else{
+							_this.deliveryDate.label = "预计"+this.deliveryDate.desc+" "+delivery2.timePeriod[0].start+'~'+delivery2.timePeriod[0].end+"送达";
+						}	
+					
+					
+					
+				}
 				}
 				_this.timePeriod = res.data.data.deliveryDate[0].timePeriod;
 			})
@@ -88,8 +104,8 @@ var vm = new Vue({
 				contactPhone:_this.order.contactPhone,
 				contactAddress:_this.order.contactAddress,
 				isImmediate:0,
-				deliveryStart:"2017/8/3 19:00",
-				deliveryEnd:"2017/8/3 20:00",
+				deliveryStart:_this.deliveryDate.data+_this.deliveryDate.start,
+				deliveryEnd:_this.deliveryDate.data+_this.deliveryDate.end,
 				leaveMessage:""
 			},{emulateJSON: true}).then(function(res){
 				//alert(res);
@@ -98,7 +114,7 @@ var vm = new Vue({
 	}
 });
 
-$("#timeModal").on("show.bs.modal",function(){
-	vm.timePeriod=[];
-	$("#timeModal .business_mainmenu2 li:eq(0)").click();
-});
+//$("#timeModal").on("show.bs.modal",function(){
+//	vm.timePeriod=[];
+//	$("#timeModal .business_mainmenu2 li:eq(0)").click();
+//});

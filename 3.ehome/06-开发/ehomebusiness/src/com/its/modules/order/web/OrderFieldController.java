@@ -262,13 +262,11 @@ public class OrderFieldController extends BaseController {
             for (OrderField orderFieldExcelData : orderFieldList) {
                 // 时间
                 StringBuffer time = new StringBuffer();
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderFieldExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderFieldExcelData.getCreateDate()) {
                     time.append("下单：");
                     time.append(DateUtils.formatDate(orderFieldExcelData.getCreateDate(), "yyyy-MM-dd HH:mm"));
                 }
-                if (StringUtils
-                        .isNotBlank(DateUtils.formatDate(orderFieldExcelData.getPayTime(), "yyyy-MM-dd HH:mm"))) {
+                if (null != orderFieldExcelData.getPayTime()) {
                     time.append((char) 10);
                     time.append("支付：");
                     time.append(DateUtils.formatDate(orderFieldExcelData.getPayTime(), "yyyy-MM-dd HH:mm"));
@@ -278,14 +276,14 @@ public class OrderFieldController extends BaseController {
                 // 预约场地
                 StringBuffer fieldName = new StringBuffer();
                 fieldName.append(orderFieldExcelData.getName());
-                if (StringUtils.isNotBlank(DateUtils
-                        .formatDate(orderFieldExcelData.getOrderFieldList().getAppointmentTime(), "yyyy年M月d日"))) {
+                if (null != orderFieldExcelData.getOrderFieldList()
+                        && null != orderFieldExcelData.getOrderFieldList().getAppointmentTime()) {
                     fieldName.append((char) 10);
                     fieldName.append(DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getAppointmentTime(),
                             "yyyy年M月d日"));
                 }
-                if (StringUtils.isNotBlank(
-                        DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getStartTime(), "HH:mm"))) {
+                if (null != orderFieldExcelData.getOrderFieldList()
+                        && null != orderFieldExcelData.getOrderFieldList().getStartTime()) {
                     fieldName.append((char) 10);
                     fieldName.append(
                             DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getStartTime(), "HH:mm"));
@@ -304,7 +302,7 @@ public class OrderFieldController extends BaseController {
             model.addAttribute("type", "error");
         }
         // 迁移至服务订单列表页面
-        return "modules/order/orderServiceList";
+        return "modules/order/orderFieldList";
     }
 
     /**

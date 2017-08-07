@@ -159,4 +159,15 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 获取某商品订单的订单清单 -->
+	<select id="getOrderGoodsLists" resultType="OrderGoodsList">
+		SELECT
+			<include refid="orderGoodsListColumns"/>
+		FROM
+			Order_Goods_List a
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Order_Goods_ID = #{orderGoodsId}
+	</select>
+	
 </mapper>

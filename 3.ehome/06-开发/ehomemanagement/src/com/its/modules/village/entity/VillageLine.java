@@ -39,14 +39,14 @@ public class VillageLine extends DataEntity<VillageLine> {
     private VillageInfo villageInfo;// 楼盘信息对象
 
     private String[] villageIdList;// 楼盘Id的集合 批量设置模块时使用 add by zhujiao
-    private VillageLinerecombusitype recomBusType;// 楼盘产品线推荐商家模式
-    private VillageLinerecombusitypedetail recomBusTypeDetail;// 楼盘产品线推荐商家模式明细
-    private VillageLinerecommodule recomModule;// 楼盘产品线推荐模块或者商家
-    private VillageLinerecomspecial recomSpecial;// 楼盘产品线推荐专题
 
+    private VillageLinerecombusitype recomBusType;// 楼盘产品线推荐商家模式
     private List<VillageLinerecombusitype> recomBusTypeList = Lists.newArrayList();// 楼盘产品线推荐商家模式列表
-    private List<VillageLinerecombusitypedetail> recomBusTypeDetailList = Lists.newArrayList();// 楼盘产品线推荐商家模式明细列表
+
+    private VillageLinerecommodule recomModule;// 楼盘产品线推荐模块或者商家
     private List<VillageLinerecommodule> recomModuleList = Lists.newArrayList();// 楼盘产品线推荐模块或者商家列表
+
+    private VillageLinerecomspecial recomSpecial;// 楼盘产品线推荐专题
     private List<VillageLinerecomspecial> recomSpecialList = Lists.newArrayList();// 楼盘产品线推荐专题列表
 
     public VillageLine() {
@@ -184,9 +184,10 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-   /* public void setCommunityModuleIds(String[] communityModuleIds) {
-        this.communityModule = StringUtils.arrToStr(communityModuleIds);
-    }*/
+    /*
+     * public void setCommunityModuleIds(String[] communityModuleIds) {
+     * this.communityModule = StringUtils.arrToStr(communityModuleIds); }
+     */
 
     // 生活模块数组集合
     public String[] getLifeModuleIds() {
@@ -197,9 +198,10 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-    /*public void setLifeModuleIds(String[] lifeModuleIds) {
-        this.lifeModule = StringUtils.arrToStr(lifeModuleIds);
-    }*/
+    /*
+     * public void setLifeModuleIds(String[] lifeModuleIds) { this.lifeModule =
+     * StringUtils.arrToStr(lifeModuleIds); }
+     */
 
     // 首页推荐模块集合
     public String[] getMaintRecomModuleIds() {
@@ -210,9 +212,10 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-/*    public void setMaintRecomModuleIds(String[] maintRecomModuleIds) {
-        this.maintRecomModule = StringUtils.arrToStr(maintRecomModuleIds);
-    }*/
+    /*
+     * public void setMaintRecomModuleIds(String[] maintRecomModuleIds) {
+     * this.maintRecomModule = StringUtils.arrToStr(maintRecomModuleIds); }
+     */
 
     // 优家推荐模块集合
     public String[] getLifeRecomModuleIds() {
@@ -223,9 +226,10 @@ public class VillageLine extends DataEntity<VillageLine> {
         }
     }
 
-   /* public void setLifeRecomModuleIds(String[] lifeRecomModuleIds) {
-        this.lifeRecomModule = StringUtils.arrToStr(lifeRecomModuleIds);
-    }*/
+    /*
+     * public void setLifeRecomModuleIds(String[] lifeRecomModuleIds) {
+     * this.lifeRecomModule = StringUtils.arrToStr(lifeRecomModuleIds); }
+     */
     // 社区推荐模块集合
     public String[] getCommunityRecomModuleIds() {
         if (communityRecomModule != null) {
@@ -234,10 +238,12 @@ public class VillageLine extends DataEntity<VillageLine> {
             return null;
         }
     }
-    
-  /*  public void setCommunityRecomModuleIds(String[] communityRecomModuleIds) {
-        this.communityRecomModule = StringUtils.arrToStr(communityRecomModuleIds);
-    }*/
+
+    /*
+     * public void setCommunityRecomModuleIds(String[] communityRecomModuleIds)
+     * { this.communityRecomModule =
+     * StringUtils.arrToStr(communityRecomModuleIds); }
+     */
     // # add by zhujiao ---end
 
     public VillageLinerecombusitype getRecomBusType() {
@@ -246,14 +252,6 @@ public class VillageLine extends DataEntity<VillageLine> {
 
     public void setRecomBusType(VillageLinerecombusitype recomBusType) {
         this.recomBusType = recomBusType;
-    }
-
-    public VillageLinerecombusitypedetail getRecomBusTypeDetail() {
-        return recomBusTypeDetail;
-    }
-
-    public void setRecomBusTypeDetail(VillageLinerecombusitypedetail recomBusTypeDetail) {
-        this.recomBusTypeDetail = recomBusTypeDetail;
     }
 
     public VillageLinerecommodule getRecomModule() {
@@ -278,14 +276,6 @@ public class VillageLine extends DataEntity<VillageLine> {
 
     public void setRecomBusTypeList(List<VillageLinerecombusitype> recomBusTypeList) {
         this.recomBusTypeList = recomBusTypeList;
-    }
-
-    public List<VillageLinerecombusitypedetail> getRecomBusTypeDetailList() {
-        return recomBusTypeDetailList;
-    }
-
-    public void setRecomBusTypeDetailList(List<VillageLinerecombusitypedetail> recomBusTypeDetailList) {
-        this.recomBusTypeDetailList = recomBusTypeDetailList;
     }
 
     public List<VillageLinerecommodule> getRecomModuleList() {

@@ -76,7 +76,7 @@ public class OrderFieldListService extends CrudService<OrderFieldListDao, OrderF
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public void cancelOrderFieldList(String orderNo,String id) {
+	public void cancelOrderFieldList(String orderId,String orderNo,String id) {
 		fieldPartitionPriceDao.cancelOrderFieldList(id);
 		dao.cancelOrderFieldList(id);
 		orderTrackService.saveOrdMsg(orderNo,"取消预约成功","取消场地预约成功（商家后台预约）");

@@ -80,7 +80,7 @@
             </div>
             <div>
             <form:form id="searchForm" modelAttribute="" action="${ctx}/service/serviceSortInfo" method="post" class="">
-                <table id="contentTable" class="table table-bordered table-condensed">
+                <table id="contentTable" class="table table-striped table-bordered table-condensed">
                     <tbody>
                         <c:forEach items="${list}" var="sortInfo">
                             <tr>

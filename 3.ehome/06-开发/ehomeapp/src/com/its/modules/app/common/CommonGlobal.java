@@ -4,14 +4,18 @@ package com.its.modules.app.common;
  * 通用字典表
  */
 public class CommonGlobal {
+	/** 否 */
+	public static final String NO = "0";
+	/** 是 */
+	public static final String YES = "1";
 
 	/* <============================我的订单筛选模块============================> */
 	/** 全部订单：模块ID */
-	public static final String ALL_ORDER_MODULEID = "0";
+	public static final String ALL_ORDER_MODULEID = "-1";
 	/** 全部订单：文字描述 */
 	public static final String ALL_ORDER_DESC = "全部订单";
 	/** 精品团购 ：模块ID */
-	public static final String GROUP_PURCHASE_MODULEID = "-1";
+	public static final String GROUP_PURCHASE_MODULEID = "-2";
 	/** 精品团购：文字描述 */
 	public static final String GROUP_PURCHASE_DESC = "精品团购";
 

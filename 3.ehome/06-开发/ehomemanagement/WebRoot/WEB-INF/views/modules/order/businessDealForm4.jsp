@@ -85,10 +85,13 @@
 							</c:if></td>
 						<td>${orderGroupPurcList.remarks }</td>
 						<td>${orderGroupPurcList.updateBy.name }</td>
-						<td><c:if test="${orderGroupPurcList.groupPurcState == 0}">
+						<td>
+						<!-- 
+							<c:if test="${orderGroupPurcList.groupPurcState == 0}">
 								<a id="btuElemComplete" class="btn btn-primary" href="${ctx}/coupon/testCoupon?id=${orderGroupPurcList.id}&groupPurcNumber=${orderGroupPurcList.groupPurcNumber }"><i
 									class="icon-ok-circle icon-custom"></i>验券消费</a>
 							</c:if></td>
+							 -->
 					</tr>
 				</c:forEach>
 			</tbody>

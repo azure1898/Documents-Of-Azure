@@ -130,6 +130,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
         orderField.setPayOrg("3");
         orderField.setPayState("1");
         orderField.setPayTime(new Date());
+        orderField.setProdType("3");
         // 保存订单
         dao.insert(orderField);
         // 保存订单明细
@@ -163,6 +164,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
         orderTrack.setHandleMsg("场地预约成功（商家后台预约）");
         orderTrack.setStateMsgPhone("预约成功");
         orderTrack.setHandleMsgPhone("付款成功，等待消费");
+        orderTrack.setCreateName("商家账号");
         orderTrackService.save(orderTrack);
     }
 
@@ -300,6 +302,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
         orderTrack.setHandleMsg("商家取消预订（自动退款）");
         orderTrack.setStateMsgPhone("已取消");
         orderTrack.setHandleMsgPhone("订单已成功取消");
+        orderTrack.setCreateName("商家账号");
         orderTrack.setRemarks(orderFieldFromJSP.getCancelRemarks());
         orderTrackService.save(orderTrack);
 
@@ -310,7 +313,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
         orderTrack.setOrderType(orderField.getProdType());
         orderTrack.setStateMsgPhone("退款中");
         orderTrack.setHandleMsgPhone("订单开始退款，等待退款");
-        orderTrack.setRemarks(orderFieldFromJSP.getCancelRemarks());
+        orderTrack.setCreateName("商家账号");
         orderTrackService.save(orderTrack);
         return 1;
     }

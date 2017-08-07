@@ -6,7 +6,7 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function() {
-            top.$.jBox.tip.mess = null;
+        	top.$.jBox.tip.mess = null;
             //$("#name").focus();
             $("#inputForm").validate({
                 submitHandler: function(form){
@@ -81,7 +81,6 @@
                 alertx("请填写取消原因");
                 return false;
             }
-
             return true;
         }
     </script>
@@ -111,15 +110,15 @@
             </select>
         </li>
     </ul>
-    <form:form id="searchForm" modelAttribute="orderField" action="${ctx}/order/orderField/" method="post" class="breadcrumb form-search">
+    <form:form id="searchForm" modelAttribute="orderField" action="${ctx}/order/orderField/" method="post" class="breadcrumb form-search" style="width:95.5%">
         <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
         <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
         <ul class="ul-form">
             <li><label>时间：</label>
-                <input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                <input name="beginCreateDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
                     value="<fmt:formatDate value="${orderField.beginCreateDate}" pattern="yyyy-MM-dd"/>"
                     onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/> - 
-                <input name="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                <input name="endCreateDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
                     value="<fmt:formatDate value="${orderField.endCreateDate}" pattern="yyyy-MM-dd"/>"
                     onclick="WdatePicker({minDate:beginCreateDate.value,dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
             </li>
@@ -127,19 +126,19 @@
                 <form:input path="orderNo" htmlEscape="false" maxlength="64" class="input-medium"/>
             </li>
             <li>
-                <form:select path="fieldInfoId" class="input-medium">
+                <form:select path="fieldInfoId" class="input-mini">
                     <form:option value="" label="全部场地"/>
                     <form:options items="${fieldInfoOptionList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
             </li>
             <li>
-                <form:select path="payState" class="input-medium">
+                <form:select path="payState" class="input-mini">
                     <form:option value="" label="支付状态"/>
                     <form:options items="${fns:getDictList('pay_goods_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
             </li>
             <li>
-                <form:select path="orderState" class="input-medium">
+                <form:select path="orderState" class="input-mini">
                     <form:option value="" label="订单状态"/>
                     <form:options items="${fns:getDictList('order_lesson_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
@@ -150,20 +149,20 @@
         </ul>
     </form:form>
     <sys:message content="${message}"/>
-    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:99%;">
+    <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
         <thead>
             <tr>
                 <th style="width:13%;">订单号</th>
-                <th style="width:10%;">姓名</th>
+                <th style="width:11.5%;">姓名</th>
                 <th style="width:13%;">电话</th>
                 <th style="width:13%;">预约场地</th>
                 <th style="width:6%;">金额</th>
-                <th style="width:8%;">终端类型</th>
-                <th style="width:8%;">支付状态</th>
-                <th style="width:8%;">订单状态</th>
+                <th style="width:6.5%;">终端类型</th>
+                <th style="width:6.5%;">支付状态</th>
+                <th style="width:6.5%;">订单状态</th>
                 <th style="width:15%;">时间</th>
                 <shiro:hasPermission name="order:orderField:edit">
-                    <th style="width:6%;">操作</th>
+                    <th style="width:9%;">操作</th>
                 </shiro:hasPermission>
             </tr>
         </thead>

@@ -106,7 +106,7 @@
   		<!--<div class="ts_txt">满20减2，还差5元</div>-->
   		<div class="business_bottom">
   			<div class="total_amount">待支付：{{order.totalMoney | formatDecimal}}</div>
-  			<div class="total_amount">优惠：{{order.activityDiscounted | formatDecimal}}</div>
+  			<div class="total_amount" v-if="order.activityDiscounted&&order.activityDiscounted>0">优惠：{{order.activityDiscounted | formatDecimal}}</div>
   			<div class="business_zbtn"><a href="#" v-on:click="submitOrder">去结算</a></div>
   		</div>
   		<div id="timeModal" class="modal fade" tabindex="-1" role="dialog">

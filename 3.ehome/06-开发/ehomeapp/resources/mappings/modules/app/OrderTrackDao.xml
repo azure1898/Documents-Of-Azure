@@ -150,10 +150,10 @@
 		WHERE
 			a.Village_Info_ID = #{villageInfoId}
 		AND a.Account_ID = #{accountId}
-		<if test="moduleManageId == -1">
+		<if test="moduleManageId == -2">
 			AND a.Order_Type = 5
 		</if>
-		<if test="moduleManageId != 0 and moduleManageId != -1">
+		<if test="moduleManageId != -1 and moduleManageId != -2">
 			AND a.Module_Manage_ID = #{moduleManageId}
 		</if>
 		ORDER BY

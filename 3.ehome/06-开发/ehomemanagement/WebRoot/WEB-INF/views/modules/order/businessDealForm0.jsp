@@ -97,7 +97,9 @@
                         支付：<fmt:formatDate value="${orderGoods.payTime}" pattern="yyyy-MM-dd HH:mm"/>
                     </c:if>
                 </td>
-                <shiro:hasPermission name="order:orderGoods:edit"><td>
+                <shiro:hasPermission name="order:orderGoods:edit">
+                <td>
+                <!-- 
                     <c:if test="${orderGoods.payState == '1' && orderGoods.orderState ==  '0'}">
                         <a id="btuElemAccept" class="btn btn-primary" href="${ctx}/order/businessDeal/accept?id=${orderGoods.id}&updateDate=${orderGoods.updateDateString}"><i class="icon-ok icon-custom"></i>受理</a>
                         <br/>
@@ -109,6 +111,7 @@
                     <c:if test="${orderGoods.orderState !=  '3' && orderGoods.orderState !=  '4'}">
                         <a id="btuElemCancel" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ><i class="icon-remove icon-custom"></i>取消</a><br/>
                     </c:if>
+                   -->
                 </td></shiro:hasPermission>
             </tr>
         </tbody>

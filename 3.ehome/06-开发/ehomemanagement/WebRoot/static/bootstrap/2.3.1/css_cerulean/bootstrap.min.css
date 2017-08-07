@@ -2043,6 +2043,19 @@ table td[class*="span"], table th[class*="span"], .row-fluid table td[class*="sp
 	background-position: 14px 14px;
 	background-repeat: no-repeat
 }
+/*add by zonghehoutai*/
+[class^="ehomeicon-"], [class*=" ehomeicon-"] {
+	display: inline-block;
+	width: 19px;
+	height: 28px;
+	margin-top: 1px;
+	margin-bottom: 3px;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("../img/glyphicons-halflings_02.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat
+}
 
 .icon-white, .nav-pills>.active>a>[class^="icon-"], .nav-pills>.active>a>[class*=" icon-"],
 	.nav-list>.active>a>[class^="icon-"], .nav-list>.active>a>[class*=" icon-"],
@@ -2653,6 +2666,37 @@ table td[class*="span"], table th[class*="span"], .row-fluid table td[class*="sp
 }
 .icon-yunying {
 	background-position: -168px -168px;
+}
+/*add by pingtai*/
+.ehomeicon-caiwu {
+	background-position: 0px 0px;
+}
+.ehomeicon-ad {
+	background-position: -24px 0px;
+}
+.ehomeicon-huiyuan {
+	background-position: -48px 0px;
+}
+.ehomeicon-jichu {
+	background-position: -72px 0px;
+}
+.ehomeicon-mokuai {
+	background-position: -96px 0px;
+}
+.ehomeicon-shop {
+	background-position: -120px 0px;
+}
+.ehomeicon-bullhorn {
+	background-position: -144px 0px;
+}
+.ehomeicon-sys {
+	background-position: -168px 0px;
+}
+.ehomeicon-bell {
+	background-position: -192px 0px;
+}
+.ehomeicon-yunying {
+	background-position: -216px 0px;
 }
 
 .dropup, .dropdown {

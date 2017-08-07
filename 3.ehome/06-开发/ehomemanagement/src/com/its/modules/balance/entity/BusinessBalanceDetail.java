@@ -4,10 +4,13 @@
 package com.its.modules.balance.entity;
 
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.its.common.persistence.DataEntity;
 import com.its.common.utils.excel.annotation.ExcelField;
+import com.its.modules.sys.utils.DictUtils;
 
 /**
  * 商家结算明细信息Entity
@@ -35,7 +38,7 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	private String payCheckState; // 支付对账状态(修改状态时两边都要修改)
 	private Date balanceStartTime; // 结算周期开始时间
 	private Date balanceEndTime; // 结算周期结束时间
-	
+
 	// 导出结算明细
 	private String serialNum; // 序号
 	private String businessName; // 商户名称
@@ -149,7 +152,7 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	}
 
 	@Length(min = 0, max = 64, message = "付款方式长度必须介于 0 和 64 之间")
-	@ExcelField(title = "付款方式", type = 1, align = 2, sort = 9,dictType="pay_type")
+	@ExcelField(title = "付款方式", type = 1, align = 2, sort = 9, dictType = "pay_type")
 	public String getPayType() {
 		return payType;
 	}
@@ -178,13 +181,21 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	}
 
 	@Length(min = 0, max = 1, message = "支付对账状态(修改状态时两边都要修改)长度必须介于 0 和 1 之间")
-	@ExcelField(title = "支付对账状态", type = 1, align = 2, sort = 11, dictType="pay_check_state")
 	public String getPayCheckState() {
 		return payCheckState;
 	}
 
 	public void setPayCheckState(String payCheckState) {
 		this.payCheckState = payCheckState;
+	}
+
+	@ExcelField(title = "支付对账状态", type = 1, align = 2, sort = 11)
+	public String getPayCheckStateName() {
+		if (StringUtils.isEmpty(this.getPayCheckState())) {
+			this.setPayCheckState("0");
+		}
+		
+		return DictUtils.getDictLabel(this.getPayCheckState(), "pay_check_state", "未对账");
 	}
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -195,7 +206,7 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	public void setBalanceStartTime(Date balanceStartTime) {
 		this.balanceStartTime = balanceStartTime;
 	}
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getBalanceEndTime() {
 		return balanceEndTime;
@@ -204,7 +215,7 @@ public class BusinessBalanceDetail extends DataEntity<BusinessBalanceDetail> {
 	public void setBalanceEndTime(Date balanceEndTime) {
 		this.balanceEndTime = balanceEndTime;
 	}
-	
+
 	@ExcelField(title = "序号", type = 1, align = 2, sort = 1)
 	public String getSerialNum() {
 		return serialNum;

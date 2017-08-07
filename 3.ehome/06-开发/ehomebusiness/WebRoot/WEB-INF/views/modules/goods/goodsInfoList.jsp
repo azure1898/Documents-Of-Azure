@@ -128,25 +128,25 @@
 		    <form:hidden id="sortItem" path="sortItem" htmlEscape="false" />
 		    <form:hidden id="sort" path="sort" htmlEscape="false" />
 		    </li>
-            <li class="btns"><input id="btnMuliDelete" class="btn btn-primary" type="button" value="删除" onclick="muliDelete()"/></li>
-            <li class="btns"><input id="btnMuliGrounding" class="btn btn-primary" type="button" onclick="muliGrounding()" value="上架"/></li>
-            <li class="btns"><input id="btnMuliUndercarriage" class="btn btn-primary" type="button" onclick="muliUndercarriage()" value="下架"/></li>
+            <li class="btns"><input id="btnMuliDelete" class="commonbtn" style="width:60px" type="button" value="删除" onclick="muliDelete()"/></li>
+            <li class="btns"><input id="btnMuliGrounding" class="commonbtn" style="width:60px" type="button" onclick="muliGrounding()" value="上架"/></li>
+            <li class="btns"><input id="btnMuliUndercarriage" class="commonbtn" style="width:60px" type="button" onclick="muliUndercarriage()" value="下架"/></li>
 		    <li>
 			<li class="btns" style="float:right;padding-right:10px;">
-                <form:select path="sortInfoId" class="input-medium">
+                <form:select path="sortInfoId"  style="width:110px;height:30px;" >
                     <form:option value="" label="所有分类"/>
                     <form:options items="${sortInfoList}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
-                <form:select path="recommend" class="input-medium">
+                <form:select path="recommend" style="width:110px;height:30px;">
                     <form:option value="" label="推荐状态"/>
                     <form:options items="${fns:getDictList('Quota')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
-                <form:select path="state" class="input-medium">
+                <form:select path="state" style="width:110px;height:30px;">
                     <form:option value="" label="商品状态"/>
                     <form:options items="${fns:getDictList('goods_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
-			<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
-            <input id="btnAddGoods" class="btn btn-primary" type="button" onclick="window.location.href='${ctx}/goods/goodsInfo/form?sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}'" value="新增商品"/>
+			<input id="btnSubmit" class="commonbtn" type="submit" value="查询" style="width:60px"/>
+            <input id="btnAddGoods" class="commonbtn" style="width:80px" type="button" onclick="window.location.href='${ctx}/goods/goodsInfo/form?sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}'" value="新增商品"/>
 			</li>
 			<li class="clearfix"></li>
 		</ul>
@@ -238,8 +238,9 @@
                     </c:if>
 				</td>
 				<td>
-    				<a href="${ctx}/goods/goodsInfo/form?id=${goodsInfoTemp.id}&sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}">编辑</a>
-					<a href="${ctx}/goods/goodsInfo/delete?id=${goodsInfoTemp.id}&sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}" onclick="return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', this.href)">删除</a>
+				    <input type="button" class="commonsmallbtn" value="编辑" style="width:40px;" onclick="window.location.href='${ctx}/goods/goodsInfo/form?id=${goodsInfoTemp.id}&sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}'">
+				    <div style="margin:0 auto;height:3px;"></div>
+				    <input type="button" class="commonsmallbtn" value="删除" style="width:40px;" onclick="return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', '${ctx}/goods/goodsInfo/delete?id=${goodsInfoTemp.id}&sortItem=${goodsInfo.sortItem}&sort=${goodsInfo.sort}')">
 				</td>
 			</tr>
 		</c:forEach>

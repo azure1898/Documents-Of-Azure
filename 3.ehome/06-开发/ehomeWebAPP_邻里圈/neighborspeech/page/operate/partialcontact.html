@@ -1,0 +1,114 @@
+<div id="partialContact">
+	<div class="grey_top">
+		<a href="#" class="black_back"></a>
+		选择联系人
+		<a href="#" class="topic_list_btn4">发送</a>
+		<div class="topic_list_btn4_tip">3</div>
+	</div>
+	<div class="main_box">
+		<div class="choose_cont">
+			<ul>
+				<li><img src="../../images/pic01.jpg" width="110" height="110">
+					<p>蓝色理想</p>
+				</li>
+				<li><img src="../../images/pic01.jpg" width="110" height="110">
+					<p>蓝色理想</p>
+				</li>
+				<li><img src="../../images/pic01.jpg" width="110" height="110">
+					<p>蓝色理想</p>
+				</li>
+				<li><img src="../../images/pic01.jpg" width="110" height="110">
+					<p>蓝色理想</p>
+				</li>
+				<div class="clear"></div>
+			</ul>
+		</div>
+
+	</div>
+	<div class="choose_title">A</div>
+	<div class="main_box" style="padding:0; border-top:1px solid #ececec;">
+		<div class="my_message">
+			<div class="my_message_left4 mr12"><img src="../../images/gx.png" width="32" height="32">
+			</div>
+			<div class="my_message3">
+				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
+				</div>
+				<div class="my_message_right">
+					&nbsp;&nbsp;@我的
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="my_message" style="border-bottom:none;">
+			<div class="my_message_left4 mr12"><img src="../../images/gx02.png" width="32" height="32">
+			</div>
+			<div class="my_message3">
+				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
+				</div>
+				<div class="my_message_right">
+					&nbsp;&nbsp;@我的
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="choose_title">B</div>
+	<div class="main_box" style="padding:0; border-top:1px solid #ececec;">
+		<div class="my_message">
+			<div class="my_message_left4 mr12"><img src="../../images/gx.png" width="32" height="32">
+			</div>
+			<div class="my_message3">
+				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
+				</div>
+				<div class="my_message_right">
+					&nbsp;&nbsp;@我的
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="my_message" style="border-bottom:none;">
+			<div class="my_message_left4 mr12"><img src="../../images/gx02.png" width="32" height="32">
+			</div>
+			<div class="my_message3">
+				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
+				</div>
+				<div class="my_message_right">
+					&nbsp;&nbsp;@我的
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$('#partialContact').ready(function() {
+		var contactvue = new Vue({
+			el: "#partialContact",
+			data: {
+				
+			},
+			mounted: function() { 
+				this.$nextTick(function() { 
+					
+				});
+			},
+			methods: {
+				choice:function(atwho){
+					vm.atwho.id=topic.id
+					vm.atwho.name=topic.subtName
+					vm.appendTopic()
+					this.cancel()
+				},
+				cancel: function() {
+					vm.showPopup = false
+				}
+			}
+
+		})
+	})
+</script>

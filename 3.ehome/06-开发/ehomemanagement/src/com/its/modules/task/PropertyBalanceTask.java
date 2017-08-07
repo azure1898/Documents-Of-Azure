@@ -25,7 +25,7 @@ public class PropertyBalanceTask extends BaseController {
 	/**
 	 * 定时卡点计算。每天凌晨 02:00 执行一次
 	 */ 
-	@Scheduled(cron = "5 * * * * *")
+	@Scheduled(cron = "0 0 2 * * *")
 	public void createPropertyBalanceTask() {
 		logger.warn("---------物业结算 开始-----------");
 		// 1.根据物业缴费单生成物业结算信息

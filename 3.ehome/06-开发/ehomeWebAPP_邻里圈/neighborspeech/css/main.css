@@ -149,3 +149,13 @@ height:32px;
 .choose_main2 ul li a{ font-size:14px; color:#000;}
 .my_message_left4{ width:32px; height:32px; float:left; position:relative; padding-top:4px;}
 .my_message_left4 img{ width:32px; height:32px; border-radius:16px;}
+/*20170804*/
+.choose_cont{ width:97%; margin-left:3%;}
+.choose_cont ul li{ width:60px; height:100px; float:left; margin-right:10px; position:relative;}
+.choose_cont ul li .tupian{ margin-top:15px;}
+.choose_cont ul li .tupian img{width:60px; height:60px; border-radius:30px;}
+.choose_cont ul li p{ text-align:center;}
+.choose_cont_tj{ width:20px; height:20px; position:absolute; top:0; right:-5px; z-index:111;}
+.choose_cont_tj img{ width:20px; height:20px; border-radius:10px;}
+.choose_title2{ height:40px; line-height:40px; padding:0 10px; font-size:16px;}
+.choose_title2 span{ float:right;font-size:14px;}

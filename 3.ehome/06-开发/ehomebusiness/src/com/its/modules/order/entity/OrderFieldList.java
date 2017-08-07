@@ -31,6 +31,8 @@ public class OrderFieldList extends DataEntity<OrderFieldList> {
 	private Double sumMoney;		// 总价格
 	private String orderState;//订单状态:0待预约、1预约成功、2已取消'
 	
+	private String orderFieldId;
+	
 	public OrderFieldList() {
 		super();
 	}
@@ -154,4 +156,14 @@ public class OrderFieldList extends DataEntity<OrderFieldList> {
 	public void setSumMoney(Double sumMoney) {
 		this.sumMoney = sumMoney;
 	}
+
+	public String getOrderFieldId() {
+		return orderFieldId;
+	}
+
+	public void setOrderFieldId(String orderFieldId) {
+		this.orderFieldId = orderFieldId;
+	}
+	
+	
 }

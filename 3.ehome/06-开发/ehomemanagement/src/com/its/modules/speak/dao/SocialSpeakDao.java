@@ -28,4 +28,11 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @return
 	 */
 	public int changeTop(SocialSpeak socialSpeak);
+	
+	/**
+	 * 根据ID查询发言详情
+	 * @param id
+	 * @return
+	 */
+	public SocialSpeak findById(SocialSpeak socialSpeak);
 }

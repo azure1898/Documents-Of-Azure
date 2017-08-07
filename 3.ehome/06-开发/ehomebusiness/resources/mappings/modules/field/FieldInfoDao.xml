@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.its.modules.field.dao.FieldInfoDao">
+
+
+<!-- begin 联查 场地预约- 分段信息 旧的  ofType指定students集合中的对象类型 -->
 	<resultMap type="com.its.modules.field.entity.FieldInfo" id="fieldInfoAndFieldPartitionPriceList">
 		<id property="id" column="id"/>
 		<result column="business_info_id" property="businessInfoId"/>
@@ -20,7 +23,6 @@
 		<result column="is_child" property="isChild"/>
 		<result column="state" property="state"/>
 		<result column="create_state" property="createState"/>
-		<!-- ofType指定students集合中的对象类型 -->
 		<collection property="fieldPartitionPriceList" ofType="com.its.modules.field.entity.FieldPartitionPrice">
 			<id property="id" column="b_id"/>
 			<result property="businessInfoId" column="b_business_info_id"/>
@@ -50,6 +52,13 @@
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
 		ORDER BY a.serial_numbers,b.start_time ASC
 	</select>
+<!-- end -->
+
+
+
+
+
+
 
 	<select id="queryOpenList"  resultMap="fieldInfoAndFieldPartitionPriceList">
 		select a.*,
@@ -105,6 +114,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<!--   旧的 2017/08/04(原工程此处并没有具体使用到)
 	<select id="findList" resultType="FieldInfo">
 		SELECT 
 			<include refid="fieldInfoColumns"/>
@@ -129,7 +139,61 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+	 -->
+	 <!-- 新的 2017/08/04 -->
+	 <!-- begin===联合查询场地预约 >分段信息 ======================================================================== -->
+	 <resultMap type="FieldInfo" id="FieldInfoMap">
+	 	<result column="ID" property="id"/>
+		<result column="Business_Info_ID" property="businessInfoId"/>
+		<result column="Serial_Numbers" property="serialNumbers"/>
+		<result column="Name" property="name"/>
+		<result column="Monday" property="monday"/>
+		<result column="Tuesday" property="tuesday"/>
+		<result column="Wednesday" property="wednesday"/>
+		<result column="Thursday" property="thursday"/>
+		<result column="Friday" property="friday"/>
+		<result column="Saturday" property="saturday"/>
+		<result column="Sunday" property="sunday"/>
+		<result column="Short_Time" property="shortTime"/>
+		<result column="Start_Open_Time" property="startOpenTime"/>
+		<result column="End_Open_Time" property="endOpenTime"/>
+		<result column="Base_Price" property="basePrice"/>
+		<result column="Is_Child" property="isChild"/>
+		<result column="State" property="state"/>
+		<result column="Create_State" property="createState"/>
+		<result column="Sell_Count" property="sellCount"/>
+		<association property="fieldPartitionPriceList" column="{id=id,appointmentTime=appointmentTime}" select="getFieldPartitionPriceList"/>
+	 </resultMap>
+	 <select id="findList" parameterType="FieldInfo" resultMap="FieldInfoMap">
+	 	select a.*,TO_DAYS(#{partitionPrice.appointmentTime}) appointmentTime  from field_info a 
+	 	where a.del_flag ='0' and a.Business_Info_ID ='${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+	 	order by Serial_Numbers
+	 </select>
+	 <resultMap type="FieldPartitionPrice" id="FieldPartitionPriceMap">
+	 	<result column="ID" property="id"/>
+		<result column="Business_Info_ID" property="businessInfoId"/>
+		<result column="Field_Info_ID" property="fieldInfoId"/>
+		<result column="Appointment_Time" property="appointmentTime"/>
+		<result column="Start_Time" property="startTime"/>
+		<result column="End_Time" property="endTime"/>
+		<result column="Base_Price" property="basePrice"/>
+		<result column="Sum_Money" property="sumMoney"/>
+		<result column="State" property="state"/>
+		<result property="outTimeState" column="outTimeState"/>
+	 </resultMap>
+	 <select id="getFieldPartitionPriceList" parameterType="hashMap" resultMap="FieldPartitionPriceMap">
+	 	select a.*,(a.end_time>now()) AS "outTimeState" from field_partition_price a 
+	 	where a.Field_Info_ID=#{id} and a.Del_Flag=0 and  TO_DAYS(a.appointment_time)=#{appointmentTime}
+	 	order by Start_Time
+	 </select>
+	 <!-- end================================================================================= -->
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	<select id="findAllList" resultType="FieldInfo">
 		SELECT 
 			<include refid="fieldInfoColumns"/>
