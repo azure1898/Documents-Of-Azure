@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>订单跟踪记录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/订单跟踪记录/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/订单跟踪记录/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3624" class="ax_default _形状">
+        <div id="u3624_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3625" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3626" class="ax_default image">
+        <img id="u3626_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u3627" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3628" class="ax_default _形状">
+        <div id="u3628_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3629" class="text" style="visibility: visible;">
+          <p><span>订单状态跟踪</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3630" class="ax_default box_1">
+        <div id="u3630_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3631" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 报修单号：WX0022017060115340009</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3632" class="ax_default _图片">
+        <img id="u3632_img" class="img " src="images/订单跟踪记录/u3632.png"/>
+        <!-- Unnamed () -->
+        <div id="u3633" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3634" class="ax_default box_1">
+        <img id="u3634_img" class="img " src="images/订单跟踪记录/u3634.png"/>
+        <!-- Unnamed () -->
+        <div id="u3635" class="text" style="visibility: visible;">
+          <p style="font-size:16px;"><span>待接单</span><span style="font-size:13px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><span style="font-size:13px;color:#999999;">15:29:07</span></p><p style="font-size:10px;"><span style="color:#999999;"><br></span></p><p style="font-size:13px;"><span style="color:#999999;">客服已派单，等待工作人员接单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3636" class="ax_default box_1">
+        <img id="u3636_img" class="img " src="images/订单跟踪记录/u3636.png"/>
+        <!-- Unnamed () -->
+        <div id="u3637" class="text" style="visibility: visible;">
+          <p style="font-size:16px;"><span>已接单&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style="font-size:13px;color:#999999;">09:15:43</span></p><p style="font-size:10px;"><span style="color:#999999;"><br></span></p><p style="font-size:13px;"><span style="color:#999999;">工作人员已接单，正在处理</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3638" class="ax_default box_1">
+        <img id="u3638_img" class="img " src="images/订单跟踪记录/u3638.png"/>
+        <!-- Unnamed () -->
+        <div id="u3639" class="text" style="visibility: visible;">
+          <p style="font-size:16px;"><span>已处理</span><span style="font-size:13px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><span style="font-size:13px;color:#999999;">16:43:18</span></p><p style="font-size:10px;"><span style="color:#999999;"><br></span></p><p style="font-size:13px;"><span style="color:#999999;">工单已处理，客服人员可能会进行回访，请您谅解</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3640" class="ax_default box_1">
+        <img id="u3640_img" class="img " src="images/订单跟踪记录/u3640.png"/>
+        <!-- Unnamed () -->
+        <div id="u3641" class="text" style="visibility: visible;">
+          <p style="font-size:16px;"><span>已完结&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><span style="font-size:14px;color:#999999;">11:36:48</span></p><p style="font-size:10px;"><span style="color:#999999;"><br></span></p><p style="font-size:13px;"><span style="color:#999999;">感谢您使用普及e家！</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3642" class="ax_default image">
+        <img id="u3642_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u3643" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3644" class="ax_default box_1">
+        <img id="u3644_img" class="img " src="images/订单跟踪记录/u3634.png"/>
+        <!-- Unnamed () -->
+        <div id="u3645" class="text" style="visibility: visible;">
+          <p style="font-size:16px;"><span>待派单</span><span style="font-size:13px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><span style="font-size:13px;color:#999999;">15:29:07</span></p><p style="font-size:10px;"><span style="color:#999999;"><br></span></p><p style="font-size:13px;"><span style="color:#999999;">工单已提交，等待客服派单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3646" class="ax_default _图片">
+        <img id="u3646_img" class="img " src="images/订单跟踪记录/u3646.png"/>
+        <!-- Unnamed () -->
+        <div id="u3647" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

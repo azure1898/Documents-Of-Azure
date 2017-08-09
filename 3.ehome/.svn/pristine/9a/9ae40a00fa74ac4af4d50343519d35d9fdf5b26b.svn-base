@@ -1,0 +1,904 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>缴费查询</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/缴费查询/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/缴费查询/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3916" class="ax_default box_1">
+        <div id="u3916_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3917" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u3918" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3919" class="ax_default box_2">
+          <div id="u3919_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3920" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 水费（住宅）&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3921" class="ax_default box_2">
+          <div id="u3921_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3922" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 住宅物业管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3923" class="ax_default box_2">
+          <div id="u3923_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3924" class="text" style="visibility: visible;">
+            <p><span>&nbsp; 2017-4&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3925" class="ax_default box_2">
+          <div id="u3925_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3926" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 车位管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3927" class="ax_default checkbox">
+          <label for="u3927_input">
+            <!-- Unnamed () -->
+            <div id="u3928" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3927_input" type="checkbox" value="checkbox" disabled/>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3929" class="ax_default label">
+          <div id="u3929_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3930" class="text" style="visibility: visible;">
+            <p><span>查表</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3931" class="ax_default checkbox">
+          <label for="u3931_input">
+            <!-- Unnamed () -->
+            <div id="u3932" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3931_input" type="checkbox" value="checkbox"/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3933" class="ax_default checkbox">
+          <label for="u3933_input">
+            <!-- Unnamed () -->
+            <div id="u3934" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3933_input" type="checkbox" value="checkbox"/>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3935" class="ax_default _图片">
+        <img id="u3935_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u3936" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3937" class="ax_default box_1">
+        <div id="u3937_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3938" class="text" style="visibility: visible;">
+          <p><span>缴费查询</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3939" class="ax_default image">
+        <img id="u3939_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u3940" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u3941" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3942" class="ax_default box_2">
+          <div id="u3942_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3943" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3944" class="ax_default label">
+          <div id="u3944_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3945" class="text" style="visibility: visible;">
+            <p><span>¥ 555.00</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3946" class="ax_default label">
+          <div id="u3946_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3947" class="text" style="visibility: visible;">
+            <p><span>未缴总金额</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3948" class="ax_default label">
+          <div id="u3948_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3949" class="text" style="visibility: visible;">
+            <p><span>房间：18栋1101、05栋1205&nbsp; </span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3950" class="ax_default box_1">
+        <div id="u3950_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3951" class="text" style="visibility: visible;">
+          <p><span>未缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3952" class="ax_default box_1">
+        <div id="u3952_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3953" class="text" style="visibility: visible;">
+          <p><span>已缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3954" class="ax_default box_1">
+        <div id="u3954_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3955" class="text" style="visibility: visible;">
+          <p><span>您有账单被冻结，请支付或取消后再缴费&gt;&gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u3956" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3957" class="ax_default box_2">
+          <div id="u3957_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3958" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 水费（住宅）&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3959" class="ax_default box_2">
+          <div id="u3959_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3960" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 住宅物业管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3961" class="ax_default box_2">
+          <div id="u3961_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3962" class="text" style="visibility: visible;">
+            <p><span>&nbsp; 2017-5&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3963" class="ax_default box_2">
+          <div id="u3963_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3964" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 车位管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3965" class="ax_default checkbox">
+          <label for="u3965_input">
+            <!-- Unnamed () -->
+            <div id="u3966" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3965_input" type="checkbox" value="checkbox"/>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u3967" class="ax_default label">
+          <div id="u3967_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u3968" class="text" style="visibility: visible;">
+            <p><span>查表</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3969" class="ax_default checkbox">
+          <label for="u3969_input">
+            <!-- Unnamed () -->
+            <div id="u3970" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3969_input" type="checkbox" value="checkbox"/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u3971" class="ax_default checkbox">
+          <label for="u3971_input">
+            <!-- Unnamed () -->
+            <div id="u3972" class="text" style="display: none; visibility: hidden">
+              <p><span></span></p>
+            </div>
+          </label>
+          <input id="u3971_input" type="checkbox" value="checkbox"/>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u3973" class="ax_default">
+
+        <!-- Unnamed (组合) -->
+        <div id="u3974" class="ax_default">
+
+          <!-- Unnamed (矩形) -->
+          <div id="u3975" class="ax_default box_1">
+            <div id="u3975_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u3976" class="text" style="visibility: visible;">
+              <p><span>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; 全选&nbsp; &nbsp; &nbsp; 合计&nbsp; ¥ 525.00&nbsp; </span></p>
+            </div>
+          </div>
+
+          <!-- Unnamed (矩形) -->
+          <div id="u3977" class="ax_default box_1">
+            <div id="u3977_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u3978" class="text" style="visibility: visible;">
+              <p><span>立即缴费</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unnamed (椭圆形) -->
+        <div id="u3979" class="ax_default ellipse">
+          <img id="u3979_img" class="img " src="images/缴费查询/u3979.png"/>
+          <!-- Unnamed () -->
+          <div id="u3980" class="text" style="visibility: visible;">
+            <p><span>√</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3981" class="ax_default box_1">
+        <div id="u3981_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3982" class="text" style="visibility: visible;">
+          <p><span>冻结</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3983" class="ax_default box_1">
+        <div id="u3983_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3984" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3985" class="ax_default box_2">
+        <div id="u3985_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3986" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; 水费（住宅）&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3987" class="ax_default box_1">
+        <div id="u3987_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3988" class="text" style="visibility: visible;">
+          <p><span>缴费查询</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3989" class="ax_default image">
+        <img id="u3989_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u3990" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u3991" class="ax_default _图片">
+        <img id="u3991_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u3992" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3993" class="ax_default box_2">
+        <div id="u3993_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3994" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; 住宅物业管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3995" class="ax_default box_2">
+        <div id="u3995_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3996" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; </span><span style="color:#666666;">2017-3&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u3997" class="ax_default box_2">
+        <div id="u3997_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u3998" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; 车位管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u3999" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4000" class="ax_default box_2">
+          <div id="u4000_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4001" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4002" class="ax_default label">
+          <div id="u4002_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4003" class="text" style="visibility: visible;">
+            <p><span>¥ 555.00</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4004" class="ax_default label">
+          <div id="u4004_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4005" class="text" style="visibility: visible;">
+            <p><span>未缴总金额</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4006" class="ax_default label">
+          <div id="u4006_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4007" class="text" style="visibility: visible;">
+            <p><span>房间：18栋1101、05栋1205&nbsp; </span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4008" class="ax_default box_1">
+        <div id="u4008_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4009" class="text" style="visibility: visible;">
+          <p><span>未缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4010" class="ax_default box_1">
+        <div id="u4010_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4011" class="text" style="visibility: visible;">
+          <p><span>已缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4012" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4013" class="ax_default box_2">
+          <div id="u4013_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4014" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp;&nbsp; 水费（住宅）&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4015" class="ax_default box_2">
+          <div id="u4015_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4016" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp;&nbsp; 住宅物业管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4017" class="ax_default box_2">
+          <div id="u4017_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4018" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp;&nbsp; </span><span style="color:#666666;">2017-2&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4019" class="ax_default box_2">
+          <div id="u4019_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4020" class="text" style="visibility: visible;">
+            <p><span>&nbsp;&nbsp;&nbsp; 车位管理费&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4021" class="ax_default label">
+          <div id="u4021_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4022" class="text" style="visibility: visible;">
+            <p><span>查表</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4023" class="ax_default label">
+          <div id="u4023_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4024" class="text" style="visibility: visible;">
+            <p><span>查表</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4025" class="ax_default box_1">
+        <div id="u4025_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4026" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4027" class="ax_default _图片">
+        <img id="u4027_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4028" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4029" class="ax_default box_1">
+        <div id="u4029_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4030" class="text" style="visibility: visible;">
+          <p><span>缴费查询</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4031" class="ax_default image">
+        <img id="u4031_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4032" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4033" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4034" class="ax_default box_2">
+          <div id="u4034_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4035" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4036" class="ax_default label">
+          <div id="u4036_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4037" class="text" style="visibility: visible;">
+            <p><span>¥ 0.00</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4038" class="ax_default label">
+          <div id="u4038_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4039" class="text" style="visibility: visible;">
+            <p><span>未缴总金额</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4040" class="ax_default label">
+          <div id="u4040_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4041" class="text" style="visibility: visible;">
+            <p><span>房间：18栋1101、05栋1205&nbsp; </span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4042" class="ax_default label">
+        <div id="u4042_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4043" class="text" style="visibility: visible;">
+          <p><span>暂无未缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4044" class="ax_default box_1">
+        <div id="u4044_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4045" class="text" style="visibility: visible;">
+          <p><span>未缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4046" class="ax_default box_1">
+        <div id="u4046_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4047" class="text" style="visibility: visible;">
+          <p><span>已缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4048" class="ax_default box_1">
+        <div id="u4048_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4049" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4050" class="ax_default _图片">
+        <img id="u4050_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4051" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4052" class="ax_default box_1">
+        <div id="u4052_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4053" class="text" style="visibility: visible;">
+          <p><span>缴费查询</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4054" class="ax_default image">
+        <img id="u4054_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4055" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4056" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4057" class="ax_default box_2">
+          <div id="u4057_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4058" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4059" class="ax_default label">
+          <div id="u4059_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4060" class="text" style="visibility: visible;">
+            <p><span>¥ 0.00</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4061" class="ax_default label">
+          <div id="u4061_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4062" class="text" style="visibility: visible;">
+            <p><span>未缴总金额</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4063" class="ax_default label">
+          <div id="u4063_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4064" class="text" style="visibility: visible;">
+            <p><span>房间：18栋1101、05栋1205&nbsp; </span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4065" class="ax_default label">
+        <div id="u4065_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4066" class="text" style="visibility: visible;">
+          <p><span>暂无已缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4067" class="ax_default box_1">
+        <div id="u4067_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4068" class="text" style="visibility: visible;">
+          <p><span>未缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4069" class="ax_default box_1">
+        <div id="u4069_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4070" class="text" style="visibility: visible;">
+          <p><span>已缴账单</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4071" class="ax_default _文本段落">
+        <img id="u4071_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4072" class="text" style="visibility: visible;">
+          <p><span>明细&nbsp;&nbsp; &gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4073" class="ax_default _文本段落">
+        <img id="u4073_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4074" class="text" style="visibility: visible;">
+          <p><span>明细&nbsp;&nbsp; &gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4075" class="ax_default _文本段落">
+        <img id="u4075_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4076" class="text" style="visibility: visible;">
+          <p><span>明细&nbsp;&nbsp; &gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4077" class="ax_default _文本段落">
+        <img id="u4077_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4078" class="text" style="visibility: visible;">
+          <p><span>明细&nbsp;&nbsp; &gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4079" class="ax_default _文本段落">
+        <img id="u4079_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4080" class="text" style="visibility: visible;">
+          <p><span>￥130.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4081" class="ax_default _文本段落">
+        <img id="u4081_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4082" class="text" style="visibility: visible;">
+          <p><span>￥65.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4083" class="ax_default _文本段落">
+        <img id="u4083_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4084" class="text" style="visibility: visible;">
+          <p><span>￥85.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4085" class="ax_default _文本段落">
+        <img id="u4085_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4086" class="text" style="visibility: visible;">
+          <p><span>￥130.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4087" class="ax_default _文本段落">
+        <img id="u4087_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4088" class="text" style="visibility: visible;">
+          <p><span>￥60.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4089" class="ax_default _文本段落">
+        <img id="u4089_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4090" class="text" style="visibility: visible;">
+          <p><span>￥85.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4091" class="ax_default _文本段落">
+        <img id="u4091_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4092" class="text" style="visibility: visible;">
+          <p><span>￥130.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4093" class="ax_default _文本段落">
+        <img id="u4093_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4094" class="text" style="visibility: visible;">
+          <p><span>￥62.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4095" class="ax_default _文本段落">
+        <img id="u4095_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4096" class="text" style="visibility: visible;">
+          <p><span>￥85.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4097" class="ax_default _文本段落">
+        <img id="u4097_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4098" class="text" style="visibility: visible;">
+          <p><span>￥130.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4099" class="ax_default _文本段落">
+        <img id="u4099_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4100" class="text" style="visibility: visible;">
+          <p><span>￥68.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4101" class="ax_default _文本段落">
+        <img id="u4101_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4102" class="text" style="visibility: visible;">
+          <p><span>￥85.00</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

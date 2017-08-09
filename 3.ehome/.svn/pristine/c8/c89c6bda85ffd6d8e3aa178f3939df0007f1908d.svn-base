@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialPersonDao">
+    <sql id="socialSpeakColumns">
+        a.id AS "id",
+        a.userid AS "userid",
+        a.tag AS "tag",
+        a.content AS "content",
+        a.visrange AS "visrange",
+        a.forbitcomment AS "forbitcomment",
+        a.forbidforward AS "forbidforward",
+        a.createtime AS "createtime",
+        a.istop AS "istop",
+        a.readnum AS "readnum",
+        a.plateid AS "plateid",
+        a.villageinfoid AS "villageinfoid",
+        a.images AS "images",
+        a.delflag AS "delflag",
+        a.isspeak AS "isspeak",
+        a.reason AS "reason",
+        a.fid AS "fid",
+        a.rootid AS "rootid"
+    </sql>
+    
+    <sql id="socialSpeakJoins">
+    </sql>
+    
+    <select id="findPersonalInfoList" resultType="SocialSpeakBean">
+        SELECT 
+            <include refid="socialSpeakColumns"/>,
+            (SELECT count(*) FROM social_comment sc WHERE sc.speakid = a.id) as countComment,
+            (SELECT count(*) FROM social_speak spf WHERE spf.rootid = a.id) as countForward,
+            (SELECT count(*) FROM social_praise sp WHERE sp.pid = a.id AND type=1) as countPraise,
+            (SELECT IFNULL((select count(*)  from social_praise spr where spr.userid=#{userId}), 0)) as isPraise
+        FROM social_speak a
+        WHERE a.userid = #{subUserId}
+        ORDER BY a.createtime desc LIMIT #{pageIndex},#{pageSize}
+    </select>
+    
+</mapper>

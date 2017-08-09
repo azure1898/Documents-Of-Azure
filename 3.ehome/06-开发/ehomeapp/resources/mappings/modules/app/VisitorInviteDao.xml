@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VisitorInviteDao">
+    
+	<sql id="visitorInviteColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.apartment_certify_id AS "apartmentCertifyId",
+		a.visitor_name AS "visitorName",
+		a.sex AS "sex",
+		a.visit_date AS "visitDate",
+		a.qr_code AS "qrCode",
+		a.invite_state AS "inviteState",
+		a.invalid_date AS "invalidDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="visitorInviteJoins">
+	</sql>
+    
+	<select id="get" resultType="VisitorInvite">
+		SELECT 
+			<include refid="visitorInviteColumns"/>
+		FROM visitor_invite a
+		<include refid="visitorInviteJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VisitorInvite">
+		SELECT 
+			<include refid="visitorInviteColumns"/>
+		FROM visitor_invite a
+		<include refid="visitorInviteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VisitorInvite">
+		SELECT 
+			<include refid="visitorInviteColumns"/>
+		FROM visitor_invite a
+		<include refid="visitorInviteJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO visitor_invite(
+			id,
+			account_id,
+			village_info_id,
+			apartment_certify_id,
+			visitor_name,
+			sex,
+			visit_date,
+			qr_code,
+			invite_state,
+			invalid_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{apartmentCertifyId},
+			#{visitorName},
+			#{sex},
+			#{visitDate},
+			#{qrCode},
+			#{inviteState},
+			#{invalidDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE visitor_invite SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			apartment_certify_id = #{apartmentCertifyId},
+			visitor_name = #{visitorName},
+			sex = #{sex},
+			visit_date = #{visitDate},
+			qr_code = #{qrCode},
+			invite_state = #{inviteState},
+			invalid_date = #{invalidDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE visitor_invite SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================================= -->
+	
+	<!-- 获取某用户某楼盘下的访客列表（正常） -->
+	<select id="getNormalVisitorInviteList" resultType="VisitorInvite">
+		SELECT DISTINCT
+			<include refid="visitorInviteColumns"/>
+		FROM
+			Visitor_Invite a
+		WHERE
+			a.del_flag = '0'
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Invite_State = '0'
+		ORDER BY
+			a.create_date DESC
+		LIMIT 20
+	</select>
+	
+	<!-- 获取某用户某楼盘下的访客列表（失效） -->
+	<select id="getInvalidVisitorInviteList" resultType="VisitorInvite">
+		SELECT DISTINCT
+			<include refid="visitorInviteColumns"/>
+		FROM
+			Visitor_Invite a
+		WHERE
+			a.del_flag = '0'
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Invite_State <![CDATA[<>]]> '0'
+		ORDER BY
+			a.Invalid_Date DESC
+		LIMIT #{count}
+	</select>
+	
+	<!-- 判断某用户某楼盘下是否存在某访客邀请 -->
+	<select id="judgeVisitorInvite" resultType="VisitorInvite">
+		SELECT DISTINCT
+			<include refid="visitorInviteColumns"/>
+		FROM
+			Visitor_Invite a
+		WHERE
+			a.del_flag = '0'
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.ID = #{visitorInviteId}
+	</select>
+	
+</mapper>

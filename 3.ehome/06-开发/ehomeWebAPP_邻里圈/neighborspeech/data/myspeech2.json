@@ -1,0 +1,50 @@
+{
+"code" : 1000,
+"data" : [{
+  "plateName":"邻里发言",
+  "userId":"",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "subjectList":[{
+     "id":"",
+     "subName":"装修作业"
+}],
+  "speakId":"123",
+  "forwardId":"",
+  "creatTime":"昨天18:30",
+  "visRange":"公开",
+  "isPraise":0,
+  "content":"装修房子是个苦差事啊，晒个图~",
+  "releasePictures":[{
+   "imgUrl":"../../images/pic01.jpg"
+},{
+   "imgUrl":"../../images/pic01.jpg"
+},{
+   "imgUrl":"../../images/pic01.jpg"
+}],
+
+  "countForward":100,
+  "countComment":456,
+  "countPraise":1000
+},{
+  "plateName":"邻里发言",
+  "userId":"",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "subjectList":[{
+     "id":"",
+     "subName":"装修作业"
+}],
+  "speakId":"",
+  "forwardId":"",
+  "creatTime":"昨天18:30",
+  "visRange":"好友可见",
+  "isPraise":0,
+  "content":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。",
+  
+  "countForward":100,
+  "countComment":0,
+  "countPraise":1000
+}],
+"message" : ""
+}

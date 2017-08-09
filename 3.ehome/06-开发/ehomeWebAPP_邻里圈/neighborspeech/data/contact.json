@@ -1,0 +1,27 @@
+{
+	"code": 1000,
+	"data": [
+		{
+			"frendId": "1",
+			"frendName": "张三",
+			"headPicSrc":"../../images/pic01.jpg"
+		}, {
+			"frendId": "2",
+			"frendName": "张三1",
+			"headPicSrc":"../../images/pic01.jpg"
+		}, {
+			"frendId": "3",
+			"frendName": "张三2",
+			"headPicSrc":"../../images/pic01.jpg"
+		}, {
+			"frendId": "4",
+			"frendName": "张三3",
+			"headPicSrc":"../../images/pic01.jpg"
+		}, {
+			"frendId": "5",
+			"frendName": "张三4",
+			"headPicSrc":"../../images/pic01.jpg"
+		}
+	],
+	"message": ""
+}

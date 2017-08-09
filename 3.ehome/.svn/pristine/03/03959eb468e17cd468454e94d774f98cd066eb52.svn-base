@@ -1,0 +1,135 @@
+<div id="partialUploading">
+	<div class="grey_top">
+		<a href="#" class="fl font12" style="margin-left:10px;" @click="close()">取消</a> 上传图片
+		<a href="#" class="topic_list_btn4" @click="choice()">发送</a>
+		<div class="topic_list_btn4_tip" v-if="uploadImageNum!=0">{{uploadImageNum}}</div>
+	</div>
+	<div class="main_box">
+		<div class="speak_main2">
+			<ul>
+				<li>
+					<div class="xiangji"></div>
+				</li>
+				<li v-for="img in speakData" @click="choiceImg(img)">
+					<div class="tupian"><img :src="img.url" width="110" height="110"></div>
+					<div class="xuanze"><img :src="img.isactive==0 ? choiceIcon:choiceIcon2" width="32" height="32"></div>
+				</li>
+			</ul>
+		</div>
+		<div class="fyxq_main_r"></div>
+		<div class="clear"></div>
+	</div>
+</div>
+<script>
+	$('#partialUploading').ready(function() {
+		var rangevm = new Vue({
+			el: '#partialUploading',
+			data: {
+				speakData: [],
+				choiceIcon: "../../images/gx_no.png",
+				choiceIcon2: "../../images/gx.png",
+				uploadImageNum: 0,
+			},
+			mounted: function() { //页面加载之后自动调用，常用于页面渲染
+				this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
+					this.cartView();
+				});
+			},
+			methods: {
+				cartView: function() {
+					var _this = this;
+					this.$http.get("../../data/speak.json").then(function(res) {
+						var test = res.data.data;
+						test.forEach(function(obj, index) {
+							obj.isactive = 0;
+							obj.selected = 0;
+
+							if(vm.speakData && vm.speakData.length > 0) {
+								$.each(vm.speakData, function(i, sd) {
+									if(sd.id == obj.id && sd.selected == 1) {
+										obj.isactive = 1;
+										obj.selected = 1;
+									}
+								})
+							}
+						})
+						_this.speakData = test;
+						//vm.speakData=_this.speakData;
+						console.log(_this.speakData)
+
+					});
+				},
+				close: function() {
+					var _this = this;
+					_this.uploadImageNum = 0;
+					vm.uploadImageNum = 0;
+					_this.speakData.forEach(function(obj, index) {
+						obj.isactive = 0;
+						if(obj.selected == 1) {
+							obj.isactive = 1;
+							_this.uploadImageNum += 1
+							vm.uploadImageNum = _this.uploadImageNum;
+
+						}
+					});
+					vm.showPopup = false
+				},
+				choice: function(item) {
+					var _this = this;
+					_this.speakData.forEach(function(obj, index) {
+
+						if(obj.isactive == 1) {
+							obj.selected = 1;
+							if(vm.speakData.indexOf(obj) < 0) {
+								vm.speakData.push(obj);
+							}
+
+							//							$.each(vm.speakData, function(index, img) {
+							//								if(img.id == obj.id) {
+							//									if(obj.selected == 1) {}
+							//								}
+							//							})
+							//							vm.speakData.push(obj);
+						} else {
+							obj.selected = 0;
+							if(vm.speakData.indexOf(obj) > -1) {
+								vm.speakData.splice(vm.speakData.findIndex(obj), 1);
+							}
+						}
+					});
+					console.log(_this.uploadImage);
+
+					this.close()
+				},
+				choiceImg: function(img) {
+					var _this = this;
+					if(img.isactive == 0) {
+						img.isactive = 1;
+						_this.uploadImageNum += 1
+						vm.uploadImageNum = _this.uploadImageNum;
+
+						//				_this.uploadImage.push(img);
+						//				console.log(_this.speakData);
+					} else {
+						img.isactive = 0;
+						_this.uploadImageNum -= 1
+						vm.uploadImageNum = _this.uploadImageNum;
+
+						//				_this.uploadImage.pop(img);
+						//				console.log(_this.uploadImage);
+					}
+				}
+				//				deleteImg:function(image){
+				//					var _this = this;
+				//		//			_this.uploadImage.splice(index, 1);	
+				//					image.selected=0;
+				//					image.isactive=0;
+				//					_this.uploadImageNum-=1;
+				//					_this.uploadImageNum=vm.uploadImageNum;
+				//					
+				//				}
+
+			}
+		})
+	})
+</script>

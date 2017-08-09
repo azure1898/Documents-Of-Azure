@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>发言详情</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/need/layer.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			a:link {
+				text-decoration: none;
+			}
+			
+			a:visited {
+				text-decoration: none;
+			}
+			
+			a:hover {
+				text-decoration: none;
+			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+			.bottom {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				background: #EEEEEE;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				padding: 0 10px;
+			}
+			
+			.bottom li {
+				float: left;
+				padding: 10px;
+			}
+			
+			.bottom li:last-child {
+				float: right;
+				font-size: 22px;
+				padding: 0;
+			}
+			
+			.bottom li img {
+				float: left;
+				width: 30px;
+				height: 30px;
+			}
+			
+			.pholder:empty:before {
+				content: attr(data-placeholder);
+				color: #bbb;
+			}
+			
+			.pholder:focus:before {
+				content: none;
+			}
+			
+			.atlink {
+				color: #337ab7;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<div id="topPage" :class="{hide:showPopup}">
+				<div class="grey_top">
+					<a href="#" class="fl font12" style="margin-left:10px;" onclick="javascript :history.go(-1);">取消</a> 发言评论
+					<a href="#" class="topic_list_btn" @click="sendOut()">发送</a>
+				</div>
+				<div class="main_box">
+					<div class="fyxq_main2">
+						<!--<textarea name="" cols="" rows="" class="fyxq" v-model="commentContent" placeholder="写下您的评论吧…"></textarea>-->
+						<div id="editable" class="fyxq pholder" contentEditable="true" data-placeholder="写下您的评论吧…" v-html="commentContent"></div>
+					</div>
+					<table width="100" border="0" style="margin-left:10px;">
+						<tr>
+							<td width="20"><img :src="ismeanwhile==0?meanwhileIcon:meanwhileIcon2" width="15" height="15" @click="meanwhile"></td>
+							<td width="80">同时转发</td>
+						</tr>
+					</table>
+				</div>
+				<div class="bottom">
+					<ul>
+						<li><img src="../../images/photo.png" /></li>
+						<li><img src="../../images/icon.png" @click="seltopic" /></li>
+						<li><img src="../../images/icon2.png" @click="selwho" /></li>
+						<li><img src="../../images/xiaolian.png" /></li>
+						<li><span v-text="textnum"></span></li>
+					</ul>
+				</div>
+			</div>
+			<div id="popupPage" :class="{hide:!showPopup}"></div>
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/comment.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

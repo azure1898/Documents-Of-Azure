@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.rong.dao.ActTokenDao">
+    
+	<sql id="actTokenColumns">
+		a.id AS "id",
+		a.accountid AS "accountid",
+		a.token AS "token",
+		a.tokencreatetime AS "tokencreatetime",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="actTokenJoins">
+	</sql>
+    
+	<select id="get" resultType="ActToken">
+		SELECT 
+			<include refid="actTokenColumns"/>
+		FROM act_token a
+		<include refid="actTokenJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ActToken">
+		SELECT 
+			<include refid="actTokenColumns"/>
+		FROM act_token a
+		<include refid="actTokenJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActToken">
+		SELECT 
+			<include refid="actTokenColumns"/>
+		FROM act_token a
+		<include refid="actTokenJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO act_token(
+			id,
+			accountid,
+			token,
+			tokencreatetime,
+			createtime
+		) VALUES (
+			#{id},
+			#{accountid},
+			#{token},
+			#{tokencreatetime},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE act_token SET 	
+			accountid = #{accountid},
+			token = #{token},
+			tokencreatetime = #{tokencreatetime},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM act_token
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getActToken" resultType="ActToken">
+		SELECT 
+			<include refid="actTokenColumns"/>
+		FROM act_token a
+		where 1=1
+		<if test="accountId != null and accountId != '' ">
+		 	and a.accountId = #{accountId}
+		</if>
+	</select>
+</mapper>

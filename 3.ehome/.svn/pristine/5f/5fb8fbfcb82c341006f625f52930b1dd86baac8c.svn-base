@@ -1,0 +1,845 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>发文字</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/发文字/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/发文字/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1878" class="ax_default shape">
+        <img id="u1878_img" class="img " src="images/评论详情/u697.png"/>
+        <!-- Unnamed () -->
+        <div id="u1879" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u1880" class="ax_default _图片1">
+        <img id="u1880_img" class="img " src="images/转发/u975.png"/>
+        <!-- Unnamed () -->
+        <div id="u1881" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1882" class="ax_default box_1">
+        <img id="u1882_img" class="img " src="images/发言详情/u542.png"/>
+        <!-- Unnamed () -->
+        <div id="u1883" class="text" style="visibility: visible;">
+          <p><span>发言</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1884" class="ax_default label">
+        <div id="u1884_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1885" class="text" style="visibility: visible;">
+          <p><span>取消</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1886" class="ax_default primary_button">
+        <div id="u1886_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1887" class="text" style="visibility: visible;">
+          <p><span>发送</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1888" class="ax_default box_1">
+        <img id="u1888_img" class="img " src="images/转发/u983.png"/>
+        <!-- Unnamed () -->
+        <div id="u1889" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1890" class="ax_default label">
+        <div id="u1890_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1891" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u1892" class="ax_default icon">
+        <img id="u1892_img" class="img " src="images/转发/u987.png"/>
+        <!-- Unnamed () -->
+        <div id="u1893" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u1894" class="ax_default icon">
+        <img id="u1894_img" class="img " src="images/转发/u989.png"/>
+        <!-- Unnamed () -->
+        <div id="u1895" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u1896" class="ax_default icon">
+        <img id="u1896_img" class="img " src="images/转发/u991.png"/>
+        <!-- Unnamed () -->
+        <div id="u1897" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (形状) -->
+      <div id="u1898" class="ax_default icon">
+        <img id="u1898_img" class="img " src="images/转发/u993.png"/>
+        <!-- Unnamed () -->
+        <div id="u1899" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1900" class="ax_default box_1">
+        <img id="u1900_img" class="img " src="images/转发/u995.png"/>
+        <!-- Unnamed () -->
+        <div id="u1901" class="text" style="visibility: visible;">
+          <p><span>发布</span></p>
+        </div>
+      </div>
+
+      <!-- 内容输入框 (多行文本框) -->
+      <div id="u1902" class="ax_default _多行文本框" data-label="内容输入框">
+        <textarea id="u1902_input">分享社区的新鲜事...</textarea>
+      </div>
+
+      <!-- 操作面板 (动态面板) -->
+      <div id="u1903" class="ax_default ax_default_hidden" data-label="操作面板" style="display: none; visibility: hidden">
+        <div id="u1903_state0" class="panel_state" data-label="@人">
+          <div id="u1903_state0_content" class="panel_state_content">
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1904" class="ax_default shape">
+              <img id="u1904_img" class="img " src="images/评论详情/u697.png"/>
+              <!-- Unnamed () -->
+              <div id="u1905" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1906" class="ax_default box_1">
+              <img id="u1906_img" class="img " src="images/发言详情/u542.png"/>
+              <!-- Unnamed () -->
+              <div id="u1907" class="text" style="visibility: visible;">
+                <p><span>选择联系人</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1908" class="ax_default ellipse">
+              <img id="u1908_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1909" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1910" class="ax_default primary_button">
+              <div id="u1910_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1911" class="text" style="visibility: visible;">
+                <p><span>确定（3）</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1912" class="ax_default ellipse">
+              <img id="u1912_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1913" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1914" class="ax_default ellipse">
+              <img id="u1914_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1915" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1916" class="ax_default box_3">
+              <div id="u1916_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1917" class="text" style="visibility: visible;">
+                <p><span>A</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1918" class="ax_default ellipse">
+              <img id="u1918_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1919" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (水平线) -->
+            <div id="u1920" class="ax_default line">
+              <img id="u1920_img" class="img " src="images/发文字/u1920.png"/>
+              <!-- Unnamed () -->
+              <div id="u1921" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (单选按钮) -->
+            <div id="u1922" class="ax_default radio_button">
+              <label for="u1922_input">
+                <!-- Unnamed () -->
+                <div id="u1923" class="text" style="display: none; visibility: hidden">
+                  <p><span></span></p>
+                </div>
+              </label>
+              <input id="u1922_input" type="radio" value="radio" name="u1922"/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1924" class="ax_default label">
+              <div id="u1924_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1925" class="text" style="visibility: visible;">
+                <p><span>A梦君</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1926" class="ax_default ellipse">
+              <img id="u1926_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1927" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (水平线) -->
+            <div id="u1928" class="ax_default line">
+              <img id="u1928_img" class="img " src="images/发文字/u1920.png"/>
+              <!-- Unnamed () -->
+              <div id="u1929" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (单选按钮) -->
+            <div id="u1930" class="ax_default radio_button">
+              <label for="u1930_input">
+                <!-- Unnamed () -->
+                <div id="u1931" class="text" style="display: none; visibility: hidden">
+                  <p><span></span></p>
+                </div>
+              </label>
+              <input id="u1930_input" type="radio" value="radio" name="u1930" checked/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1932" class="ax_default label">
+              <div id="u1932_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1933" class="text" style="visibility: visible;">
+                <p><span>阿兰得聋</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1934" class="ax_default box_3">
+              <div id="u1934_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1935" class="text" style="visibility: visible;">
+                <p><span>B</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1936" class="ax_default ellipse">
+              <img id="u1936_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1937" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (水平线) -->
+            <div id="u1938" class="ax_default line">
+              <img id="u1938_img" class="img " src="images/发文字/u1920.png"/>
+              <!-- Unnamed () -->
+              <div id="u1939" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (单选按钮) -->
+            <div id="u1940" class="ax_default radio_button">
+              <label for="u1940_input">
+                <!-- Unnamed () -->
+                <div id="u1941" class="text" style="display: none; visibility: hidden">
+                  <p><span></span></p>
+                </div>
+              </label>
+              <input id="u1940_input" type="radio" value="radio" name="u1940" checked/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1942" class="ax_default label">
+              <div id="u1942_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1943" class="text" style="visibility: visible;">
+                <p><span>波波星</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (椭圆形) -->
+            <div id="u1944" class="ax_default ellipse">
+              <img id="u1944_img" class="img " src="images/发文字/u1908.png"/>
+              <!-- Unnamed () -->
+              <div id="u1945" class="text" style="visibility: visible;">
+                <p><span>联系人</span></p><p><span>头像</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (水平线) -->
+            <div id="u1946" class="ax_default line">
+              <img id="u1946_img" class="img " src="images/发文字/u1920.png"/>
+              <!-- Unnamed () -->
+              <div id="u1947" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (单选按钮) -->
+            <div id="u1948" class="ax_default radio_button">
+              <label for="u1948_input">
+                <!-- Unnamed () -->
+                <div id="u1949" class="text" style="display: none; visibility: hidden">
+                  <p><span></span></p>
+                </div>
+              </label>
+              <input id="u1948_input" type="radio" value="radio" name="u1948" checked/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1950" class="ax_default label">
+              <div id="u1950_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1951" class="text" style="visibility: visible;">
+                <p><span>抱得三春龟</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1952" class="ax_default label">
+              <div id="u1952_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1953" class="text" style="visibility: visible;">
+                <p><span>阿兰得聋</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1954" class="ax_default label">
+              <div id="u1954_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1955" class="text" style="visibility: visible;">
+                <p><span>波波星</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1956" class="ax_default label">
+              <div id="u1956_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1957" class="text" style="visibility: visible;">
+                <p><span>抱得三...</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1958" class="ax_default link_button">
+              <div id="u1958_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1959" class="text" style="visibility: visible;">
+                <p><span>取消</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="u1903_state1" class="panel_state" data-label="#话题">
+          <div id="u1903_state1_content" class="panel_state_content">
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1960" class="ax_default shape">
+              <img id="u1960_img" class="img " src="images/评论详情/u697.png"/>
+              <!-- Unnamed () -->
+              <div id="u1961" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1962" class="ax_default box_1">
+              <img id="u1962_img" class="img " src="images/发言详情/u542.png"/>
+              <!-- Unnamed () -->
+              <div id="u1963" class="text" style="visibility: visible;">
+                <p><span>话题</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1964" class="ax_default primary_button">
+              <div id="u1964_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1965" class="text" style="visibility: visible;">
+                <p><span>取消</span></p>
+              </div>
+            </div>
+
+            <!-- 话题输入框 (文本框) -->
+            <div id="u1966" class="ax_default text_field" data-label="话题输入框">
+              <input id="u1966_input" type="text" value="#"/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1967" class="ax_default label">
+              <div id="u1967_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1968" class="text" style="visibility: visible;">
+                <p><span>#天天向上#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1969" class="ax_default label">
+              <div id="u1969_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1970" class="text" style="visibility: visible;">
+                <p><span>#实地地产#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1971" class="ax_default label">
+              <div id="u1971_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1972" class="text" style="visibility: visible;">
+                <p><span>#一本正经#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1973" class="ax_default label">
+              <div id="u1973_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1974" class="text" style="visibility: visible;">
+                <p><span>#隔山打牛#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1975" class="ax_default label">
+              <div id="u1975_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1976" class="text" style="visibility: visible;">
+                <p><span>热门话题</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1977" class="ax_default shape">
+              <img id="u1977_img" class="img " src="images/评论详情/u697.png"/>
+              <!-- Unnamed () -->
+              <div id="u1978" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1979" class="ax_default box_1">
+              <img id="u1979_img" class="img " src="images/发言详情/u542.png"/>
+              <!-- Unnamed () -->
+              <div id="u1980" class="text" style="visibility: visible;">
+                <p><span>话题</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1981" class="ax_default primary_button">
+              <div id="u1981_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1982" class="text" style="visibility: visible;">
+                <p><span>取消</span></p>
+              </div>
+            </div>
+
+            <!-- 话题输入框 (文本框) -->
+            <div id="u1983" class="ax_default text_field" data-label="话题输入框">
+              <input id="u1983_input" type="text" value="#看看"/>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1984" class="ax_default label">
+              <div id="u1984_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1985" class="text" style="visibility: visible;">
+                <p style="font-size:14px;"><span>#看看#</span><span style="font-size:10px;">（新话题）</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1986" class="ax_default label">
+              <div id="u1986_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1987" class="text" style="visibility: visible;">
+                <p><span>热门话题</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1988" class="ax_default label">
+              <div id="u1988_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1989" class="text" style="visibility: visible;">
+                <p><span>#</span><span style="color:#FF0000;">看看</span><span>世界#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1990" class="ax_default label">
+              <div id="u1990_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1991" class="text" style="visibility: visible;">
+                <p><span>#</span><span style="color:#FF0000;">看看</span><span>你呗#</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1992" class="ax_default label">
+              <div id="u1992_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1993" class="text" style="visibility: visible;">
+                <p><span>#</span><span style="color:#FF0000;">看</span><span>什么</span><span style="color:#FF0000;">看</span><span>#</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="u1903_state2" class="panel_state" data-label="上图">
+          <div id="u1903_state2_content" class="panel_state_content">
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1994" class="ax_default shape">
+              <img id="u1994_img" class="img " src="images/评论详情/u697.png"/>
+              <!-- Unnamed () -->
+              <div id="u1995" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1996" class="ax_default box_1">
+              <img id="u1996_img" class="img " src="images/发言详情/u542.png"/>
+              <!-- Unnamed () -->
+              <div id="u1997" class="text" style="visibility: visible;">
+                <p><span>上传图片</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u1998" class="ax_default primary_button">
+              <div id="u1998_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u1999" class="text" style="visibility: visible;">
+                <p><span>确认</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2000" class="ax_default image">
+              <img id="u2000_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2001" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2002" class="ax_default image">
+              <img id="u2002_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2003" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2004" class="ax_default image">
+              <img id="u2004_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2005" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2006" class="ax_default icon">
+              <img id="u2006_img" class="img " src="images/发文字/u2006.png"/>
+              <!-- Unnamed () -->
+              <div id="u2007" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="u1903_state3" class="panel_state" data-label="完成上图">
+          <div id="u1903_state3_content" class="panel_state_content">
+
+            <!-- Unnamed (矩形) -->
+            <div id="u2008" class="ax_default box_2">
+              <div id="u2008_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u2009" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u2010" class="ax_default box_1">
+              <img id="u2010_img" class="img " src="images/发言详情/u542.png"/>
+              <!-- Unnamed () -->
+              <div id="u2011" class="text" style="visibility: visible;">
+                <p><span>发言</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u2012" class="ax_default label">
+              <div id="u2012_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u2013" class="text" style="visibility: visible;">
+                <p><span>取消</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u2014" class="ax_default primary_button">
+              <div id="u2014_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u2015" class="text" style="visibility: visible;">
+                <p><span>发送</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u2016" class="ax_default box_1">
+              <img id="u2016_img" class="img " src="images/转发/u983.png"/>
+              <!-- Unnamed () -->
+              <div id="u2017" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2018" class="ax_default icon">
+              <img id="u2018_img" class="img " src="images/转发/u987.png"/>
+              <!-- Unnamed () -->
+              <div id="u2019" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2020" class="ax_default icon">
+              <img id="u2020_img" class="img " src="images/转发/u989.png"/>
+              <!-- Unnamed () -->
+              <div id="u2021" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2022" class="ax_default icon">
+              <img id="u2022_img" class="img " src="images/转发/u991.png"/>
+              <!-- Unnamed () -->
+              <div id="u2023" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2024" class="ax_default icon">
+              <img id="u2024_img" class="img " src="images/转发/u993.png"/>
+              <!-- Unnamed () -->
+              <div id="u2025" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- 内容输入框 (多行文本框) -->
+            <div id="u2026" class="ax_default _多行文本框" data-label="内容输入框">
+              <textarea id="u2026_input">分享社区的新鲜事...</textarea>
+            </div>
+
+            <!-- 选择-可见范围 (矩形) -->
+            <div id="u2027" class="ax_default box_1" data-label="选择-可见范围">
+              <div id="u2027_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u2028" class="text" style="visibility: visible;">
+                <p><span>可见：公开</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (形状) -->
+            <div id="u2029" class="ax_default icon">
+              <img id="u2029_img" class="img " src="images/转发/u1001.png"/>
+              <!-- Unnamed () -->
+              <div id="u2030" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2031" class="ax_default image">
+              <img id="u2031_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2032" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2033" class="ax_default image">
+              <img id="u2033_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2034" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2035" class="ax_default image">
+              <img id="u2035_img" class="img " src="images/发文字/u2000.png"/>
+              <!-- Unnamed () -->
+              <div id="u2036" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2037" class="ax_default _图片1">
+              <img id="u2037_img" class="img " src="images/发文字/u2037.png"/>
+              <!-- Unnamed () -->
+              <div id="u2038" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2039" class="ax_default _图片1">
+              <img id="u2039_img" class="img " src="images/发文字/u2037.png"/>
+              <!-- Unnamed () -->
+              <div id="u2040" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (图片) -->
+            <div id="u2041" class="ax_default _图片1">
+              <img id="u2041_img" class="img " src="images/发文字/u2037.png"/>
+              <!-- Unnamed () -->
+              <div id="u2042" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u2043" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u2044" class="ax_default box_1">
+          <div id="u2044_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u2045" class="text" style="visibility: visible;">
+            <p><span>可见：公开</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (形状) -->
+        <div id="u2046" class="ax_default icon">
+          <img id="u2046_img" class="img " src="images/转发/u1001.png"/>
+          <!-- Unnamed () -->
+          <div id="u2047" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

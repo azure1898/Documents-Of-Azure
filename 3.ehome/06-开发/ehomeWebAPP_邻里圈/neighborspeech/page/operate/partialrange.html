@@ -1,0 +1,62 @@
+<div id="partialRange">
+	<div class="grey_top">
+		<a href="#" class="black_back" @click="close"></a>
+		选择可见范围
+	</div>
+	<div class="main_box" style="padding:0;">
+		<div class="my_message" v-for="item in rangeInfo" @click="choice(item)">
+			<div class="my_message_left4"><img :src="item.isSelected ? chooseUrl : chooseUrl2" width="32" height="32">
+			</div>
+			<div class="my_message_right2">
+				<p>&nbsp;&nbsp;
+					<font style="font-size:16px; color:#000;">{{item.name}}</font>
+				</p>
+				<p>&nbsp;&nbsp;{{item.remark}}</p>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<script>
+	$('#partialRange').ready(function() {
+		var rangevm = new Vue({
+			el: '#partialRange',
+			data: {
+				chooseUrl: "../../images/gx.png",
+				chooseUrl2: "../../images/gx02.png",
+				rangeInfo: [{
+					name: "公开",
+					remark: "所有人可见",
+					isSelected: true
+				}, {
+					name: "粉丝可见",
+					remark: "关注我的粉丝可见",
+					isSelected: false
+				}, {
+					name: "好友可见",
+					remark: "相互关注好友可见",
+					isSelected: false
+				}, ]
+			},
+			methods: {
+				close: function() {
+					vm.showPopup = false
+				},
+				choice: function(item) {
+					if(!item.isSelected) {
+						this.rangeInfo.forEach(function(obj, index) {
+							if(item == obj) {
+								item.isSelected = !item.isSelected
+							} else {
+								obj.isSelected = false;
+							}
+						})
+					}
+					vm.rangeValue = item
+
+					this.close()
+				}
+			}
+		})
+	})
+</script>

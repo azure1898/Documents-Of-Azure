@@ -1,0 +1,40 @@
+{
+"code" : 1000,
+"data" : [{
+  "subUserId":"",
+  "userHeadUrl":"../../images/icon04.png",
+  "userName":"A梦军",
+  "speakId":"",
+  "content":"这里显示最近一条发言的内容",
+  "relation":1
+},{
+  "subUserId":"",
+  "userHeadUrl":"../../images/icon04.png",
+  "userName":"B梦军",
+  "speakId":"",
+  "content":"这里显示最近一条发言的内容",
+  "relation":2
+},{
+  "subUserId":"",
+  "userHeadUrl":"../../images/icon04.png",
+  "userName":"C梦军",
+  "speakId":"",
+  "content":"这里显示最近一条发言的内容",
+  "relation":1
+},{
+  "subUserId":"",
+  "userHeadUrl":"../../images/icon04.png",
+  "userName":"D梦军",
+  "speakId":"",
+  "content":"这里显示最近一条发言的内容",
+  "relation":2
+},{
+  "subUserId":"",
+  "userHeadUrl":"../../images/icon04.png",
+  "userName":"E梦军",
+  "speakId":"",
+  "content":"这里显示最近一条发言的内容",
+  "relation":1
+}],
+"message" : ""
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>我的发言</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/need/layer.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+		 	a:link {
+				text-decoration: none;
+				color: #505050;
+			}
+			a:visited {
+				text-decoration: none;
+				color: #505050;
+			}
+			a:hover {
+				text-decoration: none;
+				color: #505050;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.bt{
+				border-top:solid 1px #ececec;
+			}
+			.fyxq_main3 ul li:first-child {
+				margin-left: 3%;
+			}
+			.bottom_icon6 {
+			    background: url(../../images/bot_icon3.png) left center no-repeat;
+			    padding-left: 25px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+
+			<div class="grey_top">
+				<a href="#" class="black_back"></a>
+				我的发言
+			</div>
+			<div class="main_box mb10" v-for="(speech,index) in speechLists" :class="{'bt':index != 0}">
+				<div class="fyxq_main border_bot">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_title">
+							<p>
+								<font style="font-size:16px;">{{speech.plateName}}</font>
+							</p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">{{speech.visRange}}</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img :src="speech.userHeadUrl" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>{{speech.userName}}</p>
+							<p><span>{{speech.creatTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">
+						<font class="ftcred" @click="deleteSpeech(speech,index)">删除</font>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred" v-for="(subject,index) in speech.subjectList" :key="index">#{{subject.subName}}#</font>
+						<a :href="urlList.speechdetail + speech.speakId">{{speech.content}}</a>
+						<!--<font class="ftcred">@优米的米</font>-->
+					</p>
+				</div>
+				<div class="fyxq_main3" v-if="speech.releasePictures&&speech.releasePictures.length>0">
+					<ul>
+						<li v-for="img in speech.releasePictures"><img :src="img.imgUrl" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li><a :href="urlList.forward + speech.speakId" class="bottom_icon1">{{speech.countForward}}</a></li>
+						<li><a :href="speech.countComment>0?urlList.speechdetail + speech.speakId:urlList.comments + speech.speakId" class="bottom_icon2">{{speech.countComment}}</a></li>
+						<li style="border-right:none;"><a href="#" :class="speech.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(speech)">{{speech.countPraise}}</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/myspeech2.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

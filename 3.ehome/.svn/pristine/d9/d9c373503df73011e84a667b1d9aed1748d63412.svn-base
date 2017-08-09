@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+			
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>发言详情</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			.fyxq_main3 ul li:nth-child(3n+1){
+				margin-left: 3%;
+			}
+			
+			.baseline {
+				border-bottom: none;
+			}
+			.fyxq_main_l{
+				width: 200px;
+			}
+			a:link{text-decoration: none;}
+			a:visited{text-decoration: none;}
+			a:hover{text-decoration: none;}
+			
+			[v-cloak] {
+			  display: none;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+
+			<div class="grey_top">
+				<a href="#" class="black_back" onclick="javascript :history.go(-1);"></a>
+				发言详情
+			</div>
+			<div class="main_box">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img :src="customer.userHeadSrc" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>{{customer.userName}}</p>
+							<p><span>{{customer.createTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><img src="../../images/xl_icon.png" width="12" height="7"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">{{customer.subjectName}}</font>{{customer.spContent}}
+						<!--<font class="ftcred" v-for="(obj,index) in customer.friend" :key="index">{{obj.object}}</font>-->
+					</p>
+				</div>
+				<div class="fyxq_main3">
+					<ul>
+						<li v-for="image in customer.releasePictures"><img :src="image.imgUrl" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+			<div class="Boutique_buy_title mt10">
+				<div class="Boutique_buy_title_left"><a href="#" @click="forwardingList()">转发{{customer.spCountFwd}}</a></div>
+				<div class="Boutique_buy_title_left"><a href="#" class="active" @click="commentList()">评论{{customer.spCountCmt}}</a></div>
+				<div class="Boutique_buy_title_left" style="border-right:none;"><a href="#" @click="praiseList()">赞{{customer.spCountPraise}}</a></div>
+			</div>
+			<!--<div class="main_box" style="border-bottom:none;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">
+						<table width="100" border="0">
+							<tr>
+								<td width="20"><img src="../images/zan_02.png" width="14" height="13"></td>
+								<td width="60" style="padding-top:5px;">
+									<font class="ftcred">255</font>
+								</td>
+								<td width="20"><img src="../images/xinxi_icon.png" width="14" height="14"></td>
+							</tr>
+						</table>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2_2">
+					<p class="ftc5050">这个过程是很复杂的，中间也会遇到不少猫腻。</p>
+				</div>
+			</div>-->
+			<!--评论-->
+			<div id="discuss">
+				<div class="main_box" v-for="comment in comments" style="border-bottom:none;">
+					<div class="fyxq_main">
+						<div class="fyxq_main_l">
+							<div class="fyxq_main_l_img"><img :src="comment.headPicSrc" width="110" height="110"></div>
+							<div class="fyxq_main_l_title">
+								<p>{{comment.userName}}</p>
+								<p><span>{{comment.createTime}}</span></p>
+							</div>
+						</div>
+						<div class="fyxq_main_r">
+							<table width="100" border="0">
+								<tr>
+									<td width="20" @click="praiseOne(comment,2)"><img :src="comment.isPraise==1?praiseIcon2:praiseIcon" width="14" height="13"></td>
+									<td width="60" style="padding-top:5px;">{{comment.countPraise}}</td>
+									<td width="20"><img src="../../images/xinxi_icon.png" width="14" height="14"></td>
+								</tr>
+							</table>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="fyxq_main2_2" :class="{'baseline':comment.secCountCmt>0}">
+						<p class="ftc5050">{{comment.content}}</p>
+					</div>
+					<div class="ckqtpl" v-if="comment.secCountCmt>0">查看其他人对这条评论的
+						<font class="ftcred">{{comment.secCountCmt}}条评论></font>
+					</div>
+				</div>
+			</div>
+
+			<!--赞列表-->
+			<div id="praise">
+				<div class="main_box" style="border-bottom:none;" v-for="praise in praises">
+					<div class="fyxq_main">
+						<div class="zan_xq">
+							<div class="fyxq_main_l_img"><img :src="praise.headPicSrc" width="110" height="110"></div>
+							<div class="zan_xq_r">
+								<p>{{praise.userName}}</p>
+							</div>
+						</div>
+
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<!--转发列表-->
+			<div id="forwarding">
+				<div class="main_box" style="border-bottom:none;" v-for="forward in forwardings">
+					<div class="fyxq_main">
+						<div class="fyxq_main_l">
+							<div class="fyxq_main_l_img"><img :src="forward.headPicSrc" width="110" height="110"></div>
+							<div class="fyxq_main_l_title">
+								<p>{{forward.userName}}</p>
+								<p><span>{{forward.createTime}}</span></p>
+							</div>
+						</div>
+
+						<div class="clear"></div>
+					</div>
+					<div class="fyxq_main2_2">
+						<p class="ftc5050">这个过程是很复杂的，中间也会遇到不少猫腻。</p>
+					</div>
+				</div>
+			</div>
+
+			<!--底部三个按钮-->
+			<div class="business_bottom">
+				<ul>
+					<li><a href="forward.html" class="bottom2_icon1">转发</a></li>
+					<li><a href="comment.html" class="bottom2_icon2">评论</a></li>
+					<li style="border-right:none;"><a href="#" class="bottom2_icon3">赞</a></li>
+				</ul>
+			</div>
+		</div>
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/speechdetails.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>消息通知设置</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/消息通知设置/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/消息通知设置/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5342" class="ax_default shape">
+        <img id="u5342_img" class="img " src="images/消息通知设置/u5342.png"/>
+        <!-- Unnamed () -->
+        <div id="u5343" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5344" class="ax_default box_1">
+        <img id="u5344_img" class="img " src="images/发言详情/u542.png"/>
+        <!-- Unnamed () -->
+        <div id="u5345" class="text" style="visibility: visible;">
+          <p><span>消息通知设置</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5346" class="ax_default box_1">
+        <img id="u5346_img" class="img " src="images/消息通知设置/u5346.png"/>
+        <!-- Unnamed () -->
+        <div id="u5347" class="text" style="visibility: visible;">
+          <p><span>允许评论带图</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5348" class="ax_default box_1">
+        <img id="u5348_img" class="img " src="images/消息通知设置/u5348.png"/>
+        <!-- Unnamed () -->
+        <div id="u5349" class="text" style="visibility: visible;">
+          <p><span>屏蔽设置</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (返回) -->
+
+      <!-- Unnamed (图片) -->
+      <div id="u5351" class="ax_default _图片1">
+        <img id="u5351_img" class="img " src="images/发言详情/u679.png"/>
+        <!-- Unnamed () -->
+        <div id="u5352" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5353" class="ax_default _图片1">
+        <img id="u5353_img" class="img " src="images/消息通知设置/u5353.png"/>
+        <!-- Unnamed () -->
+        <div id="u5354" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5355" class="ax_default label">
+        <div id="u5355_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u5356" class="text" style="visibility: visible;">
+          <p><span>通知提醒</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5357" class="ax_default box_1">
+        <img id="u5357_img" class="img " src="images/消息通知设置/u5348.png"/>
+        <!-- Unnamed () -->
+        <div id="u5358" class="text" style="visibility: visible;">
+          <p><span>@我的</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5359" class="ax_default box_1">
+        <img id="u5359_img" class="img " src="images/消息通知设置/u5348.png"/>
+        <!-- Unnamed () -->
+        <div id="u5360" class="text" style="visibility: visible;">
+          <p><span>评论</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5361" class="ax_default box_1">
+        <img id="u5361_img" class="img " src="images/消息通知设置/u5348.png"/>
+        <!-- Unnamed () -->
+        <div id="u5362" class="text" style="visibility: visible;">
+          <p><span>赞</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5363" class="ax_default _图片1">
+        <img id="u5363_img" class="img " src="images/消息通知设置/u5353.png"/>
+        <!-- Unnamed () -->
+        <div id="u5364" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5365" class="ax_default _图片1">
+        <img id="u5365_img" class="img " src="images/消息通知设置/u5353.png"/>
+        <!-- Unnamed () -->
+        <div id="u5366" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5367" class="ax_default _图片1">
+        <img id="u5367_img" class="img " src="images/消息通知设置/u5353.png"/>
+        <!-- Unnamed () -->
+        <div id="u5368" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u5369" class="ax_default box_1">
+        <img id="u5369_img" class="img " src="images/消息通知设置/u5348.png"/>
+        <!-- Unnamed () -->
+        <div id="u5370" class="text" style="visibility: visible;">
+          <p><span>被关注</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5371" class="ax_default _图片1">
+        <img id="u5371_img" class="img " src="images/消息通知设置/u5353.png"/>
+        <!-- Unnamed () -->
+        <div id="u5372" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u5373" class="ax_default _图片1">
+        <img id="u5373_img" class="img " src="images/消息通知设置/u5373.png"/>
+        <!-- Unnamed () -->
+        <div id="u5374" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
