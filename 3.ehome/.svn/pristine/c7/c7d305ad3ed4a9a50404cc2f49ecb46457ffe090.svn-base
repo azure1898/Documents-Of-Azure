@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>流程图-发言</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/流程图-发言/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/流程图-发言/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (组合) -->
+      <div id="u1826" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1827" class="ax_default box_1">
+          <div id="u1827_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1828" class="text" style="visibility: visible;">
+            <p><span>APP新发言--流程</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1829" class="ax_default box_1">
+          <div id="u1829_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1830" class="text" style="visibility: visible;">
+            <p><span>用户</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1831" class="ax_default box_1">
+          <div id="u1831_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1832" class="text" style="visibility: visible;">
+            <p><span>{发言程序}</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1833" class="ax_default box_1">
+          <div id="u1833_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1834" class="text" style="visibility: visible;">
+            <p><span>被@人</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1835" class="ax_default box_1">
+          <div id="u1835_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1836" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1837" class="ax_default box_1">
+          <div id="u1837_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1838" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1839" class="ax_default box_1">
+          <div id="u1839_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1840" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1841" class="ax_default box_1">
+          <div id="u1841_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1842" class="text" style="visibility: visible;">
+            <p><span>开始</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1843" class="ax_default box_1">
+          <div id="u1843_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1844" class="text" style="visibility: visible;">
+            <p><span>提交内容</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1845" class="ax_default box_1">
+          <div id="u1845_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1846" class="text" style="visibility: visible;">
+            <p><span>查看成功发言</span></p><p><span>内容</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1847" class="ax_default box_1">
+          <div id="u1847_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1848" class="text" style="visibility: visible;">
+            <p><span>结束</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1849" class="ax_default box_1">
+          <div id="u1849_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1850" class="text" style="visibility: visible;">
+            <p><span>发言内容敏感词过滤</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1851" class="ax_default box_1">
+          <div id="u1851_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1852" class="text" style="visibility: visible;">
+            <p><span>生成发言记录</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1853" class="ax_default box_1">
+          <div id="u1853_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1854" class="text" style="visibility: visible;">
+            <p><span>推送给被@的人</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1855" class="ax_default box_1">
+          <div id="u1855_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1856" class="text" style="visibility: visible;">
+            <p><span>查看@我的消息</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1857" class="ax_default box_1">
+          <div id="u1857_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1858" class="text" style="visibility: visible;">
+            <p><span>结束</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1859" class="ax_default connector">
+          <img id="u1859_seg0" class="img " src="images/流程图-转发/u1069_seg0.png" alt="u1859_seg0"/>
+          <img id="u1859_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u1859_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1860" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1861" class="ax_default connector">
+          <img id="u1861_seg0" class="img " src="images/流程图-转发/u1071_seg0.png" alt="u1861_seg0"/>
+          <img id="u1861_seg1" class="img " src="images/登录/u33_seg1.png" alt="u1861_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1862" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1863" class="ax_default connector">
+          <img id="u1863_seg0" class="img " src="images/流程图-转发/u1073_seg0.png" alt="u1863_seg0"/>
+          <img id="u1863_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u1863_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1864" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1865" class="ax_default connector">
+          <img id="u1865_seg0" class="img " src="images/流程图-转发/u1075_seg0.png" alt="u1865_seg0"/>
+          <img id="u1865_seg1" class="img " src="images/流程图-转发/u1075_seg1.png" alt="u1865_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1866" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1867" class="ax_default connector">
+          <img id="u1867_seg0" class="img " src="images/流程图-转发/u1077_seg0.png" alt="u1867_seg0"/>
+          <img id="u1867_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u1867_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1868" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1869" class="ax_default connector">
+          <img id="u1869_seg0" class="img " src="images/流程图-转发/u1077_seg0.png" alt="u1869_seg0"/>
+          <img id="u1869_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u1869_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1870" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1871" class="ax_default connector">
+          <img id="u1871_seg0" class="img " src="images/流程图-转发/u1081_seg0.png" alt="u1871_seg0"/>
+          <img id="u1871_seg1" class="img " src="images/登录/u33_seg1.png" alt="u1871_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1872" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (Connector) -->
+        <div id="u1873" class="ax_default connector">
+          <img id="u1873_seg0" class="img " src="images/流程图-转发/u1083_seg0.png" alt="u1873_seg0"/>
+          <img id="u1873_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u1873_seg1"/>
+          <!-- Unnamed () -->
+          <div id="u1874" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1875" class="ax_default label">
+          <div id="u1875_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1876" class="text" style="visibility: visible;">
+            <p><span>消息提醒：</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u1877" class="ax_default label">
+          <div id="u1877_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u1878" class="text" style="visibility: visible;">
+            <p><span>有@消息</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

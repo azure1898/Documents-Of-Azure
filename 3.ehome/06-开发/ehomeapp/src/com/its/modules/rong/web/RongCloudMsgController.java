@@ -1,0 +1,263 @@
+
+package com.its.modules.rong.web;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.mail.search.DateTerm;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.its.modules.app.entity.Account;
+import com.its.modules.app.service.AccountService;
+import com.its.modules.rong.common.RongGlobal;
+import com.its.modules.rong.entity.SocialMsg;
+import com.its.modules.rong.service.SocialMsgService;
+
+import io.rong.RongCloud;
+import io.rong.messages.TxtMessage;
+
+/**
+ * @Description：融云相关消息推送接口
+ * @Author：刘恩富
+ * @Date：2017年8月11日
+ */
+@Controller
+@RequestMapping(value = "${appPath}/rongCloudMsg")
+public class RongCloudMsgController {
+
+	/**
+	 * 商品配送消息（仅商品购买模式）
+	 * @param businessId	商家Id
+	 * @param businessName	商家名称
+	 * @param orderId		订单编号
+	 * @param toUserId		发送用户Id
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="sendGoodsMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String sendGoodsMsg(String businessId,String businessName,String orderId,String toUserId,int isSend) throws Exception{
+		try{
+			
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			String[] messagePublishSystemToUserId = new String[1];
+			messagePublishSystemToUserId[0] = toUserId;
+			String msgContent = "您在["+businessName+"]下的订单已送出。 订单号:"+orderId+"。（点击查看详情）";
+			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,"");
+			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
+			
+			SocialMsg socialMsg = new SocialMsg();
+			socialMsg.setUserid(businessId);
+			socialMsg.setUsername(businessName);
+			socialMsg.setTouserid(toUserId);
+			socialMsg.setContent(msgContent);
+			socialMsg.setIsnotice("1");
+			socialMsg.setNoticetime(new Date());
+			socialMsg.setFirtype("1");
+			socialMsg.setSectype("1");
+			socialMsg.setIsread("0");
+			SocialMsgService socialMsgService = new SocialMsgService();
+			socialMsgService.save(socialMsg);
+			
+			return "{code:1000,type:1,message:\"\"}";
+		}catch (Exception ex) {
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
+	
+	/**
+	 * 商家取消订单消息（商品、课程、服务、场地）
+	 * @param businessId	商家Id
+	 * @param businessName	商家名称
+	 * @param cancelReason	取消原因
+	 * @param orderId		订单号
+	 * @param toUserId		发送用户Id
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="cancelOrderMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String cancelOrderMsg(String businessId,String businessName,String cancelReason,String orderId,String toUserId) throws Exception{
+		try{
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			String[] messagePublishSystemToUserId = new String[1];
+			messagePublishSystemToUserId[0] = toUserId;
+			String msgContent = "您在["+businessName+"]下的订单已被商家取消，订单号："+orderId+"，取消原因："+cancelReason+"（点击查看详情）";
+			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,"");
+			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
+			
+			SocialMsg socialMsg = new SocialMsg();
+			socialMsg.setUserid(businessId);
+			socialMsg.setUsername(businessName);
+			socialMsg.setTouserid(toUserId);
+			socialMsg.setContent(msgContent);
+			socialMsg.setIsnotice("1");
+			socialMsg.setNoticetime(new Date());
+			socialMsg.setFirtype("1");
+			socialMsg.setSectype("2");
+			socialMsg.setIsread("0");
+			SocialMsgService socialMsgService = new SocialMsgService();
+			socialMsgService.save(socialMsg);
+			
+			return "{code:1000,type:2,message:\"\"}";
+		}catch (Exception ex) {
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
+
+	
+	
+//	/**
+//	 * 团购券临期消息（团购）
+//	 * @param businessId	商家Id
+//	 * @param businessName	商家名称
+//	 * @param eventName		活动名称
+//	 * @param endDate		活动结束时间
+//	 * @param toUserIds		发送用户Id,格式数组
+//	 * @return				{code,message}
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value="ticketExpireMsg",method = {RequestMethod.POST,RequestMethod.GET})
+//	@ResponseBody
+//	public String ticketExpireMsg(String businessId,String businessName,String eventName,String endDate,String[] toUserIds) throws Exception{
+//		try{
+//			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+//			TxtMessage messagePublishSystemTxtMessage = new TxtMessage("您购买的["+eventName+"] 团购券马上就要到期了，截止日期"+endDate+"，请及时消费。【"+businessName+"】","");
+//			rongCloud.message.PublishSystem(businessId, toUserIds, messagePublishSystemTxtMessage, "", "", 1, 1);
+//			return "{code:1000,message:\"\"}";
+//		}catch (Exception ex) {
+//			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+//		}
+//	}
+	
+
+	/**
+	 * 团购券已消费消息（团购）
+	 * @param businessId	商家Id
+	 * @param businessName	商家名称
+	 * @param eventName		活动名称
+	 * @param toUserId		发送用户Id
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="ticketConsumeMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String ticketConsumeMsg(String businessId,String businessName,String eventName,String toUserId) throws Exception{
+		try{
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			String[] messagePublishSystemToUserId = new String[1];
+			messagePublishSystemToUserId[0] = toUserId;
+			String msgContent = "您购买的["+eventName+"]已消费成功。（点击查看详情）【"+businessName+"】";
+			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,"");
+			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
+			
+			SocialMsg socialMsg = new SocialMsg();
+			socialMsg.setUserid(businessId);
+			socialMsg.setUsername(businessName);
+			socialMsg.setTouserid(toUserId);
+			socialMsg.setContent(msgContent);
+			socialMsg.setIsnotice("1");
+			socialMsg.setNoticetime(new Date());
+			socialMsg.setFirtype("1");
+			socialMsg.setSectype("4");
+			socialMsg.setIsread("0");
+			SocialMsgService socialMsgService = new SocialMsgService();
+			socialMsgService.save(socialMsg);
+			return "{code:1000,message:\"\"}";
+		}catch (Exception ex) {
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
+	
+	/**
+	 * 团购券已退款消息（团购）
+	 * @param businessId	商家Id
+	 * @param businessName	商家名称
+	 * @param eventName		活动名称
+	 * @param toUserId		发送用户Id
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="ticketBackMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String ticketBackMsg(String businessId,String businessName,String eventName,String toUserId) throws Exception{
+		try{
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			String[] messagePublishSystemToUserId = new String[1];
+			messagePublishSystemToUserId[0] = toUserId;
+			String msgContent = "您购买的["+eventName+"]已退款成功。（点击查看详情）【"+businessName+"】";
+			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,"");
+			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
+			
+			SocialMsg socialMsg = new SocialMsg();
+			socialMsg.setUserid(businessId);
+			socialMsg.setUsername(businessName);
+			socialMsg.setTouserid(toUserId);
+			socialMsg.setContent(msgContent);
+			socialMsg.setIsnotice("1");
+			socialMsg.setNoticetime(new Date());
+			socialMsg.setFirtype("1");
+			socialMsg.setSectype("5");
+			socialMsg.setIsread("0");
+			SocialMsgService socialMsgService = new SocialMsgService();
+			socialMsgService.save(socialMsg);
+			return "{code:1000,message:\"\"}";
+		}catch (Exception ex) {
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
+	
+	
+	
+	
+//	/**
+//	 * 公告通知
+//	 * @param fromId 		发送用户Id
+//	 * @param noticeTitle	公告Title
+//	 * @param noticeSummary	公告Summary
+//	 * @return				{code,message}
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value="noticeMsg",method = {RequestMethod.POST,RequestMethod.GET})
+//	@ResponseBody
+//	public String noticeMsg(String fromId,String noticeTitle,String noticeSummary) throws Exception{
+//		try{
+//			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+//			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(noticeTitle+"\r\n"+noticeSummary,"");
+//			
+//			String[] messagePublishSystemToUserId = new String[100];
+//			int i_msg = 0;
+//			AccountService accountService = new AccountService();
+//			List<Account> list_account = accountService.findAllList();
+//			if(list_account!=null && !list_account.isEmpty()){
+//				for (int i = 0 ; i<list_account.size();i++) {
+//					Account account = list_account.get(i);
+//					messagePublishSystemToUserId[i_msg] = account.getCurrentUser().getId();
+//					if(i_msg==99){
+//						rongCloud.message.PublishSystem(fromId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
+//						Thread.sleep(1000);
+//						i_msg = 0;
+//					}else if(i == list_account.size() -1){
+//						String[] ToUserId_tmp = new String[i_msg+1];
+//						for (int j = 0;j<ToUserId_tmp.length;j++) {
+//							ToUserId_tmp[j] = messagePublishSystemToUserId[j];
+//							rongCloud.message.PublishSystem(fromId, ToUserId_tmp, messagePublishSystemTxtMessage, "", "", 1, 1);
+//							Thread.sleep(1000);
+//							i_msg = 0;
+//						}
+//					}else{
+//						i_msg++;
+//					}
+//				}
+//			}
+//			return "{code:1000,message:\"\"}";
+//		}catch (Exception ex) {
+//			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+//		}
+//	}
+	
+}

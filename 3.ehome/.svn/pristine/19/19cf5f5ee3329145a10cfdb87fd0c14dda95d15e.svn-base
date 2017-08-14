@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>楼盘选择</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/楼盘选择/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/楼盘选择/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14811" class="ax_default box_1">
+        <div id="u14811_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14812" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14813" class="ax_default box_1">
+        <div id="u14813_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14814" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14815" class="ax_default label">
+        <div id="u14815_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14816" class="text" style="visibility: visible;">
+          <p><span>楼盘选择</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u14817" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u14818" class="ax_default box_1">
+          <div id="u14818_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u14819" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (图片) -->
+        <div id="u14820" class="ax_default image">
+          <img id="u14820_img" class="img " src="images/批量设置模块/u4410.png"/>
+          <!-- Unnamed () -->
+          <div id="u14821" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (图片) -->
+        <div id="u14822" class="ax_default image">
+          <img id="u14822_img" class="img " src="images/批量设置模块/u4412.png"/>
+          <!-- Unnamed () -->
+          <div id="u14823" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (图片) -->
+        <div id="u14824" class="ax_default image">
+          <img id="u14824_img" class="img " src="images/批量设置模块/u4414.png"/>
+          <!-- Unnamed () -->
+          <div id="u14825" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u14826" class="ax_default checkbox">
+          <label for="u14826_input">
+            <!-- Unnamed () -->
+            <div id="u14827" class="text" style="visibility: visible;">
+              <p><span>实地中山璟湖城</span></p>
+            </div>
+          </label>
+          <input id="u14826_input" type="checkbox" value="checkbox" checked/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u14828" class="ax_default checkbox">
+          <label for="u14828_input">
+            <!-- Unnamed () -->
+            <div id="u14829" class="text" style="visibility: visible;">
+              <p><span>紫藤庄园</span></p>
+            </div>
+          </label>
+          <input id="u14828_input" type="checkbox" value="checkbox" checked/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u14830" class="ax_default checkbox">
+          <label for="u14830_input">
+            <!-- Unnamed () -->
+            <div id="u14831" class="text" style="visibility: visible;">
+              <p><span>紫藤新庄园</span></p>
+            </div>
+          </label>
+          <input id="u14830_input" type="checkbox" value="checkbox"/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u14832" class="ax_default checkbox">
+          <label for="u14832_input">
+            <!-- Unnamed () -->
+            <div id="u14833" class="text" style="visibility: visible;">
+              <p><span>中山</span></p>
+            </div>
+          </label>
+          <input id="u14832_input" type="checkbox" value="checkbox"/>
+        </div>
+
+        <!-- Unnamed (复选框) -->
+        <div id="u14834" class="ax_default checkbox">
+          <label for="u14834_input">
+            <!-- Unnamed () -->
+            <div id="u14835" class="text" style="visibility: visible;">
+              <p><span>北京</span></p>
+            </div>
+          </label>
+          <input id="u14834_input" type="checkbox" value="checkbox"/>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14836" class="ax_default box_1">
+        <div id="u14836_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14837" class="text" style="visibility: visible;">
+          <p><span>X</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14838" class="ax_default button">
+        <div id="u14838_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14839" class="text" style="visibility: visible;">
+          <p><span>保存</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u14840" class="ax_default button">
+        <div id="u14840_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u14841" class="text" style="visibility: visible;">
+          <p><span>取消</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

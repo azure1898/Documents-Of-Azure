@@ -1,0 +1,172 @@
+﻿.ax_default {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:400;
+  font-style:normal;
+  font-size:13px;
+  color:#333333;
+  text-align:center;
+  line-height:normal;
+}
+.box_1 {
+}
+.ellipse {
+}
+.image {
+}
+.placeholder {
+}
+.button {
+}
+._一级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  font-size:32px;
+  text-align:left;
+}
+._二级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  font-size:24px;
+  text-align:left;
+}
+._三级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  font-size:18px;
+  text-align:left;
+}
+._四级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  font-size:14px;
+  text-align:left;
+}
+._五级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  text-align:left;
+}
+._六级标题 {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:bold;
+  font-size:10px;
+  text-align:left;
+}
+.label {
+  font-size:14px;
+  text-align:left;
+}
+._文本段落 {
+  text-align:left;
+}
+._流程形状 {
+}
+.connector {
+  font-family:'Arial Normal', 'Arial';
+  font-weight:400;
+  font-style:normal;
+  font-size:12px;
+  color:#FF0000;
+  text-align:center;
+  line-height:normal;
+}
+.line {
+}
+.text_field {
+  color:#000000;
+  text-align:left;
+}
+.droplist {
+  color:#000000;
+  text-align:left;
+}
+.checkbox {
+  text-align:left;
+}
+.radio_button {
+  text-align:left;
+}
+._图片 {
+}
+.icon {
+}
+.box_2 {
+}
+.box_3 {
+}
+._形状 {
+}
+._水平线 {
+}
+.html_button {
+  text-align:center;
+}
+.table_cell {
+}
+._提交按钮 {
+  color:#000000;
+}
+.primary_button {
+  color:#FFFFFF;
+}
+.shape {
+}
+._图片1 {
+  color:#000000;
+}
+._文本链接 {
+  color:#0000FF;
+}
+._多行文本框 {
+  color:#000000;
+  text-align:left;
+}
+._列表框 {
+  color:#000000;
+  text-align:left;
+}
+._表格 {
+}
+.sticky_1 {
+  text-align:left;
+}
+.horizontal_line {
+}
+._垂直线 {
+}
+._鼠标悬停文本链接时 {
+}
+._鼠标按下文本链接时 {
+}
+._形状1 {
+}
+.link_button {
+  color:#169BD5;
+}
+.arrow {
+}
+.marker {
+  color:#FFFFFF;
+}
+.snapshot {
+}
+.sticky_3 {
+  text-align:left;
+}
+.tree_node {
+  text-align:left;
+}
+.menu_item {
+}
+.label1 {
+  font-family:'微软雅黑 Regular', '微软雅黑';
+  font-size:14px;
+  text-align:right;
+  line-height:28px;
+}
+.image1 {
+  color:#000000;
+}
+.box_11 {
+  line-height:20px;
+}

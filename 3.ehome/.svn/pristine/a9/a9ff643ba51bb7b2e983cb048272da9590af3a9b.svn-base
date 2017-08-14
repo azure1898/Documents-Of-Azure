@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.rong.dao.SocialMsgDao">
+    
+	<sql id="socialMsgColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.username AS "username",
+		a.touserid AS "touserid",
+		a.content AS "content",
+		a.isnotice AS "isnotice",
+		a.noticetime AS "noticetime",
+		a.firtype AS "firtype",
+		a.sectype AS "sectype",
+		a.isread AS "isread"
+	</sql>
+	
+	<sql id="socialMsgJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialMsg">
+		SELECT 
+			<include refid="socialMsgColumns"/>
+		FROM social_msg a
+		<include refid="socialMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialMsg">
+		SELECT 
+			<include refid="socialMsgColumns"/>
+		FROM social_msg a
+		<include refid="socialMsgJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialMsg">
+		SELECT 
+			<include refid="socialMsgColumns"/>
+		FROM social_msg a
+		<include refid="socialMsgJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_msg(
+			id,
+			userid,
+			username,
+			touserid,
+			content,
+			isnotice,
+			noticetime,
+			firtype,
+			sectype,
+			isread
+		) VALUES (
+			#{id},
+			#{userid},
+			#{username},
+			#{touserid},
+			#{content},
+			#{isnotice},
+			#{noticetime},
+			#{firtype},
+			#{sectype},
+			#{isread}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_msg SET 	
+			userid = #{userid},
+			username = #{username},
+			touserid = #{touserid},
+			content = #{content},
+			isnotice = #{isnotice},
+			noticetime = #{noticetime},
+			firtype = #{firtype},
+			sectype = #{sectype},
+			isread = #{isread}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_msg
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

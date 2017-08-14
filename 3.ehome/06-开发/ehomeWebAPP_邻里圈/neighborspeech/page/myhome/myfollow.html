@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>我的粉丝</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/need/layer.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+		 	a:link{text-decoration: none;}
+			a:visited{text-decoration: none;}
+			a:hover{text-decoration: none;}
+			[v-cloak] {
+				  display: none;
+				}
+			.main_box .my_message:last-child {
+				border-bottom: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="black_back"></a>
+				我的关注
+			</div>
+			<div class="main_box" style="border-top:solid 1px #ececec; padding:0;">
+				<div class="my_message" v-for="(myfollow,index) in myfollowData">
+					<div class="my_message_left"><img :src="myfollow.userHeadUrl" width="80" height="80">
+					</div>
+					<div class="my_message_right3">
+						<p v-if="myfollow.relation==2">&nbsp;&nbsp;<span class="myfans_but" @click="follow(myfollow,index)"><i class="glyphicon glyphicon-ok" style="margin-right:5px;"></i>已关注</span>
+							<font style="font-size:16px; color:#000;">{{myfollow.userName}}</font>
+						</p>
+						<p v-else>&nbsp;&nbsp;<span class="myfans_but" @click="follow(myfollow,index)">相互关注</span>
+							<font style="font-size:16px; color:#000;">{{myfollow.userName}}</font>
+						</p>
+						<p>&nbsp;&nbsp;{{myfollow.content}}</p>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/myfollow.js" type="text/javascript" charset="utf-8"></script>
+
+	</body>
+
+</html>

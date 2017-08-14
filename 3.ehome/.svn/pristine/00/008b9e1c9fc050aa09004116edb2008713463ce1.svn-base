@@ -1,0 +1,937 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>角色管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/角色管理/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/角色管理/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15211" class="ax_default paragraph">
+        <div id="u15211_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15212" class="text" style="visibility: visible;">
+          <p><span>系统管理 &gt; 角色管理</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (水平线) -->
+      <div id="u15213" class="ax_default horizontal_line">
+        <img id="u15213_img" class="img " src="images/添加公_司/u224.png"/>
+        <!-- Unnamed () -->
+        <div id="u15214" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15215" class="ax_default box_1">
+        <div id="u15215_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15216" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15217" class="ax_default button">
+        <div id="u15217_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15218" class="text" style="visibility: visible;">
+          <p><span>添加</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15219" class="ax_default box_2">
+        <div id="u15219_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15220" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15221" class="ax_default label">
+        <div id="u15221_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15222" class="text" style="visibility: visible;">
+          <p><span>序号</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15223" class="ax_default label">
+        <div id="u15223_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15224" class="text" style="visibility: visible;">
+          <p><span>描述</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15225" class="ax_default box_1">
+        <div id="u15225_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15226" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15227" class="ax_default label">
+        <div id="u15227_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15228" class="text" style="visibility: visible;">
+          <p><span>1</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15229" class="ax_default label">
+        <div id="u15229_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15230" class="text" style="visibility: visible;">
+          <p><span>产品经理</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15231" class="ax_default box_1">
+        <div id="u15231_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15232" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15233" class="ax_default label">
+        <div id="u15233_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15234" class="text" style="visibility: visible;">
+          <p><span>2</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15235" class="ax_default label">
+        <div id="u15235_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15236" class="text" style="visibility: visible;">
+          <p><span>用于财务结算</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15237" class="ax_default label">
+        <div id="u15237_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15238" class="text" style="visibility: visible;">
+          <p><span>角色</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15239" class="ax_default label">
+        <div id="u15239_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15240" class="text" style="visibility: visible;">
+          <p><span>产品经理</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15241" class="ax_default label">
+        <div id="u15241_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15242" class="text" style="visibility: visible;">
+          <p><span>财务总监</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15243" class="ax_default box_1">
+        <div id="u15243_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15244" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15245" class="ax_default label">
+        <div id="u15245_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15246" class="text" style="visibility: visible;">
+          <p><span>3</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (智慧社区综合管理平台) -->
+
+      <!-- Unnamed (组合) -->
+      <div id="u15248" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15249" class="ax_default shape">
+          <div id="u15249_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15250" class="text" style="display: none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15251" class="ax_default shape">
+          <div id="u15251_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15252" class="text" style="visibility: visible;">
+            <p><span>智慧社区综合管理平台</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15253" class="ax_default shape">
+          <div id="u15253_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15254" class="text" style="visibility: visible;">
+            <p><span>2017-5-19&nbsp; &nbsp; &nbsp; &nbsp; 15:25:44</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15255" class="ax_default shape">
+          <div id="u15255_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15256" class="text" style="visibility: visible;">
+            <p><span>首页</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15257" class="ax_default shape">
+          <div id="u15257_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15258" class="text" style="visibility: visible;">
+            <p><span>你好，admin&nbsp; &nbsp; 退出</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u15259" class="ax_default shape">
+          <div id="u15259_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u15260" class="text" style="visibility: visible;">
+            <p><span>修改密码</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15261" class="ax_default button">
+        <div id="u15261_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15262" class="text" style="visibility: visible;">
+          <p><span>角色授权</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15263" class="ax_default button">
+        <div id="u15263_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15264" class="text" style="visibility: visible;">
+          <p><span>编辑</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15265" class="ax_default button">
+        <div id="u15265_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15266" class="text" style="visibility: visible;">
+          <p><span>删除</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15267" class="ax_default label">
+        <div id="u15267_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15268" class="text" style="visibility: visible;">
+          <p><span>实地物业运营</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15269" class="ax_default label">
+        <div id="u15269_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15270" class="text" style="visibility: visible;">
+          <p><span>用于项目管理</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u15271" class="ax_default image">
+        <img id="u15271_img" class="img " src="images/公司管理/u38.png"/>
+        <!-- Unnamed () -->
+        <div id="u15272" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (下拉列表框) -->
+      <div id="u15273" class="ax_default droplist">
+        <select id="u15273_input">
+          <option selected value="角色所属">角色所属</option>
+          <option value="普及内部">普及内部</option>
+          <option value="合作公司">合作公司</option>
+        </select>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u15274" class="ax_default text_field">
+        <input id="u15274_input" type="text" value="请输入角色名"/>
+      </div>
+
+      <!-- Unnamed (左侧导航) -->
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15276" class="ax_default box_1">
+        <div id="u15276_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15277" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (树状菜单) -->
+      <div id="u15278" class="ax_default tree_node treeroot">
+        <div id="u15278_children" class="u15278_children">
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15279" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15280" class="ax_default image">
+              <img id="u15280_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15281" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15282" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15282_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15283" class="text" style="visibility: visible;">
+                <p><span>基础资料</span></p>
+              </div>
+            </div>
+            <div id="u15279_children" class="u15279_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15284" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15285" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15285_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15286" class="text" style="visibility: visible;">
+                    <p><span>公司管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15287" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15288" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15288_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15289" class="text" style="visibility: visible;">
+                    <p><span>楼盘管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15290" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15291" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15291_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15292" class="text" style="visibility: visible;">
+                    <p><span>城市管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15293" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15294" class="ax_default image">
+              <img id="u15294_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15295" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15296" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15296_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15297" class="text" style="visibility: visible;">
+                <p><span>商户管理</span></p>
+              </div>
+            </div>
+            <div id="u15293_children" class="u15293_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15298" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15299" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15299_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15300" class="text" style="visibility: visible;">
+                    <p><span>商户信息</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15301" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15302" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15302_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15303" class="text" style="visibility: visible;">
+                    <p><span>商户分类</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15304" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15305" class="ax_default image">
+              <img id="u15305_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15306" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15307" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15307_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15308" class="text" style="visibility: visible;">
+                <p><span>模块管理</span></p>
+              </div>
+            </div>
+            <div id="u15304_children" class="u15304_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15309" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15310" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15310_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15311" class="text" style="visibility: visible;">
+                    <p><span>图标管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15312" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15313" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15313_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15314" class="text" style="visibility: visible;">
+                    <p><span>设置管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15315" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15316" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15316_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15317" class="text" style="visibility: visible;">
+                    <p><span>推荐管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15318" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15319" class="ax_default image">
+              <img id="u15319_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15320" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15321" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15321_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15322" class="text" style="visibility: visible;">
+                <p><span>广告管理</span></p>
+              </div>
+            </div>
+            <div id="u15318_children" class="u15318_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15323" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15324" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15324_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15325" class="text" style="visibility: visible;">
+                    <p><span>发布管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15326" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15327" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15327_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15328" class="text" style="visibility: visible;">
+                    <p><span>位置管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15329" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15330" class="ax_default image">
+              <img id="u15330_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15331" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15332" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15332_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15333" class="text" style="visibility: visible;">
+                <p><span>会员管理</span></p>
+              </div>
+            </div>
+            <div id="u15329_children" class="u15329_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15334" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15335" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15335_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15336" class="text" style="visibility: visible;">
+                    <p><span>注册用户</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15337" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15338" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15338_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15339" class="text" style="visibility: visible;">
+                    <p><span>房间认证</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15340" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15341" class="ax_default image">
+              <img id="u15341_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15342" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15343" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15343_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15344" class="text" style="visibility: visible;">
+                <p><span>运营管理</span></p>
+              </div>
+            </div>
+            <div id="u15340_children" class="u15340_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15345" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15346" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15346_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15347" class="text" style="visibility: visible;">
+                    <p><span>团购管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15348" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15349" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15349_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15350" class="text" style="visibility: visible;">
+                    <p><span>优惠券管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15351" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15352" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15352_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15353" class="text" style="visibility: visible;">
+                    <p><span>充值管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15354" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15355" class="ax_default image">
+              <img id="u15355_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15356" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15357" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15357_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15358" class="text" style="visibility: visible;">
+                <p><span>信息管理</span></p>
+              </div>
+            </div>
+            <div id="u15354_children" class="u15354_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15359" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15360" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15360_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15361" class="text" style="visibility: visible;">
+                    <p><span>社区公告</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15362" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15363" class="ax_default image">
+              <img id="u15363_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15364" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15365" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15365_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15366" class="text" style="visibility: visible;">
+                <p><span>社圈管理</span></p>
+              </div>
+            </div>
+            <div id="u15362_children" class="u15362_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15367" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15368" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15368_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15369" class="text" style="visibility: visible;">
+                    <p><span>话题管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15370" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15371" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15371_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15372" class="text" style="visibility: visible;">
+                    <p><span>发言管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15373" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15374" class="ax_default image">
+              <img id="u15374_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15375" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15376" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15376_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15377" class="text" style="visibility: visible;">
+                <p><span>财务管理</span></p>
+              </div>
+            </div>
+            <div id="u15373_children" class="u15373_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15378" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15379" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15379_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15380" class="text" style="visibility: visible;">
+                    <p><span>交易管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15381" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15382" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15382_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15383" class="text" style="visibility: visible;">
+                    <p><span>结算管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15384" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15385" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15385_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15386" class="text" style="visibility: visible;">
+                    <p><span>退款管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unnamed (树节点) -->
+          <div id="u15387" class="ax_default tree_node treenode">
+
+            <!-- Unnamed (图片) -->
+            <div id="u15388" class="ax_default image">
+              <img id="u15388_img" class="img " src="images/公司管理/u85_selected.png"/>
+              <!-- Unnamed () -->
+              <div id="u15389" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+            <!-- Unnamed (矩形) -->
+            <div id="u15390" class="" selectiongroup="u15275u15278_tree_group">
+              <div id="u15390_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u15391" class="text" style="visibility: visible;">
+                <p><span>系统管理</span></p>
+              </div>
+            </div>
+            <div id="u15387_children" class="u15387_children">
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15392" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15393" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15393_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15394" class="text" style="visibility: visible;">
+                    <p><span>用户管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15395" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15396" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15396_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15397" class="text" style="visibility: visible;">
+                    <p><span>角色管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15398" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15399" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15399_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15400" class="text" style="visibility: visible;">
+                    <p><span>日志管理</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unnamed (树节点) -->
+              <div id="u15401" class="ax_default tree_node treenode">
+                <!-- Unnamed (矩形) -->
+                <div id="u15402" class="" selectiongroup="u15275u15278_tree_group">
+                  <div id="u15402_div" class=""></div>
+                  <!-- Unnamed () -->
+                  <div id="u15403" class="text" style="visibility: visible;">
+                    <p><span>版本管理</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15404" class="ax_default label">
+        <div id="u15404_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15405" class="text" style="visibility: visible;">
+          <p><span>操作</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15406" class="ax_default label">
+        <div id="u15406_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15407" class="text" style="visibility: visible;">
+          <p><span>管理用户</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15408" class="ax_default paragraph">
+        <div id="u15408_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15409" class="text" style="visibility: visible;">
+          <p><span>后续需要增加公司组织关系，在组织架构下建立角色</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15410" class="ax_default label">
+        <div id="u15410_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15411" class="text" style="visibility: visible;">
+          <p><span>管理用户</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u15412" class="ax_default label">
+        <div id="u15412_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u15413" class="text" style="visibility: visible;">
+          <p><span>管理用户</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,470 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>确认缴费</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/确认缴费_1/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/确认缴费_1/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4073" class="ax_default box_1">
+        <div id="u4073_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4074" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4075" class="ax_default _图片">
+        <img id="u4075_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4076" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4077" class="ax_default box_1">
+        <div id="u4077_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4078" class="text" style="visibility: visible;">
+          <p><span>确认缴费</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4079" class="ax_default image">
+        <img id="u4079_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4080" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4081" class="ax_default box_2">
+        <div id="u4081_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4082" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 车位管理费(17-22栋104) </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4083" class="ax_default box_2">
+        <div id="u4083_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4084" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 住宅物业管理费</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4085" class="ax_default _文本段落">
+        <img id="u4085_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4086" class="text" style="visibility: visible;">
+          <p><span style="color:#666666;">&nbsp; </span><span style="color:#1E1E1E;">房间：</span><span style="color:#000000;">18栋1101</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4087" class="ax_default">
+
+        <!-- Unnamed (组合) -->
+        <div id="u4088" class="ax_default">
+
+          <!-- Unnamed (矩形) -->
+          <div id="u4089" class="ax_default box_1">
+            <div id="u4089_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u4090" class="text" style="visibility: visible;">
+              <p><span>待支付：¥ 530.00&nbsp; 优惠：￥10.00</span></p>
+            </div>
+          </div>
+
+          <!-- Unnamed (矩形) -->
+          <div id="u4091" class="ax_default box_1">
+            <div id="u4091_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u4092" class="text" style="visibility: visible;">
+              <p><span>提交订单</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4093" class="ax_default box_2">
+        <div id="u4093_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4094" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; 优惠券&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4095" class="ax_default _文本段落">
+        <div id="u4095_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4096" class="text" style="visibility: visible;">
+          <p><span style="color:#FF0000;">-10</span><span style="color:#999999;">&gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4097" class="ax_default _文本段落">
+        <img id="u4097_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4098" class="text" style="visibility: visible;">
+          <p><span>￥150.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4099" class="ax_default box_1">
+        <div id="u4099_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4100" class="text" style="visibility: visible;">
+          <p><span>您有预缴月份被缴纳，无法提交</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4101" class="ax_default box_1">
+        <div id="u4101_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4102" class="text" style="visibility: visible;">
+          <p><span>确定</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4103" class="ax_default box_1">
+        <div id="u4103_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4104" class="text" style="visibility: visible;">
+          <p><span>点击【提价订单】</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (菱形) -->
+      <div id="u4105" class="ax_default box_1">
+        <img id="u4105_img" class="img " src="images/确认缴费/u3858.png"/>
+        <!-- Unnamed () -->
+        <div id="u4106" class="text" style="visibility: visible;">
+          <p><span>预缴费用</span></p><p><span>是否发生改变</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4107" class="ax_default box_1">
+        <div id="u4107_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4108" class="text" style="visibility: visible;">
+          <p><span>完成提交，进入“订单支付页”</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4109" class="ax_default box_1">
+        <div id="u4109_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4110" class="text" style="visibility: visible;">
+          <p><span>提示“您有预缴费用价格发生变更，请重新选择</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Connector) -->
+      <div id="u4111" class="ax_default connector">
+        <img id="u4111_seg0" class="img " src="images/确认缴费/u3876_seg0.png" alt="u4111_seg0"/>
+        <img id="u4111_seg1" class="img " src="images/确认缴费/u3876_seg1.png" alt="u4111_seg1"/>
+        <!-- Unnamed () -->
+        <div id="u4112" class="text" style="visibility: visible;">
+          <p><span>否</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Connector) -->
+      <div id="u4113" class="ax_default connector">
+        <img id="u4113_seg0" class="img " src="images/确认缴费/u3878_seg0.png" alt="u4113_seg0"/>
+        <img id="u4113_seg1" class="img " src="images/流程图-转发/u1069_seg1.png" alt="u4113_seg1"/>
+        <!-- Unnamed () -->
+        <div id="u4114" class="text" style="visibility: visible;">
+          <p><span>是</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Connector) -->
+      <div id="u4115" class="ax_default connector">
+        <img id="u4115_seg0" class="img " src="images/确认缴费/u3884_seg0.png" alt="u4115_seg0"/>
+        <img id="u4115_seg1" class="img " src="images/登录/u33_seg1.png" alt="u4115_seg1"/>
+        <!-- Unnamed () -->
+        <div id="u4116" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4117" class="ax_default box_1">
+        <div id="u4117_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4118" class="text" style="visibility: visible;">
+          <p><span>您有预缴账单被冻结，无法提交</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4119" class="ax_default box_1">
+        <div id="u4119_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4120" class="text" style="visibility: visible;">
+          <p><span>确定</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4121" class="ax_default box_1">
+        <div id="u4121_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4122" class="text" style="visibility: visible;">
+          <p><span>您有预缴费用价格发生变更，请重新选择</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4123" class="ax_default box_1">
+        <div id="u4123_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4124" class="text" style="visibility: visible;">
+          <p><span>确定</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4125" class="ax_default box_1">
+        <div id="u4125_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4126" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4127" class="ax_default _图片">
+        <img id="u4127_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4128" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4129" class="ax_default box_1">
+        <div id="u4129_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4130" class="text" style="visibility: visible;">
+          <p><span>确认缴费</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4131" class="ax_default image">
+        <img id="u4131_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4132" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4133" class="ax_default _文本段落">
+        <img id="u4133_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4134" class="text" style="visibility: visible;">
+          <p><span style="color:#666666;">&nbsp; </span><span style="color:#1E1E1E;">房间：</span><span style="color:#000000;">18栋1101</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4135" class="ax_default">
+
+        <!-- Unnamed (组合) -->
+        <div id="u4136" class="ax_default">
+
+          <!-- Unnamed (矩形) -->
+          <div id="u4137" class="ax_default box_1">
+            <div id="u4137_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u4138" class="text" style="visibility: visible;">
+              <p><span>待支付：¥ 540.00</span></p>
+            </div>
+          </div>
+
+          <!-- Unnamed (矩形) -->
+          <div id="u4139" class="ax_default box_1">
+            <div id="u4139_div" class=""></div>
+            <!-- Unnamed () -->
+            <div id="u4140" class="text" style="visibility: visible;">
+              <p><span>提交订单</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4141" class="ax_default box_2">
+        <div id="u4141_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4142" class="text" style="visibility: visible;">
+          <p><span>&nbsp;&nbsp;&nbsp; 优惠券&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4143" class="ax_default label">
+        <div id="u4143_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4144" class="text" style="visibility: visible;">
+          <p><span>不使用优惠券 &gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4145" class="ax_default _文本段落">
+        <img id="u4145_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4146" class="text" style="visibility: visible;">
+          <p><span>无可用优惠券&gt;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4147" class="ax_default label">
+        <div id="u4147_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4148" class="text" style="visibility: visible;">
+          <p><span>X3</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4149" class="ax_default label">
+        <div id="u4149_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4150" class="text" style="visibility: visible;">
+          <p><span>X3</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4151" class="ax_default _文本段落">
+        <img id="u4151_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4152" class="text" style="visibility: visible;">
+          <p><span>￥390.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4153" class="ax_default box_2">
+        <div id="u4153_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4154" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 车位管理费(17-22栋104) </span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4155" class="ax_default box_2">
+        <div id="u4155_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4156" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 住宅物业管理费</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4157" class="ax_default _文本段落">
+        <img id="u4157_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4158" class="text" style="visibility: visible;">
+          <p><span>￥150.00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4159" class="ax_default label">
+        <div id="u4159_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4160" class="text" style="visibility: visible;">
+          <p><span>X3</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4161" class="ax_default label">
+        <div id="u4161_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4162" class="text" style="visibility: visible;">
+          <p><span>X3</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4163" class="ax_default _文本段落">
+        <img id="u4163_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4164" class="text" style="visibility: visible;">
+          <p><span>￥390.00</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

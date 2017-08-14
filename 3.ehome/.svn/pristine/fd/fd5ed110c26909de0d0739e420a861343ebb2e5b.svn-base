@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>房屋报修</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/房屋报修/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/房屋报修/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- 预约时间 (动态面板) -->
+      <div id="u4563" class="ax_default" data-label="预约时间">
+        <div id="u4563_state0" class="panel_state" data-label="State1">
+          <div id="u4563_state0_content" class="panel_state_content">
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4564" class="ax_default box_1">
+              <div id="u4564_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4565" class="text" style="display: none; visibility: hidden">
+                <p><span></span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4566" class="ax_default box_1">
+              <div id="u4566_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4567" class="text" style="visibility: visible;">
+                <p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;">2017-06-11</span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;"><br></span></p><p style="font-size:14px;"><span style="font-family:'Arial Negreta', 'Arial';font-weight:700;">2017-06-12</span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;"><br></span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;">2017-06-13</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4568" class="ax_default box_1">
+              <div id="u4568_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4569" class="text" style="visibility: visible;">
+                <p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;">10时</span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;"><br></span></p><p style="font-size:14px;"><span style="font-family:'Arial Negreta', 'Arial';font-weight:700;color:#1E1E1E;">11时</span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;"><br></span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;">12时</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4570" class="ax_default box_1">
+              <div id="u4570_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4571" class="text" style="visibility: visible;">
+                <p style="font-size:14px;"><span style="font-family:'Arial Negreta', 'Arial';font-weight:700;">0分</span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;"><br></span></p><p style="font-size:13px;"><span style="font-family:'Arial Normal', 'Arial';font-weight:400;">30分</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4572" class="ax_default box_1">
+              <div id="u4572_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4573" class="text" style="visibility: visible;">
+                <p><span>选择预约时间</span></p>
+              </div>
+            </div>
+
+            <!-- Unnamed (矩形) -->
+            <div id="u4574" class="ax_default label">
+              <div id="u4574_div" class=""></div>
+              <!-- Unnamed () -->
+              <div id="u4575" class="text" style="visibility: visible;">
+                <p><span>完成</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4576" class="ax_default box_1">
+        <div id="u4576_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4577" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4578" class="ax_default box_1">
+        <div id="u4578_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4579" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4580" class="ax_default _图片">
+        <img id="u4580_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4581" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4582" class="ax_default box_1">
+        <div id="u4582_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4583" class="text" style="visibility: visible;">
+          <p><span>房屋报修</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4584" class="ax_default image">
+        <img id="u4584_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4585" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4586" class="ax_default box_1">
+        <div id="u4586_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4587" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4588" class="ax_default box_1">
+        <div id="u4588_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4589" class="text" style="visibility: visible;">
+          <p><span>&nbsp;预约时间&nbsp; </span><span style="color:#999999;">选择时间</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4590" class="ax_default text_field">
+        <input id="u4590_input" type="text" value=""/>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4591" class="ax_default _文本段落">
+        <img id="u4591_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4592" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 报修内容</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (提交按钮) -->
+      <div id="u4593" class="ax_default html_button">
+        <input id="u4593_input" type="submit" value="提交"/>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4594" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4595" class="ax_default box_1">
+          <div id="u4595_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4596" class="text" style="visibility: visible;">
+            <p style="font-size:13px;"><span><br></span></p><p style="font-size:9px;"><span>添加图片</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4597" class="ax_default label">
+          <div id="u4597_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4598" class="text" style="visibility: visible;">
+            <p><span>+</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4599" class="ax_default box_1">
+        <div id="u4599_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4600" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 联系人</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4601" class="ax_default box_1">
+        <div id="u4601_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4602" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 联系电话&nbsp; &nbsp;&nbsp; 13522965412</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4603" class="ax_default text_field">
+        <input id="u4603_input" type="text" value="王刚"/>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4604" class="ax_default text_field">
+        <input id="u4604_input" type="text" value="13522958641"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4605" class="ax_default box_1">
+        <div id="u4605_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4606" class="text" style="visibility: visible;">
+          <p style="font-size:13px;"><span>&nbsp; 联系地址&nbsp; </span><span style="font-size:12px;"> 实地中山璟湖城 A1栋 0402</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4607" class="ax_default _图片">
+        <img id="u4607_img" class="img " src="images/报修详情/u3304.png"/>
+        <!-- Unnamed () -->
+        <div id="u4608" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4609" class="ax_default _图片">
+        <img id="u4609_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4610" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4611" class="ax_default box_1">
+        <div id="u4611_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4612" class="text" style="visibility: visible;">
+          <p><span>房屋报修</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4613" class="ax_default image">
+        <img id="u4613_img" class="img " src="images/登录/u17.png"/>
+        <!-- Unnamed () -->
+        <div id="u4614" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4615" class="ax_default box_1">
+        <div id="u4615_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4616" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4617" class="ax_default box_1">
+        <div id="u4617_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4618" class="text" style="visibility: visible;">
+          <p><span>&nbsp;预约时间&nbsp;&nbsp; </span><span style="color:#666666;">06-11 14:00</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4619" class="ax_default text_field">
+        <input id="u4619_input" type="text" value=""/>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u4620" class="ax_default _文本段落">
+        <img id="u4620_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u4621" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 报修内容</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (提交按钮) -->
+      <div id="u4622" class="ax_default html_button">
+        <input id="u4622_input" type="submit" value="提交"/>
+      </div>
+
+      <!-- Unnamed (组合) -->
+      <div id="u4623" class="ax_default">
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4624" class="ax_default box_1">
+          <div id="u4624_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4625" class="text" style="visibility: visible;">
+            <p style="font-size:13px;"><span><br></span></p><p style="font-size:9px;"><span>添加图片</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (矩形) -->
+        <div id="u4626" class="ax_default label">
+          <div id="u4626_div" class=""></div>
+          <!-- Unnamed () -->
+          <div id="u4627" class="text" style="visibility: visible;">
+            <p><span>+</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4628" class="ax_default box_1">
+        <div id="u4628_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4629" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 联系人</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4630" class="ax_default box_1">
+        <div id="u4630_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4631" class="text" style="visibility: visible;">
+          <p><span>&nbsp; 联系电话&nbsp; &nbsp;&nbsp; 13522965412</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4632" class="ax_default text_field">
+        <input id="u4632_input" type="text" value="王刚"/>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u4633" class="ax_default text_field">
+        <input id="u4633_input" type="text" value="13522958641"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4634" class="ax_default box_1">
+        <div id="u4634_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4635" class="text" style="visibility: visible;">
+          <p style="font-size:13px;"><span>&nbsp; 联系地址&nbsp; </span><span style="font-size:12px;"> 实地中山璟湖城 A1栋 0402</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4636" class="ax_default _图片">
+        <img id="u4636_img" class="img " src="images/报修详情/u3304.png"/>
+        <!-- Unnamed () -->
+        <div id="u4637" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (椭圆形) -->
+      <div id="u4638" class="ax_default ellipse">
+        <img id="u4638_img" class="img " src="images/房屋报修/u4638.png"/>
+        <!-- Unnamed () -->
+        <div id="u4639" class="text" style="visibility: visible;">
+          <p><span>X</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

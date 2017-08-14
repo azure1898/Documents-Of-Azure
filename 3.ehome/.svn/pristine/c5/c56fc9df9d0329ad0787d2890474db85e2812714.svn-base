@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>提交成功</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/提交成功/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/recording.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/提交成功/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script src="resources/scripts/axure/math.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4640" class="ax_default _形状">
+        <div id="u4640_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4641" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (图片) -->
+      <div id="u4642" class="ax_default image">
+        <img id="u4642_img" class="img " src="images/登录/u2.png"/>
+        <!-- Unnamed () -->
+        <div id="u4643" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4644" class="ax_default _形状">
+        <div id="u4644_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4645" class="text" style="visibility: visible;">
+          <p><span>提交成功</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4646" class="ax_default box_1">
+        <div id="u4646_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4647" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4648" class="ax_default label">
+        <div id="u4648_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4649" class="text" style="visibility: visible;">
+          <p><span>订单提交成功</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4650" class="ax_default label">
+        <div id="u4650_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4651" class="text" style="visibility: visible;">
+          <p><span>您可以在“个人中心-我的报修“中查看处理进程。必要情况下我们将派人与您联系，请您谅解。</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (提交按钮) -->
+      <div id="u4652" class="ax_default html_button">
+        <input id="u4652_input" type="submit" value="查看订单"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4653" class="ax_default label">
+        <div id="u4653_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4654" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (提交按钮) -->
+      <div id="u4655" class="ax_default html_button">
+        <input id="u4655_input" type="submit" value="返回首页"/>
+      </div>
+
+      <!-- Unnamed (椭圆形) -->
+      <div id="u4656" class="ax_default ellipse">
+        <img id="u4656_img" class="img " src="images/支付成功_5/u3954.png"/>
+        <!-- Unnamed () -->
+        <div id="u4657" class="text" style="visibility: visible;">
+          <p><span>√</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4658" class="ax_default box_1">
+        <div id="u4658_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4659" class="text" style="display: none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u4660" class="ax_default _文本段落">
+        <div id="u4660_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u4661" class="text" style="visibility: visible;">
+          <p style="font-size:14px;"><span>报修单号：</span><span style="font-size:13px;">WX010005201706100021</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+{
+"code" : 1000,
+ "id":"001",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"countFollow":"223",
+"countFans":"322",
+"isFocus":0,
+"data" : [{
+	"id":"1111",
+	"subjectList":[{
+		"subjectId":"123456",
+ 		  "subjectName":"#装修作业#"
+	}],
+  "createTime":"昨天 18:30",
+  "speakContent":"装修房子是个苦差事啊，晒个图~ @优米的米",
+  "countForword":"赞",
+  "isPraise":1,
+  "isForword":0,
+  "forwordSpeak":{},
+  "imgList":[{ 
+   "imgUrl":"../../images/pic01.jpg" 
+},{ 
+   "imgUrl":"../../images/pic01.jpg" 
+},{ 
+   "imgUrl":"../../images/pic01.jpg" 
+}],
+  "countForword":20,
+  "countComment":123,
+  "countPraise":899
+},{
+	"id":"1111",
+	"subjectList":[{
+		"subjectId":"123456",
+ 		  "subjectName":"#装修作业#"
+	}],
+  "createTime":"昨天 18:30",
+  "speakContent":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。",
+  "countForword":"赞",
+  "isPraise":2,
+   "isForword":0,
+  "forwordSpeak":{},
+  "imgList":[],
+  "countForword":20,
+  "countComment":123,
+  "countPraise":666
+},{
+	"id":"1111",
+	"subjectList":[{
+		"subjectId":"123456",
+ 		  "subjectName":"#装修作业#"
+	}],
+	
+  "createTime":"昨天 18:30",
+  "speakContent":"装修房子是个苦差事啊，晒个图~ @优米的米",
+  "countForword":"赞",
+  "isPraise":1,
+  "isForword":1,
+  "forwordSpeak":{
+  	"speakid":"",
+  	"userName":"蓝色理想",
+  	"subjectList":[{
+  	"id":"",
+  	"subName":"装修作业"
+  	}],
+  	"speakContent":"从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是...",
+  	"imgUrl":"../../images/pic01.jpg"
+  },
+  "imgList":[],
+  "countForword":20,
+  "countComment":123,
+  "countPraise":899
+},{
+	"id":"1111",
+	"subjectList":[{
+		"subjectId":"123456",
+ 		  "subjectName":"#装修作业#"
+	}],
+	
+  "createTime":"昨天 18:30",
+  "speakContent":"装修房子是个苦差事啊，晒个图~ @优米的米",
+  "countForword":"赞",
+  "isPraise":1,
+  "isForword":0,
+  "forwordSpeak":{
+  	"speakid":"",
+  	"userName":"蓝色理想",
+  	"subjectList":[{
+  	"id":"",
+  	"subName":"装修作业"
+  	}],
+  	"speakContent":"从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是...",
+  	"imgUrl":"../../images/pic01.jpg"
+  },
+  "imgList":[],
+  "countForword":20,
+  "countComment":123,
+  "countPraise":899
+}],
+"message" : ""
+}
