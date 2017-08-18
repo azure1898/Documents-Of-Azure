@@ -47,6 +47,7 @@ import com.its.modules.operation.entity.Mobile;
 import com.its.modules.operation.service.CouponManageService;
 import com.its.modules.operation.service.CouponManageUsersService;
 import com.its.modules.operation.service.MemberDiscountService;
+import com.its.modules.sys.service.SysCodeMaxService;
 import com.its.modules.village.entity.VillageInfo;
 import com.its.modules.village.service.VillageInfoService;
 
@@ -83,6 +84,9 @@ public class CouponManageController extends BaseController {
 
 	@Autowired
 	private VillageInfoService villageInfoService;
+	
+	@Autowired
+	private SysCodeMaxService sysCodeMaxService;
 
 	@ModelAttribute
 	public CouponManage get(@RequestParam(required = false) String id) {
@@ -102,12 +106,29 @@ public class CouponManageController extends BaseController {
 			Model model) {
 		Page<CouponManage> page = couponManageService.findPage(new Page<CouponManage>(request, response), couponManage);
 
-		// 列表显示楼盘名城
+		// 列表显示楼盘名称
 		for (CouponManage c : page.getList()) {
 			String villageInfoId = c.getVillageInfoId();
 			VillageInfo villageInfo = villageInfoService.get(villageInfoId);
 			if (villageInfo != null) {
-				c.setVillageInfoId(villageInfo.getVillageName());
+				c.setVillageName(villageInfo.getVillageName());
+			}
+
+			// 根据查询的结果及活动的起始结束时间修改active_state
+			String activeState = new String();
+			if (c.getActiveStartTime().after(new Date())) {
+				activeState = "0";
+			} else if (c.getActiveStartTime().before(new Date()) && c.getActiveEndTime().after(new Date())) {
+				// 活动已经开始
+				activeState = "1";
+			} else {
+				activeState = "2";
+			}
+			// 若活动状态发生变更，则保存新的活动状态
+			String currentActiveState = c.getActiveState();
+			if (currentActiveState == null || !currentActiveState.equals(activeState)) {
+				c.setActiveState(activeState);
+				couponManageService.save(c);
 			}
 
 			// 添加领取总量
@@ -215,7 +236,8 @@ public class CouponManageController extends BaseController {
 
 			// 生成优惠券号 券号生成规则为：年月日（170605）+券号（6位流水号）例如最终生成的券码为：
 			// 170604000001
-			String discountNum = memberDiscountService.getNextDiscountId();
+			// String discountNum = memberDiscountService.getNextDiscountId();
+			String discountNum = sysCodeMaxService.getDiscountNum();
 			memberDiscount.setDiscountNum(discountNum); // 优惠券号
 			memberDiscount.setObtainDate(new Date()); // 获得时间
 			// memberDiscount.setOrderId(orderId); // 哪个订单赠送的优惠券
@@ -271,38 +293,51 @@ public class CouponManageController extends BaseController {
 
 		if (excelFile != null && excelFile.getSize() != 0) {
 			try {
-				ImportExcel importExcel = new ImportExcel(excelFile, 1, 0);
+				ImportExcel importExcel = new ImportExcel(excelFile, 0, 0);
 				mobileList = importExcel.getDataList(Mobile.class);
-				for (Mobile mobile : mobileList) {
-					/* 添加优惠券的导入用户 */
-					// 根据手机号查询会员信息
-					boolean userExist = false;
-					String phoneNum = mobile.getMobileNo().toString();
-					Date registerTime = mobile.getRegisterDate();
-					String accountId = new String();
-					Account account = new Account();
-					account.setPhoneNum(phoneNum);
-					List<Account> accountList = accountService.findList(account);
-					if (accountList != null && accountList.size() > 0) {
-						userExist = true;
-						accountId = accountList.get(0).getId();// 会员ID
+
+				// 检查excel文件格式是否合法
+				result = this.checkMobileList(mobileList);
+				
+				// 如果格式不合法，则返回
+				if (!(Boolean) result.get("success")) {
+					return result;
+				} else {
+					
+					// 合法，则进行excel数据入库
+					for (Mobile mobile : mobileList) {
+
+						/* 添加优惠券的导入用户 */
+						// 根据手机号查询会员信息
+						boolean userExist = false;
+						String phoneNum = mobile.getMobileNo().toString();
+						Date registerTime = mobile.getRegisterDate();
+						String accountId = new String();
+						Account account = new Account();
+						account.setPhoneNum(phoneNum);
+						List<Account> accountList = accountService.findList(account);
+						if (accountList != null && accountList.size() > 0) {
+							userExist = true;
+							accountId = accountList.get(0).getId();// 会员ID
+						}
+
+						CouponManageUsers couponManageUsers = new CouponManageUsers();
+						couponManageUsers.setCouponManageId(lastId);// 优惠券ID
+						couponManageUsers.setAccount(phoneNum);
+						couponManageUsers.setRegisterTime(registerTime);
+						couponManageUsers.setAccountId(accountId);
+						couponManageUsers.setExistFlag(userExist ? "0" : "1");
+
+						couponManageUsersService.save(couponManageUsers);
+
+						result.put("success", Boolean.TRUE);
+						result.put("lastId", lastId);
 					}
-
-					CouponManageUsers couponManageUsers = new CouponManageUsers();
-					couponManageUsers.setCouponManageId(lastId);// 优惠券ID
-					couponManageUsers.setAccount(phoneNum);
-					couponManageUsers.setRegisterTime(registerTime);
-					couponManageUsers.setAccountId(accountId);
-					couponManageUsers.setExistFlag(userExist ? "0" : "1");
-
-					couponManageUsersService.save(couponManageUsers);
-
-					result.put("success", Boolean.TRUE);
-					result.put("lastId", lastId);
 				}
 			} catch (InvalidFormatException | IOException e) {
 				e.printStackTrace();
 				result.put("success", Boolean.FALSE);
+				result.put("msg", "导入的excel格式错误，请检查！");
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 				result.put("success", Boolean.FALSE);
@@ -313,6 +348,42 @@ public class CouponManageController extends BaseController {
 
 		} else {
 			result.put("success", Boolean.FALSE);
+			result.put("msg", "请检查导入的excel文件是否为空！");
+		}
+		
+		return result;
+	}
+
+	/**
+	 * 检查传入的Mobile集合对象是否合规
+	 * 
+	 * @param mobileList
+	 * @return
+	 */
+	private Map<String, Object> checkMobileList(List<Mobile> mobileList) {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// excel中，数据从第二行开始，设置lineNum的初始值为1
+		int lineNum = 1;
+		for (Mobile mobile : mobileList) {
+			lineNum++;
+
+			// 对导入的excel数据格式进行校验,第一列为手机号，第二列为注册日期
+			Long mobileNo = mobile.getMobileNo();
+			String mobileNoStr = String.valueOf(mobileNo);
+			if (mobileNo == null) {
+
+				// 导入的excel中，第**行的手机号为空
+				result.put("success", Boolean.FALSE);
+				result.put("msg", "导入的excel中，第" + lineNum + "行的手机号码为空，导入excel的第一列必须为手机号，且不能为空！");
+			} else if (mobileNoStr.length() != 11) {
+
+				// 导入的excel中，第**行的第一列手机号位数不足11位
+				result.put("success", Boolean.FALSE);
+				result.put("msg", "导入的excel中，第" + lineNum + "行的第一列手机号位数不足11位，导入excel的第一列必须为手机号！");
+			} else {
+				result.put("success", Boolean.TRUE);
+			}
 		}
 		return result;
 	}
@@ -333,11 +404,11 @@ public class CouponManageController extends BaseController {
 		Date endDate = new Date();
 		List<Account> accountList = new ArrayList<Account>();
 		// TODO: 查找用户列表处添加日志
-		logger.warn("pushObjType:"+pushObjType);
-		logger.warn("timeScope:"+timeScope);
-		logger.warn("timeScopeStartTime:"+timeScopeStartTime);
-		logger.warn("timeScopeEndTime:"+timeScopeEndTime);
-		logger.warn("orderType:"+orderType);
+		logger.warn("pushObjType:" + pushObjType);
+		logger.warn("timeScope:" + timeScope);
+		logger.warn("timeScopeStartTime:" + timeScopeStartTime);
+		logger.warn("timeScopeEndTime:" + timeScopeEndTime);
+		logger.warn("orderType:" + orderType);
 		// 根据推送对象类型的五种形式生成优惠券明细，推送对象类型：0平台注册用户 1平台登录用户 2未下单用户 3下单用户 4自定义用户
 		// 当为0平台注册用户 1平台登录用户时，注册时间或登录时间选择用户，生成优惠券
 		if (pushObjType.equals(CouponManage.PUSH_OBJ_TYPE_PLATREGUSER)) {

@@ -1,5 +1,7 @@
 package com.its.modules.app.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
@@ -46,4 +48,14 @@ public interface OrderGoodsDao extends CrudDao<OrderGoods> {
 	 * @return OrderGoods
 	 */
 	public OrderGoods judgeOrderGoodsCancelAble(@Param("orderId") String orderId, @Param("accountId") String accountId);
+	
+	/**
+	 * 
+	 * @Description：根据用户id，订单状态(配送中)查询未配送订单
+	 * @Author：邵德才
+	 * @Date：2017年8月14日
+	 * @param orderGoods
+	 * @return
+	 */
+	public List<OrderGoods> findListByUserIdAndOrderState(@Param("orderGoods")OrderGoods orderGoods, @Param("pageIndex")int pageIndex, @Param("pageSize")int pageSize);
 }

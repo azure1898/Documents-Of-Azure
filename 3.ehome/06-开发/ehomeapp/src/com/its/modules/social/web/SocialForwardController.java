@@ -76,13 +76,18 @@ public class SocialForwardController extends BaseController {
 			return toJson;
 		}
 		toJson.put("speakId", speakId);
+		toJson.put("noticeId", socialSpeakBean.getNoticeid());
 		toJson.put("userName", socialSpeakBean.getNickName());
 		toJson.put("speakContent", socialSpeakBean.getContent());
+		toJson.put("title", socialSpeakBean.getTitle());
+		toJson.put("summary", socialSpeakBean.getSummary());
 		String images = socialSpeakBean.getImages();
-		if(StringUtils.isEmpty(images)) {
+		if(!StringUtils.isEmpty(images)) {
 			String[] image = images.split(",");
 			String imgUrl = image[0];
 			toJson.put("imgUrl", imgUrl);
+		} else {
+			toJson.put("imgUrl", "");
 		}
 		
 		List<SocialSubject> ssList = socialSubjectService.findAllByfkId(speakId, SocialGlobal.SUB_RELATION_SPK);
@@ -132,6 +137,12 @@ public class SocialForwardController extends BaseController {
 				dataListMap.put("headPicSrc", headPicSrc);
 				dataList.add(dataListMap);
 			}
+		} else {
+			Map dataListMap = new HashMap();
+			dataListMap.put("friendId", "");
+			dataListMap.put("friendName", "");
+			dataListMap.put("headPicSrc", "");
+			dataList.add(dataListMap);
 		}
 		toJson.put("data", dataList);
 		toJson.put("code", Global.CODE_SUCCESS);

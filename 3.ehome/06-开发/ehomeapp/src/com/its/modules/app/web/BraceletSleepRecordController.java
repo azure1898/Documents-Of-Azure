@@ -22,7 +22,10 @@ import com.its.common.utils.DateUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.common.AppUtils;
+import com.its.modules.app.entity.BraceletExerciseRecord;
+import com.its.modules.app.entity.BraceletInfo;
 import com.its.modules.app.entity.BraceletSleepRecord;
+import com.its.modules.app.service.BraceletInfoService;
 import com.its.modules.app.service.BraceletSleepRecordService;
 
 import net.sf.json.JSONObject;
@@ -39,6 +42,8 @@ public class BraceletSleepRecordController extends BaseController {
 
 	@Autowired
 	private BraceletSleepRecordService braceletSleepRecordService;
+	@Autowired
+	private BraceletInfoService braceletInfoService;
 
 	/**
 	 * 提交睡眠数据
@@ -47,8 +52,8 @@ public class BraceletSleepRecordController extends BaseController {
 	 *            用户ID(不可空)
 	 * @param buildingID
 	 *            楼盘ID(不可空)
-	 * @param bandID
-	 *            手环ID(不可空)
+	 * @param bandMac
+	 *            手环Mac(不可空)
 	 * @param date
 	 *            日期(不可空)
 	 * @param sleepTime
@@ -57,7 +62,7 @@ public class BraceletSleepRecordController extends BaseController {
 	 *            睡眠开始时间(日期类型、不可空)
 	 * @param sleepEnd
 	 *            睡眠结束时间(日期类型、不可空)
-	 * @param deepTime
+	 * @param sleepTimeDeep
 	 *            深睡时长(数字类型、不可空)
 	 * @param shallowTime
 	 *            浅睡时长(数字类型、不可空)
@@ -65,29 +70,34 @@ public class BraceletSleepRecordController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitSleepData", method = RequestMethod.POST)
-	public String submitSleepData(String userID, String buildingID, String bandID, String date, String sleepTime, String sleepStart, String sleepEnd,
-			String deepTime, String shallowTime) {
+	public String submitSleepData(String userID, String buildingID, String bandMac, String date, String sleepTimeTotal, String sleepStart, String sleepEnd, String sleepTimeDeep, String sleepTimeLight) {
 		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandID) || StringUtils.isBlank(date)
-				|| !AppUtils.isNumeric(sleepTime) || StringUtils.isBlank(sleepStart) || StringUtils.isBlank(sleepEnd) || !AppUtils.isNumeric(deepTime)
-				|| !AppUtils.isNumeric(shallowTime)) {
+		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandMac) || StringUtils.isBlank(date) || !AppUtils.isNumeric(sleepTimeTotal) || StringUtils.isBlank(sleepStart) || StringUtils.isBlank(sleepEnd) || !AppUtils.isNumeric(sleepTimeDeep) || !AppUtils.isNumeric(sleepTimeLight)) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "参数错误");
 			return JSONObject.fromObject(json).toString();
 		}
-		BraceletSleepRecord record = braceletSleepRecordService.getAccountDayRecord(userID, buildingID, bandID, DateUtils.parseDate(date));
+		BraceletInfo braceletInfo = braceletInfoService.getAccountBraceletSpe(userID, buildingID, bandMac);
+		if (braceletInfo == null) {
+			json.put("code", Global.CODE_PROMOT);
+			json.put("message", "手环尚未绑定");
+			return JSONObject.fromObject(json).toString();
+		}
+		//
+		BraceletSleepRecord record = braceletSleepRecordService.getAccountDayRecord(userID, buildingID, braceletInfo.getId(), DateUtils.parseDate(date));
 		if (record == null) {
 			record = new BraceletSleepRecord();
 			record.setAccountId(userID);
 			record.setVillageinfoId(buildingID);
-			record.setBraceletId(bandID);
+			record.setBraceletId(braceletInfo.getId());
 			record.setRecordDate(DateUtils.parseDate(date));
 		}
-		record.setSleepTime(Double.parseDouble(sleepTime));
-		record.setDeepSleepTime(Double.parseDouble(deepTime));
-		record.setLightSleepTime(Double.parseDouble(shallowTime));
-		record.setSleepStart(DateUtils.parseDate(sleepStart));
-		record.setSleepEnd(DateUtils.parseDate(sleepEnd));
+
+		record.setSleepTime(Double.parseDouble(sleepTimeTotal));
+		record.setDeepSleepTime(Double.parseDouble(sleepTimeDeep));
+		record.setLightSleepTime(Double.parseDouble(sleepTimeLight));
+		record.setSleepStart(sleepStart);
+		record.setSleepEnd(sleepEnd);
 		braceletSleepRecordService.save(record);
 		json.put("code", Global.CODE_SUCCESS);
 		json.put("message", "成功");
@@ -109,21 +119,71 @@ public class BraceletSleepRecordController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSleepData")
-	public String getSleepData(String userID, String buildingID, String bandID, String date) {
+	public String getSleepData(String userID, String buildingID, String bandMac, String startDate, String endDate) {
 		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandID) || StringUtils.isBlank(date)) {
+		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandMac) || StringUtils.isBlank(startDate) || StringUtils.isBlank(endDate)) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "参数错误");
 			return JSONObject.fromObject(json).toString();
 		}
-		BraceletSleepRecord record = braceletSleepRecordService.getAccountDayRecord(userID, buildingID, bandID, DateUtils.parseDate(date));
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("sleepTime", record.getSleepTime());
-		data.put("deepTime", record.getDeepSleepTime());
-		data.put("shallowTime", record.getLightSleepTime());
-		data.put("sleepPeriod", DateFormatUtils.format(record.getSleepStart(), "HH:mm") + "-" + DateFormatUtils.format(record.getSleepEnd(), "HH:mm"));
+		BraceletInfo braceletInfo = braceletInfoService.getAccountBraceletSpe(userID, buildingID, bandMac);
+		if (braceletInfo == null) {
+			json.put("code", Global.CODE_PROMOT);
+			json.put("message", "手环尚未绑定");
+			return JSONObject.fromObject(json).toString();
+		}
+		Date sDate = DateUtils.parseDate(startDate);
+		Date eDate = DateUtils.parseDate(endDate);
+		List<BraceletSleepRecord> recordList = braceletSleepRecordService.getPeriodSleepRecordByBraceletId(userID, buildingID, braceletInfo.getId(), sDate, eDate);
+
+		List<BraceletSleepRecord> recordListcpy = new ArrayList<BraceletSleepRecord>();
+		List<Map<String, Object>> details = new ArrayList<>();
+
+		// 找出没有数据的日期集合
+		Map<BraceletSleepRecord, Date> objDateMap = new HashMap<BraceletSleepRecord, Date>();
+		for (BraceletSleepRecord b : recordList) {
+			objDateMap.put(b, b.getRecordDate());
+		}
+		int tianshu = AppUtils.dateSpan(sDate, eDate);
+		String strDate = "";
+		Date dateDate = null;
+		for (int i = 0; i <= tianshu; i++) {
+			boolean flag = true;
+			strDate = AppUtils.getSpecifiedDayAfter(sDate, i);
+			dateDate = DateUtils.parseDate(strDate);
+			for (Map.Entry<BraceletSleepRecord, Date> entry : objDateMap.entrySet()) {
+				if (entry.getValue().equals(dateDate)) {
+					flag = false;
+					// 数据库有
+					recordListcpy.add(entry.getKey());
+				}
+			}
+			if (flag) {
+				// 数据库无数据
+				Map<String, Object> detail = new HashMap<>();
+				detail.put("sleepTimeTotal", 0);
+				detail.put("sleepTimeDeep", 0);
+				detail.put("sleepTimeLight", 0);
+				detail.put("sleepStart", "");
+				detail.put("sleepEnd", "");
+				detail.put("date", DateFormatUtils.format(dateDate, "yyyy-MM-dd"));
+				details.add(detail);
+			}
+
+		}
+		// 数据库数据处理
+		for (BraceletSleepRecord record : recordList) {
+			Map<String, Object> detail = new HashMap<>();
+			detail.put("sleepTimeTotal", record.getSleepTime());
+			detail.put("sleepTimeDeep", record.getDeepSleepTime());
+			detail.put("sleepTimeLight", record.getLightSleepTime());
+			detail.put("sleepStart",record.getSleepStart());
+			detail.put("sleepEnd", record.getSleepEnd());
+			detail.put("date", DateFormatUtils.format(record.getRecordDate(), "yyyy-MM-dd"));
+			details.add(detail);
+		}
 		json.put("code", Global.CODE_SUCCESS);
-		json.put("data", data);
+		json.put("data", details);
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
 	}

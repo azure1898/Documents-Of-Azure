@@ -2,80 +2,70 @@ var vm = new Vue({
 	el: "#app",
 	data: {
 		items: {},
-		n: 0,
 		item: {},
+		items3: [],
 		leaveMessage: "",
-		totalMoney:0,
-    coupons:{
-		   	name:"不使用优惠券",
-		   	money:0,
-             },
-             items3:[]
+		urlList: {
+			checkicon: "../../images/02.png",
+			checkedicon: "../../images/01.png"
+		},
+		couponDiscounted: 0,
+		couponID:"",
+        isOK:true,
+        num:0
 	},
 	mounted: function() {
 		this.$nextTick(function() {
 			var _this = this;
-			this.$http.get(interfaceUrl + "/live/confirmSiteOrder", {
+			var data = {
 				userID: userInfo.userID,
 				buildingID: userInfo.buildingID,
 				businessID: getQueryString("businessID"),
 				siteReservationID: getQueryString("id")
-			}).then(function(res) {
-				_this.items = res.data.data;
-				 _this.items3 = res.data.data.coupons;
-				_this.totalMoney=res.data.data.totalMoney;
+			};
+			this.getData(_this, "/live/confirmSiteOrder", data, function(resData) {
+				resData.coupons.forEach(function(coupon, index) {
+					coupon.isSelected = 0;
+				});
+				_this.items = resData;
+				_this.items3 = _this.items.coupons;
+				_this.init(_this.items,_this.items3)
 			})
-		 $(".details_spgm_right_2 > img").attr("src","../../images/01.png");			
-               
 		})
-		
 	},
 	methods: {
-		
-		
-		changeStatusCoupons1:function(){
-             $(".choose_coup_main_right > span > img").attr("src","../../images/02.png");				     	
-			$(event.target).attr("src","../../images/01.png");	
-           this.coupons.name="不使用优惠券";
-			this.coupons.money=0;	
-			this.totalMoney=this.items.totalMoney;
+		init:function(item,coup){
+        	var arr=new Arrey();
+        	coup.foreach(function(e,i){
+        		if(item.totalMoney >= e.couponCondition){
+        		arr.push(e);
+        	}
+           })
+        	if(arr.length>0){
+        		this.isOK=false;
+        		this.num=arr.length;
+        	}
+        	else{
+        		this.isOK=true;
+        	}
+        },
+		changeCoupon: function(coupon) {
+			this.items3.forEach(function(coupon, index) {
+				coupon.isSelected = 0;
+			});
+			if (coupon) {
+				coupon.isSelected = 1;
+				this.couponID=coupon.couponID;
+				if (coupon.couponType == 0) {
+					this.couponDiscounted = coupon.couponMoney;
+				} else {
+					this.couponDiscounted = this.items.totalMoney * (100 - coupon.couponMoney) / 100;
+				}
+			} else {
+				this.couponDiscounted = 0;
+			}
 			$("#couponModal").modal('toggle');
-	     }
-	,changeStatusCoupons2:function(item){
-		 $(".details_spgm_right_2 > img").attr("src","../../images/02.png");			
-			$(event.target).attr("src","../../images/01.png").parents(".choose_coup_main").siblings().find(".choose_coup_main_right > span > img").attr("src","../../images/02.png");		
-			this.coupons.name=item.couponMoney;
-			this.coupons.money=item.couponMoney;
-			this.calcMonery();
-			$("#couponModal").modal('toggle');		
-	},
-	calcMonery(){
-		var m=this.items.totalMoney;
-		this.totalMoney=m-this.coupons.money;
-		
-		
-	},
-		//优惠券
-//		changeStatus1: function() {
-//			var _this = this;
-//			this.n += 1;
-//			if (_this.n % 2 == 1) {
-//				$(event.target).attr("src", "../../images/01.png")
-//				$(".choose_coup_main .choose_coup_main_right img").attr("src", "../../images/02.png")
-//				$("#coups").text("不使用优惠券");
-//			} else {
-//				$(event.target).attr("src", "../../images/02.png")
-//				$("#coups").text("");
-//			}
-//		},
-//		changeStatus2: function(item) {
-//			console.log(item);
-//			$(".details_spgm_right_2 img").attr("src", "../../images/02.png")
-//			$(".choose_coup_main .choose_coup_main_right img").attr("src", "../../images/02.png")
-//			$(event.target).closest("img").attr("src", "../../images/01.png")
-//
-//			$("#coups").text("-￥" + item.couponMoney);
-//		},
+		},
 		affirm: function() {
 			var name = $(".name").val();
 			var phone = $(".phone").val();
@@ -87,7 +77,6 @@ var vm = new Vue({
 					btn: '确定',
 					shadeClose: false,
 				});
-
 			} else if (!xx.test(phone)) {
 				layer.open({
 
@@ -95,7 +84,6 @@ var vm = new Vue({
 					btn: '确定',
 					shadeClose: false,
 				});
-
 			} else if (xx.test(name) && !reg.test(name)) {
 
 				layer.open({
@@ -104,45 +92,29 @@ var vm = new Vue({
 					btn: '确定',
 					shadeClose: false,
 				});
-
 			} else if (xx.test(phone) && !(/^1[34578]\d{9}$/.test(phone))) {
-
 				layer.open({
 					content: '请输入正确的手机号',
 					btn: '确定',
 					shadeClose: false,
 				});
-
 			} else {
 				var _this = this;
-				var path = interfaceUrl + "/live/submitSiteOrder";
-				this.$http.post(path, {
+				var orderData = {
 					userID: userInfo.userID,
 					buildingID: userInfo.buildingID,
 					businessID: _this.items.businessID,
 					contactPerson: _this.items.contactPerson, //联系人名称
 					contactPhone: _this.items.contactPhone, //联系人电话
 					siteReservationID: getQueryString("id"),
-					//							couponID:,
-					leaveMessage: _this.leaveWords
+					leaveMessage: _this.leaveWords,
+					couponID:_this.couponID
+				}
+				this.postData(_this, "/live/submitSiteOrder", orderData, function(resData) {
+					_this.item = resData;
 
-				}, {
-					emulateJSON: true
-				}).then(function(res) {
-					if (res.data.code == 1000) {
-
-						_this.item = res.data.data;
-					} else if (res.data.code == 5000) {
-						layer.open({
-							content: res.data.message,
-							btn: '确定',
-							shadeClose: false,
-						});
-					}
 				})
-
 			}
 		}
-
 	}
 })

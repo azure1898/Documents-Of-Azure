@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.entity;
 
 import org.hibernate.validator.constraints.Length;
@@ -9,10 +6,12 @@ import com.its.common.persistence.DataEntity;
 
 /**
  * 楼盘产品线专题推荐Entity
+ * 
  * @author sushipeng
- * @version 2017-08-07
+ * 
+ * @version 2017-08-15
  */
-public class VillageLinerecomspecial extends DataEntity<VillageLinerecomspecial> {
+public class VillageLineRecomSpecial extends DataEntity<VillageLineRecomSpecial> {
 	
 	private static final long serialVersionUID = 1L;
 	private String villageLineId;		// 楼盘产品线ID
@@ -20,11 +19,11 @@ public class VillageLinerecomspecial extends DataEntity<VillageLinerecomspecial>
 	private String specialName;		// 专题名称
 	private Integer sortNum;		// 排序序号
 	
-	public VillageLinerecomspecial() {
+	public VillageLineRecomSpecial() {
 		super();
 	}
 
-	public VillageLinerecomspecial(String id){
+	public VillageLineRecomSpecial(String id){
 		super(id);
 	}
 

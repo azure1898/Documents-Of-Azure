@@ -212,7 +212,8 @@
                     ${orderTrack.createName}
                 </td>
                 <td style="width:25%">
-                    ${orderTrack.remarks}
+                    <c:if test="${not empty orderTrack.remarks}">${orderTrack.remarks}</c:if>
+                    <c:if test="${orderTrack.stateMsg == '提交订单'}">${orderField.accountMsg}</c:if>
                 </td>
         </c:forEach>
         </tbody>

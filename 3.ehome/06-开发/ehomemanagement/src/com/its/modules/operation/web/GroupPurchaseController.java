@@ -146,7 +146,7 @@ public class GroupPurchaseController extends BaseController {
 			//模块ID
 			moduleManageBusiness.setId(groupPurchase.getModuleId());
 			ModuleManage moduleBusinessCategory = moduleManageService.getBusinessCategoryDictId(moduleManageBusiness);
-			if(moduleBusinessCategory !=null){
+			if(moduleBusinessCategory !=null && moduleBusinessCategory.getBusinessCategoryDictId() !=null){
 				//从商户分类信息表，依据商户分类ID，查询商户基本信息ID
 				groupPurchase.setBusinessCategoryDictId(moduleBusinessCategory.getBusinessCategoryDictId());
 				List<GroupPurchase> businessCategoryList = groupPurchaseService.getBusinessId(groupPurchase);
@@ -156,7 +156,9 @@ public class GroupPurchaseController extends BaseController {
 						//依据商家Id，从商家信息表查询商家名称
 						groupBusiness.setBusinessinfoId(groupCategory.getBusinessinfoId());
 						GroupPurchase groupBusinessInfo = groupPurchaseService.getBusinessNameList(groupBusiness);
-						groupBusinessList.add(groupBusinessInfo);
+						if(groupBusinessInfo !=null){							
+						    groupBusinessList.add(groupBusinessInfo);
+						}
 					}
 				}
 			}
@@ -165,7 +167,7 @@ public class GroupPurchaseController extends BaseController {
 			groupBusinessFirst.setBusinessinfoId("");
 			groupBusinessFirst.setBusinessName("商家名称");
 			groupBusinessList.add(0,groupBusinessFirst);
-			
+		    
 			model.addAttribute("groupBusinessList", groupBusinessList);
 			
 		}
@@ -278,7 +280,7 @@ public class GroupPurchaseController extends BaseController {
 		//模块ID
 		moduleManage.setId(moduleId);
 		ModuleManage moduleBusinessCategory = moduleManageService.getBusinessCategoryDictId(moduleManage);
-		if(moduleBusinessCategory !=null){
+		if(moduleBusinessCategory !=null && moduleBusinessCategory.getBusinessCategoryDictId() !=null){
 			//从商户分类信息表，依据商户分类ID，查询商户基本信息ID
 			groupPurchase.setBusinessCategoryDictId(moduleBusinessCategory.getBusinessCategoryDictId());
 			List<GroupPurchase> businessCategoryList = groupPurchaseService.getBusinessId(groupPurchase);
@@ -287,7 +289,9 @@ public class GroupPurchaseController extends BaseController {
 					//依据商家Id，从商家信息表查询商家名称
 					groupBusiness.setBusinessinfoId(groupCategory.getBusinessinfoId());
 					GroupPurchase groupBusinessInfo = groupPurchaseService.getBusinessNameList(groupBusiness);
-					groupBusinessInfoList.add(groupBusinessInfo);
+					if(groupBusinessInfo !=null){
+					  groupBusinessInfoList.add(groupBusinessInfo);
+					}
 				}
 			}
 		}

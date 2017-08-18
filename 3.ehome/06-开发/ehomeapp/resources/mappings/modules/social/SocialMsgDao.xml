@@ -105,4 +105,23 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 查询未读的消息信息 -->
+	<select id="countUnRead" resultType="int">
+	    SELECT count(*)
+	    FROM social_msg a
+	    WHERE 1=1 
+	        <if test="toUserId != null and toUserId != ''">
+	            and a.touserid=#{toUserId} 
+	        </if>
+	        <if test="secType != null and secType != ''">
+                and sectype=#{secType} 
+            </if>
+            <if test="isRead != null and isRead != ''">
+                and isread=#{isRead}
+            </if>
+            <if test="firType != null and firType != ''">
+                and firtype = #{firType}
+            </if>
+	</select>
+	
 </mapper>

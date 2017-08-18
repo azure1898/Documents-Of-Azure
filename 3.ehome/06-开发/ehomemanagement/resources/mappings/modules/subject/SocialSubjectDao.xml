@@ -62,7 +62,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.ordernum
+				ORDER BY a.isrecommend, a.ordernum
 			</otherwise>
 		</choose>
 	</select>

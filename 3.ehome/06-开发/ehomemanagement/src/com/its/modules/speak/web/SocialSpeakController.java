@@ -108,7 +108,14 @@ public class SocialSpeakController extends BaseController {
 	@RequiresPermissions("speak:socialSpeak:view")
 	@RequestMapping(value = "form")
 	public String form(SocialSpeak socialSpeak, Model model) {
+		String userId = UserUtils.getUser().getId();
+		SocialSpeak ss = socialSpeakService.findUser(userId);
+		
 		model.addAttribute("socialSpeak", socialSpeak);
+		if(ss != null) {
+			model.addAttribute("auserid", ss.getAuserid());
+			model.addAttribute("ausername", ss.getUsername());
+		}
 		return "modules/speak/socialSpeakForm";
 	}
 	
@@ -118,7 +125,7 @@ public class SocialSpeakController extends BaseController {
 		SocialSpeak socialSpeak = new SocialSpeak();
 		socialSpeak.setId(id);
 		SocialSpeak speak = socialSpeakService.findById(socialSpeak);
-		speak.setReadnum((Integer.parseInt(speak.getReadnum())+1)+"");
+		speak.setReadnum((Integer.parseInt(speak.getReadnum() == null ? "0" : speak.getReadnum())+1)+"");
 		socialSpeakService.save(speak);
 		SocialComment socialComment = new SocialComment();
 		socialComment.setSpeakid(id);
@@ -168,7 +175,7 @@ public class SocialSpeakController extends BaseController {
 	public String save(SocialSpeak socialSpeak, Model model, RedirectAttributes redirectAttributes, 
 			HttpServletRequest request, HttpServletResponse response) {
 		socialSpeak.setCreatetime(new Date());
-		socialSpeak.setUserid(UserUtils.getUser().getId());
+		socialSpeak.setUserid(socialSpeak.getAuserid());
 		socialSpeak.setIstop("0");
 		socialSpeak.setReadnum("0");
 		socialSpeak.setDelflag("1");

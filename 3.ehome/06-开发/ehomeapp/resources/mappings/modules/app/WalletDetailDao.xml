@@ -7,8 +7,10 @@
 		a.account_id AS "accountId",
 		a.village_info_id AS "villageInfoId",
 		a.trade_type AS "tradeType",
+		a.order_id AS "orderId",
+		a.wallet_principal AS "walletPrincipal",
+		a.wallet_present AS "walletPresent",
 		a.trade_date AS "tradeDate",
-		a.money AS "money",
 		a.terminal_source AS "terminalSource",
 		a.mobile_unique_code AS "mobileUniqueCode",
 		a.pay_type AS "payType",
@@ -38,18 +40,6 @@
 		<include refid="walletDetailJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="accountId != null and accountId != ''">
-				AND a.account_id LIKE 
-					<if test="dbName == 'oracle'">'%'||#{accountId}</if>
-					<if test="dbName == 'mssql'">'%'+#{accountId}</if>
-					<if test="dbName == 'mysql'">concat('%',#{accountId})</if>
-			</if>
-			<if test="tradeType != null and tradeType != ''">
-				AND a.trade_type = #{tradeType}
-			</if>
-			<if test="beginTradeDate != null and endTradeDate != null and beginTradeDate != '' and endTradeDate != ''">
-				AND a.trade_date BETWEEN #{beginTradeDate} AND #{endTradeDate}
-			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -85,8 +75,10 @@
 			account_id,
 			village_info_id,
 			trade_type,
+			order_id,
+			wallet_principal,
+			wallet_present,
 			trade_date,
-			money,
 			terminal_source,
 			mobile_unique_code,
 			pay_type,
@@ -101,8 +93,10 @@
 			#{accountId},
 			#{villageInfoId},
 			#{tradeType},
+			#{orderId},
+			#{walletPrincipal},
+			#{walletPresent},
 			#{tradeDate},
-			#{money},
 			#{terminalSource},
 			#{mobileUniqueCode},
 			#{payType},
@@ -117,7 +111,19 @@
 	
 	<update id="update">
 		UPDATE wallet_detail SET 	
-			village_info_id = #{villageInfoId}
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			trade_type = #{tradeType},
+			order_id = #{orderId},
+			wallet_principal = #{walletPrincipal},
+			wallet_present = #{walletPresent},
+			trade_date = #{tradeDate},
+			terminal_source = #{terminalSource},
+			mobile_unique_code = #{mobileUniqueCode},
+			pay_type = #{payType},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
@@ -126,15 +132,31 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- =============================================== -->
-	<!--  -->
+	
+	<!-- 获取钱包明细 -->
 	<select id="getWalletDetail" resultType="WalletDetail">
-		SELECT <include refid="walletDetailColumns"/> FROM wallet_detail a
-		WHERE a.del_flag=0 AND a.Account_ID=#{accountId} 
-		ORDER BY a.Trade_Date DESC LIMIT #{pageIndex},#{pageSize}
+		SELECT
+			<include refid="walletDetailColumns"/>
+		FROM
+			wallet_detail a
+		WHERE
+			a.del_flag = 0
+		AND a.Account_ID = #{accountId} 
+		ORDER BY
+			a.Trade_Date DESC
+		LIMIT #{pageIndex},#{pageSize}
 	</select>
 	
-	<select id="getRechargeList">
-		
+	<!-- 获取钱包订单支付或退款的详情 -->
+	<select id="getWalletDetailOfOrder" resultType="WalletDetail">
+		SELECT
+			<include refid="walletDetailColumns"/>
+		FROM
+			Wallet_Detail a
+		WHERE
+			a.del_flag = '0'
+		AND a.Order_ID = #{orderId}
+		AND A.Trade_Type = #{tradeType}
 	</select>
+	
 </mapper>

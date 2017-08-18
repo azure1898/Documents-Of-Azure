@@ -114,7 +114,7 @@
                     <td>${villageLine.villageInfo.villageName}</td>
                     <td>${fns:getDictLabel(villageLine.productLine, 'product_line', '')}</td>
                     <td><fmt:formatDate value="${villageLine.setTime}" pattern="yyyy-MM-dd" /></td>
-                    <td>${fns:getDictLabel(villageLine.setState, 'set_state', '')}</td>
+                    <td>${villageLine.setState==1?'已设置':'未设置'}</td>
                 </tr>
             </c:forEach>
         </tbody>

@@ -18,6 +18,7 @@ import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.GoodsInfoBean;
 import com.its.modules.app.bean.OrderGoodsBean;
 import com.its.modules.app.common.AppGlobal;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.OrderGoodsDao;
@@ -64,6 +65,9 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 
 	@Autowired
 	private SysCodeMaxService sysCodeMaxService;
+
+	@Autowired
+	private OrderGoodsDao orderGoodsDao;
 
 	public OrderGoods get(String id) {
 		return super.get(id);
@@ -161,7 +165,7 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 		// 运费
 		double distributeCharge = business.getDistributeCharge() != null ? business.getDistributeCharge() : 0;
 		double distributeBenefit = 0;
-		if ("1".equals(business.getFullDistributeFlag()) && business.getFullDistributeMoney() >= totalMoney) {
+		if (CommonGlobal.YES.equals(business.getFullDistributeFlag()) && totalMoney >= business.getFullDistributeMoney()) {
 			distributeBenefit = business.getDistributeCharge();
 		}
 		order.setAddressMoney(distributeCharge);
@@ -173,10 +177,10 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 		if (couponManage != null) {
 			couponBenefit = couponManageService.calCouponMoney(couponManage, totalMoney);
 			// 更改优惠券使用状态
-			couponManageService.updateUserState(couponManage.getMemberDiscountId(), AppGlobal.DISCOUNT_USER_STATE_USED);
+			couponManageService.updateUserState(CommonGlobal.DISCOUNT_USE_STATE_USED, order.getId(), couponManage.getMemberDiscountId());
 		}
-		// 商品总金额 + 配送费 - 配送费减免
-		order.setSumMoney(totalMoney + distributeCharge - distributeBenefit);
+		// 商品总金额
+		order.setSumMoney(totalMoney);
 		order.setBenefitMoney(businessBenefit);// 商家优惠
 		order.setCouponMoney(couponBenefit);// 优惠券减免
 		// 商品总金额 + 配送费 - 配送费减免 - 商家优惠-优惠券减免
@@ -299,4 +303,16 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 		this.update(orderGoods);
 		return true;
 	}
+
+	/**
+	 * 
+	 * @Description：根据用户ID，订单状态(配送中)查询未配送订单
+	 * @Author：邵德才
+	 * @Date：2017年8月14日 @param orderGoods
+	 * @return List<OrderGoods>
+	 */
+	public List<OrderGoods> findListByUserIdAndOrderState(OrderGoods orderGoods, int pageIndex, int pageSize) {
+		return orderGoodsDao.findListByUserIdAndOrderState(orderGoods, pageIndex, pageSize);
+	}
+
 }

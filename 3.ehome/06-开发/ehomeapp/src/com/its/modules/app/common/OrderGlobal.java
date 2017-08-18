@@ -98,7 +98,7 @@ public class OrderGlobal {
 	public static final String ORDER_GROUP_PURHCASE_UNCONSUME = "0";
 	/** 团购订单-已消费 */
 	public static final String ORDER_GROUP_PURHCASE_CONSUMED = "1";
-	/** 团购订单-退款中 */
+	/** 团购订单-退款处理中 */
 	public static final String ORDER_GROUP_PURHCASE_REFUNDING = "2";
 	/** 团购订单-已退款 */
 	public static final String ORDER_GROUP_PURHCASE_REFUNDED = "3";

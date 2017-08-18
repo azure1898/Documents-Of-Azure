@@ -191,8 +191,10 @@ public class OrderGoodsController extends BaseController {
         // 根据订单号检索信息
         orderRefundInfo.setOrderNo(orderGoods.getOrderNo());
         orderRefundInfo = orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
-        // 将退款完成时间添加到画面中
-        model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        if (null != orderRefundInfo) {
+            // 将退款完成时间添加到画面中
+            model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        }
         // 迁移至商品订单详细页面
         return "modules/order/orderGoodsForm";
     }
@@ -209,12 +211,16 @@ public class OrderGoodsController extends BaseController {
     @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "complete")
     public String complete(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderGoodsService.check(id, updateDate)) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = orderGoodsService.complete(id);
@@ -223,11 +229,11 @@ public class OrderGoodsController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
     }
 
@@ -241,12 +247,16 @@ public class OrderGoodsController extends BaseController {
     @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "accept")
     public String accept(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderGoodsService.check(id, updateDate)) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = orderGoodsService.accept(id);
@@ -255,11 +265,11 @@ public class OrderGoodsController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
     }
 
@@ -272,12 +282,18 @@ public class OrderGoodsController extends BaseController {
      */
     @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "cancel")
-    public String cancel(OrderGoods orderGoods, Model model, RedirectAttributes redirectAttributes) {
+    public String cancel(OrderGoods orderGoods, Model model, RedirectAttributes redirectAttributes,
+            String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "") {
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        } else {
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+        }
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderGoodsService.check(orderGoods.getId(), orderGoods.getUpdateDateString())) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
         int result = 0;
         try {
@@ -287,7 +303,7 @@ public class OrderGoodsController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
 
         // 若没更新则显示操作
@@ -295,11 +311,11 @@ public class OrderGoodsController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至商品订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
     }
 
@@ -322,7 +338,15 @@ public class OrderGoodsController extends BaseController {
             redirectAttributes.addFlashAttribute("type", "error");
             return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
         }
-        int result = orderGoodsService.dispatching(id);
+        int result = 0;
+        try {
+            result = orderGoodsService.dispatching(id);
+        } catch (Exception e) {
+            addMessage(redirectAttributes, "操作失败");
+            redirectAttributes.addFlashAttribute("type", "error");
+            // 迁移至商品订单列表页面
+            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+        }
         if (0 == result) {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");

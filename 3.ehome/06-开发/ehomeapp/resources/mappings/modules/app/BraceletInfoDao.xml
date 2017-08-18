@@ -7,12 +7,14 @@
 		a.account_id AS "accountId",
 		a.villageinfo_id AS "villageinfoId",
 		a.model AS "model",
+		a.model_name AS "modelName",
 		a.serial_number AS "serialNumber",
+		a.pair_type AS "pairType",
 		a.name AS "name",
 		a.version AS "version",
 		a.target_step AS "targetStep",
-		a.create_by AS "createBy.id",
 		a.mac AS "mac",
+		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
@@ -79,12 +81,14 @@
 			account_id,
 			villageinfo_id,
 			model,
+			model_name,
 			serial_number,
+			pair_type,
 			name,
 			version,
 			target_step,
-			create_by,
 			mac,
+			create_by,
 			create_date,
 			update_by,
 			update_date,
@@ -95,12 +99,14 @@
 			#{accountId},
 			#{villageinfoId},
 			#{model},
+			#{modelName},
 			#{serialNumber},
+			#{pairType},
 			#{name},
 			#{version},
 			#{targetStep},
-			#{createBy.id},
 			#{mac},
+			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
@@ -114,7 +120,9 @@
 			account_id = #{accountId},
 			villageinfo_id = #{villageinfoId},
 			model = #{model},
+			model_name = #{modelName},
 			serial_number = #{serialNumber},
+			pair_type = #{pairType},
 			name = #{name},
 			version = #{version},
 			target_step = #{targetStep},
@@ -130,7 +138,17 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
 	<!-- =========================================== -->
+	<!-- 获取用户绑定的某个手环信息 -->
+	<select id="getAccountBraceletSpe" resultType="BraceletInfo">
+		SELECT <include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<where>
+			a.del_flag = 0 AND a.account_id = #{accountId} AND a.villageinfo_id = #{villageInfoId} AND a.mac=#{bandMac}
+		</where>
+	</select>
+	
 	<!-- 获取用户绑定的所有手环 -->
 	<select id="getAccountBracelets" resultType="BraceletInfo">
 		SELECT <include refid="braceletInfoColumns"/>
@@ -139,6 +157,7 @@
 			a.del_flag = 0 AND a.account_id = #{accountId} AND a.villageinfo_id = #{villageInfoId}
 		</where>
 	</select>
+	
 	<!-- 修改手环名称 -->
 	<update id="updateName">
 		UPDATE bracelet_info SET name = #{name} WHERE id = #{id}
@@ -147,4 +166,5 @@
 		UPDATE bracelet_info SET target_step = #{targetStep}
 		 WHERE account_id = #{accountId} AND villageinfo_id = #{villageInfoId}
 	</update>
+	
 </mapper>

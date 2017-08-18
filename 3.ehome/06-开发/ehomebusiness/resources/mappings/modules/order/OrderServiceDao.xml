@@ -27,6 +27,7 @@
 		a.service_type AS "serviceType",
 		a.service_address AS "serviceAddress",
 		a.service_money AS "serviceMoney",
+		a.transaction_id AS "transactionId",
 		a.is_start AS "isStart",
 		str_to_date(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
 		str_to_date(a.end_time,'%Y-%m-%d %H:%i') AS "endTime",
@@ -85,6 +86,9 @@
             </if>
             <if test="prodType != null and prodType != ''">
                 AND a.prod_type = #{prodType}
+            </if>
+              <if test="pending == 1">
+                AND a.order_state != 2 AND a.order_state != 3
             </if>
         </where>
         <choose>

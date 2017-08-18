@@ -6,21 +6,20 @@ package com.its.modules.social.entity;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.validation.constraints.NotNull;
 
 import com.its.common.persistence.DataEntity;
 
 /**
  * 发言管理Entity
  * @author 刘浩浩
- * @version 2017-08-08
+ * @version 2017-08-16
  */
 public class SocialSpeak extends DataEntity<SocialSpeak> {
 	
 	private static final long serialVersionUID = 1L;
 	private String userid;		// 发言人，用户ID
 	private String tag;		// 标签
-	private String content;		// 文字内容
+	private String content;		// 发言内容
 	private int visrange;		// 可见范围 1：公开 2：好友可见； 3：粉丝可见
 	private int forbitcomment;		// 是否禁止评论 1：是；0：否
 	private int forbidforward;		// 是否禁止转发 1：是； 0：否
@@ -36,8 +35,10 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	private String reason;		// 转发原因
 	private String fid;		// 转发父id
 	private String rootid;		// 转发原发言id
-	private Date beginCreatetime;		// 开始 发布时间
-	private Date endCreatetime;		// 结束 发布时间
+	private String noticeid;		// 公告ID
+	private String title;		// 标题
+	private String summary;		// 摘要
+	private String remarks;     //备注
 	
 	public SocialSpeak() {
 		super();
@@ -47,7 +48,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		super(id);
 	}
 
-	@Length(min=1, max=32, message="发言人，用户ID长度必须介于 1 和 32 之间")
+	@Length(min=0, max=64, message="发言人，用户ID长度必须介于 0 和 64 之间")
 	public String getUserid() {
 		return userid;
 	}
@@ -73,7 +74,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.content = content;
 	}
 	
-	@Length(min=1, max=2, message="可见范围 1：公开 2：好友可见； 3：粉丝可见长度必须介于 1 和 2 之间")
+	@Length(min=0, max=11, message="可见范围 1：公开 2：好友可见； 3：粉丝可见长度必须介于 0 和 11 之间")
 	public int getVisrange() {
 		return visrange;
 	}
@@ -82,7 +83,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.visrange = visrange;
 	}
 	
-	@Length(min=1, max=2, message="是否禁止评论 1：是；0：否长度必须介于 1 和 2 之间")
+	@Length(min=0, max=11, message="是否禁止评论 1：是；0：否长度必须介于 0 和 11 之间")
 	public int getForbitcomment() {
 		return forbitcomment;
 	}
@@ -91,7 +92,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.forbitcomment = forbitcomment;
 	}
 	
-	@Length(min=1, max=2, message="是否禁止转发 1：是； 0：否长度必须介于 1 和 2 之间")
+	@Length(min=0, max=11, message="是否禁止转发 1：是； 0：否长度必须介于 0 和 11 之间")
 	public int getForbidforward() {
 		return forbidforward;
 	}
@@ -101,7 +102,6 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	}
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@NotNull(message="发布时间不能为空")
 	public Date getCreatetime() {
 		return createtime;
 	}
@@ -110,7 +110,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.createtime = createtime;
 	}
 	
-	@Length(min=1, max=2, message="是否置顶 0：否； 1：是长度必须介于 1 和 2 之间")
+	@Length(min=0, max=11, message="是否置顶 0：否； 1：是长度必须介于 0 和 11 之间")
 	public int getIstop() {
 		return istop;
 	}
@@ -119,7 +119,16 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.istop = istop;
 	}
 	
-	@Length(min=1, max=11, message="阅读次数长度必须介于 1 和 11 之间")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getToptime() {
+		return toptime;
+	}
+
+	public void setToptime(Date toptime) {
+		this.toptime = toptime;
+	}
+	
+	@Length(min=0, max=11, message="阅读次数长度必须介于 0 和 11 之间")
 	public String getReadnum() {
 		return readnum;
 	}
@@ -128,7 +137,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.readnum = readnum;
 	}
 	
-	@Length(min=1, max=64, message="id长度必须介于 0 和 64 之间")
+	@Length(min=0, max=11, message="id长度必须介于 0 和 64 之间")
 	public String getPlateid() {
 		return plateid;
 	}
@@ -137,7 +146,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.plateid = plateid;
 	}
 	
-	@Length(min=1, max=64, message="id长度必须介于 0 和 64 之间")
+	@Length(min=0, max=11, message="id长度必须介于 0 和 64 之间")
 	public String getVillageinfoid() {
 		return villageinfoid;
 	}
@@ -199,30 +208,40 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.rootid = rootid;
 	}
 	
-	public Date getBeginCreatetime() {
-		return beginCreatetime;
+	@Length(min=0, max=64, message="公告ID长度必须介于 0 和 64 之间")
+	public String getNoticeid() {
+		return noticeid;
 	}
 
-	public void setBeginCreatetime(Date beginCreatetime) {
-		this.beginCreatetime = beginCreatetime;
+	public void setNoticeid(String noticeid) {
+		this.noticeid = noticeid;
 	}
 	
-	public Date getEndCreatetime() {
-		return endCreatetime;
+	@Length(min=0, max=64, message="标题长度必须介于 0 和 64 之间")
+	public String getTitle() {
+		return title;
 	}
 
-	public void setEndCreatetime(Date endCreatetime) {
-		this.endCreatetime = endCreatetime;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	@Length(min=0, max=200, message="摘要长度必须介于 0 和 200 之间")
+	public String getSummary() {
+		return summary;
 	}
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@NotNull(message="发布时间不能为空")
-	public Date getToptime() {
-		return toptime;
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
-	public void setToptime(Date toptime) {
-		this.toptime = toptime;
+	@Length(min=0, max=255, message="备注长度必须介于 0 和 255 之间")
+	public String getRemarks() {
+		return remarks;
 	}
-		
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	
 }

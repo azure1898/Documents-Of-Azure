@@ -227,9 +227,11 @@ public class OrderServiceController extends BaseController {
         OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
         // 根据订单号检索信息
         orderRefundInfo.setOrderNo(orderService.getOrderNo());
-        orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
-        // 将退款完成时间添加到画面中
-        model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        orderRefundInfo = orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
+        if (null != orderRefundInfo) {
+            // 将退款完成时间添加到画面中
+            model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        }
         // 迁移至服务订单详细页面
         return "modules/order/orderServiceForm";
     }
@@ -243,23 +245,36 @@ public class OrderServiceController extends BaseController {
      */
     @RequiresPermissions("order:orderService:cancel")
     @RequestMapping(value = "cancel")
-    public String cancel(OrderService orderService, Model model, RedirectAttributes redirectAttributes) {
+    public String cancel(OrderService orderService, Model model, RedirectAttributes redirectAttributes,
+            String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderServiceService.check(orderService.getId(), orderService.getUpdateDateString())) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
-        int result = orderServiceService.cancel(orderService);
+        int result = 0;
+        try {
+            result = orderServiceService.cancel(orderService);
+        } catch (Exception e) {
+            addMessage(redirectAttributes, "操作失败");
+            redirectAttributes.addFlashAttribute("type", "error");
+            // 迁移至商品订单列表页面
+            return redirectUrl;
+        }
         // 若没更新则显示操作
         if (0 == result) {
             addMessage(redirectAttributes, "操作失败");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
     }
 
@@ -275,11 +290,15 @@ public class OrderServiceController extends BaseController {
     @RequiresPermissions("order:orderService:complete")
     @RequestMapping(value = "complete")
     public String complete(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderServiceService.check(id, updateDate)) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = orderServiceService.complete(id);
@@ -287,11 +306,11 @@ public class OrderServiceController extends BaseController {
         if (0 == result) {
             addMessage(redirectAttributes, "操作失败");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
     }
 
@@ -305,11 +324,15 @@ public class OrderServiceController extends BaseController {
     @RequiresPermissions("order:orderService:accept")
     @RequestMapping(value = "accept")
     public String accept(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderServiceService.check(id, updateDate)) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = orderServiceService.accept(id);
@@ -317,11 +340,11 @@ public class OrderServiceController extends BaseController {
         if (0 == result) {
             addMessage(redirectAttributes, "操作失败");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至服务订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderService/?repage";
+            return redirectUrl;
         }
     }
 }

@@ -18,9 +18,11 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,13 +191,13 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		setCredentialsMatcher(matcher);
 	}
 	
-//	/**
-//	 * 清空用户关联权限认证，待下次使用时重新加载
-//	 */
-//	public void clearCachedAuthorizationInfo(Principal principal) {
-//		SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
-//		clearCachedAuthorizationInfo(principals);
-//	}
+	/**
+	 * 清空用户关联权限认证，待下次使用时重新加载
+	 */
+	public void clearCachedAuthorizationInfo(Principal principal) {
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
+		clearCachedAuthorizationInfo(principals);
+	}
 
 	/**
 	 * 清空所有关联认证
@@ -203,12 +205,12 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	 */
 	@Deprecated
 	public void clearAllCachedAuthorizationInfo() {
-//		Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
-//		if (cache != null) {
-//			for (Object key : cache.keys()) {
-//				cache.remove(key);
-//			}
-//		}
+		Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
+		if (cache != null) {
+			for (Object key : cache.keys()) {
+				cache.remove(key);
+			}
+		}
 	}
 
 	/**
@@ -241,6 +243,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			this.name = user.getName();
 			this.mobileLogin = mobileLogin;
 		}
+
 
 		public String getId() {
 			return id;

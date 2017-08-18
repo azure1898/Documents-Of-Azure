@@ -247,7 +247,7 @@
                 <label>首页【1】 <input type="hidden" value="0">
                 </label>
                 <form:checkboxes items="${fns:getDictList('mainNavigation')}" path="mainNavigationIds" itemLabel="label" itemValue="value" />
-                <span class="help-inline"><font color="red">*</font> </span>
+                <span class="help-inline"><font color="red">*勾选数量只能为2个</font> </span>
             </div>
         </div>
         <div class="control-group">

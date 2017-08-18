@@ -5,6 +5,7 @@ package com.its.modules.social.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,5 +121,29 @@ public class SocialPraiseService extends CrudService<SocialPraiseDao, SocialPrai
 	 */
 	public List<SocialPraise> findListByToUserId(String touserid) {
 		return socialPraiseDao.findListByToUserId(touserid);
+	}
+	
+	/**
+	 * @Description：根据用户ID查询该用户的点赞数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countPraiseByUserId(String userId){
+		return socialPraiseDao.countPraiseByUserId(userId);
+	}
+	
+	/**
+	 * 
+	 * @Description：根据发言id和点赞人得到数据
+	 * @Author：邵德才
+	 * @Date：2017年8月16日
+	 * @param userId
+	 * @param pid
+	 * @return
+	 */
+	public int getIsPraise(String userId, String pid) {
+		return socialPraiseDao.getIsPraise(userId, pid);
 	}
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
 import com.its.modules.comment.entity.SocialComment;
-import com.its.modules.speak.entity.SocialSpeak;
 
 /**
  * 评论DAO接口

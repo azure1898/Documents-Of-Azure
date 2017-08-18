@@ -14,24 +14,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
 import com.its.common.web.BaseController;
+import com.its.modules.app.bean.BusinessInfoBean;
 import com.its.modules.app.bean.GroupPurchaseBean;
 import com.its.modules.app.bean.ModuleManageBean;
 import com.its.modules.app.bean.VillageLineRecomBusiTypeBean;
 import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
-import com.its.modules.app.entity.BusinessCategorydict;
 import com.its.modules.app.entity.BusinessInfo;
 import com.its.modules.app.entity.ModuleManage;
+import com.its.modules.app.entity.VillageLine;
 import com.its.modules.app.entity.VillageLineRecomBusiTypeDetail;
-import com.its.modules.app.entity.VillageLinerecomspecial;
-import com.its.modules.app.entity.VillageLinerecomspecialdetail;
+import com.its.modules.app.entity.VillageLineRecomSpecial;
+import com.its.modules.app.entity.VillageLineRecomSpecialDetail;
 import com.its.modules.app.service.BusinessInfoService;
 import com.its.modules.app.service.GroupPurchaseService;
 import com.its.modules.app.service.ModuleManageService;
 import com.its.modules.app.service.VillageLineRecomBusiTypeService;
-import com.its.modules.app.service.VillageLinerecomspecialService;
-import com.its.modules.app.service.VillageLinerecomspecialdetailService;
-import com.its.modules.sys.entity.Dict;
+import com.its.modules.app.service.VillageLineRecomSpecialDetailService;
+import com.its.modules.app.service.VillageLineRecomSpecialService;
+import com.its.modules.app.service.VillageLineService;
 
 /**
  * 生活首页Controller
@@ -57,10 +58,13 @@ public class LifeIndexController extends BaseController {
 	private BusinessInfoService businessInfoService;
 
 	@Autowired
-	private VillageLinerecomspecialService villageLinerecomspecialService;
+	private VillageLineRecomSpecialService villageLineRecomSpecialService;
 
 	@Autowired
-	private VillageLinerecomspecialdetailService villageLinerecomspecialdetailService;
+	private VillageLineRecomSpecialDetailService villageLineRecomSpecialDetailService;
+
+	@Autowired
+	private VillageLineService villageLineService;
 
 	/**
 	 * 生活首页模块推荐
@@ -79,7 +83,13 @@ public class LifeIndexController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, buildingID)) {
 			return toJson;
 		}
-		List<ModuleManageBean> moduleManages = moduleManageService.getModuleList(CommonGlobal.MAIN_NAVIGATION_LIFE, buildingID);
+		VillageLine villageLine = villageLineService.getByVillageInfoId(buildingID);
+		if (villageLine == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "楼盘产品线不存在");
+			return toJson;
+		}
+		List<ModuleManageBean> moduleManages = moduleManageService.getModuleList(villageLine.getLifeRecomModule(), buildingID);
 		if (moduleManages == null || moduleManages.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无数据");
@@ -91,14 +101,13 @@ public class LifeIndexController extends BaseController {
 		for (ModuleManageBean moduleManageBean : moduleManages) {
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("moduleID", moduleManageBean.getId());
-			data.put("prodType", moduleManageBean.getProdType());
+			data.put("modeID", moduleManageBean.getProdType());
 			data.put("moduleIcon", ValidateUtil.getImageUrl(moduleManageBean.getModuleIcon(), ValidateUtil.ZERO, request));
 			data.put("moduleName", moduleManageBean.getModuleName());
 			data.put("moduleUrl", moduleManageBean.getModuleUrl());
 
 			datas.add(data);
 		}
-
 		/* Data数据结束 */
 
 		toJson.put("code", Global.CODE_SUCCESS);
@@ -135,7 +144,8 @@ public class LifeIndexController extends BaseController {
 		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> map : businessList) {
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("businessID", map.get("businessID"));
+			data.put("businessID", map.get("businessId"));
+			data.put("modeID", map.get("prodType"));
 			data.put("businessName", map.get("businessName"));
 			data.put("businessDesc", map.get("recommendDes"));
 			data.put("businessImage", ValidateUtil.getImageUrl((String) map.get("recommendPic"), ValidateUtil.ZERO, request));
@@ -230,8 +240,8 @@ public class LifeIndexController extends BaseController {
 			List<Map<String, Object>> modes = new ArrayList<Map<String, Object>>();
 			for (VillageLineRecomBusiTypeDetail detail : bean.getVillageLineRecomBusiTypeDetails()) {
 				Map<String, Object> mode = new HashMap<String, Object>();
-				data.put("modeImage", ValidateUtil.getImageUrl(detail.getPicUrl(), ValidateUtil.ZERO, request));
-				data.put("modeType", detail.getProdType());
+				mode.put("modeImage", ValidateUtil.getImageUrl(detail.getPicUrl(), ValidateUtil.ZERO, request));
+				mode.put("modeType", detail.getProdType());
 
 				modes.add(mode);
 			}
@@ -265,8 +275,8 @@ public class LifeIndexController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, buildingID)) {
 			return toJson;
 		}
-		List<BusinessInfo> businessInfos = businessInfoService.getNormalBusinessList(buildingID);
-		if (businessInfos == null || businessInfos.size() == 0) {
+		List<BusinessInfoBean> businessInfoBeans = businessInfoService.getNormalBusinessList(buildingID);
+		if (businessInfoBeans == null || businessInfoBeans.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无数据");
 			return toJson;
@@ -274,16 +284,17 @@ public class LifeIndexController extends BaseController {
 
 		/* Data数据开始 */
 		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-		for (BusinessInfo businessInfo : businessInfos) {
+		for (BusinessInfoBean businessInfoBean : businessInfoBeans) {
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("businessID", businessInfo.getId());
-			data.put("businessName", businessInfo.getBusinessName());
-			data.put("businessImage", businessInfoService.formatBusinessPic(businessInfo.getBusinessPic(), request));
-			data.put("businessLabels", businessInfoService.getBusinessLabelList(businessInfo));
-			data.put("isFeeActivity", "1".equals(businessInfo.getFreeDistributeFlag()) ? 1 : 0);
-			data.put("deliveryFee", ValidateUtil.validateDouble(businessInfo.getDistributeCharge()));
-			if (CommonGlobal.YES.equals(businessInfo.getFreeDistributeFlag())) {
-				data.put("deliveryFeeActivity", "满" + businessInfo.getFreeDistributeMoney() + "元免" + (businessInfo.getDistributeCharge() != null ? businessInfo.getDistributeCharge() : 0) + "元运费");// 配送费活动内容
+			data.put("businessID", businessInfoBean.getId());
+			data.put("modeID", businessInfoBean.getProdType());
+			data.put("businessName", businessInfoBean.getBusinessName());
+			data.put("businessImage", businessInfoService.formatBusinessPic(businessInfoBean.getBusinessPic(), request));
+			data.put("businessLabels", businessInfoService.getBusinessLabelList(businessInfoBean));
+			data.put("isFeeActivity", "1".equals(businessInfoBean.getFreeDistributeFlag()) ? 1 : 0);
+			data.put("deliveryFee", ValidateUtil.validateDouble(businessInfoBean.getDistributeCharge()));
+			if (CommonGlobal.YES.equals(businessInfoBean.getFreeDistributeFlag())) {
+				data.put("deliveryFeeActivity", "满" + businessInfoBean.getFreeDistributeMoney() + "元免" + (businessInfoBean.getDistributeCharge() != null ? businessInfoBean.getDistributeCharge() : 0) + "元运费");// 配送费活动内容
 			}
 			data.put("activities", null);
 			data.put("businessUrl", null);
@@ -315,34 +326,47 @@ public class LifeIndexController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, buildingID)) {
 			return toJson;
 		}
-		VillageLinerecomspecial villageLinerecomspecial = villageLinerecomspecialService.getVillageLinerecomspecial(CommonGlobal.RECOMMEND_LIFE, buildingID);
-		if (villageLinerecomspecial == null) {
+		VillageLineRecomSpecial villageLineRecomSpecial = villageLineRecomSpecialService.getVillageLineRecomSpecial(CommonGlobal.RECOMMEND_LIFE, buildingID);
+		if (villageLineRecomSpecial == null) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无专题推荐");
 			return toJson;
 		}
-		List<VillageLinerecomspecialdetail> villageLinerecomspecialdetails = villageLinerecomspecialdetailService.getVillageLinerecomspecialdetailList(villageLinerecomspecial.getId());
+		List<VillageLineRecomSpecialDetail> villageLinerecomspecialdetails = villageLineRecomSpecialDetailService.getRecomSpecialDetailList(villageLineRecomSpecial.getId());
 
 		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topicName", villageLinerecomspecial.getSpecialName());
+		data.put("topicName", villageLineRecomSpecial.getSpecialName());
 
 		/* 专题推荐明细开始 */
 		List<Map<String, Object>> topicDatas = new ArrayList<Map<String, Object>>();
-		for (VillageLinerecomspecialdetail villageLinerecomspecialdetail : villageLinerecomspecialdetails) {
+		for (VillageLineRecomSpecialDetail villageLineRecomSpecialDetail : villageLinerecomspecialdetails) {
 			Map<String, Object> topicData = new HashMap<String, Object>();
-			String recomBusinessModuleId = villageLinerecomspecialdetail.getRecomBusinessModuleId();
-			topicData.put("recommendID", recomBusinessModuleId);
-			if (CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLinerecomspecialdetail.getRecomType())) {
-				topicData.put("recommendName", businessInfoService.get(recomBusinessModuleId).getBusinessName());
+			if (CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType())) {
+				// 推荐商家
+				String recomBusinessId = villageLineRecomSpecialDetail.getRecomBusinessId();
+				if (recomBusinessId != null) {
+					topicData.put("recommendID", recomBusinessId);
+					BusinessInfo businessInfo = businessInfoService.get(recomBusinessId);
+					topicData.put("recommendName", businessInfo == null ? "" : businessInfo.getBusinessName());
+					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
+					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+				}
 			} else {
-				topicData.put("recommendName", moduleManageService.get(recomBusinessModuleId).getModuleName());
+				// 推荐模块
+				String recomModuleId = villageLineRecomSpecialDetail.getRecomModuleId();
+				if (recomModuleId != null) {
+					topicData.put("recommendID", recomModuleId);
+					ModuleManage moduleManage = moduleManageService.get(recomModuleId);
+					topicData.put("recommendName", moduleManage == null ? "" : moduleManage.getModuleName());
+					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
+					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+				}
 			}
-			topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLinerecomspecialdetail.getPicUrl(), ValidateUtil.ZERO, request));
-			topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLinerecomspecialdetail.getRecomType()) ? 2 : 1);
 
 			topicDatas.add(topicData);
 		}
+		data.put("topicData", topicDatas);
 		/* 专题推荐明细结束 */
 
 		/* Data数据结束 */

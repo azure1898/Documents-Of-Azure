@@ -107,11 +107,27 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
                 throw new ServiceException(businessInfo.getBusinessName() + "没有设置投放楼盘！");
             }
         } else {
+            //修改主表信息
             businessInfoDao.update(businessInfo);
+            //删除服务时段信息
             businessServicetimeService.deleteService(businessInfo);
+            //插入时段的信息
             if (businessInfo.getsHours() != null) {
                 businessServicetimeService.saveService(businessInfo);
             }
+           //删除商家分类的信息
+            businessInfoDao.deleteInfoCategory(businessInfo);
+            //插入商家分类的信息
+            if (businessInfo.getCategoryList() != null && businessInfo.getCategoryList().size() > 0) {
+                businessInfoDao.insertInfoCategory(businessInfo);
+            } else {
+                throw new ServiceException(businessInfo.getBusinessName() + "没有设置分类！");
+            }
+            //删除商家账号下所有用户的分类角色
+            
+            
+            //添加商家账号下所有用户的分类角色
+            
             // 删除投放楼盘关联数据
             businessInfoDao.deleteInfoServiceScope(businessInfo);
             // 插入投放楼盘关联数据

@@ -11,11 +11,13 @@
 					"subName": "装修主题"
 				}
 			],
+			"id":"",
+			"isFocus":0,
 			"content": "装修房子是个苦差事啊，晒个图~",
 			"countForward": 55,
 			"countComment": 30,
 			"countPraise": 154,
-			"isPraise":1,
+			"isPraise":0,
 			"imgUrls": [
 				{
 					"url": "../../images/pic01.jpg"
@@ -38,6 +40,8 @@
 					"subName": "装修主题1"
 				}
 			],
+			"id":"",
+			"isFocus":1,
 			"content": "装修房子是个苦差事啊，晒个图~",
 			"countForward": 55,
 			"countComment": 30,
@@ -55,6 +59,9 @@
 					"subName": "装修主题"
 				}
 			],
+			"id":"",
+			"isFocus":1,
+
 			"content": "装修房子是个苦差事啊，晒个图~",
 			"countForward": 55,
 			"countComment": 30,

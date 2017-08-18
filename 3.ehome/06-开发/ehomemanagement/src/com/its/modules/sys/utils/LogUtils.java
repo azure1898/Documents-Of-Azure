@@ -93,13 +93,12 @@ public class LogUtils {
 			}
 			// 如果有异常，设置异常信息
 			log.setException(Exceptions.getStackTraceAsString(ex));
+			if(StringUtils.isNotBlank(log.getException())){//如果有异常信息 ,则保存为错误日志
+				log.setType(Log.TYPE_ERROR);
+			}
 			// 如果无标题并无异常日志，则不保存信息
 			if (StringUtils.isBlank(log.getTitle()) && StringUtils.isBlank(log.getException())){
 				return;
-			}
-			//添加异常消息
-			if(log.getException()!=null){
-				log.setType(Log.TYPE_ERROR);
 			}
 			// 保存日志信息
 			log.preInsert();

@@ -40,9 +40,9 @@
 						$("#stockNum"+i).text(stockNums+" 件");
 						
 						if(saleNums ==null || saleNums=='' || saleNums=='undefined'){
-							$("#saleNum"+i).val("已出售 0 件");
+							$("#saleNum"+i).val("已售出 0 件");
 						}else{
-							$("#saleNum"+i).val("已出售 "+saleNums+" 件");
+							$("#saleNum"+i).val("已售出 "+saleNums+" 件");
 						}						
 					}
 				}

@@ -10,7 +10,8 @@ var vm = new Vue({
 			myspeech:"myspeech.html?id=",
 			mypraise:"mypraise.html?id="
 		},
-		speechIndex:0
+		speechIndex:0,   //用于判断点击的是哪一个
+		screens:"" //屏蔽的信息
 	},
 	mounted: function() {
 		this.$nextTick(function() {
@@ -20,7 +21,13 @@ var vm = new Vue({
 	methods: {
 		cartView: function() {
 			var _this = this;
-			this.$http.get("../../data/mySpeech.json").then(function(res) {
+//			this.$http.get("../../data/mySpeech.json").then(function(res) {
+//				_this.speechLists = res.data.data;
+//			});
+			
+			this.$http.post(interfaceUrl + "/speak/speakDetail",{
+				userID:1,
+			},{emulateJSON: true}).then(function(res){
 				_this.speechLists = res.data.data;
 			});
 		},
@@ -50,12 +57,7 @@ var vm = new Vue({
 	  	_this.speechIndex=index;
 	  	$("#bg").fadeIn(0.1);
 	  	$("#type").slideDown()
-//	  	layer.open({
-//		    type: 1
-//		    ,content: '<div class="sort_xiala"><ul><li v-on:click="cancelAttention()">取消关注</li><li v-if="true">屏蔽他的发言</li><li><font class="index_redft">删除</font></li><li style="height:10px; background:#dddddd">&nbsp;</li><li>取消</li></ul></div>'
-//		    ,anim: 'up'
-//		    ,style: 'position:fixed; bottom:-18px; left:0; width: 100%; height: 200px; padding:10px 0; border:none;'
-//		  });
+
 	  },
        //关闭弹窗
        closePopups:function(){
@@ -64,10 +66,13 @@ var vm = new Vue({
        },
        //取消关注
 	  cancelAttention:function(){
+		var _this = this;
+	  	
 	  	layer.open({
 		    content: '您确定要取消关注吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(index){
+		    	_this.speechLists[_this.speechIndex].isFocus=0
 		      layer.close(index);
 		      vm.closePopups();
 		    },
@@ -78,12 +83,23 @@ var vm = new Vue({
 		  });
 	  	
 	  },
+	  attention:function(item){
+       		item.isFocus=1;
+       },
 	  //屏蔽他的发言
 	  shield:function(){
+		var _this = this;
 	  	layer.open({
 		    content: '您确定要屏蔽TA发言吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(index){
+			_this.$http.post(interfaceUrl + "/message/black",{
+				userID:1,
+				subUserId:1                 //_this.speechLists[_this.speechIndex].userId
+			},{emulateJSON: true}).then(function(res){
+//				_this.screens = res.data.data;
+			});
+		    	
 		      layer.close(index);
 		      vm.closePopups();
 		    },

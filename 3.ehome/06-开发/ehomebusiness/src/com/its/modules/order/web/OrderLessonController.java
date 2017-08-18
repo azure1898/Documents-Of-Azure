@@ -155,9 +155,11 @@ public class OrderLessonController extends BaseController {
         OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
         // 根据订单号检索信息
         orderRefundInfo.setOrderNo(orderLesson.getOrderNo());
-        orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
-        // 将退款完成时间添加到画面中
-        model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        orderRefundInfo = orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
+        if (null != orderRefundInfo) {
+            // 将退款完成时间添加到画面中
+            model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        }
         return "modules/order/orderLessonForm";
     }
 
@@ -170,11 +172,15 @@ public class OrderLessonController extends BaseController {
      */
     @RequiresPermissions("order:orderLesson:edit")
     @RequestMapping(value = "cancel")
-    public String cancel(OrderLesson orderLesson, Model model, RedirectAttributes redirectAttributes) {
+    public String cancel(OrderLesson orderLesson, Model model, RedirectAttributes redirectAttributes,String redirectUrl) {
+    	if(redirectUrl!=null && redirectUrl!="")
+    		redirectUrl="redirect:" + Global.getAdminPath() +redirectUrl;
+    	else
+    		redirectUrl="redirect:" + Global.getAdminPath() + "/order/orderLesson/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderLessonService.check(orderLesson.getId(), orderLesson.getUpdateDateString())) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
-            return "redirect:" + Global.getAdminPath() + "/order/orderLesson/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = orderLessonService.cancel(orderLesson);
@@ -182,11 +188,11 @@ public class OrderLessonController extends BaseController {
         if (0 == result) {
             addMessage(redirectAttributes, "操作失败");
             // 迁移至课程培训订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderLesson/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至课程培训订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderLesson/?repage";
+            return redirectUrl;
         }
     }
 

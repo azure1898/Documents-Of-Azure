@@ -77,15 +77,17 @@ public class SocialCommentController extends BaseController {
 			return result;
 		}
 		
-		int pageSize = SocialGlobal.COMMENT_PAGE_SIZE;
+		int pageSize = pageIndex==0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		SocialComment socialComment = new SocialComment();
 		socialComment.setDelflag(SocialGlobal.COMMENT_DEL_FLAG_NO);
 		socialComment.setSpeakid(speakId);
-		List<SocialCommentBean> cmtList = socialCommentService.findCommentBeanList(userId, socialComment, pageSize * pageIndex, pageSize);
+		List<SocialCommentBean> cmtList = socialCommentService.findCommentBeanList(userId, socialComment, pageIndex, pageSize);
 		List<Map> dataList = new ArrayList();
 		if(cmtList!=null && cmtList.size()>0){
 			for(SocialCommentBean cb: cmtList){
 				Map dataListMap = new HashMap();
+				dataListMap.put("userId", cb.getUserid());
 				dataListMap.put("userName", cb.getNickName());
 				dataListMap.put("headPicSrc", cb.getPhoto());
 				
@@ -163,9 +165,10 @@ public class SocialCommentController extends BaseController {
 		toJson.put("createTime", createtime);
 		toJson.put("countPraise", socialCommentBean.getCountPraise());
 		toJson.put("content", socialCommentBean.getContent());
-		int pageSize = SocialGlobal.COMMENT_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		//查询当前评论的子评论
-		List<SocialCommentBean> scbList = socialCommentService.findSecCommentBeanList(userId, socialCommentBean, pageSize * pageIndex, pageSize);
+		List<SocialCommentBean> scbList = socialCommentService.findSecCommentBeanList(userId, socialCommentBean, pageIndex, pageSize);
 		List<Map> dataList = new ArrayList<Map>();
 		if(scbList != null && scbList.size()>0) {
 			//遍历子评论List
@@ -211,72 +214,69 @@ public class SocialCommentController extends BaseController {
 	@ResponseBody
 	public String saveComment(String pid, String content, String subjectIds, int isForward, int isComment) {
 		//结果封装
-		Map<String, Object> toJson = new HashMap<String, Object>();
-		//判断pid是否为空
-		if(StringUtils.isEmpty(pid)){
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "评论ID为空");
-			String result = JSONObject.fromObject(toJson).toString();
-			return result;
-		}
-		//根据pid查询出要回复的评论
-		SocialComment psc = socialCommentService.get(pid);
-		if(psc == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "当前评论不存在");
-			String result = JSONObject.fromObject(toJson).toString();
-			return result;
-		}
-		SocialComment sc = new SocialComment();
-		sc.setContent(content);
-		sc.setFid(pid);
-		sc.setSpeakid(psc.getSpeakid());
-		//sc.setSubjectid(psc.getSubjectid());
-		sc.setIscomment(isComment);
-		sc.setCreatetime(new Date());
-		sc.setUserid(UserUtils.getUser().getId());
-		sc.setDelflag(SocialGlobal.COMMENT_DEL_FLAG_NO);
-		//保存回复
-		socialCommentService.save(sc);
-		if(!StringUtils.isEmpty(subjectIds)){
-			String[] subjectIdArr = subjectIds.split(",");
-			for(String subjectId : subjectIdArr) {
-				SocialSubRelation ssr = new SocialSubRelation();
-				ssr.setSubjectid(subjectId);
-				ssr.setCommentid(sc.getId());
-				socialSubRelationService.save(ssr);
-			}
-		}
-		
-		//如果用户选中回复并转发，那么再在转发表中添加转发相关信息
-		if(SocialGlobal.COMMENT_AND_FORWARD_YES == isForward) {
-			SocialSpeak ssf = new SocialSpeak();
-			//获取要转发的发言
-			SocialSpeak ss = socialSpeakService.get(psc.getSpeakid());
-			
-			ssf.setReason(content);
-			ssf.setVisrange(SocialGlobal.FORWARD_VIS_RANGE_OPEN);
-			ssf.setForbitcomment(SocialGlobal.FORWARD_FORBIT_COMMENT_NO);
-			ssf.setForbidforward(SocialGlobal.FORWARD_FORBIT_FORWARD_NO);
-			ssf.setUserid(UserUtils.getUser().getId());
-			ssf.setCreatetime(new Date());
-			ssf.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
-			ssf.setVillageinfoid(ss.getVillageinfoid());
-			ssf.setFid(ss.getId());
-			if(StringUtils.isEmpty(ss.getRootid())) {
-				ssf.setRootid(ss.getId());
-			} else {
-				ssf.setRootid(ss.getRootid());
-			}
-			socialSpeakService.save(ssf);
-		}
-		toJson.put("code", Global.CODE_SUCCESS);
-		toJson.put("message", "评论成功");
-		
-		//将结果转换成String返回
-		String result = JSONObject.fromObject(toJson).toString();
-		System.out.println("+++++++" + result);
-		return result;
+				Map<String, Object> toJson = new HashMap<String, Object>();
+				//判断pid是否为空
+				if(StringUtils.isEmpty(pid)){
+					toJson.put("code", Global.CODE_PROMOT);
+					toJson.put("message", "评论ID为空");
+					String result = JSONObject.fromObject(toJson).toString();
+					return result;
+				}
+				//根据pid查询出要回复的评论
+				SocialComment sc = new SocialComment();
+				if(isComment == SocialGlobal.COMMENT_ISCOMMENT_NO) {
+					SocialComment psc = socialCommentService.get(pid);
+					sc.setFid(pid);
+					sc.setSpeakid(psc.getSpeakid());
+				} else {
+					sc.setSpeakid(pid);
+				}
+				sc.setContent(content);
+				sc.setIscomment(isComment);
+				sc.setCreatetime(new Date());
+				sc.setUserid(UserUtils.getUser().getId());
+				sc.setDelflag(SocialGlobal.COMMENT_DEL_FLAG_NO);
+				//保存回复
+				socialCommentService.save(sc);
+				if(!StringUtils.isEmpty(subjectIds)){
+					String[] subjectIdArr = subjectIds.split(",");
+					for(String subjectId : subjectIdArr) {
+						SocialSubRelation ssr = new SocialSubRelation();
+						ssr.setSubjectid(subjectId);
+						ssr.setCommentid(sc.getId());
+						socialSubRelationService.save(ssr);
+					}
+				}
+				
+				//如果用户选中回复并转发，那么再在转发表中添加转发相关信息
+				if(SocialGlobal.COMMENT_AND_FORWARD_YES == isForward) {
+					SocialSpeak ssf = new SocialSpeak();
+					//获取要转发的发言
+					SocialSpeak ss = socialSpeakService.get(sc.getSpeakid());
+					
+					ssf.setReason(content);
+					ssf.setVisrange(SocialGlobal.FORWARD_VIS_RANGE_OPEN);
+					ssf.setForbitcomment(SocialGlobal.FORWARD_FORBIT_COMMENT_NO);
+					ssf.setForbidforward(SocialGlobal.FORWARD_FORBIT_FORWARD_NO);
+					ssf.setUserid(UserUtils.getUser().getId());
+					ssf.setCreatetime(new Date());
+					ssf.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
+//					ssf.setVillageinfoid(ss.getVillageinfoid());
+					ssf.setFid(ss.getId());
+					if(StringUtils.isEmpty(ss.getRootid())) {
+						ssf.setRootid(ss.getId());
+					} else {
+						ssf.setRootid(ss.getRootid());
+					}
+					socialSpeakService.save(ssf);
+				}
+				toJson.put("code", Global.CODE_SUCCESS);
+				toJson.put("message", "评论成功");
+				
+				//将结果转换成String返回
+				String result = JSONObject.fromObject(toJson).toString();
+				System.out.println("+++++++" + result);
+				return result;
 	}
 	
 }

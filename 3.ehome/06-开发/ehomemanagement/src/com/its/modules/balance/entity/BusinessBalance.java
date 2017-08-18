@@ -41,6 +41,9 @@ public class BusinessBalance extends DataEntity<BusinessBalance> {
 	private String depositBank; // 开户银行
 	private String bankAccount; // 银行账号
 	private String remark; // 备注
+	private String addrPro; // 地址_省
+	private String addrCity; // 地址_市
+	private String villageInfoId; // 楼盘
 	
 	public BusinessBalance() {
 		super();
@@ -215,6 +218,30 @@ public class BusinessBalance extends DataEntity<BusinessBalance> {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getAddrPro() {
+		return addrPro;
+	}
+
+	public void setAddrPro(String addrPro) {
+		this.addrPro = addrPro;
+	}
+
+	public String getAddrCity() {
+		return addrCity;
+	}
+
+	public void setAddrCity(String addrCity) {
+		this.addrCity = addrCity;
+	}
+
+	public String getVillageInfoId() {
+		return villageInfoId;
+	}
+
+	public void setVillageInfoId(String villageInfoId) {
+		this.villageInfoId = villageInfoId;
 	}
 
 	@Override

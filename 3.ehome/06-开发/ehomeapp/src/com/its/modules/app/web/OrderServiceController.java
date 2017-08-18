@@ -105,7 +105,7 @@ public class OrderServiceController extends BaseController {
 		data.put("serviceCharge", ValidateUtil.validateDouble(businessInfo.getServiceCharge()));
 		data.put("contactPerson", address != null ? address.getContact() : null);
 		data.put("contactPhone", address != null ? address.getPhoneNum() : null);
-		data.put("contactAddress", address != null ? address.getAddress() : null);
+		data.put("contactAddress", address != null ? addressService.getAddressDetail(address) : null);
 		data.put("serviceID", serviceInfo.getId());
 		data.put("serviceName", serviceInfo.getName());
 		data.put("unit", businessInfoService.getUnit(serviceInfo.getBaseUnit()));

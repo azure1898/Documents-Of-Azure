@@ -45,6 +45,16 @@
 			    background: url(../../images/bot_icon3.png) left center no-repeat;
 			    padding-left: 25px;
 			}
+			.twoLine{
+		    	overflow: hidden;
+		 	    text-overflow: ellipsis;
+		 	    display: -webkit-box;
+		 	     -webkit-line-clamp: 2;
+		     	-webkit-box-orient: vertical;
+		    }
+			 .twoLine img{
+	   		 	display: none;
+	   		}
 		</style>
 	</head>
 
@@ -82,17 +92,34 @@
 				</div>
 				<div class="fyxq_main2">
 					<p class="ftc5050">
-						<font class="ftcred" v-for="(subject,index) in speech.subjectList" :key="index">#{{subject.subName}}#</font>
+						<!--<font class="ftcred" v-for="(subject,index) in speech.subjectList" :key="index">#{{subject.subName}}#</font>-->
 						<a :href="urlList.speechdetail + speech.speakId">{{speech.content}}</a>
 						<!--<font class="ftcred">@优米的米</font>-->
 					</p>
 				</div>
-				<div class="fyxq_main3" v-if="speech.releasePictures&&speech.releasePictures.length>0">
+				<div class="fyxq_main3" v-if="speech.imgUrls&&speech.imgUrls.length>0">
 					<ul>
-						<li v-for="img in speech.releasePictures"><img :src="img.imgUrl" width="110" height="110"></li>
+						<li v-for="img in speech.imgUrls"><img :src="img.url" width="110" height="110"></li>
 						<div class="clear"></div>
 					</ul>
 				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:6px;" v-if="speech.isSpeak==0" >
+					<div class="fyxq_main_l2_img">
+						<!--<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
+						<img v-bind:src="item.userHeadUrl" v-else width="110" height="110">-->
+						<img :src="speech.rootSpeak.image"/>
+					</div>
+					<div class="fyxq_main_l_title2">
+						<p v-if="speech.rootSpeak.noticeId ==''">@{{speech.rootSpeak.userName}}</p>
+						<p v-else>{{speech.rootSpeak.title}}</p>
+						<!--<p><span>
+							<font class="ftcred" v-for="(subject,index) in item.speak.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
+							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>-->
+					    <p class="twoLine" v-html="speech.rootSpeak.content"></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+				
 				<div class="personal_main_bottom">
 					<ul>
 						<li><a :href="urlList.forward + speech.speakId" class="bottom_icon1">{{speech.countForward}}</a></li>

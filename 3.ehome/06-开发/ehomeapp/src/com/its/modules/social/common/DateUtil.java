@@ -2,7 +2,6 @@ package com.its.modules.social.common;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -19,62 +18,50 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String getDaysBeforeNow(Date date) {
-		long sysTime = Long.parseLong(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-		long ymdhms = Long.parseLong(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
-		String strYear = "年前";
-		String strMonth = "月前";
-		String strDay = "天前";
-		String strHour = "小时前";
-		String strMinute = "分钟前";
-		try {
-			if (ymdhms == 0) {
-				return "";
-			}
-			long between = (sysTime / 10000000000L) - (ymdhms / 10000000000L);
-			if (between > 0) {
-				return between + strYear;
-			}
-			between = (sysTime / 100000000L) - (ymdhms / 100000000L);
-			if (between > 0) {
-				return between + strMonth;
-			}
-			between = (sysTime / 1000000L) - (ymdhms / 1000000L);
-			if (between > 0) {
-				return between + strDay;
-			}
-			between = (sysTime / 10000) - (ymdhms / 10000);
-			if (between > 0) {
-				return between + strHour;
-			}
-			between = (sysTime / 100) - (ymdhms / 100);
-			if (between > 0) {
-				return between + strMinute;
-			}
-			return "1" + strMinute;
-		} catch (Exception e) {
-			return "";
+	 	Date sysDate = new Date();
+		String result = "";
+		SimpleDateFormat sdf = null;
+			
+		long from = date.getTime();  
+		long to = sysDate.getTime();  
+		int minutes = (int) ((to - from)/(1000 * 60));
+		//分钟级别比较
+		if(minutes<1){
+			return "刚刚";
+		}else if(1<=minutes && minutes<60){
+			return minutes + "分钟前";
+		}else if(60<=minutes && minutes<24*60){
+			return minutes/60 + "小时前";
+		}else if(24*60<=minutes && minutes<48*60){
+			sdf = new SimpleDateFormat("HH:mm"); 
+			result = sdf.format(date); 
+			return "昨天 " + result;
+		}else{
+			sdf = new SimpleDateFormat("MM-dd HH:mm"); 
+			result = sdf.format(date); 
+			return result;
 		}
 	}
 	
 	 public static void main(String[] args) throws ParseException {  
-	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");  
-	        Date date = df.parse("2017-08-04");  
-	        Calendar cal = Calendar.getInstance();  
-	        cal.add(Calendar.DATE, -7);  
-	        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); //上周一  
-	        System.out.println(df.format(cal.getTime()));  
-	        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); //周末  
-	        System.out.println(df.format(cal.getTime()));  
-	          
-	        
-	        Calendar cal1 = Calendar.getInstance();  
-	        //n为推迟的周数，1本周，-1向前推迟一周，2下周，依次类推  
-	        int n = 2;  
-	        String monday;  
-	        cal1.add(Calendar.DATE, n*7);  
-	        //想周几，这里就传几Calendar.MONDAY（TUESDAY...）  
-	        cal1.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);  
-	        monday = new SimpleDateFormat("yyyy-MM-dd").format(cal1.getTime());  
-	        System.out.println(monday);  
+		/* SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//如2016-08-10 20:40  
+		 long from = simpleFormat.parse("2016-05-01 13:05:00").getTime();  
+		 long to = simpleFormat.parse("2016-05-01 14:06:04").getTime();  
+		 int minutes = (int) ((to - from)/(1000 * 60));  
+		 
+		 System.out.println(minutes);
+		 System.out.println(121/60);*/
+	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	        Date date5 = df.parse("2017-08-17 17:52:00"); 
+	        Date date2 = df.parse("2017-08-17 17:5:00");   
+	       Date date0 = df.parse("2017-08-17 09:56:00"); 
+	       Date date = df.parse("2017-08-16 14:43:00"); 
+	        Date date1 = df.parse("2017-08-14 14:43:00");   
+	      
+	        System.out.println(getDaysBeforeNow(date5));
+	       System.out.println(getDaysBeforeNow(date0));
+	       System.out.println(getDaysBeforeNow(date));
+	        System.out.println(getDaysBeforeNow(date1));
 	    }  
+	 
 }

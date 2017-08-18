@@ -25,6 +25,16 @@
 			[v-cloak] {
 				  display: none;
 				}
+		 	.twoLine{
+		    	overflow: hidden;
+		 	    text-overflow: ellipsis;
+		 	    display: -webkit-box;
+		 	     -webkit-line-clamp: 2;
+		     	-webkit-box-orient: vertical;
+		    }
+	    .twoLine img{
+	    	display: none;
+	    }
     </style>
 	</head>
 
@@ -61,15 +71,21 @@
 						<a v-bind:src="item.comment.imgUrls[0].url" v-if="item.comment.imgUrls.length>0">查看原图</a>
 				</div>
 				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+					<!--<div class="fyxq_main_l_title2">
+						<p>公告摘要</p>
+					</div>-->
 					<div class="fyxq_main_l2_img">
-						<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
-						<img v-bind:src="item.userHeadUrl" v-else width="110" height="110">
+						<!--<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
+						<img v-bind:src="item.userHeadUrl" v-else width="110" height="110">-->
+						<img :src="item.imgUrls"/>
 					</div>
 					<div class="fyxq_main_l_title2">
-						<p>@{{item.speak.userName}}</p>
-						<p><span>
+						<p v-if="item.speak.noticeId ==''">@{{item.speak.userName}}</p>
+						<p v-else>{{item.speak.title}}</p>
+						<!--<p><span>
 							<font class="ftcred" v-for="(subject,index) in item.speak.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
-							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>
+							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>-->
+					    <p class="twoLine" v-html="item.speak.content"><img src="../../images/baoxiu.png"/></p>
 					</div>
 				</div>
 				<div class="clear"></div>
@@ -82,6 +98,7 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/mypraisedetails.js"></script>
 	</body>
 

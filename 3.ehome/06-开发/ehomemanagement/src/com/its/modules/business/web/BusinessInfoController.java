@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.csource.common.MyException;
@@ -39,7 +40,6 @@ import com.its.modules.business.entity.BusinessServicetime;
 import com.its.modules.business.service.BusinessCategorydictService;
 import com.its.modules.business.service.BusinessInfoService;
 import com.its.modules.business.service.BusinessServicetimeService;
-import com.its.modules.goods.entity.GoodsInfo;
 import com.its.modules.sys.utils.UserUtils;
 
 /**
@@ -122,6 +122,10 @@ public class BusinessInfoController extends BaseController {
     @RequiresPermissions(value = { "business:businessInfo:add", "business:businessInfo:edit" }, logical = Logical.OR)
     @RequestMapping(value = "save")
     public String save(BusinessInfo businessInfo, Model model, @RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    	if (StringUtils.isNotBlank(businessInfo.getBusinessIntroduce())) {
+			// 特殊字符转义
+    		businessInfo.setBusinessIntroduce(StringEscapeUtils.unescapeHtml4(businessInfo.getBusinessIntroduce()));
+        }
         if (!beanValidator(model, businessInfo)) {
             return form(businessInfo, model, request);
         }
@@ -193,9 +197,9 @@ public class BusinessInfoController extends BaseController {
     public String updateState(BusinessInfo businessInfo, RedirectAttributes redirectAttributes) {
         String flagName = "";
         if (businessInfo.getUseState().equals("0")) {
-            flagName = "解冻";
-        } else {
             flagName = "取消冻结";
+        } else {
+            flagName = "冻结";
         }
         if (UserUtils.getUser().getId().equals(businessInfo.getId())) {
             addMessage(redirectAttributes, flagName + "商户信息失败, 不允许" + flagName + "当前商户信息");

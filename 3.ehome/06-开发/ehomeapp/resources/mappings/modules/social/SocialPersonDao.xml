@@ -31,7 +31,7 @@
             (SELECT count(*) FROM social_comment sc WHERE sc.speakid = a.id) as countComment,
             (SELECT count(*) FROM social_speak spf WHERE spf.rootid = a.id) as countForward,
             (SELECT count(*) FROM social_praise sp WHERE sp.pid = a.id AND type=1) as countPraise,
-            (SELECT IFNULL((select count(*)  from social_praise spr where spr.userid=#{userId}), 0)) as isPraise
+            (SELECT IFNULL((select count(*)  from social_praise spr where sp.pid = a.id AND type=1 AND spr.userid=#{userId}), 0)) as isPraise
         FROM social_speak a
         WHERE a.userid = #{subUserId}
         ORDER BY a.createtime desc LIMIT #{pageIndex},#{pageSize}

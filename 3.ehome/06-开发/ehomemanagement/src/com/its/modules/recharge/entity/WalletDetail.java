@@ -8,6 +8,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.its.common.persistence.DataEntity;
+import com.its.common.utils.NumberUtil;
 import com.its.common.utils.excel.annotation.ExcelField;
 import com.its.modules.account.entity.Account;
 import com.its.modules.sys.utils.DictUtils;
@@ -47,6 +48,8 @@ public class WalletDetail extends DataEntity<WalletDetail> {
 	private String villageInfoId; // 楼盘ID
 	private String tradeType; // 交易类型
 	private Date tradeDate; // 交易时间
+	private Double walletPrincipal; // 本金金额
+	private Double walletPresent; // 赠送金额
 	private Double money; // 金额
 	private String terminalSource; // 终端来源
 	private String mobileUniqueCode; // 手机唯一码
@@ -127,6 +130,22 @@ public class WalletDetail extends DataEntity<WalletDetail> {
 		return money;
 	}
 
+	public Double getWalletPrincipal() {
+		return walletPrincipal;
+	}
+
+	public void setWalletPrincipal(Double walletPrincipal) {
+		this.walletPrincipal = walletPrincipal;
+	}
+
+	public Double getWalletPresent() {
+		return walletPresent;
+	}
+
+	public void setWalletPresent(Double walletPresent) {
+		this.walletPresent = walletPresent;
+	}
+
 	/**
 	 * 获取带“+、-”符号的金额字符串
 	 * 
@@ -141,7 +160,7 @@ public class WalletDetail extends DataEntity<WalletDetail> {
 		} else {
 			moneyStr.append("+");
 		} 
-		moneyStr.append(this.money);
+		moneyStr.append(NumberUtil.doubleFormat(this.money));
 		return moneyStr.toString();
 	}
 

@@ -42,8 +42,7 @@ public class LessonInfo extends DataEntity<LessonInfo> {
 	private List<String> imageUrls; //一览用图片路径
 	private List<ServiceInfoPic> picList; //图片LIST
 	private String delImageName; //服务编辑时删除的图片名称
-
-
+	private String isfull; // 是否约满（商家首页查询用）
 
 	private String stock;		// 用于条件查询,约满
 
@@ -247,6 +246,14 @@ public class LessonInfo extends DataEntity<LessonInfo> {
 
 	public void setDelImageName(String delImageName) {
 		this.delImageName = delImageName;
+	}
+
+	public String getIsfull() {
+		return isfull;
+	}
+
+	public void setIsfull(String isfull) {
+		this.isfull = isfull;
 	}
 	
 }

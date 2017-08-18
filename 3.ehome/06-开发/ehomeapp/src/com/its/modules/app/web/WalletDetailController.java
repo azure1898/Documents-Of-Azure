@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.its.common.config.Global;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
+import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
 import com.its.modules.app.entity.WalletDetail;
 import com.its.modules.app.service.AccountService;
@@ -28,6 +26,7 @@ import net.sf.json.JSONObject;
  * 钱包明细Controller
  * 
  * @author like
+ * 
  * @version 2017-07-17
  */
 @Controller
@@ -37,10 +36,13 @@ public class WalletDetailController extends BaseController {
 	private AccountService accountService;
 	@Autowired
 	private WalletDetailService walletDetailService;
+
 	/**
 	 * 钱包信息
+	 * 
 	 * @param userID
-	 * @return
+	 *            用户ID
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getWallet")
@@ -62,7 +64,7 @@ public class WalletDetailController extends BaseController {
 			Map<String, Object> dj = new HashMap<String, Object>();
 			dj.put("transactionName", walletDetailService.getTradeTypeString(d.getTradeType()));
 			dj.put("transactionTime", DateFormatUtils.format(d.getTradeDate(), "yyyy-MM-dd HH:mm"));
-			dj.put("transactionMoney", d.getMoney());
+			dj.put("transactionMoney", ValidateUtil.validateDouble(d.getWalletPrincipal()) + ValidateUtil.validateDouble(d.getWalletPresent()));
 			listJson.add(dj);
 		}
 		data.put("details", listJson);
@@ -72,16 +74,19 @@ public class WalletDetailController extends BaseController {
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
 	}
-	
+
 	/**
 	 * 余额明细
+	 * 
 	 * @param userID
+	 *            用户ID
 	 * @param pageIndex
-	 * @return
+	 *            分页页码
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getTransactionDetail")
-	public String getTransactionDetail(String userID,String pageIndex) {
+	public String getTransactionDetail(String userID, String pageIndex) {
 		if (StringUtils.isBlank(userID) || !StringUtils.isNumeric(pageIndex)) {
 			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
 		}
@@ -91,7 +96,7 @@ public class WalletDetailController extends BaseController {
 			Map<String, Object> dj = new HashMap<String, Object>();
 			dj.put("transactionName", walletDetailService.getTradeTypeString(d.getTradeType()));
 			dj.put("transactionTime", DateFormatUtils.format(d.getTradeDate(), "yyyy-MM-dd HH:mm"));
-			dj.put("transactionMoney", d.getMoney());
+			dj.put("transactionMoney", ValidateUtil.validateDouble(d.getWalletPrincipal()) + ValidateUtil.validateDouble(d.getWalletPresent()));
 			data.add(dj);
 		}
 		Map<String, Object> json = new HashMap<String, Object>();
@@ -100,5 +105,5 @@ public class WalletDetailController extends BaseController {
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
 	}
-	
+
 }

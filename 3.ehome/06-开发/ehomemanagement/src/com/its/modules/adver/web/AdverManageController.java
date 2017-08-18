@@ -107,10 +107,10 @@ public class AdverManageController extends BaseController {
         if (!beanValidator(model, adverManage)) {
             return form(adverManage, model,request);
         }
-        if (adverManage.getSkipTime() != null && ("").equals(adverManage.getSkipTime())) {
+        if ("".equals(adverManage.getSkipTime())) {
             adverManage.setSkipTime(null);
         }
-        if (adverManage.getDisplayTimeInterval() != null && ("").equals(adverManage.getDisplayTimeInterval())) {
+        if ("".equals(adverManage.getDisplayTimeInterval())) {
             adverManage.setDisplayTimeInterval(null);
         }
         // 文件上传处理

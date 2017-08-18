@@ -39,10 +39,14 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		v.addr_pro AS "addrPro",
+		v.addr_city AS "addrCity"
 	</sql>
 	
 	<sql id="couponManageJoins">
+	   LEFT JOIN village_info v 
+	          ON v.id = a.Village_Info_ID
 	</sql>
     
 	<select id="get" resultType="CouponManage">

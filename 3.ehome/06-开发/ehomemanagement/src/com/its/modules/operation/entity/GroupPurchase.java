@@ -29,8 +29,8 @@ public class GroupPurchase extends DataEntity<GroupPurchase> {
 	private String businessinfoId;		// 商家ID
 	private String groupPurcName;		// 团购名称
 	private String groupPurcPic;		// 团购图片
-	private String marketMoney;		// 市场价
-	private String groupPurcMoney;		// 团购价
+	private Double marketMoney;		// 市场价
+	private Double groupPurcMoney;		// 团购价
 	private String restrictionNumber;		// 用户限购数
 	private String supportType;		// 商家支持：0支持随时退  1支持过期退 2免预约
 	private String groupPurcDetail;		// 团购详情
@@ -108,19 +108,19 @@ public class GroupPurchase extends DataEntity<GroupPurchase> {
 		this.groupPurcPic = groupPurcPic;
 	}
 	
-	public String getMarketMoney() {
+	public Double getMarketMoney() {
 		return marketMoney;
 	}
 
-	public void setMarketMoney(String marketMoney) {
+	public void setMarketMoney(Double marketMoney) {
 		this.marketMoney = marketMoney;
 	}
 	
-	public String getGroupPurcMoney() {
+	public Double getGroupPurcMoney() {
 		return groupPurcMoney;
 	}
 
-	public void setGroupPurcMoney(String groupPurcMoney) {
+	public void setGroupPurcMoney(Double groupPurcMoney) {
 		this.groupPurcMoney = groupPurcMoney;
 	}
 	

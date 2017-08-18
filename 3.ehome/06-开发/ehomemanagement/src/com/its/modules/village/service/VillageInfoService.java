@@ -281,4 +281,26 @@ public class VillageInfoService extends CrudService<VillageInfoDao, VillageInfo>
    public List<VillageInfo> findAllList() {
        return villageInfoDao.findAllList(new VillageInfo());
    }
+
+   /**
+    * 判断楼盘名称同一城市下是否重复
+    * @param addrCity 城市ID
+    * @param villageName 楼盘名称
+    * @return 是否重复（重复返回true，不重复返回false）
+    */
+	public boolean checkVillageNameDuplicate(String addrCity, String villageName) {
+		VillageInfo villageInfo = new VillageInfo();
+		villageInfo.setAddrCity(addrCity);
+		List<VillageInfo> villageInfoList =  this.dao.findList(villageInfo);
+		if (villageInfoList != null && !villageInfoList.isEmpty()) {
+			for (VillageInfo tempVillageInfo : villageInfoList) {
+				if (StringUtils.isNotBlank(villageName) && villageName.equals(tempVillageInfo.getVillageName())) {
+					System.out.println("重复");
+					return true;
+				}
+			}
+		}
+		System.out.println("不重复");
+		return false;
+	}
 }

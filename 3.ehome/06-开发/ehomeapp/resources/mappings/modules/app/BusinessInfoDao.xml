@@ -356,16 +356,23 @@
 	</select>
 	
 	<!-- 获取某楼盘下所有正常的商家 -->
-	<select id="getNormalBusinessList" resultType="BusinessInfo">
+	<select id="getNormalBusinessList" resultType="BusinessInfoBean">
 		SELECT
-			<include refid="businessInfoColumns"/>
+			<include refid="businessInfoColumns"/>,
+			d.Prod_Type as prodType
 		FROM
 			Business_Info a,
-			Business_ServiceScope b
+			Business_ServiceScope b,
+			Business_CategoryInfo c,
+			Business_CategoryDict d
 		WHERE
 			a.ID = b.BusinessInfo_ID
+		AND	a.id=c. BusinessInfo_ID
+		AND c.Business_Category_Dict_ID=d.id
 		AND a.del_flag = '0'
 		AND b.del_flag = '0'
+		AND c.del_flag = '0'
+		AND d.del_flag = '0'
 		AND b.Village_Info_ID = #{villageInfoId}
 		AND a.Business_State = '1'
 		AND a.Use_State = '0'
@@ -374,6 +381,7 @@
 			a.create_date DESC
 		LIMIT 5
 	</select>
+	
 	<!-- 根据商家分类字典表，获取商家的商品模式 -->
 	<select id="getProdTypeByCategoryDictId" resultType="string">
 		SELECT a.prod_type 
@@ -383,4 +391,19 @@
 			AND a.id=#{id}
 		</where>
 	</select>
+	
+	<!-- 获取某商家的产品模式集合 -->
+	<select id="getBusinessProdTypeList" resultType="java.lang.String">
+		SELECT
+			a.Prod_Type
+		FROM
+			Business_CategoryDict a,
+			Business_CategoryInfo b
+		WHERE
+			a.ID = b.Business_Category_Dict_ID
+		AND a.del_flag = '0'
+		AND b.del_flag = '0'
+		AND b.BusinessInfo_ID = #{businessInfoId}
+	</select>
+	
 </mapper>

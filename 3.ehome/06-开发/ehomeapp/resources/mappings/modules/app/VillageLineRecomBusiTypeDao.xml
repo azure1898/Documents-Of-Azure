@@ -111,8 +111,9 @@
 	
 	
 	<resultMap type="VillageLineRecomBusiTypeBean" id="villageLineRecomBusiTypeBeanMapOne">
+		<id  property="id" column="ID"/>
 		<association property="businessInfo" javaType="BusinessInfo">
-			<id property="id" column="ID" />
+			<id property="id" column="Business_ID" />
 			<result property="businessName" column="Business_Name" />
 		</association>
 		<collection property="villageLineRecomBusiTypeDetails" ofType="VillageLineRecomBusiTypeDetail">
@@ -125,7 +126,8 @@
 	<!-- 获取某楼盘下某推荐位置的商家列表 -->
 	<select id="getRecommendBusinessList" resultMap="villageLineRecomBusiTypeBeanMapOne">
 		SELECT
-			c.ID,
+			a.ID,
+			c.ID AS Business_ID,
 			c.Business_Name,
 			b.Prod_Type,
 			b.Pic_Url
@@ -145,7 +147,7 @@
 			FROM
 				Village_Line d
 			WHERE
-				d.del_flag = 0
+				d.del_flag = '0'
 			AND d.Village_Info_ID = #{villageInfoId}
 			AND d.Product_Line = '0'
 			AND d.Set_State = '1'

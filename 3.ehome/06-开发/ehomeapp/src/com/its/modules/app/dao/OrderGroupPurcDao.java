@@ -1,11 +1,14 @@
 package com.its.modules.app.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
 
 import com.its.modules.app.bean.OrderGroupPurcBean;
+import com.its.modules.app.bean.OrderGroupPurcRCBean;
 import com.its.modules.app.entity.OrderGroupPurc;
 
 /**
@@ -59,4 +62,12 @@ public interface OrderGroupPurcDao extends CrudDao<OrderGroupPurc> {
 	 * @return OrderGroupPurc
 	 */
 	public OrderGroupPurc judgeOrderGroupPurcCancelAble(@Param("orderId") String orderId, @Param("accountId") String accountId);
+	
+	/**
+	 * 获取团购券临近期的数据
+	 * @param numDays	临近天数
+	 * @return
+	 */
+	public List<OrderGroupPurcRCBean> findTicketExpireMsg(@Param("numDays") String numDays);
+	
 }

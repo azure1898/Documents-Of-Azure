@@ -21,7 +21,7 @@ import com.its.modules.app.entity.ModuleManage;
 public interface ModuleManageDao extends CrudDao<ModuleManage> {
 
 	/**
-	 * 获取某楼盘下的模块列表（商户分类）
+	 * 获取某楼盘下的模块列表（关联在产品模式下的模块）
 	 * 
 	 * @param villageInfoId
 	 *            楼盘ID
@@ -41,12 +41,10 @@ public interface ModuleManageDao extends CrudDao<ModuleManage> {
 	public String getModuleId(@Param("prodType") String prodType, @Param("businessInfoId") String businessInfoId);
 
 	/**
-	 * 获取某楼盘下某种类型的模块推荐信息
+	 * 获取生活首页模块推荐列表
 	 * 
-	 * @param type
-	 *            主导航类型：0首页 1社区 2生活
-	 * @param villageInfoId
-	 *            楼盘ID
+	 * @param moduleIds
+	 *            模块ID列表
 	 * @return List<ModuleManageBean>
 	 */
 	public List<ModuleManageBean> getModuleList(List<String> moduleIds);
@@ -61,10 +59,24 @@ public interface ModuleManageDao extends CrudDao<ModuleManage> {
 	 * @return List<Map<String, Object>>
 	 */
 	public List<Map<String, Object>> getRecommendBusinessList(@Param("recommendPosition") String recommendPosition, @Param("villageInfoId") String villageInfoId);
+
 	/**
 	 * 根据手机端模块编码获取模块信息
+	 * 
 	 * @param phoneModuleCode
-	 * @return
+	 *            机端模块编码
+	 * @return ModuleManage
 	 */
-	public ModuleManage getModuleByPhoneCode(@Param("phoneModuleCode")String phoneModuleCode);
+	public ModuleManage getModuleByPhoneCode(@Param("phoneModuleCode") String phoneModuleCode);
+
+	/**
+	 * 获取模块管理列表
+	 * 
+	 * @param list
+	 *            INLIST
+	 * @param inStr
+	 *            INSTR
+	 * @return List<ModuleManage>
+	 */
+	public List<ModuleManage> getModuleManageList(@Param("list") List<String> list, @Param("inStr") String inStr);
 }

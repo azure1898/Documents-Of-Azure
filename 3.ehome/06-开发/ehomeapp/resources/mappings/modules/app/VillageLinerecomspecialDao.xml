@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.its.modules.app.dao.VillageLinerecomspecialDao">
+<mapper namespace="com.its.modules.app.dao.VillageLineRecomSpecialDao">
     
-	<sql id="villageLinerecomspecialColumns">
+	<sql id="villageLineRecomSpecialColumns">
 		a.id AS "id",
 		a.village_line_id AS "villageLineId",
 		a.recom_position AS "recomPosition",
@@ -16,22 +16,22 @@
 		a.del_flag AS "delFlag"
 	</sql>
 	
-	<sql id="villageLinerecomspecialJoins">
+	<sql id="villageLineRecomSpecialJoins">
 	</sql>
     
-	<select id="get" resultType="VillageLinerecomspecial">
+	<select id="get" resultType="VillageLineRecomSpecial">
 		SELECT 
-			<include refid="villageLinerecomspecialColumns"/>
+			<include refid="villageLineRecomSpecialColumns"/>
 		FROM village_linerecomspecial a
-		<include refid="villageLinerecomspecialJoins"/>
+		<include refid="villageLineRecomSpecialJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="VillageLinerecomspecial">
+	<select id="findList" resultType="VillageLineRecomSpecial">
 		SELECT 
-			<include refid="villageLinerecomspecialColumns"/>
+			<include refid="villageLineRecomSpecialColumns"/>
 		FROM village_linerecomspecial a
-		<include refid="villageLinerecomspecialJoins"/>
+		<include refid="villageLineRecomSpecialJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
@@ -45,11 +45,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="VillageLinerecomspecial">
+	<select id="findAllList" resultType="VillageLineRecomSpecial">
 		SELECT 
-			<include refid="villageLinerecomspecialColumns"/>
+			<include refid="villageLineRecomSpecialColumns"/>
 		FROM village_linerecomspecial a
-		<include refid="villageLinerecomspecialJoins"/>
+		<include refid="villageLineRecomSpecialJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -109,9 +109,9 @@
 		WHERE id = #{id}
 	</update>
 	<!-- 获取某楼盘APP产品线下某位置的专题推荐 -->
-	<select id="getVillageLinerecomspecial" resultType="VillageLinerecomspecial">
+	<select id="getVillageLineRecomSpecial" resultType="VillageLineRecomSpecial">
 		SELECT
-			<include refid="villageLinerecomspecialColumns"/>
+			<include refid="villageLineRecomSpecialColumns"/>
 		FROM
 			Village_LineRecomSpecial a
 		WHERE

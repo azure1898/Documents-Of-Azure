@@ -46,7 +46,7 @@
         function hrefByProdType(value) {
             if ('0' == value) {
                 // 迁移至商品订单列表页面
-                window.location.href="${ctx}/order/orderLesson";
+                window.location.href="${ctx}/order/orderGoods";
             } else if ('1' == value) {
                 // 迁移至服务订单列表页面
                 window.location.href="${ctx}/order/orderService";

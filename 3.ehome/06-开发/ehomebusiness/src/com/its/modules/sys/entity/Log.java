@@ -31,11 +31,12 @@ public class Log extends DataEntity<Log> {
 	private Date beginDate;		// 开始日期
 	private Date endDate;		// 结束日期
 	
+	
 	// 日志类型（1：接入日志；2：错误日志）
-	public static final String TYPE_OPERATE = "1";
-	public static final String TYPE_LOGIN = "2";
-	public static final String TYPE_ERROR = "3";
-	public static final String TYPE_SAFETY = "4";
+	public static final String TYPE_OPERATE = "1";//操作日志
+	public static final String TYPE_LOGIN = "2";//登陆日志
+	public static final String TYPE_ERROR = "3";//错误日志
+	public static final String TYPE_SAFETY = "4";//安全日志
 	
 	public Log(){
 		super();

@@ -18,14 +18,22 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style type="text/css">
+    	.bp{
+    		border-top:solid 1px #ececec;
+    	}
+    </style>
 	</head>
 
 	<body>
+		<div id="app">
+			
+
 		<div class="grey_top">
 			<a href="#" class="black_back"></a>
 			订单消息
 		</div>
-		<div class="main_box">
+		<!--<div class="main_box">
 			<div class="order_message">
 				<h4><span>2017-05-09 18:05</span>餐饮美食订单</h4>
 				<p>您选购的商品正在为您配送，订单号为[115299565844114]， 谢谢您的耐心等待！
@@ -35,18 +43,20 @@
 				</p>
 			</div>
 
-		</div>
-		<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+		</div>-->
+		<div class="main_box mb10" v-for="(order,index) in ordermessages"  :class="{'bp' : index!=0}">
 			<div class="order_message">
-				<h4><span>2017-05-09 18:05</span>餐饮美食订单</h4>
-				<p>您选购的商品正在为您配送，订单号为[115299565844114]， 谢谢您的耐心等待！
+				<h4><span>{{order.createTime}}</span>{{order.moduleName}}</h4>
+				<p>您选购的商品正在为您配送，订单号为[{{order.orderNum}}]， 谢谢您的耐心等待！
 				</p>
 				<p style="padding-top:5px;">
-					<font class="ftcred">查看详情></font>
+					<a :href="order.url"></a><font class="ftcred">查看详情></font>
 				</p>
 			</div>
 
 		</div>
+		</div>
+		
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="../../js/common/jquery.js"></script>
@@ -54,7 +64,8 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/ordermessage.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 
 </html>

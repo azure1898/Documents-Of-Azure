@@ -30,6 +30,10 @@ public class VillageLine extends DataEntity<VillageLine> {
     private String productLine; // 产品线
     private String setState; // 设置状态
     private Date setTime; // 设置时间
+
+    private String recomSetState; // 推荐设置状态
+    private Date recomSetTime; // 推荐设置时间
+
     private String mainNavigation; // 主导航
     private String communityModule; // 社区模块
     private String lifeModule; // 生活模块
@@ -48,8 +52,7 @@ public class VillageLine extends DataEntity<VillageLine> {
 
     private VillageLinerecomspecial recomSpecial;// 楼盘产品线推荐专题
     private List<VillageLinerecomspecial> recomSpecialList = Lists.newArrayList();// 楼盘产品线推荐专题列表
-    
-    
+
     private String communityModuleSort; // 社区模块排序
     private String lifeModuleSort; // 生活模块排序
     private String maintRecomModuleSort; // 首页推荐模块排序
@@ -340,7 +343,7 @@ public class VillageLine extends DataEntity<VillageLine> {
     public void setLifeRecomModuleSort(String lifeRecomModuleSort) {
         this.lifeRecomModuleSort = lifeRecomModuleSort;
     }
-    
+
     // 社区模块数组排序集合
     public String[] getCommunityModuleSortIds() {
         if (communityModuleSort != null) {
@@ -349,6 +352,7 @@ public class VillageLine extends DataEntity<VillageLine> {
             return null;
         }
     }
+
     // 生活模块数组排序集合
     public String[] getLifeModuleSortIds() {
         if (lifeModuleSort != null) {
@@ -357,6 +361,7 @@ public class VillageLine extends DataEntity<VillageLine> {
             return null;
         }
     }
+
     // 首页推荐模块排序集合
     public String[] getMaintRecomModuleSortIds() {
         if (maintRecomModuleSort != null) {
@@ -365,6 +370,7 @@ public class VillageLine extends DataEntity<VillageLine> {
             return null;
         }
     }
+
     // 生活推荐模块排序集合
     public String[] getLifeRecomModuleSortIds() {
         if (lifeRecomModuleSort != null) {
@@ -373,6 +379,7 @@ public class VillageLine extends DataEntity<VillageLine> {
             return null;
         }
     }
+
     // 社区推荐模块排序集合
     public String[] getCommunityRecomModuleSortIds() {
         if (communityRecomModuleSort != null) {
@@ -380,6 +387,22 @@ public class VillageLine extends DataEntity<VillageLine> {
         } else {
             return null;
         }
+    }
+
+    public String getRecomSetState() {
+        return recomSetState;
+    }
+
+    public void setRecomSetState(String recomSetState) {
+        this.recomSetState = recomSetState;
+    }
+
+    public Date getRecomSetTime() {
+        return recomSetTime;
+    }
+
+    public void setRecomSetTime(Date recomSetTime) {
+        this.recomSetTime = recomSetTime;
     }
 
 }

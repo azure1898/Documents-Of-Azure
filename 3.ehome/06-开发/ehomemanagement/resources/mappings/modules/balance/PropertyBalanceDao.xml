@@ -50,7 +50,7 @@
 			</if>
             
             <if test="balanceStartTime != null and balanceStartTime != ''">
-                AND a.balance_start_time &gt; #{balanceStartTime}
+                AND a.balance_start_time &gt;= #{balanceStartTime}
             </if>
             <if test="balanceEndTime != null and balanceEndTime != ''">
                 AND a.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
@@ -86,9 +86,37 @@
 			<include refid="propertyBalanceColumns"/>
 		FROM property_balance a
 		<include refid="propertyBalanceJoins"/>
-		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
-		</where>		
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="propertyCompanyId != null and propertyCompanyId != ''">
+                AND a.property_company_id = #{propertyCompanyId}
+            </if>
+            <if test="balanceCycle != null and balanceCycle != ''">
+                AND a.balance_cycle = #{balanceCycle}
+            </if>
+            
+            <if test="balanceStartTime != null and balanceStartTime != ''">
+                AND a.balance_start_time &gt;= #{balanceStartTime}
+            </if>
+            <if test="balanceEndTime != null and balanceEndTime != ''">
+                AND a.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+            <if test="balanceModel != null and balanceModel != ''">
+                AND a.balance_model = #{balanceModel}
+            </if>
+            <if test="balanceState != null and balanceState != ''">
+                AND a.balance_state = #{balanceState}
+            </if>
+            <if test="checkState != null and checkState != ''">
+                AND a.check_state = #{checkState}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND b.business_name like 
+                    <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+            </if>
+        </where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -393,7 +421,7 @@
                 AND b.property_company_id = #{propertyCompanyId}
             </if>
             <if test="balanceStartTime != null and balanceStartTime != ''">
-                AND b.balance_start_time &gt; #{balanceStartTime}
+                AND b.balance_start_time &gt;= #{balanceStartTime}
             </if>
             <if test="balanceEndTime != null and balanceEndTime != ''">
                 AND b.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)

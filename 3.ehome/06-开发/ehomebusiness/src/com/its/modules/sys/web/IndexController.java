@@ -1,43 +1,47 @@
 package com.its.modules.sys.web;
 
-import com.its.common.persistence.Page;
-import com.its.common.utils.MyFDFSClientUtils;
-import com.its.common.utils.StringUtils;
-import com.its.common.web.BaseController;
-import com.its.modules.field.entity.FieldInfo;
-import com.its.modules.field.entity.FieldPartitionPrice;
-import com.its.modules.field.service.FieldInfoService;
-import com.its.modules.goods.entity.GoodsInfo;
-import com.its.modules.goods.entity.GoodsInfoPic;
-import com.its.modules.goods.entity.SortInfo;
-import com.its.modules.goods.service.GoodsInfoService;
-import com.its.modules.goods.service.SortInfoService;
-import com.its.modules.lesson.entity.LessonInfo;
-import com.its.modules.lesson.service.LessonInfoService;
-import com.its.modules.order.entity.OrderGoods;
-import com.its.modules.order.entity.OrderService;
-import com.its.modules.order.service.*;
-import com.its.modules.service.entity.ServiceInfo;
-import com.its.modules.service.service.ServiceInfoService;
-import com.its.modules.setup.entity.BusinessCategorydict;
-import com.its.modules.setup.entity.BusinessInfo;
-import com.its.modules.setup.service.BusinessCategorydictService;
-import com.its.modules.setup.service.BusinessInfoService;
-import com.its.modules.sys.entity.User;
-import com.its.modules.sys.utils.UserUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.csource.common.MyException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.its.common.web.BaseController;
+import com.its.modules.field.entity.FieldInfo;
+import com.its.modules.field.entity.FieldPartitionPrice;
+import com.its.modules.field.service.FieldInfoService;
+import com.its.modules.goods.entity.GoodsInfo;
+import com.its.modules.goods.service.GoodsInfoService;
+import com.its.modules.goods.service.SortInfoService;
+import com.its.modules.lesson.entity.LessonInfo;
+import com.its.modules.lesson.service.LessonInfoService;
+import com.its.modules.order.entity.OrderField;
+import com.its.modules.order.entity.OrderGoods;
+import com.its.modules.order.entity.OrderLesson;
+import com.its.modules.order.entity.OrderService;
+import com.its.modules.order.service.OrderFieldService;
+import com.its.modules.order.service.OrderGoodsListService;
+import com.its.modules.order.service.OrderGoodsService;
+import com.its.modules.order.service.OrderLessonService;
+import com.its.modules.order.service.OrderRefundInfoService;
+import com.its.modules.order.service.OrderServiceListService;
+import com.its.modules.order.service.OrderServiceService;
+import com.its.modules.order.service.OrderTrackService;
+import com.its.modules.service.entity.ServiceInfo;
+import com.its.modules.service.service.ServiceInfoService;
+import com.its.modules.setup.entity.BusinessInfo;
+import com.its.modules.setup.service.BusinessCategorydictService;
+import com.its.modules.setup.service.BusinessInfoService;
+import com.its.modules.sys.entity.User;
+import com.its.modules.sys.utils.UserUtils;
 
 @Controller
 @RequestMapping(value = "${adminPath}/sys/index")
@@ -122,233 +126,328 @@ public class IndexController extends BaseController {
 
     /* @RequiresPermissions("sys:index:view") */
     @RequestMapping(value = { "list", "" })
-    public String list(OrderGoods orderGoods, GoodsInfo goodsInfo, OrderService orderService, ServiceInfo serviceInfo,
-            HttpServletRequest request, HttpServletResponse response, Model model) {
-        // 从SESSION中取得商家信息
-        User user = UserUtils.getUser();
-        BusinessInfo businessInfo = businessInfoService.getJoinArea(user.getBusinessinfoId());
-        model.addAttribute("businessInfo", businessInfo);
-        // 商家概况
-        Integer goodsCount = 0, goodsCountStock = 0, goodsOrderCount = 0, serviceCount = 0, serviceCountStock = 0,
-                serviceOrderCount = 0, lessonCount = 0, lessonCountStock = 0, lessonOrderCount = 0, fieldCount = 0,
-                fieldCountStock = 0, fieldOrderCount = 0;
-        Double goodsMoney = 0.0, serviceMoney = 0.0, lessonMoney = 0.0, fieldMoney = 0.0;
-        // 商品相关查询
-        GoodsInfo goodsInfo_where = new GoodsInfo();
-        goodsCount = goodsInfoService.findAllListCount(goodsInfo_where);// 商品个数
-        // 商家设置库存预警
-        if ("1".equals(businessInfo.getStockWarn())) {
-            goodsInfo_where.setStock(Integer.parseInt(businessInfo.getStockWarnNum()));
-            goodsCountStock = goodsInfoService.findAllListCount(goodsInfo_where);// 商品库存不足个数
+    public String list(HttpServletRequest request,HttpServletResponse response, Model model) throws java.text.ParseException {
+				/* 从SESSION中取得商家信息 */
+		User user = UserUtils.getUser();
+		BusinessInfo businessInfo = businessInfoService.getJoinArea(user.getBusinessinfoId());
+		model.addAttribute("businessInfo", businessInfo);
+		if ("1".equals(businessInfo.getStockWarn())) {
+			int warnNum = Integer.valueOf(businessInfo.getStockWarnNum());
+			model.addAttribute("warnNum",warnNum);
+		}
+		/*商家产品模式*/
+		List<String> ptList = businessInfoService.getPtlistById(businessInfo.getId());
+		model.addAttribute("ptlist", ptList);
+		/******************** 产品统计  ***************************************************/
+							/* 商品 */
+		GoodsInfo goodInfo = new GoodsInfo();
+		goodInfo.setBusinessInfoId(businessInfo.getId());
+		List<GoodsInfo> goodsInfoList = goodsInfoService.findList(goodInfo);
+		model.addAttribute("goodsCount", goodsInfoList.size());// 商品总数
+		List<GoodsInfo> goodsStock = new ArrayList<GoodsInfo>();//库存不足商品
+		int goodsbzCount = 0;// 库存不足数量
+		if ("1".equals(businessInfo.getStockWarn())) {
+			goodsbzCount = 0;
+			int warnNum = Integer.valueOf(businessInfo.getStockWarnNum());
+			for (GoodsInfo gi : goodsInfoList) {
+				if ((gi.getStock()==null?2147483647:gi.getStock()) <= warnNum) {
+					goodsbzCount++;
+					if(goodsStock.size()<5)
+						goodsStock.add(gi);
+				}
+			}
+		}
+		model.addAttribute("goodsbzCount", goodsbzCount);// 商品库存不足数量
+							/* 服务 */
+		ServiceInfo serviceInfo = new ServiceInfo();
+		serviceInfo.setBusinessInfoId(businessInfo.getId());
+		List<ServiceInfo> serviceInfoList = serviceInfoService.findList(serviceInfo);
+		model.addAttribute("serviceCount", serviceInfoList.size());// 总数
+		List<ServiceInfo> serviceStock = new ArrayList<ServiceInfo>();//库存不足服务
+		int servicesbzCount = 0;// 库存不足数量
+		if ("1".equals(businessInfo.getStockWarn())) {
+			servicesbzCount = 0;
+			int warnNum = Integer.valueOf(businessInfo.getStockWarnNum());
+			for (ServiceInfo si : serviceInfoList) {
+				if (si.getStock() <= warnNum) {
+					servicesbzCount++;
+					if(serviceStock.size()<5)
+						serviceStock.add(si);
+				}
+			}
+		}
+		model.addAttribute("servicesbzCount", servicesbzCount);// 库存不足数
+								/* 课程培训 */
+		LessonInfo lessonInfo = new LessonInfo();
+		lessonInfo.setBusinessInfoId(businessInfo.getId());
+		List<LessonInfo> lessonInfoList = lessonInfoService.findList(lessonInfo);
+		model.addAttribute("lessonCount", lessonInfoList.size());// 总数
+//    	LessonInfo lessonInfo = new LessonInfo();
+//    	lessonInfo.setStock("1");
+//		model.addAttribute("lessonbzCount",  lessonInfoService.findAllListCount(lessonInfo));// 约满数
+    	int lessonbzCount = 0; 
+		List<LessonInfo> lessonStock = new ArrayList<LessonInfo>();//约满的课程信息
+		for(LessonInfo li:lessonInfoList){
+			if(li.getPeopleLimit()==0){
+				lessonbzCount++;
+				if(lessonStock.size()<5)
+					lessonStock.add(li);
+			}
+		}
+		model.addAttribute("lessonbzCount",lessonbzCount);// 约满数
+								/* 场地预约 */
+		Date startTime = new Date();//今天
+		Calendar calendar=Calendar.getInstance();   
+		calendar.setTime(startTime); 
+		calendar.add(Calendar.DAY_OF_WEEK, 6); // 目前的時間加7天    
+		Date endTime =calendar.getTime();//6天后
+		
+		FieldInfo fieldInfo = new FieldInfo();
+		if (fieldInfo.getPartitionPrice()==null){
+			fieldInfo.setPartitionPrice(new FieldPartitionPrice());
+			fieldInfo.getPartitionPrice().setAppointmentTime(new Date());
+			fieldInfo.getPartitionPrice().setStartTime(startTime);
+			fieldInfo.getPartitionPrice().setEndTime(endTime);
+		}
+		List<FieldInfo> fieldInfoList = fieldInfoService.findList(fieldInfo);
+		model.addAttribute("fieldCount", fieldInfoList.size());// 总数
+		List<FieldInfo> fieldStock = new ArrayList<FieldInfo>();//约满的场地信息
+		int fieldbzCount=0;//约满数
+		boolean _b = true;
+		for(FieldInfo fi:fieldInfoList){
+			List<FieldPartitionPrice> fppList =  fi.getFieldPartitionPriceList();
+			if(fppList==null || fppList.size()<1){continue;}
+			_b=true;
+			for(FieldPartitionPrice fpp:fppList){
+				if(fpp.getState().equals("0")){//可预约
+					_b=false;break;
+				}
+			}
+			if(_b){
+				fieldbzCount++;
+				if(fieldStock.size()<5){
+					fieldStock.add(fi);
+				}
+			}
+		}
+		model.addAttribute("fieldbzCount",fieldbzCount);
+		model.addAttribute("fieldStock",fieldStock);
+//		model.addAttribute("fieldbzCount", fieldInfoService.getCountFull(new Date()));// 查询某天约满数
+		//查询约满的场地信息
+		/******************** 本周订单 ***************************************************/
+						/* 获取本周开始结束日期 */
+		Date beginCreateDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").parse(new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(getBeginDayOfWeek()));
+		Date endCreateDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").parse(new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(getEndDayOfWeek()));
+		model.addAttribute("beginCreateDate",new SimpleDateFormat("yyyy-MM-dd").format(beginCreateDate));
+		model.addAttribute("endCreateDate",new SimpleDateFormat("yyyy-MM-dd").format(endCreateDate));
+			/* 商品订单 */
+		OrderGoods orderGoods = new OrderGoods();
+		orderGoods.setBeginCreateDate(beginCreateDate);
+		orderGoods.setEndCreateDate(endCreateDate);
+		orderGoods.setBusinessInfoId(businessInfo.getId());
+		List<OrderGoods> orderGoodsList = orderGoodsService.findList(orderGoods);
+		model.addAttribute("orderGoodsCount", orderGoodsList.size());// 总数
+							/* 服务订单 */
+		OrderService orderService = new OrderService();
+		orderService.setBeginCreateDate(beginCreateDate);
+		orderService.setEndCreateDate(endCreateDate);
+		orderService.setBusinessInfoId(businessInfo.getId());
+		List<OrderService> orderServiceList = orderServiceService.findList(orderService);
+		model.addAttribute("orderServiceCount", orderServiceList.size());// 总数
+							/* 课程培训 */
+		OrderLesson orderLesson = new OrderLesson();
+		orderLesson.setBeginCreateDate(beginCreateDate);
+		orderLesson.setEndCreateDate(endCreateDate);
+		orderLesson.setBusinessInfoId(businessInfo.getId());
+		List<OrderLesson> orderLessonList = orderLessonService.findList(orderLesson);
+		model.addAttribute("orderLessonCount", orderLessonList.size());// 总数
+							/* 场地预约 */
+		OrderField orderField = new OrderField();
+		orderField.setBeginCreateDate(beginCreateDate);
+		orderField.setEndCreateDate(endCreateDate);
+		orderField.setBusinessInfoId(businessInfo.getId());
+		List<OrderField> orderFieldList = orderFieldService.findList(orderField);
+		model.addAttribute("orderFieldCount", orderFieldList.size());// 总数
+		/******************** 本周收入 ***************************************************/
+		Double goodsInclu=0.0,//商品收入
+				serviceInclu=0.0,//服务收入
+				lessonInclu=0.0,//课程收入
+				fieldInclu=0.0;//场地收入
+		for(OrderGoods og:orderGoodsList){
+			if(!og.getOrderState().equals("4")){//排除取消的订单
+				goodsInclu+=og.getSumMoney();
+			}
+		}
+		for(OrderService os:orderServiceList){
+			if(!os.getOrderState().equals("3")){
+				serviceInclu+=os.getSumMoney();
+			}
+		}
+		for(OrderLesson ol:orderLessonList){
+			if(!ol.getOrderState().equals("2")){
+				lessonInclu+=ol.getSumMoney();
+			}
+		}
+		for(OrderField of:orderFieldList){
+			if(!of.getOrderState().equals("2")){
+				fieldInclu+=of.getSumMoney();
+			}
+		}
+		model.addAttribute("goodsInclu", goodsInclu);
+		model.addAttribute("serviceInclu", serviceInclu);
+		model.addAttribute("lessonInclu", lessonInclu);
+		model.addAttribute("fieldInclu", fieldInclu);
+		/******************** 待办事宜 ***************************************************/
+			/*商品类 待处理订单*/
+		OrderGoods ogoods = new OrderGoods();
+		ogoods.setPending(1);
+		ogoods.setBusinessInfoId(businessInfo.getId());
+		List<OrderGoods> pendingOrderGoodsList = orderGoodsService.findList(ogoods);
+		int pendingPayGoods=0,//待付款
+				pendingHandleGoods=0,//待受理
+					pendingDisGoods=0,//待配送
+						pendingSuccessGoods=0;//待完成
+		List<OrderGoods> newOrderGoodsList = new ArrayList<OrderGoods>();
+		for(OrderGoods og :pendingOrderGoodsList ){
+			if(newOrderGoodsList.size()<5){
+				if(og.getUpdateDate()!=null){
+					og.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(og.getUpdateDate()));
+				}
+				newOrderGoodsList.add(og);
+			}
+			if(og.getOrderState().equals("0")){//待受理
+				pendingHandleGoods++;
+			}
+			if(og.getOrderState().equals("1")){//已受理>待配送
+				pendingDisGoods++;
+			}
+			if(og.getPayState().equals("0")){//未支付 >待付款
+				pendingPayGoods++;
+			}
+			if(og.getOrderState().equals("2")){//配送中>待完成
+				pendingSuccessGoods++;
+			}
+		}
+		model.addAttribute("newOrderGoodsList", newOrderGoodsList);//只显示五条
+		model.addAttribute("pendingHandleGoods", pendingHandleGoods);
+		model.addAttribute("pendingDisGoods", pendingDisGoods);
+		model.addAttribute("pendingPayGoods", pendingPayGoods);
+		model.addAttribute("pendingSuccessGoods", pendingSuccessGoods);
+		model.addAttribute("goodsStock", goodsStock);//库存不足商品
+		
+			/*服务类 待处理订单*/
+		
+		OrderService oService = new OrderService();
+		oService.setPending(1);
+		oService.setBusinessInfoId(businessInfo.getId());
+		List<OrderService> pendingOrderServiceList = orderServiceService.findList(oService);
+		int pendingPayService=0,//待付款
+				pendingHandleService=0,//待受理
+						pendingSuccessService=0;//待完成
+		List<OrderService> newOrderServiceList = new ArrayList<OrderService>();//存放五条
+		for(OrderService os :pendingOrderServiceList ){
+			if(newOrderServiceList.size()<5){
+				if(os.getUpdateDate()!=null){
+					os.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(os.getUpdateDate()));
+				}
+				newOrderServiceList.add(os);
+			}
+			if(os.getOrderState().equals("0")){//待受理
+				pendingHandleService+=1;
+			}
+			if(os.getPayState()==null){os.setPayState("0");}//此种情况应该不会存在.
+			if(os.getPayState().equals("0")){//未支付 >待付款
+				pendingPayService+=1;
+			}
+			if(os.getOrderState().equals("1")){//已受理>待完成
+				pendingSuccessService+=1;
+			}
+		}
+		model.addAttribute("newOrderServiceList", newOrderServiceList);//只显示五条
+		model.addAttribute("pendingPayService", pendingPayService);
+		model.addAttribute("pendingHandleService", pendingHandleService);
+		model.addAttribute("pendingSuccessService", pendingSuccessService);
+		model.addAttribute("serviceStock", serviceStock);//库存不足服务
+		
+		
+				/*课程预约类 待处理订单*/
+		
+		OrderLesson oLesson= new OrderLesson();
+		oLesson.setPending(1);
+		oLesson.setBusinessInfoId(businessInfo.getId());
+		List<OrderLesson> pendingOrderLessonList = orderLessonService.findList(oLesson);
+		int pendingPayLesson=0,//待付款
+				pendingHandleLesson=0;//待预约
+		List<OrderLesson> newOrderLessonList = new ArrayList<OrderLesson>();//存放五条
+		for(OrderLesson ol :pendingOrderLessonList ){
+			if(newOrderLessonList.size()<5){
+				if(ol.getUpdateDate()!=null){
+					ol.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ol.getUpdateDate()));
+				}
+				newOrderLessonList.add(ol);
+			}
+			if(ol.getOrderState().equals("0")){//待预约
+				pendingHandleLesson+=1;
+			}
+			if(ol.getPayState().equals("0")){//未支付 >待付款
+				pendingPayLesson+=1;
+			}
+		}
+		model.addAttribute("newOrderLessonList", newOrderLessonList);//只显示五条
+		model.addAttribute("pendingPayLesson", pendingPayLesson);
+		model.addAttribute("pendingHandleLesson", pendingHandleLesson);
+		model.addAttribute("lessonStock", lessonStock);//约满的课程信息
+		
+//		System.out.println("lessonStock.size()"+lessonStock.size());
+		
+				/*场地类 待处理订单*/
+		
+		OrderField oField= new OrderField();
+		oField.setPending(1);
+		oField.setBusinessInfoId(businessInfo.getId());
+		List<OrderField> pendingOrderFieldList = orderFieldService.findList(oField);
+		int pendingPayField=0,//待付款
+				pendingHandleField=0;//待预约
+		List<OrderField> newOrderFieldList = new ArrayList<OrderField>();//存放五条
+		for(OrderField of :pendingOrderFieldList ){
+			if(newOrderFieldList.size()<5){
+				if(of.getUpdateDate()!=null){
+					of.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(of.getUpdateDate()));
+				}
+				newOrderFieldList.add(of);
+			}
+			if(of.getOrderState().equals("0")){//待预约
+				pendingHandleField+=1;
+			}
+			if(of.getPayState().equals("0")){//未支付 >待付款
+				pendingPayField+=1;
+			}
+		}
+		model.addAttribute("newOrderFieldList", newOrderFieldList);//只显示五条
+		model.addAttribute("pendingPayField", pendingPayField);
+		model.addAttribute("pendingHandleField", pendingHandleField);
+//		model.addAttribute("lessonStock", lessonStock);//库存不足服务
+		
+		return "modules/sys/index";
+	}
+    
+    //获取本周的开始时间
+    public static Date getBeginDayOfWeek() {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int dayofweek = cal.get(Calendar.DAY_OF_WEEK);
+        if (dayofweek == 1) {
+            dayofweek += 7;
         }
-
-        goodsOrderCount = orderGoodsService.findAllListCount();// 本周商品订单金额
-        goodsMoney = orderGoodsService.findAllListMoney();// 本周商品订单金额
-        // 服务相关查询
-        ServiceInfo serviceInfo_where = new ServiceInfo();
-        serviceCount = serviceInfoService.findAllListCount(serviceInfo_where);// 服务个数
-        // 商家设置库存预警
-        if (businessInfo.getStockWarn().equals("1")) {
-            serviceInfo_where.setStock(Integer.parseInt(businessInfo.getStockWarnNum()));
-            serviceCountStock = serviceInfoService.findAllListCount(serviceInfo_where);// 服务库存不足个数
-        }
-
-        serviceOrderCount = orderServiceService.findAllListCount();// 本周服务订单数
-        serviceMoney = orderServiceService.findAllListMoney();// 本周服务订单金额
-        // 课程相关查询
-        LessonInfo lessonInfo_where = new LessonInfo();
-        lessonCount = lessonInfoService.findAllListCount(lessonInfo_where);// 课程个数
-        // 商家设置库存预警
-        if (businessInfo.getStockWarn().equals("1")) {
-            lessonInfo_where.setStock("1");
-            lessonCountStock = lessonInfoService.findAllListCount(lessonInfo_where);// 课程约满个数
-        }
-
-        lessonOrderCount = orderLessonService.findAllListCount();// 本周课程订单数
-        lessonMoney = orderLessonService.findAllListMoney();// 本周课程订单金额
-        // 场地相关查询
-        FieldInfo fieldInfo_where = new FieldInfo();
-        fieldCount = fieldInfoService.findAllListCount(fieldInfo_where);// 场地个数
-        // 商家设置库存预警
-        if (businessInfo.getStockWarn().equals("1")) {
-            fieldInfo_where.setStock("1");
-            fieldCountStock = fieldInfoService.findAllListCount(fieldInfo_where);// 场地约满个数
-        }
-
-        fieldOrderCount = orderFieldService.findAllListCount();// 本周场地订单个数
-        fieldMoney = orderFieldService.findAllListMoney();
-
-        model.addAttribute("goodsCount", goodsCount);// 商品个数
-        model.addAttribute("goodsCountStock", goodsCountStock);// 商品库存不足个数
-        model.addAttribute("goodsOrderCount", goodsOrderCount);// 本周商品订单数
-        model.addAttribute("goodsMoney", goodsMoney);// 本周商品订单金额
-        model.addAttribute("serviceCount", serviceCount);// 服务个数
-        model.addAttribute("serviceCountStock", serviceCountStock);// 服务库存不足个数
-        model.addAttribute("serviceOrderCount", serviceOrderCount);// 本周服务订单数
-        model.addAttribute("serviceMoney", serviceMoney);// 本周服务订单金额
-        model.addAttribute("lessonCount", lessonCount);// 课程个数
-        model.addAttribute("lessonCountStock", lessonCountStock);// 课程约满个数
-        model.addAttribute("lessonOrderCount", lessonOrderCount);// 本周课程订单数
-        model.addAttribute("lessonMoney", lessonMoney);// 本周课程订单金额
-        model.addAttribute("fieldCount", fieldCount);// 场地个数
-        model.addAttribute("fieldCountStock", fieldCountStock);// 场地约满个数
-        model.addAttribute("fieldOrderCount", fieldOrderCount);// 本周场地订单个数
-        model.addAttribute("fieldMoney", fieldMoney);// 本周场地订单总金额
-        // ------------------------------------------商品相关信息查询
-        // 开始------------------------
-
-        // 商家分类信息检索条件
-        Map<String, String> paramer = new HashMap<String, String>();
-        // 根据当前登陆者的商家ID进行检索
-        paramer.put("businessInfoId", user.getBusinessinfoId());
-        // 将上方导航下拉菜单默认选中为商品订单
-        model.addAttribute("nowProdType", "0");
-
-        // 只显示当前商家对应的订单
-        orderGoods.setBusinessInfoId(user.getBusinessinfoId());
-        // 只显当前商家商品的订单
-        orderGoods.setProdType("0");
-        Page<OrderGoods> pageGoods = orderGoodsService.findPage(new Page<OrderGoods>(request, response, 5), orderGoods);
-        Integer goodsSum1 = 0;// 待付款商品订单
-        Integer goodsSum2 = 0;// 待受理商品订单
-        Integer goodsSum3 = 0;// 待配送商品订单
-        Integer goodsSum4 = 0;// 待完成商品订单
-        for (OrderGoods orderGoodsTemp : pageGoods.getList()) {
-            // 为了排他处理这里使用乐观锁以更新日时控制
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            orderGoodsTemp.setUpdateDateString(sdf.format(orderGoodsTemp.getUpdateDate()));
-            if (orderGoodsTemp.getPayState().equals("0")) {// 待付款商品订单
-                goodsSum1++;
-            }
-            if (orderGoodsTemp.getOrderState().equals("0")) {// 待受理商品订单
-                goodsSum2++;
-            }
-            if (orderGoodsTemp.getOrderState().equals("1")) {// 待配送商品订单
-                goodsSum3++;
-            }
-            if (orderGoodsTemp.getOrderState().equals("2")) {// 待完成商品订单
-                goodsSum4++;
-            }
-        }
-        model.addAttribute("goodsSum1", goodsSum1);
-        model.addAttribute("goodsSum2", goodsSum2);
-        model.addAttribute("goodsSum3", goodsSum3);
-        model.addAttribute("goodsSum4", goodsSum4);
-        model.addAttribute("pageGoods", pageGoods);
-
-        // 商品库存---
-        // 商家设置库存预警
-        if (businessInfo.getStockWarn().equals("1")) {
-            // 根据商家ID取得显示信息
-            SortInfo sortInfo = new SortInfo();
-            sortInfo.setBusinessInfoId(user.getBusinessinfoId());
-            // 应该显示商品分类
-            sortInfo.setType("0");
-            // 根据登录的商家ID取得分类信息
-            List<SortInfo> sortInfoList = sortInfoService.findList(sortInfo);
-            model.addAttribute("sortInfoList", sortInfoList);
-
-            // 只显示属于当前商家的商品
-            goodsInfo.setBusinessInfoId(user.getBusinessinfoId());
-            // 一览显示信息取得
-            goodsInfo.setSortItem("a.create_date");
-            goodsInfo.setSort("ASC");
-            goodsInfo.setStock(Integer.parseInt(businessInfo.getStockWarnNum()));
-            Page<GoodsInfo> pageGoodsStock = goodsInfoService.findPage(new Page<GoodsInfo>(request, response, 5),
-                    goodsInfo);
-
-            for (GoodsInfo goodsItem : pageGoodsStock.getList()) {
-                if (StringUtils.isNotBlank(goodsItem.getImgs())) {
-                    String[] imageNames = goodsItem.getImgs().split(",");
-                    // 图片url集合
-                    List<String> imageUrls = new ArrayList<String>();
-                    try {
-                        imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[0] + "_compress2"));
-                    } catch (IOException | MyException e) {
-                    }
-                    goodsItem.setImageUrls(imageUrls);
-                }
-            }
-            model.addAttribute("pageGoodsStock", pageGoodsStock);
-        }
-
-        // ------------------------------------------商品相关信息查询
-        // 结束------------------------
-
-        // ------------------------------------------服务相关信息查询
-        // 开始------------------------
-        // 只显示当前商家对应的订单
-        orderService.setBusinessInfoId(user.getBusinessinfoId());
-        // 只显当前商家服务的订单
-        orderService.setProdType("1");
-        Page<OrderService> pageService = orderServiceService.findPage(new Page<OrderService>(request, response, 5),
-                orderService);
-        // 商家分类信息检索条件
-        paramer.clear();
-        // 根据当前登陆者的商家ID进行检索
-        paramer.put("businessInfoId", user.getBusinessinfoId());
-        // 将上方导航下拉菜单默认选中为服务订单
-        model.addAttribute("nowProdType", "1");
-        Integer serviceSum1 = 0;// 待付款服务订单
-        Integer serviceSum2 = 0;// 待受理服务订单
-        Integer serviceSum3 = 0;// 待完成商品订单
-        for (OrderService orderServiceTemp : pageService.getList()) {
-            // 为了排他处理这里使用乐观锁以更新日时控制
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            orderServiceTemp.setUpdateDateString(sdf.format(orderServiceTemp.getUpdateDate()));
-            if (orderServiceTemp.getPayState().equals("0")) {// 待付款商品订单
-                serviceSum1++;
-            }
-            if (orderServiceTemp.getOrderState().equals("0")) {// 待受理商品订单
-                serviceSum2++;
-            }
-            if (orderServiceTemp.getOrderState().equals("1")) {// 待完成商品订单
-                serviceSum3++;
-            }
-        }
-        model.addAttribute("serviceSum1", serviceSum1);
-        model.addAttribute("serviceSum2", serviceSum2);
-        model.addAttribute("serviceSum3", serviceSum3);
-        model.addAttribute("pageService", pageService);
-
-        // 服务库存--------------
-        if (businessInfo.getStockWarn().equals("1")) {
-            // 根据商家ID取得显示信息
-            SortInfo sortInfo = new SortInfo();
-            sortInfo.setBusinessInfoId(user.getBusinessinfoId());
-            // 应该显示服务分类
-            sortInfo.setType(SORT_TYPE_SERVICE);
-            // 根据登录的商家ID取得分类信息
-            List<SortInfo> sortInfoList = sortInfoService.findList(sortInfo);
-            model.addAttribute("sortInfoList", sortInfoList);
-
-            // 只显示属于当前商家的服务
-            serviceInfo.setBusinessInfoId(user.getBusinessinfoId());
-            // 取得一览数据
-            serviceInfo.setSortItem("a.create_date");
-            serviceInfo.setSort("ASC");
-            serviceInfo.setStock(Integer.parseInt(businessInfo.getStockWarnNum()));
-            Page<ServiceInfo> pageServiceStock = serviceInfoService.findPage(new Page<ServiceInfo>(request, response),
-                    serviceInfo);
-
-            for (ServiceInfo serviceItem : pageServiceStock.getList()) {
-                if (StringUtils.isNotBlank(serviceItem.getImgs())) {
-                    String[] imageNames = serviceItem.getImgs().split(",");
-                    // 图片url集合
-                    List<String> imageUrls = new ArrayList<String>();
-                    try {
-                        imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[0] + "_compress2"));
-                    } catch (IOException | MyException e) {
-                    }
-                    serviceItem.setImageUrls(imageUrls);
-                }
-            }
-
-            model.addAttribute("pageServiceStock", pageServiceStock);
-        }
-        // ------------------------------------------服务相关信息查询
-        // 结束------------------------
-
-        return "modules/sys/index";
+        cal.add(Calendar.DATE, 2 - dayofweek);
+        return cal.getTime();
+    }
+    //获取本周的结束时间
+    public static Date getEndDayOfWeek(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getBeginDayOfWeek());  
+        cal.add(Calendar.DAY_OF_WEEK, 6); 
+        return cal.getTime();
     }
 }

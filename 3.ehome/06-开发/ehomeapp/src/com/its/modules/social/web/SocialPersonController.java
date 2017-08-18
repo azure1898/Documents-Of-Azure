@@ -1,7 +1,6 @@
 package com.its.modules.social.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
 import com.its.common.web.BaseController;
+import com.its.modules.app.entity.Account;
+import com.its.modules.app.service.AccountService;
 import com.its.modules.social.bean.SocialRelationBean;
 import com.its.modules.social.bean.SocialSpeakBean;
 import com.its.modules.social.common.DateUtil;
@@ -48,6 +49,9 @@ public class SocialPersonController extends BaseController {
 	@Autowired
 	private SocialSpeakService socialSpeakService;
 	
+	@Autowired
+	private AccountService accountService;
+	
 	/**
 	 * @Description：首页信息展现
 	 * @Author：王萌萌
@@ -70,14 +74,16 @@ public class SocialPersonController extends BaseController {
 		}
 		//根据用户id获取用户基本信息
 		SocialRelationBean srb = socialRelationService.findPersonalInfo(userId, subUserId);
-		toJson.put("id", srb.getSubuserid());
-		toJson.put("userName", srb.getNickName());
-		toJson.put("headPicSrc", srb.getPhoto());
-		toJson.put("countFollow", srb.getCountFollow());
-		toJson.put("countFans", srb.getCountFans());
-		toJson.put("isFocus", srb.getRelation());
+		if(!StringUtils.isEmpty(srb)) {
+			toJson.put("id", srb.getSubuserid());
+			toJson.put("userName", srb.getNickName());
+			toJson.put("headPicSrc", srb.getPhoto());
+			toJson.put("countFollow", srb.getCountFollow());
+			toJson.put("countFans", srb.getCountFans());
+			toJson.put("isFocus", srb.getRelation());
+		}
 		
-		int pageSize = SocialGlobal.COMMENT_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
 		//获取用户的发言列表
 		List<SocialSpeakBean> ssbList = socialPersonService.findPersonalInfoList(subUserId, userId, pageIndex, pageSize);
 		List<Map> dataList = new ArrayList<Map>();
@@ -89,6 +95,7 @@ public class SocialPersonController extends BaseController {
 				String createtime = DateUtil.getDaysBeforeNow(ssb.getCreatetime());
 				speak.put("createTime", createtime);
 				speak.put("speakContent", ssb.getContent());
+				speak.put("reason", ssb.getReason());
 				if(ssb.getIsspeak() == SocialGlobal.SPEAK_IS_SPEAK_YES) {//如果该发言是用户直接发言
 					speak.put("isForword", SocialGlobal.SPEAK_IS_FORWORD_NO);//是否转发为否
 				} else {
@@ -96,12 +103,17 @@ public class SocialPersonController extends BaseController {
 					//查询转发的发言
 					SocialSpeakBean ssbForword = socialSpeakService.findSpeakBySpeakId(ssb.getRootid());
 					if(!StringUtils.isEmpty(ssbForword)) {
-						Map forwrodSpeak = new HashMap();
-						forwrodSpeak.put("speakId", ssb.getRootid());
-						forwrodSpeak.put("userName", ssbForword.getNickName());
-						forwrodSpeak.put("speakContent", ssbForword.getContent());
+						Map rootSpeak = new HashMap();
+						rootSpeak.put("speakId", ssb.getRootid());
+						rootSpeak.put("userName", ssbForword.getNickName());
+						rootSpeak.put("speakContent", ssbForword.getContent());
 						String createTime = DateUtil.getDaysBeforeNow(ssbForword.getCreatetime());
-						forwrodSpeak.put("createTime", createTime);
+						rootSpeak.put("createTime", createTime);
+						rootSpeak.put("noticeId", ssbForword.getNoticeid());
+						rootSpeak.put("title", ssbForword.getTitle());
+						rootSpeak.put("summary", ssbForword.getSummary());
+						rootSpeak.put("isSpeak", ssbForword.getIsspeak());
+						rootSpeak.put("delFlag", ssbForword.getDelflag());
 						//根据转发的发言id获取话题
 						List<SocialSubject> ssForwordList = socialSubjectService.findAllByfkId(ssbForword.getId(), SocialGlobal.SUB_RELATION_SPK);
 						List subjectList = new ArrayList();
@@ -111,15 +123,17 @@ public class SocialPersonController extends BaseController {
 							subjectListMap.put("subName", ss.getSubname());
 							subjectList.add(subjectListMap);
 						}
-						forwrodSpeak.put("subjectList", subjectList);
+						rootSpeak.put("subjectList", subjectList);
 						//转发的发言中的图片
 						String images = ssbForword.getImages();
 						if(!StringUtils.isEmpty(images)) {
 							String[] image = images.split(",");
-							List imgUrlList = Arrays.asList(image);
-							forwrodSpeak.put("imgList", imgUrlList);
+							rootSpeak.put("imgList", image[0]);
+						} else {
+							Account account = accountService.get(ssbForword.getUserid());
+							rootSpeak.put("imageList", account.getPhoto());
 						}
-						dataListMap.put("forwrodSpeak", forwrodSpeak);
+						dataListMap.put("rootSpeak", rootSpeak);
 					}
 				}
 				dataListMap.put("speak", speak);
@@ -131,24 +145,6 @@ public class SocialPersonController extends BaseController {
 				}
 				dataListMap.put("isPraise", ssb.getIsPraise());
 				
-				//发言中的图片
-				String images = ssb.getImages();
-				if(!StringUtils.isEmpty(images)) {
-					String[] image = images.split(",");
-					List imgUrlList = Arrays.asList(image);
-					dataListMap.put("imgList", imgUrlList);
-				}
-				
-				//根据发言id获取话题
-				List<SocialSubject> ssList = socialSubjectService.findAllByfkId(ssb.getId(), SocialGlobal.SUB_RELATION_SPK);
-				List subjectList = new ArrayList();
-				for (SocialSubject ss : ssList) {
-					Map subjectListMap = new HashMap();
-					subjectListMap.put("id", ss.getId());
-					subjectListMap.put("subName", ss.getSubname());
-					subjectList.add(subjectListMap);
-				}
-				dataListMap.put("subjectList", subjectList);
 				dataList.add(dataListMap);
 			}
 		}

@@ -37,6 +37,41 @@ public interface BraceletSleepRecordDao extends CrudDao<BraceletSleepRecord> {
 			@Param("braceletId") String braceletId, @Param("recordDate") Date recordDate);
 
 	/**
+	 * 根据手环ID获取某段时间的睡眠数据
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletId
+	 *            手环ID
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public List<BraceletSleepRecord> getPeriodSleepRecordByBraceletId(@Param("accountId") String accountId, @Param("villageinfoId") String villageinfoId,
+			@Param("braceletId") String braceletId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	/**
+	 * 根据mac获取某段时间的睡眠数据
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletMac
+	 *            手环braceletMac
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public List<BraceletSleepRecord> getPeriodSleepRecordByMac(@Param("accountId") String accountId, @Param("villageinfoId") String villageinfoId,
+			@Param("braceletMac") String braceletMac, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	
+	/**
 	 * 获取周运动数据
 	 * 
 	 * @param accountId

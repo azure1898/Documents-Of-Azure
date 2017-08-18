@@ -110,19 +110,22 @@
 		WHERE id = #{id}
 	</update>
 	
-	<!-- 更新团购子表已售数量 -->
-	<update id="updateSaleNum">
+	<!-- 团购子表减少库存，增加已售数量 -->
+	<update id="reduceStockNumAddSaleNum">
 		UPDATE Group_PurchaseTime a
-		SET a.Sale_Num = a.Sale_Num + #{count}
+		SET a.Stock_Num = a.Stock_Num - #{count},
+		a.Sale_Num = a.Sale_Num + #{count}
 		WHERE
 			a.del_flag = '0'
 		AND a.ID = #{groupPurchaseTimeId}
+		AND a.Stock_Num <![CDATA[>=]]> #{count}
 	</update>
 	
-	<!-- 减少团购子表已售数量 -->
-	<update id="reduceSaleNum">
+	<!-- 团购子表增加库存，减少已售数量 -->
+	<update id="addStockNumReduceSaleNum">
 		UPDATE Group_PurchaseTime a
-		SET a.Sale_Num = a.Sale_Num - #{count}
+		SET a.Stock_Num = a.Stock_Num + #{count},
+		a.Sale_Num = a.Sale_Num - #{count}
 		WHERE
 			a.del_flag = '0'
 		AND a.ID = #{groupPurchaseTimeId}

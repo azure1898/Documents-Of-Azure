@@ -162,11 +162,14 @@
 		<result column="State" property="state"/>
 		<result column="Create_State" property="createState"/>
 		<result column="Sell_Count" property="sellCount"/>
-		<association property="fieldPartitionPriceList" column="{id=id,appointmentTime=appointmentTime}" select="getFieldPartitionPriceList"/>
+		<association property="fieldPartitionPriceList" column="{id=id,appointmentTime=appointmentTime,startTime=startTime,endTime=endTime}" select="getFieldPartitionPriceList"/>
 	 </resultMap>
 	 <select id="findList" parameterType="FieldInfo" resultMap="FieldInfoMap">
-	 	select a.*,TO_DAYS(#{partitionPrice.appointmentTime}) appointmentTime  from field_info a 
+	 	select a.*,TO_DAYS(#{partitionPrice.appointmentTime}) appointmentTime,TO_DAYS(#{partitionPrice.startTime}) startTime ,TO_DAYS(#{partitionPrice.endTime}) endTime   from field_info a 
 	 	where a.del_flag ='0' and a.Business_Info_ID ='${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+	 	<if test="id != null and id != ''">
+	    	AND a.id = #{id}
+	   </if>
 	 	order by Serial_Numbers
 	 </select>
 	 <resultMap type="FieldPartitionPrice" id="FieldPartitionPriceMap">
@@ -183,7 +186,14 @@
 	 </resultMap>
 	 <select id="getFieldPartitionPriceList" parameterType="hashMap" resultMap="FieldPartitionPriceMap">
 	 	select a.*,(a.end_time>now()) AS "outTimeState" from field_partition_price a 
-	 	where a.Field_Info_ID=#{id} and a.Del_Flag=0 and  TO_DAYS(a.appointment_time)=#{appointmentTime}
+	 	where a.Field_Info_ID=#{id} and a.Del_Flag=0 
+	 		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and  TO_DAYS(a.appointment_time) >=#{endTime} and TO_DAYS(a.appointment_time)<![CDATA[<=]]>#{startTime}
+			</if>
+	 		<if test="startTime == null or startTime == '' or endTime == null or endTime == ''">
+				and  TO_DAYS(a.appointment_time)=#{appointmentTime}
+			</if>
+	 	
 	 	order by Start_Time
 	 </select>
 	 <!-- end================================================================================= -->
@@ -320,5 +330,6 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+	
 	
 </mapper>

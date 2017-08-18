@@ -17,12 +17,17 @@ var vm = new Vue({
         // 渲染页面
         cartView: function () {
             var _this = this;
-            this.$http.get(interfaceUrl + "/live/getBusinessList",
-				{ userID: userInfo.userID, buildingID: userInfo.buildingID, sort: 1, moduleID: getQueryString("mid") }).then(function (response) {
-				    if (response.data.code == 1000) {
-				        _this.businessList = response.data.data;
-				    }
-				});
+
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                moduleID: getQueryString("mid"),
+                sort: 1
+            };
+
+            _this.getData(_this, "/live/getBusinessList", data, function (resData) {
+                _this.businessList = resData;
+            });
         },
         sort: function () {
             $(".sort_xiala").stop().slideToggle(400);
@@ -35,15 +40,19 @@ var vm = new Vue({
             $(event.target).append("<span class='green_dh'></span>");
             $(event.target).addClass("selected");
 
-            this.sort();
-
             var _this = this;
-            this.$http.get(interfaceUrl + "/live/getBusinessList",
-			{ buildingID: userInfo.buildingID, sort: method, moduleID: getQueryString("mid") }).then(function (response) {
-			    if (response.data.code == 1000) {
-			        _this.businessList = response.data.data;
-			    }
-			});
+
+            _this.sort();
+
+            var data = {
+                buildingID: userInfo.buildingID,
+                moduleID: getQueryString("mid"),
+                sort: method
+            };
+
+            _this.getData(_this, "/live/getBusinessList", data, function (resData) {
+                _this.businessList = resData;
+            });
         }
     }
 });

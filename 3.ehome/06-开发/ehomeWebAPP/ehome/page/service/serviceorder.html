@@ -1,319 +1,321 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>服务_确认订单</title>
-
-		<!-- Bootstrap -->
-		<link href="../../css/bootstrap.css" rel="stylesheet">
-		<link href="../../css/main.css" rel="stylesheet">
-		<link href="../../css/common.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
-		<link rel="stylesheet" type="text/css" href="../../css/cursom/service.css" />
-		<link rel="stylesheet" type="text/css" href="../../css/cursom/model.css"/>
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>服务_确认订单</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cursom/service.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cursom/model.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-		<style type="text/css">
-			.order_tip {
-				display: none;
-			}
-			
-			.message {
-				float: left;
-				width: 100px;
-			}
-			
-			.message span {
-				float: left;
-			}
-			
-			.input {
-			
-				border-radius: 2px;
-				border: 0px solid #CCCCCC;
-			}
-			/*.input_num{width:auto;display: inline;border:none;}*/
-			input:focus {
-				outline: none;
-				border-color: none;
-				box-shadow: none;
-				border-radius: 1px;
-			}
-			/*.add{
-    		text-align:center;
-    		line-height: 100px;
-    	}*/
-		</style>
-	</head>
-	<body>
-		<div id="app" v-cloak>
-			<div class="grey_top">
-				<a href="#" class="green_back" onclick="javascript :history.go(-1);"></a>
-				确认订单
-			</div>
-			<div class="order_whitebox" v-if="way==0">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl" >
-							<p>联系人：<span>{{ customer.contactPerson}}</span><span class="plr10">{{ customer.contactPhone}}</span></p>
-							<p>服务地址：{{ customer.contactAddress}}</p>
-						</div>
-						<div class="list_inbtn mt10" data-toggle="modal" data-target="#myModal_address"></div>
-					</div>
-					<!--如果没有联系人是显示添加联系人-->
-					<!--<div class="goods_receipt clearfix">
-						<div class="fl">
-							<p><span class="glyphicon glyphicon-plus-sign">请添加联系人信息</span></p>
-						</div>
-						<div class="list_inbtn mt10"></div>
-					</div>-->
-				</div>
-			</div>
-			<div class="order_whitebox" v-else="way==1">
+    <style type="text/css">
+        .order_tip {
+            display: none;
+        }
 
-				<div class="plr10" style="width: 100%;">
+        .message {
+            float: left;
+            width: 70px;
+        }
 
-					<div class="goods_receipt clearfix">
-						<div class="fl" style="width: 100%;">
-							<b>联系人信息</b>
-						</div>
-					</div>
-					<br />
-					<div class="goods_receipt clearfix">
-						<div class="fl" style="width: 100%;">
-							<div class="message"><span>联  系  人：</span></div><input type="text" class="inut-name input" v-model="order.contactPerson" />
-						</div>
-					</div>
-					<br />
-					<div class="goods_receipt clearfix">
-						<div class="fl" style="width: 100%;">
-							<div class="message"><span>联系电话：</span></div><input type="text" class="inut-phone input" v-model="order.contactPhone">
-						</div>
-					</div>
-				</div>
+            .message span {
+                float: left;
+            }
 
-			</div>
+        .input {
+            border-radius: 2px;
+            border: 0px solid #CCCCCC;
+            width: 93%;
+        }
+        /*.input_num{width:auto;display: inline;border:none;}*/
+        input:focus {
+            outline: none;
+            border-color: none;
+            box-shadow: none;
+            border-radius: 1px;
+        }
+        /*.add{
+            text-align:center;
+            line-height: 100px;
+        }*/
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="grey_top">
+            <a href="#" class="green_back" onclick="javascript :history.go(-1);"></a>
+            确认订单
+        </div>
+        <div class="order_whitebox" v-if="way==0">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">
+                        <p>联系人：<span>{{ order.contactPerson}}</span><span class="plr10">{{ order.contactPhone}}</span></p>
+                        <p>服务地址：{{ order.contactAddress}}</p>
+                    </div>
+                    <div class="list_inbtn mt10" data-toggle="modal" data-target="#myModal_address"></div>
+                </div>
+                <!--如果没有联系人是显示添加联系人-->
+                <!--<div class="goods_receipt clearfix">
+                    <div class="fl">
+                        <p><span class="glyphicon glyphicon-plus-sign">请添加联系人信息</span></p>
+                    </div>
+                    <div class="list_inbtn mt10"></div>
+                </div>-->
+            </div>
+        </div>
+        <div class="order_whitebox" v-else="way==1">
+            <div class="plr10" style="width: 100%;">
+                <div class="goods_receipt clearfix">
+                    <div class="fl" style="width: 100%;">
+                        <b>联系人信息</b>
+                    </div>
+                </div>
+                <br />
+                <div class="goods_receipt clearfix">
+                    <div class="fl" style="width: 100%;">
+                        <div class="message"><span>联  系  人：</span></div><input type="text" class="inut-name input" v-model="order.contactPerson" />
+                    </div>
+                </div>
+                <br />
+                <div class="goods_receipt clearfix">
+                    <div class="fl" style="width: 100%;">
+                        <div class="message"><span>联系电话：</span></div><input type="text" class="inut-phone input" v-model="order.contactPhone">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line_ec mt10"></div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl" v-bind:data-id="order.businessID"><strong>{{order.businessName}}</strong></div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">服务名称</div>
+                    <div class="fr oneLine" v-bind:data-id="order.serviceID">{{order.serviceName}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">服务单价</div>
+                    <div class="fr">{{order.servicePrice|formatDecimal}}/{{order.unit}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox" v-if="order.serviceCharge>0">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">服务费</div>
+                    <div class="fr">{{order.serviceCharge|formatDecimal}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox" v-if="order.serviceWay==0">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">上门时间</div>
+                    <div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
+                    <div class="fr">{{serviceDate.label}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox" v-else="order.serviceWay==1">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">到店服务</div>
+                    <div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
+                    <div class="fr">{{serviceDate.label}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">预约数量</div>
+                    <div class="goods_num fr" style="margin-top:0;">
+                        <a href="#" class="num_jian" @click="changeMoney_reduce(order)" id="num_jian"></a><span class="goods_shuzi">{{order.serviceNumber}}</span>
+                        <!--<input class="input_num"   type="text" v-bind:value="order.serviceNumber">-->
+                        <a href="#" class="num_zeng" @click="changeMoney_add(order)"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line_ec mt10"></div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">优惠券</div>
+                     <div v-if="isOK">
+                       <div class="list_inbtn fr"></div>
+                       <div class="fr font_orange" >无可用优惠券</div>
+                    </div>
+                    <div v-else>
+                       <div class="list_inbtn fr" data-toggle="modal" data-target="#couponModal" v-if="!isOK"></div>
+                       <div class="fr font_orange" v-if="couponDiscounted>0">-{{couponDiscounted | formatDecimal}}</div>          
+                       <div class="fr font_orange" v-else>{{num}}张优惠券可用</div>                  	
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="order_whitebox">
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="message"><span>您的留言：</span></div><input type="text" class="input" v-model="leaveWords" />
+                    <div class="fr font_orange"></div>
+                </div>
+            </div>
+        </div>
+        <div class="order_tip">最多可预约{{order.stockNumber}}台</div>
+        <div class="business_bottom">
+            <span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{(order.totalMoney-couponDiscounted)|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
+            <span class="ft12" v-if="couponDiscounted>0">优惠：<font class="font_orange">{{couponDiscounted|formatDecimal}}</font></span>
+            <div class="business_zbtn"><a href="###" id="submit" @click="affirm()">提交订单</a></div>
+        </div>
+        <!--选择时间-->
+        <div id="timeModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" v-if="order.serviceWay==0">选择上门时间</h4>
+                        <h4 class="modal-title" v-else="order.serviceWay==1">选择到店时间</h4>
+                    </div>
+                    <div class="modal-body nopadding">
+                        <div class="business_mainmenu2" style="border-top:none;">
+                            <ul>
+                                <li v-for="(delivery,index) in order.serviceDate" v-bind:class="index==0?'selected':''" v-on:click="changeDelivery(delivery)">
+                                    <a href="#">{{delivery.desc}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="business_goods_box">
+                            <div class="businessmenu_choice2 colorbg" v-for="period in timePeriod" v-if="period.isImmediate&&order.serviceWay==2" v-on:click="timeSelected(period)">立即上门（预计{{period.end}}到达）</div>
+                            <div class="businessmenu_choice2 colorbg" v-for="period in timePeriod" v-if="period.isImmediate&&order.serviceWay==1" v-on:click="timeSelected(period)">立即到店（预计{{period.end}}到达）</div>
+                            <div class="plr10">
+                                <div class="Selection_time_m">
+                                    <ul>
+                                        <li v-for="period in timePeriod" v-if="!period.isImmediate"><a href="#" v-on:click="timeSelected(period)">{{period.start}}~{{period.end}}</a></li>
+                                    </ul>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--选择优惠卷-->
+        <div id="couponModal" class="modal modal_c" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog_c" role="document">
+                <div class="modal-content modal-content_c">
+                    <div class="modal-header modal-header_coupon">
+                        <h4 class="modal-title center_c"><span class="glyphicon glyphicon-menu-left line_c font_c" data-dismiss="modal" aria-label="Close"></span>选择优惠券</h4>
+                    </div>
+                    <div class="modal-body  modal-body_c bg_de">
+                        <div class="details_spgm" style="background:white;">
+                            <div class="details_spgm_right_2" v-on:click="changeCoupon()">
+                                <img v-bind:src="couponDiscounted==0?urlList.checkedicon:urlList.checkicon">
+                            </div>
+                            <div class="details_spgm_left_2 center_c">不使用优惠券</div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="choose_coup_title"><a href="#" style="color:red;">优惠券使用说明</a></div>
+                        <div class="choose_coup_main" v-for="(coup,index) in items3" v-bind:data-id="coup.couponID">
+                            <div class="choose_coup_main_left">
+                                <p v-if="coup.couponType == '0'">
+                                    <font class="font_orange">{{coup.couponMoney|formatDecimal}}</font><br>
+                                    <span>{{coup.couponCondition}}</span>
+                                </p>
+                                <p v-else>
+                                    <font class="font_orange">{{coup.couponMoney/10}}折</font><br>
+                                    <span>{{coup.couponCondition}}</span>
+                                </p>
+                            </div>
+                            <div class="choose_coup_main_m"><img src="../../images/03.png" width="12" height="100"></div>
+                            <div class="choose_coup_main_right">
+                                <span v-on:click="changeCoupon(coup)"><img v-bind:src="coup.isSelected==0?urlList.checkicon:urlList.checkedicon" width="24" height="24"></span>
+                                <p>
+                                    <font style="font-size:18px;">{{coup.couponName}}</font>
+                                </p>
+                                <p>
+                                    <font class="font14">限{{coup.limitUser}}用户使用</font>
+                                </p>
+                                <p>
+                                    <font class="font14">限{{coup.couponStart}}至{{coup.couponEnd}}</font>
+                                </p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--选择地址-->
+        <div class="modal modal_c" id="myModal_address" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog_c" role="document">
+                <div class="modal-content modal-content_c">
+                    <div class="modal-header" style="background:#F8F8F8;">
+                        <h4 class="modal-title center_c" id="myModalLabel">	<span class="glyphicon glyphicon-menu-left line_c font_c" data-dismiss="modal"></span>选择地址</h4>
+                    </div>
+                    <div class="modal-body modal-body_c">
+                        <div id="place1_ad" v-for="item2 in items2" v-bind:data-id="item2.addressID">
+                            <div class="count_1_ad">
+                                <div class="fl" style="margin:7px 0px;">
+                                    <img v-bind:src="item2.isSelected==0?urlList.checkicon:urlList.checkedicon" v-on:click="changeAddress(item2)" id="img">
+                                </div>
+                                <div class="fl" style="margin:0px 10px;">
+                                    <div><span>{{item2.contactPerson}}</span><span class="fr margin_ad">{{item2.contactPhone}}</span></div>
+                                    <div>{{item2.address}}</div>
+                                </div>
+                                <div class="fr">
+                                    <div class="fl" style="margin:5px 5px;">
+                                        <img src="../../images/business/05.png">
+                                    </div>
+                                    <div class="fl" style="margin:8px 0px;">
+                                        <span class="glyphicon glyphicon-edit"></span><a href="#">编辑</a>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="business_bottom">
+                <div class="ser_zbtn "><a href='#'>新增地址</a></div>
+            </div>
+        </div>
 
-			<div class="line_ec mt10"></div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl" v-bind:data-id="order.businessID"><strong>{{order.businessName}}</strong></div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">服务名称</div>
-						<div class="fr oneLine" v-bind:data-id="order.serviceID">{{order.serviceName}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">服务单价</div>
-						<div class="fr">{{order.servicePrice|formatDecimal}}/{{order.unit}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox" v-if="order.serviceCharge>0">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">服务费</div>
-						<div class="fr">{{order.serviceCharge|formatDecimal}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox" v-if="order.serviceWay==0">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">上门时间</div>
-						<div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
-						<div class="fr">{{serviceDate.label}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox" v-else="order.serviceWay==1">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">到店服务</div>
-						<div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
-						<div class="fr">{{serviceDate.label}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">预约数量</div>
-						<div class="goods_num fr" style="margin-top:0;">
-							<a href="#" class="num_jian" @click="changeMoney_reduce(order)" id="num_jian"></a><span class="goods_shuzi">{{order.serviceNumber}}</span>
-							<!--<input class="input_num"   type="text" v-bind:value="order.serviceNumber">-->
-							<a href="#" class="num_zeng" @click="changeMoney_add(order)"></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="line_ec mt10"></div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="fl">优惠券</div>
-						<div class="list_inbtn fr"   data-toggle="modal" data-target="#couponModal" ></div>
-						<div class="fr font_orange" v-if="coupons.money>0">-{{coupons.money|formatDecimal}}</div>
-  					<div class="fr font_orange" v-else>{{coupons.name}}</div>
-  				</div>
-				</div>
-			</div>
-			<div class="order_whitebox">
-				<div class="plr10">
-					<div class="goods_receipt clearfix">
-						<div class="message"><span>您的留言：</span></div><input type="text" class="input" v-model="leaveWords" />
-						<div class="fr font_orange"></div>
-					</div>
-				</div>
-			</div>
-			<div class="order_tip">最多可预约{{order.stockNumber}}台</div>
-			<div class="business_bottom">
-				<span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{totalMoney|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
-				<span class="ft12" v-if="coupons.money&&coupons.money>0">优惠：<font class="font_orange" >{{coupons.money|formatDecimal}}</font></span>
-				<div class="business_zbtn"><a href="###" id="submit" @click="affirm()">提交订单</a></div>
-			</div>
-			<!--选择时间-->
-			<div id="timeModal" class="modal fade" tabindex="-1" role="dialog">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" v-if="order.serviceWay==0">选择上门时间</h4>
-							<h4 class="modal-title" v-else="order.serviceWay==1">选择到店时间</h4>
-						</div>
-						<div class="modal-body nopadding">
-							<div class="business_mainmenu2" style="border-top:none;">
-								<ul>
-									<li v-for="(delivery,index) in order.serviceDate" v-bind:class="index==0?'selected':''" v-on:click="changeDelivery(delivery)">
-										<a href="#">{{delivery.desc}}</a>
-									</li>
-								</ul>
-							</div>
-							<div class="business_goods_box">
-								<div class="businessmenu_choice2 colorbg" v-for="period in timePeriod" v-if="period.isImmediate&&order.serviceWay==2" v-on:click="timeSelected(period)">立即上门（预计{{period.end}}到达）</div>
-								<div class="businessmenu_choice2 colorbg" v-for="period in timePeriod" v-if="period.isImmediate&&order.serviceWay==1" v-on:click="timeSelected(period)">立即到店（预计{{period.end}}到达）</div>
-								<div class="plr10">
-									<div class="Selection_time_m">
-										<ul>
-											<li v-for="period in timePeriod" v-if="!period.isImmediate"><a href="#" v-on:click="timeSelected(period)">{{period.start}}~{{period.end}}</a></li>
-										</ul>
-										<div class="clear"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--选择优惠卷-->
-			  <div id="couponModal" class="modal modal_c" tabindex="-1" role="dialog">
-				<div class="modal-dialog modal-dialog_c" role="document">
-					<div class="modal-content modal-content_c">
-						<div class="modal-header modal-header_coupon">
-							<h4 class="modal-title center_c"><span class="glyphicon glyphicon-menu-left line_c font_c" data-dismiss="modal" aria-label="Close"></span>选择优惠券</h4>
-						</div>
-						<div class="modal-body  modal-body_c bg_de">
-							<div class="details_spgm" style="background:white;">
-								<div class="details_spgm_right_2" @click="changeStatusCoupons1()">
-									<img src="../../images/02.png">
-								</div>
-								<div class="details_spgm_left_2 center_c">不使用优惠券</div>
-								<div class="clear"></div>
-							</div>
-							<div class="choose_coup_title"><a href="#" style="color:red;">优惠券使用说明</a></div>
-							<div class="choose_coup_main" v-for="(coup,index) in items3" v-bind:data-id="coup.couponID">
-								<div class="choose_coup_main_left">
-									<p>
-										<font class="font_orange">{{coup.couponMoney|formatDecimal}}</font><br>
-										<span>{{coup.couponCondition}}</span>
-									</p>
-								</div>
-								<div class="choose_coup_main_m"><img src="../../images/03.png" width="12" height="100"></div>
-								<div class="choose_coup_main_right">
-									<span @click="changeStatusCoupons2(coup)"><img src="../../images/02.png" width="24" height="24"></span>
-									<p>
-										<font style="font-size:18px;">{{coup.couponName}}</font>
-									</p>
-									<p>
-										<font class="font14">限{{coup.limitUser}}用户使用</font>
-									</p>
-									<p>
-										<font class="font14">限{{coup.couponStart}}至{{coup.couponEnd}}</font>
-									</p>
-								</div>
-								<div class="clear"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-<!--选择地址-->
-  			<div class="modal modal_c" id="myModal_address" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-dialog_c" role="document">
-				<div class="modal-content modal-content_c">
-					<div class="modal-header" style="background:#F8F8F8;">
-						<h4 class="modal-title center_c" id="myModalLabel">	<span class="glyphicon glyphicon-menu-left line_c font_c" data-dismiss="modal" ></span>选择地址</h4>
-					</div>
-					<div class="modal-body modal-body_c">
 
-						<div id="place1_ad" v-for="item2 in items2" v-bind:data-id="item2.addressID">
-							<div class="count_1_ad">
-								<div class="fl" style="margin:7px 0px;">
-									<img src="../../images/02.png" @click="changeStatusAddress(item2)" id="img">
-								</div>
-								<div class="fl" style="margin:0px 10px;">
-									<div><span>{{item2.contactPerson}}</span><span class="fr margin_ad">{{item2.contactPhone}}</span></div>
-									<div>{{item2.address}}</div>
-								</div>
-								<div class="fr">
-									<div class="fl" style="margin:5px 5px;">
-										<img src="../../images/business/05.png">
-									</div>
-									<div class="fl" style="margin:8px 0px;">
-										<span class="glyphicon glyphicon-edit"></span><a href="#">编辑</a>
-									</div>
-								</div>
-								<div class="clear"></div>
-							</div>
-						</div>
-						<div class="clear"></div>
-					</div>
-
-				</div>
-			</div>
-	  <div class="business_bottom">
-				<div class="ser_zbtn " ><a href='#'>新增地址</a></div>
-			</div>
-  			</div>
-  			
-	   
-		</div>		
-	</body>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="../../js/static/jquery.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="../../js/static/bootstrap.min.js"></script>
-		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/cursom/service/serviceorder.js" type="text/javascript" charset="utf-8"></script>
-
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../../js/static/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/static/bootstrap.min.js"></script>
+    <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/service/serviceorder.js" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>

@@ -129,8 +129,10 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 	public String createOrderService(Account account, String contactPerson, String contactPhone, String contactAddress, ServiceInfo serviceInfo, int appointNum, int isImmediate, String serviceStart, String serviceEnd, CouponManageBean couponManageBean, String leaveMessage) {
 		BusinessInfo businessInfo = businessInfoService.get(serviceInfo.getBusinessInfoId());
 		VillageInfo villageInfo = villageInfoService.get(account.getVillageInfoId());
-		// 总金额=服务金额+上门服务费
-		double totalMoney = appointNum * serviceInfoService.getServicePrice(serviceInfo) + ValidateUtil.validateDouble(businessInfo.getServiceCharge());
+		// 服务总价格
+		double totalMoney = appointNum * serviceInfoService.getServicePrice(serviceInfo);
+		// 上门服务费
+		double serviceCharge = ValidateUtil.validateDouble(businessInfo.getServiceCharge());
 
 		// 优惠券优惠金额
 		double couponMoney = 0;
@@ -138,7 +140,7 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 			couponMoney = couponManageService.calCouponMoney(couponManageBean, totalMoney);
 		}
 		// 实际支付金额
-		double payMoney = totalMoney - couponMoney;
+		double payMoney = totalMoney + serviceCharge - couponMoney;
 
 		/* 生成订单开始 */
 		OrderService orderService = new OrderService();
@@ -207,7 +209,7 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 
 		// 修改会员的优惠券使用状态
 		if (couponManageBean != null) {
-			couponManageService.updateUserState(couponManageBean.getMemberDiscountId(), CommonGlobal.DISCOUNT_USE_STATE_USED);
+			couponManageService.updateUserState(CommonGlobal.DISCOUNT_USE_STATE_USED, orderService.getId(), couponManageBean.getMemberDiscountId());
 		}
 		// 更新预约服务已购数量
 		serviceInfo.setSellCount(ValidateUtil.validateInteger(serviceInfo.getSellCount()) + appointNum);
@@ -293,7 +295,7 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 		this.update(orderService);
 		return true;
 	}
-	
+
 	/**
 	 * 返回商家支持
 	 * 
@@ -313,4 +315,5 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 		}
 		return types;
 	}
+
 }

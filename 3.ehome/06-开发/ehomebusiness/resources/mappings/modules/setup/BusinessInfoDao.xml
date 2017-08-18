@@ -498,4 +498,8 @@
         WHERE id = #{id}
     </update>
 
+
+<select id="getPtlistById" parameterType="String" resultType="String">
+	select DISTINCT prod_type from business_categorydict where id in (select Business_Category_Dict_ID from business_categoryinfo where BusinessInfo_ID=#{id})
+</select>
 </mapper>

@@ -33,6 +33,13 @@ public interface BusinessInfoDao extends CrudDao<BusinessInfo> {
      * @return
      */
     public int insertInfoCategory(BusinessInfo businessInfo);
+    /**
+     * 插入商家分类关联数据 add by zhujiao
+     * 
+     * @param user
+     * @return
+     */
+    public int deleteInfoCategory(BusinessInfo businessInfo);
 
     /**
      * 管理商家银行账户信息

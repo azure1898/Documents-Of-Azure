@@ -28,6 +28,7 @@
 		a.account_msg AS "accountMsg",
 		a.pay_type AS "payType",
 		a.pay_org AS "payOrg",
+		a.transaction_id AS "transactionId",
 		str_to_date(a.pay_time,'%Y-%m-%d %H:%i') AS "payTime",
 		a.pay_user_name AS "payUserName",
 		a.pay_state AS "payState",
@@ -77,6 +78,9 @@
             </if>
             <if test="prodType != null and prodType != ''">
                 AND a.prod_type = #{prodType}
+            </if>
+              <if test="pending == 1">
+                AND a.order_state != 1 AND a.order_state != 2
             </if>
 		</where>
 		<choose>

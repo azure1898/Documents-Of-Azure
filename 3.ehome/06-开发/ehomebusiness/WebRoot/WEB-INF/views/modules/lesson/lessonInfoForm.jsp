@@ -264,6 +264,10 @@
 		</div>
 		<div class="control-group">
 			<label class="control-label">轮播图片：</label> <span id="warnning"></span>
+			<div class="controls">
+			    <span>第1张图片将会用做列表页面显示，最多可以上传5张</span><br/>
+			    <span>（建议图片尺寸640*400像素，图片小于1M的jpg、png格式图片）</span>
+			</div>
 		</div>
 		<div class="img-box full" id="imgArea">
 			<form:hidden path="delImageName" />

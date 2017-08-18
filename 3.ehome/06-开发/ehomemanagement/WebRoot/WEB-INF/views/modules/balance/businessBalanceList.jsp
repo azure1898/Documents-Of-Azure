@@ -93,13 +93,13 @@ function itemCheck(obj) {
 		<input id="pageSize" name="pageSize" type="hidden"
 			value="${page.pageSize}" />
 		<ul class="ul-form">
-			<li><input name="balanceStartTime" type="text"
+			<li><input name="balanceStartTime" type="text" placeholder="结算开始时间"
 				readonly="readonly" maxlength="20" class="input-medium Wdate"
 				value="<fmt:formatDate value="${businessBalance.balanceStartTime}" pattern="yyyy-MM-dd"/>"
 				onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
 			</li>
 			<li><input name="balanceEndTime" type="text" readonly="readonly"
-				maxlength="20" class="input-medium Wdate"
+				 placeholder="结算结束时间" maxlength="20" class="input-medium Wdate"
 				value="<fmt:formatDate value="${businessBalance.balanceEndTime}" pattern="yyyy-MM-dd"/>"
 				onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
 			</li>
@@ -113,8 +113,8 @@ function itemCheck(obj) {
 					<option value="">全部区域</option>
 			</select> <select id="addrVillage" name="villageInfoId" style="width: 120px">
 					<option value="">全部楼盘</option>
-			</select> <input type="text" class="hide" id="hidProId" value=""> <input
-				type="text" class="hide" id="hidCityId" value=""> <input
+			</select> <input type="text" class="hide" id="hidProId" value="${businessBalance.addrPro}"> <input
+				type="text" class="hide" id="hidCityId" value="${businessBalance.addrCity}"> <input
 				type="text" class="hide" id="hidAreaId" value=""> <input
 				type="text" class="hide" id="hidVillageId"
 				value="${couponManage.villageInfoId}"></li>
@@ -156,10 +156,10 @@ function itemCheck(obj) {
 			</div>
 			<div class="div-inline">
 				<span class="help-inline"> <font color="red"> 订单金额： <fmt:formatNumber
-							type="currency">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
-							type="currency">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
-							type="currency">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
-							type="currency">${sumPayMoney}</fmt:formatNumber> 元
+							type="number" pattern="0.00" maxFractionDigits="2">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumPayMoney}</fmt:formatNumber> 元
 				</font></span>
 			</div>
 		</div>
@@ -218,24 +218,23 @@ function itemCheck(obj) {
                            value='${businessBalance.balanceStartTime}' pattern='yyyy-MM-dd' />&balanceEndTime=<fmt:formatDate
                            value='${businessBalance.balanceEndTime}' pattern='yyyy-MM-dd' />">结算单明细</a>
 						</td>
-						<td id="${businessBalance.id}"><a
-							href="${ctx}/balance/businessBalance/check?id=${businessBalance.id}">
-								${fns:getDictLabel(businessBalance.checkState, 'checkState', '')}
-						</a></td>
+						<td id="${businessBalance.id}">
+						<c:choose>
+						  <c:when test="${businessBalance.checkState==0 }">
+	                        <a
+	                            href="${ctx}/balance/businessBalance/check?id=${businessBalance.id}">
+	                                ${fns:getDictLabel(businessBalance.checkState, 'checkState', '')}
+	                        </a>
+						  </c:when>
+						  <c:otherwise>
+                                ${fns:getDictLabel(businessBalance.checkState, 'checkState', '')}
+						  </c:otherwise>
+						</c:choose></td>
 					</shiro:hasPermission>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
-	<p align="center">
-		<span class="help-inline"> <font color="red">
-				团购结算金额=已消费优惠券金额<br /> 结算金额=订单金额+平台优惠-扣点金额<br />
-				商品购买：订单金额=商品金额+配送费-商家优惠-平台优惠<br /> 服务预约：订单金额=服务金额+上门费-商家优惠-平台优惠<br />
-				课程购买：订单金额=课程金额-商家优惠-平台优惠<br /> 场地预约：订单金额=场地金额-商家优惠-平台优惠<br />
-				团购：订单金额=团购券金额
-		</font>
-		</span>
-	</p>
 </body>
 </html>

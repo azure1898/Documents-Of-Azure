@@ -82,7 +82,7 @@
 			</div>
 			<div class="mtop20"></div>
 			<div class="login_m_but">
-				<input type="password" id="password" name="password" type="text"  maxlength="30" style="width:185px; height:28px; background:url(${ctxStatic}/images/passworld.png) 15px center no-repeat; padding-left:36px; border:none; text-align:left; color:#8c9093;" placeholder="请输入密码" autocomplete="off"/>
+				<input type="password" id="password" name="password" maxlength="30" style="width:185px; height:28px; background:url(${ctxStatic}/images/passworld.png) 15px center no-repeat; padding-left:36px; border:none; text-align:left; color:#8c9093;" placeholder="请输入密码" autocomplete="off"/>
 			</div>
 			<div class="mtop20"></div>		
 			<div class="login_m_but2">

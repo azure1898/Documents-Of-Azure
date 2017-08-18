@@ -232,6 +232,8 @@
 		<result property="orderNo" column="orderNo" />
 		<result property="createDate" column="createDate" />
 		<result property="payType" column="payType" />
+		<result property="orderState" column="orderState" />
+		<result property="payState" column="payState" />
 		<association property="businessInfo" javaType="BusinessInfo">
 			<result property="businessName" column="Business_Name" />
 			<result property="phoneNum" column="Phone_Num" />

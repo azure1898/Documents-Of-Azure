@@ -14,8 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
 import com.its.common.web.BaseController;
+import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.entity.Account;
+import com.its.modules.app.entity.OrderGoods;
 import com.its.modules.app.service.AccountService;
+import com.its.modules.app.service.ModuleManageService;
+import com.its.modules.app.service.OrderGoodsService;
+import com.its.modules.rong.common.RongGlobal;
+import com.its.modules.rong.service.SocialMsgService;
 import com.its.modules.social.common.DateUtil;
 import com.its.modules.social.common.SocialGlobal;
 import com.its.modules.social.entity.SocialComment;
@@ -58,6 +64,13 @@ public class SocialMessageController extends BaseController {
 	private SocialPraiseService socialPraiseService;
 	@Autowired
 	private SocialRelationService socialRelationService;
+	@Autowired
+	private OrderGoodsService orderGoodsService;
+	@Autowired
+	private ModuleManageService moduleManageService;
+	@Autowired
+	private SocialMsgService socialMsgService;
+	
 	
 	/**
 	 * @我的
@@ -70,7 +83,8 @@ public class SocialMessageController extends BaseController {
 	public Map<String, Object> myMsg(String userId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
-		if(StringUtils.isBlank(userId)) {
+		Account account2 = accountService.get(userId);
+		if(StringUtils.isBlank(userId) || account2 == null) {
 			map.put("code", Global.CODE_PROMOT);
 			map.put("message", "查看@我的发言失败");
 		} else {
@@ -84,8 +98,10 @@ public class SocialMessageController extends BaseController {
 				SocialSpeak socialSpeak = socialSpeakService.get(speakid); // 根据发言的id得到所有数据
 				String id = socialSpeak.getId();
 				dataMap.put("id", id);
+				int isFocus = socialRelationService.isFocus(userId, socialSpeak.getUserid());
+				dataMap.put("isFocus", isFocus>0 ? SocialGlobal.RELATION_IS_FOCUS_YES : SocialGlobal.RELATION_IS_FOCUS_NO);
 				//根据用户id从Account查询信息
-				Account account = accountService.get(id);
+				Account account = accountService.get(userId);
 				dataMap.put("userId", userId);
 				dataMap.put("userHeadUrl", account.getPhoto());
 				dataMap.put("userName", account.getNickname());
@@ -114,20 +130,21 @@ public class SocialMessageController extends BaseController {
 					String subName = socialSubject.getSubname();
 					subjectListMap.put("subName", subName); // 话题
 					subjectList.add(subjectListMap);
-					
-					//根据发言id得到评论数量
-					int commentCount = socialCommentService.commentCount(speakid);
-					dataMap.put("countComment", commentCount);
-					
-					//根据发言id得到转发数量
-					int countForward = socialSpeakService.countForward(speakid);
-					dataMap.put("countForward", countForward);
-					
-					//根据发言id得到点赞数量
-					int countPraise = socialPraiseService.countPraise(speakid);
-					dataMap.put("countPraise", countPraise);
 				}
 				dataMap.put("subjectList", subjectList);
+				
+				//根据发言id得到评论数量
+				int commentCount = socialCommentService.commentCount(speakid);
+				dataMap.put("countComment", commentCount);
+				
+				//根据发言id得到转发数量
+				int countForward = socialSpeakService.countForward(speakid);
+				dataMap.put("countForward", countForward);
+				
+				//根据发言id得到点赞数量
+				int countPraise = socialPraiseService.countPraise(speakid);
+				dataMap.put("countPraise", countPraise);
+				
 				dataList.add(dataMap);
 			}
 			map.put("code", Global.CODE_SUCCESS);
@@ -180,7 +197,8 @@ public class SocialMessageController extends BaseController {
 	public Map<String, Object> commentMe(String userId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
-		if(StringUtils.isBlank(userId)){
+		Account account2 = accountService.get(userId);
+		if(StringUtils.isBlank(userId) || account2 == null){
 			map.put("code", Global.CODE_PROMOT);
 			map.put("message", "评论我的失败");
 		}else {
@@ -207,6 +225,7 @@ public class SocialMessageController extends BaseController {
 						commentMap.put("content", socialComment2.getContent());
 						commentMap.put("createTime", socialComment2.getCreatetime());
 						commentMap.put("fid", socialComment2.getFid());
+						commentMap.put("delFlag", socialComment2.getDelflag());
 						String images = socialComment2.getImages();
 						if(StringUtils.isNotBlank(images)){
 							String[] split = images.split(",");
@@ -234,8 +253,6 @@ public class SocialMessageController extends BaseController {
 							SocialSubject socialSubject = socialSubjectService.get(subjectid);
 							String subname = socialSubject.getSubname(); // 用话题id在话题表中找到话题名称
 							subjectMap1.put("subName", subname);
-							String delFlag = socialSubject.getDelFlag();
-							subjectMap1.put("delFlag", delFlag);
 							commentMap.put("subjectList", subjectMap1);
 						}
 						commentList.add(commentMap);
@@ -257,18 +274,22 @@ public class SocialMessageController extends BaseController {
 				subjectlist.add(subjectMap);
 				speakMap.put("subjectList", subjectlist);
 				speakMap.put("content", socialSpeak.getContent());
+				speakMap.put("noticeId", socialSpeak.getNoticeid());
+				speakMap.put("title", socialSpeak.getTitle());
+				speakMap.put("summary", socialSpeak.getSummary());
 				speakMap.put("delFlag", socialSpeak.getDelflag());
+				
+				// 根据用户id查发言人用户昵称
+				Account account = accountService.get(userId);
+				speakMap.put("userName", account.getNickname());
 				String images = socialSpeak.getImages();
 				if(StringUtils.isNotBlank(images)){
 					String[] split = images.split(",");
 					speakMap.put("images", split);
 				}else{
-					speakMap.put("images", "");
+					speakMap.put("images", account.getPhoto());
 				}
 				
-				// 根据用户id查发言人用户昵称
-				Account account = accountService.get(userId);
-				speakMap.put("userName", account.getNickname());
 				dataMap.put("commontList", commentList);
 				dataMap.put("speak", speakMap);
 				dataList.add(dataMap);
@@ -296,7 +317,8 @@ public class SocialMessageController extends BaseController {
 	public Map<String, Object> myComment(String userId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
-		if(StringUtils.isBlank(userId)){
+		Account account2 = accountService.get(userId);
+		if(StringUtils.isBlank(userId) || account2 == null){
 			map.put("code", Global.CODE_PROMOT);
 			map.put("message", "我的评论失败");
 		}else {
@@ -316,12 +338,13 @@ public class SocialMessageController extends BaseController {
 			//遍历list
 			for (SocialComment socialComment2 : findList) {
 				Map<String, Object> speakMap = new HashMap<>(); // 存储发言对象数据
-				String speakId = socialComment2.getId();
-				commentMap.put("id", speakId);
+				String commentId = socialComment2.getId();
+				commentMap.put("id", commentId);
 				commentMap.put("content", socialComment2.getContent());
 				commentMap.put("createTime", socialComment2.getCreatetime());
 				commentMap.put("fid", socialComment2.getFid());
-				commentMap.put("speakId", socialComment2.getSpeakid());
+				String speakId = socialComment2.getSpeakid();
+				commentMap.put("speakId", speakId);
 				commentMap.put("delFlag", socialComment2.getDelflag());
 				String images1 = socialComment2.getImages();
 				if(StringUtils.isNotBlank(images1)){
@@ -336,6 +359,9 @@ public class SocialMessageController extends BaseController {
 				if(socialSpeak != null){
 					String speakid = socialSpeak.getId();
 					speakMap.put("id", speakid);
+					speakMap.put("noticeId", socialSpeak.getNoticeid());
+					speakMap.put("title", socialSpeak.getTitle());
+					speakMap.put("summary", socialSpeak.getSummary());
 					speakMap.put("content", socialSpeak.getContent());
 					String images = socialSpeak.getImages();
 					if(StringUtils.isNotBlank(images)){
@@ -351,14 +377,19 @@ public class SocialMessageController extends BaseController {
 					//根据发言id 找到所属话题
 					List<SocialSubRelation> findList2 = socialSubRelationService.findList(socialSubRelation);
 					List<Map<String, Object>> subjectlist = new ArrayList<>();
-					String subjectid = findList2.get(0).getSubjectid();
-					subjectMap.put("id", subjectid);
-					String subname = socialSubjectService.get(subjectid).getSubname();
-					subjectMap.put("subName", subname);
+					if(findList2 != null && findList2.size() > 0) {
+						String subjectid = findList2.get(0).getSubjectid();
+						subjectMap.put("id", subjectid);
+						String subname = socialSubjectService.get(subjectid).getSubname();
+						subjectMap.put("subName", subname);
+					}else {
+						subjectMap.put("id", "");
+						subjectMap.put("subName", "");
+					}
 					subjectlist.add(subjectMap);
 					speakMap.put("subjectList", subjectlist);
-					dataMap.put("speak", speakMap);
 				}
+				dataMap.put("speak", speakMap);
 				
 				// 根据评论id 找到话题id
 				SocialSubRelation socialSubRelation = new SocialSubRelation();
@@ -366,7 +397,7 @@ public class SocialMessageController extends BaseController {
 				List<SocialSubRelation> findList1 = socialSubRelationService.findList(socialSubRelation);
 				Map<String, Object> subjectMap = new HashMap<>(); // 存储评论话题数据
 				List<Map<String, Object>> subjectlist = new ArrayList<>();
-				if(findList1 != null){
+				if(findList1 != null && findList1.size() > 0){
 					for (SocialSubRelation socialSubRelation2 : findList1) {
 						String subjectid = socialSubRelation2.getSubjectid();
 						subjectMap.put("id", subjectid);
@@ -380,11 +411,10 @@ public class SocialMessageController extends BaseController {
 				subjectlist.add(subjectMap);
 				commentMap.put("subjectList", subjectlist);
 				commentList.add(commentMap);
+				
+				dataMap.put("commontList", commentList);
+				dataList.add(dataMap);
 			}
-			
-			dataMap.put("commontList", commentList);
-			dataList.add(dataMap);
-			
 			
 			map.put("code", Global.CODE_SUCCESS);
 			map.put("data", dataList);
@@ -407,7 +437,8 @@ public class SocialMessageController extends BaseController {
 	public Map<String, Object> commentDel(String commentId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
-		if(StringUtils.isBlank(commentId)){
+		Account account2 = accountService.get(commentId);
+		if(StringUtils.isBlank(commentId) || account2 == null){
 			map.put("code", Global.CODE_PROMOT);
 			map.put("message", "删除我的评论失败");
 		}else {
@@ -432,7 +463,8 @@ public class SocialMessageController extends BaseController {
 	public Map<String, Object> praiseMeList(String userId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
-		if(StringUtils.isBlank(userId)){
+		Account account2 = accountService.get(userId);
+		if(StringUtils.isBlank(userId) || account2 == null){
 			map.put("code", Global.CODE_PROMOT);
 			map.put("message", "查看赞过我的失败");
 		}else {
@@ -510,6 +542,9 @@ public class SocialMessageController extends BaseController {
 					}
 					
 					speakMap.put("id", speakId);
+					speakMap.put("noticeId", socialSpeak.getNoticeid());
+					speakMap.put("title", socialSpeak.getTitle());
+					speakMap.put("summary", socialSpeak.getSummary());
 					speakMap.put("content", socialSpeak.getContent());
 					String images = socialSpeak.getImages();
 					if(StringUtils.isNotBlank(images)){
@@ -527,11 +562,18 @@ public class SocialMessageController extends BaseController {
 						String subjectid = findList1.get(0).getSubjectid();
 						subjectListMap.put("id", subjectid);
 						
+						SocialSubject socialSubject = socialSubjectService.get(subjectid);
 						// 根据话题id找到话题名称
-						String subname = socialSubjectService.get(subjectid).getSubname();
-						subjectListMap.put("subName", subname);
-						subjectList.add(subjectListMap);
+						if(socialSubject != null){
+							subjectListMap.put("subName", socialSubject.getSubname());
+						}else {
+							subjectListMap.put("subName", "");
+						}
+					}else {
+						subjectListMap.put("id", "");
+						subjectListMap.put("subName", "");
 					}
+					subjectList.add(subjectListMap);
 				}
 				speakMap.put("subjectList", subjectList);
 				dataMap.put("comment", commentMap);
@@ -545,5 +587,222 @@ public class SocialMessageController extends BaseController {
 			map.put("message", "查看赞过我的成功");
 		}
 		return map;
+	}
+	
+	/**
+	 * 
+	 * @Description：订单消息
+	 * @Author：邵德才
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @param pageIndex
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value="orderMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> orderMsg(String userId, int pageIndex) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		
+		Account account2 = accountService.get(userId);
+		if(StringUtils.isBlank(userId) || account2 == null){
+			map.put("code", Global.CODE_PROMOT);
+			map.put("message", "查看订单消息失败");
+		}else {
+			//根据用户id，订单状态(配送中)查询未配送订单
+			OrderGoods orderGoods = new OrderGoods();
+			orderGoods.setOrderState(OrderGlobal.ORDER_GOODS_DISPATCHING);
+			orderGoods.setAccountId(userId);
+			int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+			pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
+			List<OrderGoods> findListByUserIdAndOrderState = orderGoodsService.findListByUserIdAndOrderState(orderGoods,pageIndex,pageSize);
+			for (OrderGoods orderGoods2 : findListByUserIdAndOrderState) {
+				String payState = orderGoods2.getPayState();
+				if(!OrderGlobal.ORDER_PAY_STATE_REFUNDING.equals(payState) && !OrderGlobal.ORDER_PAY_STATE_REFUNDED.equals(payState)){
+					map.put("id", orderGoods2.getId()); //订单id
+					map.put("orderNum", orderGoods2.getOrderNo()); // 订单号
+					//根据模块id找到模块名称
+					String moduleManageId = orderGoods2.getModuleManageId();
+					String moduleName = moduleManageService.get(moduleManageId).getModuleName();
+					map.put("moduleName", moduleName); //模块名称
+					map.put("createTime", orderGoods2.getStartTime());
+				}
+			}
+			map.put("code", Global.CODE_SUCCESS);
+			map.put("message", "查看订单消息成功");
+		}
+		return map;
+	}
+	
+	/**
+	 * 
+	 * @Description：管理员消息
+	 * @Author：邵德才
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @param pageIndex
+	 * @return
+	 * @throws Exception
+	 */
+	/*@ResponseBody
+	@RequestMapping(value="managerMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> managerMsg(String villageInfoId, String userId, String subUserId, int pageIndex) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		
+		if(StringUtils.isBlank(userId)){
+			map.put("code", Global.CODE_PROMOT);
+			map.put("message", "查看管理员消息失败");
+		}else {
+			List<Map<String, Object>> dataList = new ArrayList<>();
+			Map<String, Object> dataMap = new HashMap<>();
+			Map<String, Object> speakMap = new HashMap<>();	
+			Map<String, Object> rootSpeakMap = new HashMap<>();	
+			
+			// 根据管理员id查找所有发过的公告
+			List<SocialSpeak> listByUserId = socialSpeakService.getListByUserId(subUserId);
+			if(listByUserId != null && listByUserId.size() > 0) {
+				for (SocialSpeak socialSpeak : listByUserId) {
+					List<Map<String, Object>> subjectList = new ArrayList<>();
+					Map<String, Object> subjectMap = new HashMap<>();	
+					String speakid = socialSpeak.getId();
+					if(socialSpeak.getNoticeid() != null) {
+						speakMap.put("id", speakid);
+						speakMap.put("noticeId", socialSpeak.getNoticeid());
+						speakMap.put("title", socialSpeak.getTitle());
+						speakMap.put("summary", socialSpeak.getSummary());
+						speakMap.put("delFlag", socialSpeak.getDelflag());
+						speakMap.put("isSpeak", socialSpeak.getIsspeak());
+						SocialSubRelation socialSubRelation = new SocialSubRelation();
+						socialSubRelation.setSpeakid(speakid);
+						
+						List<SocialSubRelation> findList = socialSubRelationService.findList(socialSubRelation);
+						for (SocialSubRelation socialSubRelation2 : findList) {
+							String subjectid = socialSubRelation2.getSubjectid();
+							subjectMap.put("id", subjectid); // 话题id
+							//根据话题id查找话题名称
+							SocialSubject socialSubject = socialSubjectService.get(subjectid);
+							String subName = socialSubject.getSubname();
+							subjectMap.put("subName", subName); // 话题
+							subjectList.add(subjectMap);
+						}
+						
+						speakMap.put("subjectList", subjectList);
+						speakMap.put("createTime", socialSpeak.getCreatetime());
+						speakMap.put("speakContent", socialSpeak.getContent());
+						speakMap.put("reasion", socialSpeak.getReason());
+						
+						String images = socialSpeak.getImages();
+						if(StringUtils.isNotBlank(images)) {
+							speakMap.put("imgList", images.split(","));
+						}else {
+							speakMap.put("imgList", "");
+						}
+						dataMap.put("speak", speakMap);
+						
+						if(SocialGlobal.SPEAK_IS_SPEAK_NO == socialSpeak.getIsspeak()) {
+							SocialSpeak ssf = socialSpeakService.get(socialSpeak.getRootid());
+							String speakId = ssf.getId();
+							rootSpeakMap.put("speakId", speakId);
+							rootSpeakMap.put("noticeId", ssf.getNoticeid());
+							
+							//根据管理员id从Account查询信息
+							Account account = accountService.get(ssf.getUserid());
+							rootSpeakMap.put("userName", account.getNickname());
+							rootSpeakMap.put("delFlag", ssf.getDelflag());
+							rootSpeakMap.put("isSpeak", ssf.getIsspeak());
+							
+							SocialSubRelation socialSubRelation1 = new SocialSubRelation();
+							socialSubRelation1.setSpeakid(speakId);
+							List<SocialSubRelation> findList1 = socialSubRelationService.findList(socialSubRelation);
+							List<Map<String, Object>> subjectList1 = new ArrayList<>();
+							Map<String, Object> subjectMap1 = new HashMap<>();
+							for (SocialSubRelation socialSubRelation2 : findList1) {
+								String subjectid = socialSubRelation2.getSubjectid();
+								subjectMap1.put("id", subjectid); // 话题id
+								//根据话题id查找话题名称
+								SocialSubject socialSubject = socialSubjectService.get(subjectid);
+								String subName = socialSubject.getSubname();
+								subjectMap1.put("subName", subName); // 话题
+								subjectList1.add(subjectMap1);
+							}
+							rootSpeakMap.put("subjectList", subjectList1);
+							rootSpeakMap.put("speakContent", ssf.getReason());
+							rootSpeakMap.put("title", ssf.getTitle());
+							rootSpeakMap.put("summary", ssf.getSummary());
+							rootSpeakMap.put("createTime", ssf.getCreatetime());
+							String imag = socialSpeak.getImages();
+							if(StringUtils.isNotBlank(imag)) {
+								rootSpeakMap.put("imgList", imag.split(","));
+							}else {
+								rootSpeakMap.put("imgList", "");
+							}
+							dataMap.put("rootSpeak", rootSpeakMap);
+						}
+					}
+					//根据发言id得到评论数量
+					int commentCount = socialCommentService.commentCount(speakid);
+					dataMap.put("countComment", commentCount);
+					
+					//根据发言id得到转发数量
+					int countForward = socialSpeakService.countForward(speakid);
+					dataMap.put("countForward", countForward);
+					
+					//根据发言id得到点赞数量
+					int countPraise = socialPraiseService.countPraise(speakid);
+					dataMap.put("countPraise", countPraise);
+
+					
+					int isPraise = socialPraiseService.getIsPraise(subUserId, speakid);
+					dataMap.put("isPraise", isPraise==0 ? SocialGlobal.PRAISE_STATE_NO : SocialGlobal.PRAISE_STATE_YES);
+					dataList.add(dataMap);
+				}
+			}
+			
+			map.put("id", subUserId);
+			//根据管理员id从Account查询信息
+			Account account = accountService.get(subUserId);
+			map.put("userName", account.getNickname());
+			map.put("headPicSrc", account.getPhoto());
+			
+			int countFocusByUserId = socialRelationService.countFocusByUserId(subUserId);
+			map.put("countFollow", countFocusByUserId);
+			int countFansByUserId = socialRelationService.countFansByUserId(subUserId);
+			map.put("countFans", countFansByUserId);
+			int focus = socialRelationService.isFocus(userId, subUserId);
+			map.put("isFocus", focus);
+			map.put("data", dataList);
+			map.put("code", Global.CODE_SUCCESS);
+			map.put("message", "查看管理员消息成功");
+		}
+		return map;
+	}*/
+	
+	/**
+	 * @Description：消息页面
+	 * @Author：王萌萌
+	 * @Date：2017年8月16日
+	 * @param userId 用户id
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@RequestMapping(value="countMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map countMsg(String userId) throws Exception {
+		Map toJson = new HashMap();
+		if(StringUtils.isEmpty(userId)) {
+			toJson.put("code", Global.CODE_ERROR);
+			toJson.put("message", "用户id为空");
+			return toJson;
+		}
+		int countAtMe = socialMsgService.countUnRead(userId, null, RongGlobal.MSG_IS_READ_NO, RongGlobal.MSG_FIRTYPE_ORDER);
+		int countComment = socialMsgService.countUnRead(userId, RongGlobal.MSG_SECTYPE_PLWD, RongGlobal.MSG_IS_READ_NO, null);
+		int countOrder = socialMsgService.countUnRead(userId, RongGlobal.MSG_SECTYPE_PS, RongGlobal.MSG_IS_READ_NO, null);
+		toJson.put("countAtMe", countAtMe);
+		toJson.put("countComment", countComment);
+		toJson.put("countOrder", countOrder);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("message", "查询消息页面成功");
+		return toJson;
 	}
 }

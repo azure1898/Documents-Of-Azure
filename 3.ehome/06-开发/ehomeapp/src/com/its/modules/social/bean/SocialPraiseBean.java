@@ -33,6 +33,12 @@ public class SocialPraiseBean extends SocialPraise {
 	
 	private String content;//内容
 
+	private String noticeId;//公告id
+	
+	private String title;//公告标题
+	
+	private String summary;//公告摘要
+
 	public String getSpkUserId() {
 		return spkUserId;
 	}
@@ -124,6 +130,30 @@ public class SocialPraiseBean extends SocialPraise {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getNoticeId() {
+		return noticeId;
+	}
+
+	public void setNoticeId(String noticeId) {
+		this.noticeId = noticeId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 	
 	

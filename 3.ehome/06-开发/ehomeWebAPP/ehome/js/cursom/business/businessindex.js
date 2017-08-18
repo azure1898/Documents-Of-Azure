@@ -8,7 +8,6 @@ var vm = new Vue({
             goicon: "../../images/grey_go.png"
         },
         business: {}
-
     },
     mounted: function () {//页面加载之后自动调用，常用于页面渲染
         this.$nextTick(function () {//在2.0版本中，加mounted的$nextTick方法，才能使用vm
@@ -20,49 +19,33 @@ var vm = new Vue({
         cartView: function () {
             var _this = this;
 
-            this.$http.get(interfaceUrl + "/live/getBusinessIndex",
-			{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: getQueryString("id") }).then(function (res) {
-			    _this.business = res.data.data;
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id")
+            };
 
-			    //_this.collection(_this.business.isCollection,_this.business.businessID)
-			});
+            _this.getData(_this, "/live/getBusinessIndex", data, function (resData) {
+                _this.business = resData;
+            });
         },
         getMore: function (business) {
-            this.$http.get(interfaceUrl + "/live/getMoreGroupBuy",
-			{ buildingID: userInfo.buildingID, businessID: getQueryString("id") }).then(function (res) {
-			    business.groupBuy = res.data.data;
-			    $(".order_whitebox").hide();
-			});
+            var _this = this;
+
+            var data = {
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id")
+            };
+
+            _this.getData(_this, "/live/getMoreGroupBuy", data, function (resData) {
+                business.groupBuy = resData;
+                $(".order_whitebox").hide();
+            });
         },
         collection: function (business) {
-
-            if (business.isCollection == 0) {
-                this.add_collections(business);
-            }
-            else if (business.isCollection == 1) {
-                this.cancel_collections(business);
-            }
-        },
-        add_collections: function (business) {
             var _this = this;
-            this.$http.post(path_add,
-				{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: business.businessID },
-				{ emulateJSON: true }).then(function (res) {
-				    _this.item = res.data.data;
-				    business.isCollection = 1;
-				    toast('收藏成功');
-				})
-        },
-        cancel_collections: function (business) {
-            var _this = this;
-            this.$http.post(path_cancle,
-				{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: business.businessID },
-				{ emulateJSON: true }).then(function (res) {
-				    _this.item = res.data.data;
-				    business.isCollection = 0;
-				    toast('取消收藏');
-				})
 
+            _this.myCollection(_this, business);
         }
     }
 })

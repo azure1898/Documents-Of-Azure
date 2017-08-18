@@ -171,3 +171,37 @@ height:32px;
 .myfans_tc_bottom{ height:40px;border-top:1px solid #ececec; position:absolute; bottom:1px;}
 .myfans_tc_bottom a{ width:149px; height:40px; line-height:40px; text-align:center; float:left; display:inline-block; border-right:1px solid #ececec; color:#000; font-size:16px;}
 .border_bot{border-bottom:1px solid #ececec; margin-bottom:10px; padding-bottom:10px;}
+/*index20170807*/
+.cloud{ width:94%; height:130px; margin-left:3%; margin-top:10px; background:#fff; border-radius:5px; box-shadow:0 0 5px #ececec;}
+.cloud_top{ width:100%;}
+.business_price_box2{ padding:15px;}
+.business_nr{ color:#000;}
+.business_nr .business_name{ font-size:18px; line-height:22px;}
+.business_name span{ display:inline-block; padding:0px 6px; border-radius:4px; border:1px solid #5e95f1; font-size:16px; margin-right:2px; color:#5e95f1;}
+.business_nr .business_type{ }
+.business_nr .business_type span{ display:inline-block; padding:0px 6px; border:solid 1px #fff; border-radius:2px; font-size:10px; margin-right:4px; }
+.business_nr .business_start{}
+.business_nr .business_start span{ font-size:12px;}
+
+.business_nr .full_cut{ font-size:10px; margin-top:4px;}
+.index_news{ margin:auto; width:94%; height:46px; border-top:1px solid #ececec;}
+.index_news p{ line-height:46px;}
+.newstyle{display:inline-block; height:24px; line-height:24px; padding:0px 5px;}
+.index_menu_main{ width:100%; background:#fff; margin-top:10px; padding-bottom:6px;}
+.index_menu_top{height:50px; width:94%; line-height:50px;  font-size:16px; margin:0 3%; border-bottom:1px solid #ececec;}
+.index_menu_top span{ float:right; font-size:14px;}
+.index_menu{ margin-top:10px; width:94%; margin:auto;}
+.index_menu ul{width:100%; margin:auto;}
+.index_menu ul li{ float:left; width:19%; height:94px; text-align:center; padding-top:20px;}
+.index_menu ul li img{ width:48px; height:48px;}
+.index_menu ul li p{ text-align:center; line-height:30px;}
+.index_menu ul li p a{ color:#808080;}
+.he100{ height:100px;}
+/*20170809*/
+.gongneng{ height:300px;width:100%;position:absolute; bottom:0; left:0; z-index:999;}
+.gongneng_m{ width:96%; height:110px; margin-left:2%; position:relative;}
+.gongneng_m ul{ width:100%;}
+.gongneng_m ul li{ width:33%; float:left; text-align:center;}
+.gongneng_m ul li img{ width:80px; height:80px;}
+.gongneng_m ul li p{ color:#000; line-height:24px;}
+.gongneng_m2{ height:110px; width:84px; margin:auto; padding-top:100px;}

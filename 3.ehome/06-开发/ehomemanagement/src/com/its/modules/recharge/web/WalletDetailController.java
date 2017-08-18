@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.utils.DateUtils;
+import com.its.common.utils.NumberUtil;
 import com.its.common.utils.StringUtils;
 import com.its.common.utils.excel.ExportExcel;
 import com.its.common.web.BaseController;
@@ -60,18 +62,22 @@ public class WalletDetailController extends BaseController {
 	public String list(WalletDetail walletDetail, HttpServletRequest request, HttpServletResponse response,
 			Model model) {
 		Page<WalletDetail> page = walletDetailService.findPage(new Page<WalletDetail>(request, response), walletDetail);
-//		List<WalletDetail> walletDetailList = walletDetailService.findList(walletDetail);
 		if (page == null) {
 			page = new Page<WalletDetail>();
 		}
 
-		Double accountRecharge = new Double(0);// 账号充值
-		Double rechargeGift = new Double(0);// 充值赠送
-		Double orderConsume = new Double(0);// 订单消费
-		Double orderCancel = new Double(0);// 订单取消
-		Double rechargeBalance = new Double(0);// 充值余额
+		Double accountRecharge = NumberUtils.DOUBLE_ZERO;// 账号充值
+		Double rechargeGift = NumberUtils.DOUBLE_ZERO;// 充值赠送
+		Double orderConsume = NumberUtils.DOUBLE_ZERO;// 订单消费
+		Double orderCancel = NumberUtils.DOUBLE_ZERO;// 订单取消
+		Double rechargeBalance = NumberUtils.DOUBLE_ZERO;// 充值余额
 		// 计算前台统计数据
 		for (WalletDetail tempWalletDetail : page.getList()) {
+			// 金额 = 本金金额 + 赠送金额
+			Double walletPrincipal = tempWalletDetail.getWalletPrincipal() != null ? tempWalletDetail.getWalletPrincipal() : Double.valueOf(0);
+			Double walletPresent = tempWalletDetail.getWalletPresent() != null ? tempWalletDetail.getWalletPresent() : Double.valueOf(0);
+			tempWalletDetail.setMoney(walletPrincipal + walletPresent);
+			
 			if (DictUtils.getDictValue(WalletDetail.LABEL_ACCOUNT_RECHARGE, WalletDetail.DICT_TYPE_TRADETYPE, "")
 					.equals(tempWalletDetail.getTradeType())) {
 				accountRecharge += tempWalletDetail.getMoney();
@@ -102,13 +108,14 @@ public class WalletDetailController extends BaseController {
 				WalletDetail.LABEL_REMARKS_ORDER_CANCEL);
 
 		model.addAttribute("page", page);
-		model.addAttribute("accountRecharge", accountRecharge);
-		model.addAttribute("rechargeGift", rechargeGift);
-		model.addAttribute("orderConsume", orderConsume);
-		model.addAttribute("orderCancel", orderCancel);
-		model.addAttribute("rechargeBalance", rechargeBalance);
+		model.addAttribute("accountRecharge", NumberUtil.doubleFormat(accountRecharge));
+		model.addAttribute("rechargeGift", NumberUtil.doubleFormat(rechargeGift));
+		model.addAttribute("orderConsume", NumberUtil.doubleFormat(orderConsume));
+		model.addAttribute("orderCancel", NumberUtil.doubleFormat(orderCancel));
+		model.addAttribute("rechargeBalance", NumberUtil.doubleFormat(rechargeBalance));
 		model.addAttribute("tradeTypeMap", tradeTypeMap);
 		if (walletDetail != null) {
+			System.out.println(walletDetail.getVillageInfoId());
 			model.addAttribute("villageInfoId", walletDetail.getVillageInfoId());
 		}
 		return "modules/recharge/walletDetailList";
@@ -133,6 +140,11 @@ public class WalletDetailController extends BaseController {
 
 			// 交易方式Label转换
 			for (WalletDetail tempWalletDetail : walletDetailList) {
+				// 金额 = 本金金额 + 赠送金额
+				Double walletPrincipal = tempWalletDetail.getWalletPrincipal() != null ? tempWalletDetail.getWalletPrincipal() : Double.valueOf(0);
+				Double walletPresent = tempWalletDetail.getWalletPresent() != null ? tempWalletDetail.getWalletPresent() : Double.valueOf(0);
+				tempWalletDetail.setMoney(walletPrincipal + walletPresent);
+				
 				if (DictUtils.getDictValue(WalletDetail.LABEL_ACCOUNT_RECHARGE, WalletDetail.DICT_TYPE_TRADETYPE, "")
 						.equals(tempWalletDetail.getTradeType())) {
 					tempWalletDetail.setTradeType(WalletDetail.LABEL_REMARKS_ACCOUNT_RECHARGE);

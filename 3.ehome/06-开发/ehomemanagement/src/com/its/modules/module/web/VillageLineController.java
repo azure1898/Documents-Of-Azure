@@ -3,6 +3,7 @@
  */
 package com.its.modules.module.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +34,10 @@ import com.its.common.web.BaseController;
 import com.its.modules.business.entity.BusinessCategorydict;
 import com.its.modules.business.service.BusinessCategorydictService;
 import com.its.modules.business.service.BusinessInfoService;
+import com.its.modules.module.entity.VillageLinerecombusitype;
 import com.its.modules.module.entity.VillageLinerecombusitypedetail;
 import com.its.modules.module.entity.VillageLinerecommodule;
+import com.its.modules.module.entity.VillageLinerecomspecial;
 import com.its.modules.module.entity.VillageLinerecomspecialdetail;
 import com.its.modules.module.service.ModuleManageService;
 import com.its.modules.property.entity.PropertyCompany;
@@ -95,7 +99,7 @@ public class VillageLineController extends BaseController {
 
     @RequiresPermissions("module:villageLine:setModule")
     @RequestMapping(value = "form")
-    public String form(VillageLine villageLine, Model model) {
+    public String form(VillageLine villageLine, Model model, HttpServletRequest request) {
         model.addAttribute("villageLine", villageLine);
         // 获取排序之后生活和社区模块
         List<String> moduleIds = getModuleIds(villageLine.getCommunityModule());
@@ -231,7 +235,8 @@ public class VillageLineController extends BaseController {
     @RequiresPermissions("module:villageLine:mainRecom")
     @RequestMapping(value = "updateMaintRecomModule")
     public String updateMaintRecomModule(VillageLine villageLine, Model model, RedirectAttributes redirectAttributes) {
-        villageLine.setSetTime(new Date());
+        villageLine.setRecomSetState("1");
+        villageLine.setRecomSetTime(new Date());
         villageLineService.updateMaintRecomModule(villageLine);
         addMessage(redirectAttributes, "保存首页设置成功");
         return "redirect:" + Global.getAdminPath() + "/module/villageLine/recommendList";
@@ -274,7 +279,8 @@ public class VillageLineController extends BaseController {
     @RequiresPermissions("module:villageLine:mainRecom")
     @RequestMapping(value = "updateCommunityRecomModule")
     public String updateCommunityRecomModule(VillageLine villageLine, Model model, RedirectAttributes redirectAttributes) {
-        villageLine.setSetTime(new Date());
+        villageLine.setRecomSetState("1");
+        villageLine.setRecomSetTime(new Date());
         villageLineService.updateCommunityRecomModule(villageLine);
         addMessage(redirectAttributes, "保存首页设置成功");
         return "redirect:" + Global.getAdminPath() + "/module/villageLine/recommendList";
@@ -293,21 +299,57 @@ public class VillageLineController extends BaseController {
     @RequiresPermissions("module:villageLine:lifeRecom")
     @RequestMapping(value = "lifeRecomFrom")
     public String lifeRecomFrom(VillageLine villageLine, Model model, HttpServletRequest request) {
+        //
+     // ----------------------通过图片ID获取图片路径---开始--------------------
+
+        for (VillageLinerecommodule imgItem : villageLine.getRecomModuleList()) {
+            if (StringUtils.isNotBlank(imgItem.getPicUrl())) {
+                try {
+                    imgItem.setPicId(imgItem.getPicUrl());
+                    imgItem.setPicUrl(MyFDFSClientUtils.get_fdfs_file_url(request, imgItem.getPicUrl()));
+                } catch (IOException | MyException e) {
+                }
+            }
+        }
+        for (VillageLinerecomspecial item : villageLine.getRecomSpecialList()) {
+            for (VillageLinerecomspecialdetail imgItem : item.getRecomSpecialDetailList()) {
+                if (StringUtils.isNotBlank(imgItem.getPicUrl())) {
+                    try {
+                        imgItem.setPicId(imgItem.getPicUrl());
+                        imgItem.setPicUrl(MyFDFSClientUtils.get_fdfs_file_url(request, imgItem.getPicUrl()));
+                    } catch (IOException | MyException e) {
+                    }
+                }
+            }
+        }
+        for (VillageLinerecombusitype item : villageLine.getRecomBusTypeList()) {
+            for (VillageLinerecombusitypedetail imgItem : item.getRecomBusTypeDetailList()) {
+                if (StringUtils.isNotBlank(imgItem.getPicUrl())) {
+                    try {
+                        imgItem.setPicId(imgItem.getPicUrl());
+                        imgItem.setPicUrl(MyFDFSClientUtils.get_fdfs_file_url(request, imgItem.getPicUrl()));
+                    } catch (IOException | MyException e) {
+                    }
+                }
+            }
+        }
+        // ----------------------通过图片ID获取图片路径---结束--------------------
+        
         model.addAttribute("villageLine", villageLine);
         // 获取排序之后生活推荐模块
         List<String> lifeRecomIds = getModuleIds(villageLine.getLifeRecomModule());
         model.addAttribute("getlifeList", moduleManageService.getSetModuleList(lifeRecomIds));
         // 获取排序之后模块--获取该楼盘下有关联的所有模块
-        List<String> moduleListIds = getModuleIds(villageLine.getCommunityModule()+villageLine.getLifeModule());
+        List<String> moduleListIds = getModuleIds(villageLine.getCommunityModule() + villageLine.getLifeModule());
         model.addAttribute("getModuleList", moduleManageService.getSetModuleList(moduleListIds));
-        //获取该楼盘下有关联的所有分类
+        // 获取该楼盘下有关联的所有分类
         model.addAttribute("getCategoryList", moduleManageService.getCategoryList(moduleListIds));
-        //获取排序后的生活模块的列表
+        // 获取排序后的生活模块的列表
         List<String> moduleIds = getModuleIds(villageLine.getLifeModule());
         model.addAttribute("lifeModuleList", moduleManageService.getSetModuleList(moduleIds));
-        //获取所有商家的列表
+        // 获取所有商家的列表
         model.addAttribute("allBusList", businessInfoService.findAllList());
-        //获取所有模块的列表
+        // 获取所有模块的列表
         model.addAttribute("moduleList", moduleManageService.findAllList());
         return "modules/module/lifeRecomModule";
     }
@@ -326,46 +368,59 @@ public class VillageLineController extends BaseController {
     @RequiresPermissions("module:villageLine:lifeRecom")
     @RequestMapping(value = "updateLifeRecomModule")
     public String updateLifeRecomModule(VillageLine villageLine, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
-        villageLine.setSetTime(new Date());
+        villageLine.setRecomSetState("1");
+        villageLine.setRecomSetTime(new Date());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
         for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
-            if (entity.getKey().startsWith("file")) {//模块推荐的图片上传
+            if (entity.getKey().startsWith("file")) {// 模块推荐的图片上传
                 int index = Integer.parseInt(entity.getKey().replace("file", ""));
                 VillageLinerecommodule villageLinerecommodule = villageLine.getRecomModuleList().get(index);
                 // 上传文件名
                 MultipartFile mf = entity.getValue();
                 try {
                     if (mf.getSize() != 0) {
-                        String picUrl = MyFDFSClientUtils.get_fdfs_file_url(request, MyFDFSClientUtils.uploadFile(request, mf));
+                        String picUrl = MyFDFSClientUtils.uploadFile(request, mf);
                         villageLinerecommodule.setPicUrl(picUrl);
+                    }else{
+                        if(StringUtils.isNoneBlank(villageLinerecommodule.getPicId())){
+                            villageLinerecommodule.setPicUrl(null);
+                        }
                     }
                 } catch (Exception ex) {
                     addMessage(redirectAttributes, "上传模块推荐图片失败");
                 }
-            } else if (entity.getKey().startsWith("specialFile")) {//专题推荐的图片上传
+            } else if (entity.getKey().startsWith("specialFile")) {// 专题推荐的图片上传
                 String[] indexArr = entity.getKey().split("_");
                 // 上传文件名
                 MultipartFile mf = entity.getValue();
                 List<VillageLinerecomspecialdetail> recomSpecialDetailList = villageLine.getRecomSpecialList().get(Integer.parseInt(indexArr[1])).getRecomSpecialDetailList();
                 try {
                     if (mf.getSize() != 0) {
-                        String picUrl = MyFDFSClientUtils.get_fdfs_file_url(request, MyFDFSClientUtils.uploadFile(request, mf));
+                        String picUrl = MyFDFSClientUtils.uploadFile(request, mf);
                         recomSpecialDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(picUrl);
+                    }else{
+                        if(StringUtils.isNoneBlank( recomSpecialDetailList.get(Integer.parseInt(indexArr[2])).getPicId())){
+                            recomSpecialDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(null);
+                        }
                     }
                 } catch (Exception ex) {
                     addMessage(redirectAttributes, "上传专题推荐明细图片失败");
                 }
-            }else if (entity.getKey().startsWith("busTyefile")) {//商家分类推荐的图片上传
+            } else if (entity.getKey().startsWith("busTyefile")) {// 商家分类推荐的图片上传
                 String[] indexArr = entity.getKey().split("_");
                 // 上传文件名
                 MultipartFile mf = entity.getValue();
-                //获取商家分类明细推荐的List
+                // 获取商家分类明细推荐的List
                 List<VillageLinerecombusitypedetail> recomBusTypeDetailList = villageLine.getRecomBusTypeList().get(Integer.parseInt(indexArr[1])).getRecomBusTypeDetailList();
                 try {
                     if (mf.getSize() != 0) {
-                        String picUrl = MyFDFSClientUtils.get_fdfs_file_url(request, MyFDFSClientUtils.uploadFile(request, mf));
+                        String picUrl = MyFDFSClientUtils.uploadFile(request, mf);
                         recomBusTypeDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(picUrl);
+                    }else{
+                        if(StringUtils.isNoneBlank(recomBusTypeDetailList.get(Integer.parseInt(indexArr[2])).getPicId())){
+                            recomBusTypeDetailList.get(Integer.parseInt(indexArr[2])).setPicUrl(null);
+                        }
                     }
                 } catch (Exception ex) {
                     addMessage(redirectAttributes, "上传商家分类明细图片失败");
@@ -379,10 +434,11 @@ public class VillageLineController extends BaseController {
 
     /**
      * 通过商家ID获取分类列表 （设置推荐中用到）
+     * 
      * @param businessinfoId
      * @return
      * @return List<BusinessCategorydict>
-     * @author zhujiao   
+     * @author zhujiao
      * @date 2017年8月3日 下午7:47:02
      */
     @ResponseBody

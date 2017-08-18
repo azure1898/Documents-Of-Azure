@@ -1,20 +1,23 @@
 package com.its.modules.app.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.CouponManageDao;
 import com.its.modules.app.entity.CouponManage;
+import com.its.modules.app.entity.MemberDiscount;
+import com.its.modules.sys.service.SysCodeMaxService;
 
 /**
  * 优惠券管理Service
@@ -33,6 +36,12 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	@Autowired
 	private ModuleManageService moduleManageService;
 
+	@Autowired
+	private MemberDiscountService memberDiscountService;
+
+	@Autowired
+	private SysCodeMaxService sysCodeMaxService;
+
 	public CouponManage get(String id) {
 		return super.get(id);
 	}
@@ -48,6 +57,11 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	@Transactional(readOnly = false)
 	public void save(CouponManage couponManage) {
 		super.save(couponManage);
+	}
+
+	@Transactional(readOnly = false)
+	public int update(CouponManage couponManage) {
+		return dao.update(couponManage);
 	}
 
 	/**
@@ -101,24 +115,20 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	}
 
 	/**
-	 * 获取某楼盘下买家可领取的优惠券的领取状态（已抢光、已领取、立即领取）
+	 * 获取某楼盘下买家可领取的优惠券的领取状态（已抢光、已领取、立即领取） 1->未领取 2->已抢光 3->已领取
 	 */
-	public String getCouponStatus(CouponManage couponManage, int receiveNum) {
+	public int getCouponStatus(CouponManage couponManage, int receiveNum) {
 		// 发放总量：0无限制 1限量发送
 		if (CommonGlobal.COUPON_GRANT_TYPE_LIMIT.equals(couponManage.getGrantType())) {
 			if (ValidateUtil.validateInteger(couponManage.getLimitedNum()) - ValidateUtil.validateInteger(couponManage.getReceiveNum()) == 0) {
-				return "已抢光";
+				return 2;
 			}
 		}
 		// 买家领取规则：0无限制 1每人每日限领1张 2每人限领1张
-		if (CommonGlobal.COUPON_RECEIVE_RULE_UNLIMIT.equals(couponManage.getReceiveRule())) {
-			return "立即领取";
+		if (CommonGlobal.COUPON_RECEIVE_RULE_UNLIMIT.equals(couponManage.getReceiveRule()) || receiveNum == 0) {
+			return 1;
 		} else {
-			if (receiveNum == 0) {
-				return "立即领取";
-			} else {
-				return "已领取";
-			}
+			return 3;
 		}
 	}
 
@@ -130,8 +140,9 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	 * @param couponId
 	 *            优惠券ID
 	 */
-	public void updateReceiveNumById(@Param("receiveNum") Integer receiveNum, @Param("couponId") String couponId) {
-		dao.updateReceiveNumById(receiveNum, couponId);
+	@Transactional(readOnly = false)
+	public int updateReceiveNumById(@Param("receiveNum") Integer receiveNum, @Param("couponId") String couponId) {
+		return dao.updateReceiveNumById(receiveNum, couponId);
 	}
 
 	/**
@@ -186,7 +197,7 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 		if (CommonGlobal.COUPON_TYPE_FIXED.equals(couponManage.getCouponType())) {
 			couponMoney = couponMoneyNative;
 		} else {
-			couponMoney = ((100 - couponMoneyNative) / 100) * totalMoney;
+			couponMoney = couponMoneyNative / 100 * totalMoney;
 			// 折扣券可设置优惠上限，判断折扣券是否存在优惠上限
 			if (couponManage.getUpperLimitMoney() != null && couponManage.getUpperLimitMoney() != 0) {
 				double upperLimitMoney = ValidateUtil.validateDouble(couponManage.getUpperLimitMoney());
@@ -215,32 +226,6 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	}
 
 	/**
-	 * 获取优惠券金额
-	 * 
-	 * @param couponManage
-	 *            优惠券信息
-	 * @return 优惠券金额
-	 */
-	public String getCouponMoney(CouponManage couponManage) {
-		// 优惠券类型：0固定金额券 1折扣券
-		double couponMoney = ValidateUtil.validateDouble(couponManage.getCouponMoney());
-		if (CommonGlobal.COUPON_TYPE_FIXED.equals(couponManage.getCouponType())) {
-			return String.valueOf(couponMoney);
-		} else {
-			int discount = (int) couponMoney;
-			// 个位数
-			int prefix = discount / 10;
-			// 十分位
-			int suffix = discount % 10;
-			if (suffix == 0) {
-				return prefix + "折";
-			} else {
-				return prefix + "." + suffix + "折";
-			}
-		}
-	}
-
-	/**
 	 * 获取优惠券使用条件
 	 * 
 	 * @param couponManage
@@ -257,14 +242,62 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	}
 
 	/**
+	 * 生成会员的优惠券
+	 * 
+	 * @param couponManage
+	 *            优惠券信息
+	 * @param userId
+	 *            用户ID
+	 * @return MemberDiscount
+	 */
+	@Transactional(readOnly = false)
+	public MemberDiscount createMemberDiscount(CouponManage couponManage, String userId) {
+		MemberDiscount memberDiscount = new MemberDiscount();
+		memberDiscount.setVillageInfoId(couponManage.getVillageInfoId());
+		memberDiscount.setDiscountId(couponManage.getId());
+		// 优惠券号（年16 + 月08 + 日28 + 六位流水号）
+		memberDiscount.setDiscountNum(sysCodeMaxService.getDiscountNum());
+		memberDiscount.setAccountId(userId);
+		memberDiscount.setObtainDate(new Date());
+		// 计算优惠券有效时间
+		Date validStart = null;
+		Date validEnd = null;
+		// 优惠券有效期类型：0起止日期 1天
+		if (CommonGlobal.COUPON_VALIDITY_TYPE_START_END.equals(couponManage.getValidityType())) {
+			validStart = couponManage.getValidityStartTime();
+			validEnd = couponManage.getValidityEndTime();
+		} else {
+			validStart = new Date();
+			validEnd = businessInfoService.add(ValidateUtil.validateInteger(couponManage.getValidityDays())).getTime();
+		}
+		memberDiscount.setValidStart(validStart);
+		memberDiscount.setValidEnd(validEnd);
+		memberDiscount.setUseState(CommonGlobal.DISCOUNT_USE_STATE_UNUSED);
+		memberDiscount.setReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_RECEIVE);
+		// 新增会员的优惠券
+		memberDiscountService.save(memberDiscount);
+		// 修改优惠券领取总量
+		int row = this.updateReceiveNumById(couponManage.getReceiveNum() + 1, couponManage.getId());
+		if (row == 0) {
+			// 事务回滚
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return null;
+		}
+		return memberDiscount;
+	}
+
+	/**
 	 * 修改会员优惠券的使用状态
 	 * 
-	 * @param id
-	 *            会员优惠券ID
-	 * @param newState
+	 * @param useState
 	 *            使用状态：0未使用；1已使用；2已过期；3已冻结
+	 * @param orderId
+	 *            订单ID
+	 * @param memberDiscountId
+	 *            会员优惠券ID
+	 * @return 操作的行数
 	 */
-	public void updateUserState(String id, String newState) {
-		dao.updateUserState(id, newState);
+	public int updateUserState(String useState, String orderId, String memberDiscountId) {
+		return dao.updateUserState(useState, orderId, memberDiscountId);
 	}
 }

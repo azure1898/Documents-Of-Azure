@@ -120,7 +120,7 @@
             	}else{
             		return true; 
                 }
-    	    }, "输入的市场价金额格式不正确，请输入低于10位的数字");
+    	    }, "输入的市场价金额格式不正确，请输入低于10位的数字或者低于2位的小数位");
             
             //chec市场价金额格式
             jQuery.validator.addMethod("checkGroupPurcMoney", function(value, element,params) {
@@ -129,7 +129,7 @@
             	}else{
             		return true; 
                 }
-    	    }, "输入的团购价金额格式不正确，请输入低于10位的数字");
+    	    }, "输入的团购价金额格式不正确，请输入低于10位的数字或者低于2位的小数位");
             
             //check团购开始时间必填
             $.validator.addMethod("startTimesClass", function(value) {
@@ -143,7 +143,7 @@
           
             //check团购库存量必填
             $.validator.addMethod("stockNumClass", function(value) {
-            	return value!="";                
+            	return value!=""  &&  value!=0;                
     	    }, "请输入库存量");
             
 			$("#inputForm").validate({
@@ -159,10 +159,12 @@
 	                },
 				    marketMoney : {
 			            required : true,
+			            min:0.01,
 			            checkMarketMoney:"params"
 				    },
 				    groupPurcMoney : {
 			            required : true,
+			            min:0.01,
 			            checkGroupPurcMoney:"params"
 				    },
 				    checkGroupPurcDetail : {
@@ -193,10 +195,12 @@
 	                },
 				    marketMoney : {
 			            required : "请输入市场价",
+			            min:"请输入市场价",
 			            checkMarketMoney:"输入的市场价金额格式不正确，请输入低于10位的数字"
 				    },
 				    groupPurcMoney : {
 			            required : "请输入团购价",
+			            min:"请输入市场价",
 			            checkGroupPurcMoney:"输入的团购价金额格式不正确，请输入低于10位的数字"
 				    },
 				    checkGroupPurcDetail : {
@@ -335,7 +339,7 @@
 					
 					
 					&nbsp;&nbsp;&nbsp;*库存量：&nbsp;&nbsp;
-					<input name="groupPurchasetimeList[0].stockNum" id="groupPurchasetimeList[0].stockNum" value="${groupPurchase.stockNums}" maxlength="10" type="text" class="stockNumClass input-mini digits"/>&nbsp;件
+					<input name="groupPurchasetimeList[0].stockNum" id="groupPurchasetimeList[0].stockNum" value="${groupPurchase.stockNums}" maxlength="9" type="text" class="stockNumClass input-mini digits"/>&nbsp;件
 					
 					&nbsp;&nbsp;&nbsp;<a id="addRow" class="btn btn-default" onclick="addRow()"><i class="icon-plus"></i></a>
 					<a class="btn btn-default" onclick="removeRow()"><i class="icon-remove"></i></a>
@@ -345,7 +349,7 @@
 		<div class="control-group">
 			<label class="control-label">用户限购数：</label>
 			<div class="controls">
-				<form:input path="restrictionNumber" htmlEscape="false" maxlength="10" class="input-medium digits"/>&nbsp;件
+				<form:input path="restrictionNumber" htmlEscape="false" maxlength="9" class="input-medium digits"/>&nbsp;件
 			</div>
 		</div>
 		<div class="control-group">
@@ -355,7 +359,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*团购详情</label>
+			<label class="control-label">*团购详情：</label>
 			<div class="controls">
 				<form:textarea id="groupPurcDetail" path="groupPurcDetail" rows="4" style="width:1000px;height:300px" />
                 <label for="groupPurcDetail" class="error word_message"  style="display:none;">超出最大长度，请适当缩减内容</label>
@@ -376,7 +380,7 @@
 		<div class="control-group">
 			<label class="control-label">*使用时间：</label>
 			<div class="controls">
-				<form:input path="useTime" id="useTime" htmlEscape="false" maxlength="200" class="input-xlarge"/>
+				<form:input path="useTime" id="useTime" htmlEscape="false" maxlength="60" class="input-xlarge"/>
 			</div>
 		</div>
 		<div class="control-group">

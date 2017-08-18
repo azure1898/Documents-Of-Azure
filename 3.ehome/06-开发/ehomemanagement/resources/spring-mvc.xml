@@ -88,6 +88,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="${adminPath}/**" />
 			<mvc:exclude-mapping path="${adminPath}/"/>
+			<mvc:exclude-mapping path="${adminPath}/out"/>
 			<mvc:exclude-mapping path="${adminPath}/login"/>
 			<mvc:exclude-mapping path="${adminPath}/sys/menu/tree"/>
 			<mvc:exclude-mapping path="${adminPath}/sys/menu/treeData"/>
@@ -125,6 +126,7 @@
 
     <bean id="businessBalanceTask" class="com.its.modules.task.BusinessBalanceTask"></bean>
     <bean id="propertyBalanceTask" class="com.its.modules.task.PropertyBalanceTask"></bean>
+    <bean id="downloadBillTask" class="com.its.modules.task.DownloadBillTask"></bean>
     <bean id="buildingTask" class="com.its.modules.task.BuildingTask"></bean>
     <bean id="roomTask" class="com.its.modules.task.RoomTask"></bean>
 
@@ -132,6 +134,7 @@
         <!-- 这里表示的是每隔五秒执行一次 -->
         <task:scheduled ref="businessBalanceTask" method="createBusinessBalanceTask" cron="00 30 23 * * ?" />
         <task:scheduled ref="propertyBalanceTask" method="createPropertyBalanceTask" cron="00 30 23 * * ?" />
+        <task:scheduled ref="downloadBillTask" method="createDownloadBillTask" cron="00 00 10 * * ?" />
         
          <!--每天23点30分定点执行-->
         <task:scheduled ref="buildingTask" method="createBuildingTask" cron="00 30 23 * * ?" />

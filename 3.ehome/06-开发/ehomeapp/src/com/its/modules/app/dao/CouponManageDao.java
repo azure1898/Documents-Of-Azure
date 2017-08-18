@@ -3,8 +3,10 @@ package com.its.modules.app.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
+
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.entity.CouponManage;
 
@@ -57,7 +59,7 @@ public interface CouponManageDao extends CrudDao<CouponManage> {
 	 * @param couponId
 	 *            优惠券ID
 	 */
-	public void updateReceiveNumById(@Param("receiveNum") Integer receiveNum, @Param("couponId") String couponId);
+	public int updateReceiveNumById(@Param("receiveNum") Integer receiveNum, @Param("couponId") String couponId);
 
 	/**
 	 * 获取可用的优惠券
@@ -94,10 +96,13 @@ public interface CouponManageDao extends CrudDao<CouponManage> {
 	/**
 	 * 修改会员优惠券的使用状态
 	 * 
-	 * @param id
-	 *            会员优惠券ID
-	 * @param newState
+	 * @param useState
 	 *            使用状态：0未使用；1已使用；2已过期；3已冻结
+	 * @param orderId
+	 *            订单ID
+	 * @param memberDiscountId
+	 *            会员优惠券ID
+	 * @return 操作的行数
 	 */
-	public void updateUserState(@Param("id") String id, @Param("newState") String newState);
+	public int updateUserState(@Param("useState") String useState, @Param("orderId") String orderId, @Param("memberDiscountId") String memberDiscountId);
 }

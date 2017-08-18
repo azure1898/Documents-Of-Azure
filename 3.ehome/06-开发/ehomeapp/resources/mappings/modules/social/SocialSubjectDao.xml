@@ -168,7 +168,7 @@
         FROM social_subject a
         WHERE 1=1
             <if test="subjectName != null and subjectName != ''">
-                AND a.subname like concat('%',#{subjectName},'%')
+                AND a.subname like concat(#{subjectName},'%')
             </if>
         ORDER BY a.createtime LIMIT #{pageIndex}, #{pageSize}
 	</select>
@@ -181,5 +181,13 @@
 	        <if test="subjectName != null and subjectName != ''">
 	            AND a.subname = #{subjectName}
 	        </if>
+	</select>
+	
+	<!-- 查询所有热门话题 -->
+	<select id="findHotSubjectList" resultType="socialSubject">
+	    SELECT 
+	        <include refid="socialSubjectColumns"/>
+	    FROM social_subject a
+	    WHERE a.isrecommend = #{isRecommend}
 	</select>
 </mapper>

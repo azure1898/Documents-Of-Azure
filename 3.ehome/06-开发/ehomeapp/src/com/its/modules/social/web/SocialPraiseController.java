@@ -60,11 +60,12 @@ public class SocialPraiseController extends BaseController {
 			return result;
 		}
 		
-		int pageSize = SocialGlobal.PRAISE_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		SocialPraise socialPraise = new SocialPraise();
 		socialPraise.setType(SocialGlobal.PRAISE_TYPE_SPEAK);
 		socialPraise.setPid(speakId);
-		List<SocialPraiseBean> praiseList = socialPraisetService.findPraiseBeanList(socialPraise, pageSize * pageIndex, pageSize);
+		List<SocialPraiseBean> praiseList = socialPraisetService.findPraiseBeanList(socialPraise, pageIndex, pageSize);
 		List<Map> dataList = new ArrayList();
 		if(praiseList!=null && praiseList.size()>0){
 			for(SocialPraiseBean praiseBean: praiseList){

@@ -17,22 +17,49 @@
         console.log(balanceModel);
         if (balanceModel == 0) {
             $("#rate").val($("#collectFees").val());
-           // $("#money").prop("disabled","disabled")
+           $("#money").prop("disabled","disabled")
         } else {
             $("#money").val($("#collectFees").val());
-            //$("#rate").prop("disabled","disabled")
+            $("#rate").prop("disabled","disabled")
         }
-        $("#longitude").prop("disabled", true);
-        $("#latitude").prop("disabled", true);
+        $("#longitude").prop("readonly", true);
+        $("#latitude").prop("readonly", true); 
         //如果为编辑状态则服务范围不可修改
         if ($('#businessinfoId').val() != null && $('#businessinfoId').val() != "") {
-            $("input[name='villageIdList']").each(function() {
-                $(this).prop("disabled", true)
-            });
-            $("#addrDetail").prop("disabled", true);
-            $("#longitude").prop("disabled", true);
-            $("#latitude").prop("disabled", true);
+          $("input[name='villageIdList']").each(function() {
+            $(this).prop("disabled", true)
+          });
+          $("#addrDetail").prop("disabled", true);
+          $("#longitude").prop("disabled", true);
+          $("#latitude").prop("disabled", true);
         }
+        
+        // 富文本编辑器初始化
+        KindEditor.ready(function(K) {
+            var editor1 = K.create('textarea[name="businessIntroduce"]', {
+                cssPath : '${ctxStatic}/plugins/code/prettify.css',
+                uploadJson :  "${ctx}/UploadFile.do",
+                allowFileManager : false,
+                themeType : 'simple',
+                allowImageUpload:true,//允许上传图片
+                afterChange : function() {
+                    var limitNum = 65000;
+                    if(this.count() > limitNum) {
+                        $(".word_message").show();
+                    } else {
+                    	$(".word_message").hide();
+                    }
+                    firstKindEditorLoadFlag = false;
+                },
+                afterBlur: function(){this.sync();},
+                items : [
+                    'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                    'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                    'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+            });
+            prettyPrint();
+        });
+        
         jQuery.validator.addMethod("checkSpecialCharacters", function(value, element,params) {
 	        var patrn=/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
 	        return this.optional(element) || (patrn.test(value));
@@ -58,7 +85,23 @@
             } else {
                 return true;
             }
-        }, "结束日期必须大于开始日期");
+        }, "暂停营业结束时间应该大于暂停营业起始时间");
+        // 校验商家标签：标签以逗号隔开，最多5个
+        $.validator.addMethod("checkBusinessLabel",function(value,element,params){
+         	// 逗号
+            var commaSign = ",";
+         	// 排除未填写商家标签的情况
+         	if (value == undefined || value == "") {
+             	return true;
+         	}
+      		// 正则表达式：标签以逗号隔开，最多5个
+         	var labelPatrn = "^([a-zA-Z0-9\u4e00-\u9fa5]+" + commaSign + "){0,4}[a-zA-Z0-9\u4e00-\u9fa5]+$";
+        	var regExpLabel = new RegExp(labelPatrn);
+        	
+//         	console.log("regExpLabel.exec(value) =" + (regExpLabel.exec(value) != null ? regExpLabel.exec(value)[0] : null));
+//         	console.log("value == regExpLabel.exec(value) =" + (regExpLabel.exec(value) != null && value == regExpLabel.exec(value)[0]));
+	      	return regExpLabel.exec(value) != null && value == regExpLabel.exec(value)[0];
+	     },"商家标签应以半角逗号隔开，最多输入5个");
         $("#inputForm").validate({
             rules : {
                 businessName : {
@@ -74,8 +117,7 @@
                 },
                 phoneNum : {
                     required : true,
-                    minlength : 11,
-                    isMobile : true
+                    isPhoneNumber : true
                 },
                 categoryIdList : {
                     required : true
@@ -94,7 +136,12 @@
                 },
                 checkImg:{
                     checkImg:"params"
-                }
+                },
+                businessLabel : {
+                    required : true,
+                    checkBusinessLabel : true,
+                    maxlength : 128
+                },
             },
             messages : {
                 checkImg:{
@@ -105,18 +152,11 @@
                     required : "请输入商家名称",
                 },
                 phoneNum : {
-                    required : "请输入手机号",
-                    minlength : "确认手机不能小于11个字符",
-                    isMobile : "请正确填写您的手机号码"
+                    required : "请输入联系电话",
+                    isPhoneNumber : "请正确填写您的联系电话"
                 },
                 contactPerson : {
                     required : "请输入联系人"
-                },
-                phoneNum : {
-                    required : "请输入联系电话"
-                },
-                phoneNum : {
-                    required : "请输入联系电话"
                 },
                 categoryIdList : {
                     required : "请选择商家分类"
@@ -133,8 +173,27 @@
                 addrArea : {
                     required : "请选择服务区域"
                 },
+                rate : {
+                    required : "请输入单笔订单比例"
+                },
+                money : {
+                    required : "请输入单笔订单固定金额"
+                },
+                businessLabel : {
+                    required : "请填写至少一个商家标签"
+                },
+                addrDetail : {
+                    required : "请输入详细地址"
+                },
+                balanceCycle : {
+                    required : "请选择结算周期"
+                }
             },
             submitHandler : function(form) {
+                if (KindEditor.instances[0].html().length > 65000) {
+	                    $(".word_message").show();
+	                    return;
+	            }
                 var villageIdList = '';
                 $("input[name='villageIdList']").each(function() {
                     if ($(this).attr("checked") == 'checked') {
@@ -194,23 +253,45 @@
                 $("#messageBox").text("输入有误，请先更正。");
                 if (element.is(":checkbox") || element.is(":radio") || element.parent().is(".input-append")) {
                     error.appendTo(element.parent().parent());
+                } else if (element.is("#rate") || element.is("#money")){
+                    error.appendTo(element.parent());
                 } else {
                     error.insertAfter(element);
                 }
             }
         });
-        $("input[name='balancemodel']").click(function() {
-            console.log($(this).val())
-            if ($(this).val() == 0) {
-                $("#lable").html("每笔订单收取订单金额");
-                $("#unit").html("%")
-                $("#money").prop("disabled","disabled")
-                $("#rate").prop("disabled","")
+        $("input:radio[name='balanceModel']").change(function() {
+            var balanceModelValue = $("input[name='balanceModel']:checked").val();
+            if (balanceModelValue == 0) {
+				$("#money").prop("disabled","disabled");
+                $("#money").val("");
+                $("#rate").removeAttr("disabled");
+             	// 手动清除单笔订单固定金额必填提示
+             	var msgMoney = "请输入单笔订单固定金额";
+                var $labelError = $("#money").parent().children("label.error");
+                if ($labelError.size() != 0) {
+                    $.each($labelError,function(index,value,array){
+                     if ($(value).text() == msgMoney) {
+                         $(value).remove();
+                     }
+                    });
+                }
+                $("#money").removeData("previousValue");
             } else {
-                $("#lable").html("每笔订单收取");
-                $("#unit").html("元")
-                $("#money").prop("disabled","")
-                $("#rate").prop("disabled","disabled")
+				$("#rate").prop("disabled","disabled");
+				$("#rate").val("");
+                $("#money").removeAttr("disabled");
+             	// 手动清除单笔订单固定金额必填提示
+                var msgRate = "请输入单笔订单比例";
+                var $labelError = $("#rate").parent().children("label.error");
+                if ($labelError.size() != 0) {
+                     $.each($labelError,function(index,value,array){
+	                     if ($(value).text() == msgRate) {
+	                         $(value).remove();
+	                     }
+               		 });
+                 }
+                $("#rate").removeData("previousValue");
             }
         });
         /* 根据服务时间间隔  读取时间段下拉数据 */
@@ -220,6 +301,16 @@
         /* 根据服务方式判断是否显示服务费用  上门显示*/
         $("input[name='serviceModel']").click(function() {
             bindServiceType($(this).val())
+            getTimeList(30);
+        });
+        /* 根据配送方式 判断是否显示配送时段*/
+        $("#peisong").hide();
+        $("input[name='distributeModel']").click(function() {
+           if($(this).val()=="0"){
+               $("#peisong").show();
+           }else{
+               $("#peisong").hide();
+           }
         });
 
         //通过分类选择 判断是否显示 或者是否可以选择
@@ -275,15 +366,23 @@
                 cleanErroMsg(this,0);
             }
         })
+       // 城市改变去掉错误提示
         $("#addrcity").change(function() {
             getVillageList1();
             if($(this).val()!=""){
                 cleanErroMsg(this,1);
             }
         })
+        //区域改变去掉错误提示
         $("#addrarea").change(function() {
             if($(this).val()!=""){
                 cleanErroMsg(this,2);
+            }
+        })
+        //结算周期改变去掉错误提示
+        $("#balanceCycle").change(function() {
+            if($(this).val()!=""){
+                cleanErroMsg(this,0);
             }
         })
         var ids = "${businessInfo.villageIds}".split(",");
@@ -296,7 +395,52 @@
             console.log(address);
             getLoaction(address);
         });
+        
+        // 营业状态与暂停营业时间联动（当当前时间在暂停营业时间范围内时，选中正常营业状态时清空暂停营业时间）
+        $("input[name='businessState']").change(function() {
+            var businessStateValue = $("input[name='businessState']:checked").val();
+            // 当前时间
+            var nowDate = new Date();
+            if ($("#stopBusinessBeginTime").val() != "" && $("#stopBusinessEndTime").val() != "" 
+                    && businessStateValue == 1 && nowDate >= getNewDate($("#stopBusinessBeginTime").val()) && nowDate <= getNewDate($("#stopBusinessEndTime").val())) {
+                $("#stopBusinessBeginTime").val("");
+                $("#stopBusinessEndTime").val("");
+				// 手动清除营业状态合法性提示信息
+				var msgBusinessState = "当前时间在暂停营业起止时间段内，营业状态应为暂停营业";
+				var $labelError = $("input[name='businessState']:checked").parent().parent().children("label.error");
+				if ($labelError.size() != 0) {
+				    $.each($labelError,function(index,value,array){
+					     if ($(value).text() == msgBusinessState) {
+					         $(value).remove();
+					     }
+				    });
+				} 
+            }
+        });
+        
+        // 暂停营业起始时间
+        $("#stopBusinessBeginTime").blur(function() {
+            clearBusinessStateValidate();
+        });
+        
+     	// 暂停营业结束时间
+        $("#stopBusinessEndTime").blur(function() {
+            clearBusinessStateValidate();
+        });
     });
+    
+    // 手动清除营业状态合法性提示信息并清除校验缓存
+    function clearBusinessStateValidate(){
+        var businessStateValue = $("input[name='businessState']:checked").val();
+        // 当前时间
+        var nowDate = new Date();
+        // 当前时间在暂停营业时间范围内，自动将营业状态设成暂停营业
+        if ($("#stopBusinessBeginTime").val() != "" && $("#stopBusinessEndTime").val() != "" 
+                && nowDate >= getNewDate($("#stopBusinessBeginTime").val()) && nowDate <= getNewDate($("#stopBusinessEndTime").val())) {
+            $("input[name='businessState'][value='0']").attr("checked","checked");
+        }
+    }
+    
     function getLoaction(address){
         var url = "http://api.map.baidu.com/geocoder/v2/?ak=T0NLYovGsug1jpoUIvQZcEontX0VtGZf&output=json&address="+address;
         url = url + "&callback=showLocation";
@@ -351,15 +495,18 @@
     }
 
     function bindList() {
+        var  timetype=$("input[name='serviceModel']:checked").val();
         $.ajax({
             type : 'POST',
             url : '${ctx}/business/businessInfo/bindList',
             data : {
-                timetype : $("#serviceModel").val(),
+                timetype :timetype,
                 businessinfoId : $("#businessinfoId").val()
             },
             dataType : 'json',
             success : function(data) {
+                console.log("timetype="+timetype);
+                console.log(data);
                 for (var i = 0; i < data.length - 1; i++) {
                     addRow();
                 }
@@ -717,7 +864,7 @@
             </div>
             <div class="controls" style="margin-top: 5px;">
                 <label class="control-label">每笔订单收取订单金额</label>
-                <input id="rate" class="input-mini required number" maxlength="10" />
+                <input id="rate" type="text" name="rate" class="input-mini required number" maxlength="10" />
                 <label id="unit">%</label>
             </div>
             <div class="controls" style="margin-top: 5px;">
@@ -726,7 +873,7 @@
             </div>
             <div class="controls" style="margin-top: 5px;">
                 <label class="control-label">每笔订单收取</label>
-                <input id="money" class="input-mini required number" maxlength="10" />
+                <input id="money" type="text" name="money" class="input-mini required number" maxlength="10" />
                 <label id="unit">元</label>
             </div>
         </div>
@@ -743,11 +890,12 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">商家介绍描述：</label>
-            <div class="controls">
-                <form:textarea path="businessIntroduce" htmlEscape="false" rows="4" maxlength="2000" class="input-xxlarge" />
-            </div>
-        </div>
+			<label class="control-label">商家介绍描述：</label>
+			<div class="controls">
+				<form:textarea id="content" path="businessIntroduce" rows="4" maxlength="2000" style="width:1000px;height:400px" class="input-xlarge" />
+				<label for="content" class="custom-error word_message" style="display: none;">超出最大长度，请适当缩减内容</label>
+			</div>
+		</div>
         <div class="control-group">
             <label class="control-label">营业状态：</label>
             <div class="controls">
@@ -770,10 +918,7 @@
             <div class="control-group">
                 <label class="control-label">预约服务方式：</label>
                 <div class="controls">
-                    <form:radiobuttons path="serviceModel" items="${fns:getDictList('servicemodel')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" />
-                    <span class="help-inline">
-                        <font color="red">*</font>
-                    </span>
+                    <form:radiobuttons path="serviceModel" items="${fns:getDictList('servicemodel')}" itemLabel="label" itemValue="value" htmlEscape="false" />
                 </div>
             </div>
             <div class="control-group">
@@ -811,36 +956,35 @@
             <div class="control-group">
                 <label class="control-label">商品配送方式：</label>
                 <div class="controls">
-                    <form:radiobuttons path="distributeModel" items="${fns:getDictList('distributemodel')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" />
-                    <span class="help-inline">
-                        <font color="red">*</font>
-                    </span>
+                    <form:radiobuttons path="distributeModel" items="${fns:getDictList('distributemodel')}" itemLabel="label" itemValue="value" htmlEscape="false" />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">上门配送时段：</label>
-                <div id="timeList1"></div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">时间片显示区间：</label>
-                <div class="controls">
-                    <form:select path="distributeTimeInterval" class="timelist">
-                        <form:options items="${fns:getDictList('servicetimeinterval')}" itemLabel="label" itemValue="value" htmlEscape="false" />
-                    </form:select>
-                    分钟
-                    <span class="help-inline">指：取送时间间隔 </span>
+            <div id="peisong">
+                <div class="control-group">
+                    <label class="control-label">上门配送时段：</label>
+                    <div id="timeList1"></div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">最短送达时间：</label>
-                <div class="controls">
-                    <form:select path="shortestArriveTime" class="timelist">
-                        <form:options items="${fns:getDictList('servicetimeinterval')}" itemLabel="label" itemValue="value" htmlEscape="false" />
-                    </form:select>
-                    分钟
-                    <span class="help-inline">
-                        <font color="red">*</font>
-                    </span>
+                <div class="control-group">
+                    <label class="control-label">时间片显示区间：</label>
+                    <div class="controls">
+                        <form:select path="distributeTimeInterval" class="timelist">
+                            <form:options items="${fns:getDictList('servicetimeinterval')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                        </form:select>
+                        分钟
+                        <span class="help-inline">指：取送时间间隔 </span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">最短送达时间：</label>
+                    <div class="controls">
+                        <form:select path="shortestArriveTime" class="timelist">
+                            <form:options items="${fns:getDictList('servicetimeinterval')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                        </form:select>
+                        分钟
+                        <span class="help-inline">
+                            <font color="red">*</font>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

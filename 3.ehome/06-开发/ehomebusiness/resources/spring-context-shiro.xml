@@ -18,6 +18,7 @@
 				/userfiles/** = anon
 				${adminPath}/cas = cas
 				${adminPath}/login = authc
+				${adminPath}/out = authc
 				${adminPath}/logout = logout
 				${adminPath}/** = user
 				/act/rest/service/editor/** = perms[act:model:edit]

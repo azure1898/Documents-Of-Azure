@@ -11,9 +11,15 @@ var vm=new Vue({
 	methods:{
 		cartView:function(){
 			var _this = this;
-			this.$http.get("../../data/praiseDetail.json").then(function(res){
+//			this.$http.get("../../data/praiseDetail.json").then(function(res){
+//				_this.praiseDetail = res.data;
+//			});	
+			this.$http.post(interfaceUrl + "/message/praiseMeList",{
+				userId:userInfo.userID, //用户id
+//				pageIndex:0
+			},{emulateJSON: true}).then(function(res){
 				_this.praiseDetail = res.data;
-			});	
+			});
 		},
 	}
 })

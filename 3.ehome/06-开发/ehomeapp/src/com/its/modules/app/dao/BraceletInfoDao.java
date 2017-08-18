@@ -21,6 +21,15 @@ import com.its.modules.app.entity.BraceletInfo;
 public interface BraceletInfoDao extends CrudDao<BraceletInfo> {
 
 	/**
+	 * 获取用户绑定的某个手环信息
+	 * 
+	 * @param accountId
+	 * @param villageInfoId
+	 * @return
+	 */
+	public BraceletInfo getAccountBraceletSpe(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId,@Param("bandMac")String bandMac);
+	
+	/**
 	 * 获取用户绑定的所有手环
 	 * 
 	 * @param accountId

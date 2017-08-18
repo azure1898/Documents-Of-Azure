@@ -75,16 +75,16 @@ public class UserUtils {
 	 * @return 取不到返回null
 	 */
 	public static User getByLoginName(String loginName){
-		User user = (User)CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + loginName);
-		if (user == null){
-			user = userDao.getByLoginName(new User(null, loginName));
+//		User user = (User)CacheUtils.get(USER_CACHE, USER_CACHE_LOGIN_NAME_ + loginName);
+//		if (user == null){
+			User user = userDao.getByLoginName(new User(null, loginName));
 			if (user == null){
 				return null;
 			}
 			user.setRoleList(roleDao.findList(new Role(user)));
 			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
 			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-		}
+//		}
 		return user;
 	}
 	
@@ -98,6 +98,13 @@ public class UserUtils {
 		removeCache(CACHE_OFFICE_LIST);
 		removeCache(CACHE_OFFICE_ALL_LIST);
 		UserUtils.clearCache(getUser());
+		
+		CacheUtils.remove("menuNamePathMap");//清除菜单名称
+		CacheUtils.remove(CACHE_ROLE_LIST);
+		CacheUtils.remove(CACHE_MENU_LIST);
+		CacheUtils.remove(CACHE_AREA_LIST);
+		CacheUtils.remove(CACHE_OFFICE_LIST);
+		CacheUtils.remove(CACHE_OFFICE_ALL_LIST);
 	}
 	
 	/**
@@ -315,4 +322,23 @@ public class UserUtils {
 //		return new HashMap<String, Object>();
 //	}
 	
+	
+	/**
+	 * 获取当前用户登陆权限
+	 * @return
+	 */
+	public static int getUserLoginFlag(){
+		User oldUser = getUser();
+		User user = userDao.getByLoginName(oldUser);
+		if(user==null){//删除用户
+			return 1;
+		}
+		if(!user.getPassword().equals(oldUser.getPassword())){//修改密码
+			return 2;
+		}
+		if(user.getLoginFlag().equals("0")){//冻结用户
+			return 3;
+		}
+		return 0;
+	}
 }

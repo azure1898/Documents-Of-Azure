@@ -3,6 +3,8 @@
  */
 package com.its.modules.setup.dao;
 
+import java.util.List;
+
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
 import com.its.modules.setup.entity.BusinessInfo;
@@ -107,4 +109,12 @@ public interface BusinessInfoDao extends CrudDao<BusinessInfo> {
      * @date 2017年7月18日 下午6:36:41
      */
     public int updateSetting(BusinessInfo businessInfo);
+    
+    
+    /**
+     * 通过商家ID获得商家产品模式
+     * @param id
+     * @return
+     */
+    public List<String> getPtlistById(String id);
 }

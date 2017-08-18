@@ -44,7 +44,7 @@ public class GroupPurchasetimeService extends CrudService<GroupPurchasetimeDao, 
 	}
 
 	/**
-	 * 更新团购子表已售数量
+	 * 团购子表减少库存，增加已售数量
 	 * 
 	 * @param count
 	 *            变动的数值
@@ -52,12 +52,12 @@ public class GroupPurchasetimeService extends CrudService<GroupPurchasetimeDao, 
 	 *            团购子表ID
 	 * @return 操作的行数
 	 */
-	public int updateSaleNum(int count, String groupPurchaseTimeId) {
-		return dao.updateSaleNum(count, groupPurchaseTimeId);
+	public int reduceStockNumAddSaleNum(int count, String groupPurchaseTimeId) {
+		return dao.reduceStockNumAddSaleNum(count, groupPurchaseTimeId);
 	}
 
 	/**
-	 * 减少团购子表已售数量
+	 * 团购子表增加库存，减少已售数量
 	 * 
 	 * @param count
 	 *            变动的数值
@@ -65,7 +65,7 @@ public class GroupPurchasetimeService extends CrudService<GroupPurchasetimeDao, 
 	 *            团购子表ID
 	 * @return 操作的行数
 	 */
-	public int reduceSaleNum(int count, String groupPurchaseTimeId) {
-		return dao.reduceSaleNum(count, groupPurchaseTimeId);
+	public int addStockNumReduceSaleNum(int count, String groupPurchaseTimeId) {
+		return dao.addStockNumReduceSaleNum(count, groupPurchaseTimeId);
 	}
 }

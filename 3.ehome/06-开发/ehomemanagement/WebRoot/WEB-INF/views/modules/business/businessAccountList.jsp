@@ -61,7 +61,7 @@
         <thead>
             <tr align="center">
                 <th align="center">序号</th>
-                <th>账号名</th>
+                <th>账户名</th>
                 <th>添加时间</th>
                 <th>状态</th>
             </tr>

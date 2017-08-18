@@ -111,10 +111,10 @@
                 <th>序号</th>
                 <th>商家名称</th>
                 <th>商家图片</th>
-                <th>联系人</th>
-                <th>联系电话</th>
                 <th>城市</th>
                 <th>商家分类</th>
+                 <th>联系人</th>
+                <th>联系电话</th>
                 <th>添加时间</th>
                 <th>状态</th>
                 <shiro:hasPermission name="business:businessInfo:edit">
@@ -131,10 +131,10 @@
                     </td>
                     <td>${businessInfo.businessName}</td>
                     <td><img id="preview" src="${businessInfo.businessPic}" style="width:45px; height:45;" /></td>
-                    <td>${businessInfo.contactPerson}</td>
-                    <td>${businessInfo.phoneNum}</td>
                     <td>${businessInfo.addrCity}</td>
                     <td>${businessInfo.businessCategorydict.categoryName}</td>
+                    <td>${businessInfo.contactPerson}</td>
+                    <td>${businessInfo.phoneNum}</td>
                     <td><fmt:formatDate value="${businessInfo.createDate}" pattern="yyyy-MM-dd" /></td>
                     <td><c:if test="${businessInfo.useState==0}">
                              正常
@@ -142,7 +142,7 @@
                              冻结
                          </c:if></td>
                     <td><shiro:hasPermission name="business:businessAccount:view">
-                            <a href="${ctx}/business/businessAccount?businessinfoId=${businessInfo.id}&prodType=${businessInfo.businessCategorydict.prodType}">管理账号</a>
+                            <a href="${ctx}/business/businessAccount?businessinfoId=${businessInfo.id}&prodType=${businessInfo.businessCategorydict.prodType}">管理账户</a>
                         </shiro:hasPermission> 
                         <shiro:hasPermission name="business:businessInfo:editBank">
                             <a href="${ctx}/business/businessInfo/editBank?id=${businessInfo.id}">银行账号</a>

@@ -54,6 +54,7 @@ public class OrderService extends DataEntity<OrderService> {
     private Date payTime; // 支付时间
     private String payUserName; // 支付账号
     private String payState; // 支付状态:0未支付1已支付2退款中3已退款
+    private String transactionID; // 微信或支付宝交易号
     private String payStateLabel; // 支付状态Label
     private List<OrderTrack> orderTrackList; // 订单跟踪明细
     private List<OrderServiceList> orderServiceList; // 订单服务明细
@@ -64,7 +65,8 @@ public class OrderService extends DataEntity<OrderService> {
     private String timeForExcel; // EXCEL显示用时间
     private String searchFlg; // 检索按钮按下标示
 
-    private int pending; //是否查询待处理标记
+    private int pending; // 是否查询待处理标记
+
     public OrderService() {
         super();
     }
@@ -451,12 +453,20 @@ public class OrderService extends DataEntity<OrderService> {
         this.searchFlg = searchFlg;
     }
 
-	public int getPending() {
-		return pending;
-	}
+    public int getPending() {
+        return pending;
+    }
 
-	public void setPending(int pending) {
-		this.pending = pending;
-	}
+    public void setPending(int pending) {
+        this.pending = pending;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
 
 }

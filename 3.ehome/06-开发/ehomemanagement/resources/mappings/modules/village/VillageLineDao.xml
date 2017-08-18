@@ -29,14 +29,14 @@
   </sql>
 
   <sql id="villageLineJoins">
-  LEFT JOIN village_info b on a.village_info_id=b.id
+    LEFT JOIN village_info b on a.village_info_id=b.id
   </sql>
 
   <select id="get" resultType="VillageLine">
     SELECT
     <include refid="villageLineColumns" />
     FROM village_line a
-    
+
     <include refid="villageLineJoins" />
     WHERE a.id = #{id}
   </select>
@@ -72,6 +72,8 @@
     a.product_line AS "productLine",
     a.set_state AS "setState",
     a.set_time AS "setTime",
+    a.recom_set_state AS "recomSetState",
+    a.recom_set_time AS "recomSetTime",
     a.del_flag AS "delFlag"
   </sql>
   <!-- 楼盘线所对应的所有楼盘信息列表 add by zhujiao -->
@@ -88,9 +90,10 @@
       <if test="setState != null and setState != ''">
         AND a.set_state = #{setState}
       </if>
-      <if test="setState != null and setState != ''">
-        AND a.set_state = #{setState}
+      <if test="recomSetState != null and recomSetState != '' and recomSetState != '0'">
+        AND a.recom_set_state = #{recomSetState}
       </if>
+      
       <if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
         AND b.addr_pro = #{villageInfo.addrPro}
       </if>
@@ -104,10 +107,10 @@
         AND b.property_company_id = #{villageInfo.propertyCompanyId}
       </if>
       <if test="villageInfo != null and villageInfo.villageName != null and villageInfo.villageName != ''">
-            AND b.village_name LIKE
-            <if test="dbName == 'oracle'">'%'||#{villageInfo.villageName}||'%'</if>
-            <if test="dbName == 'mssql'">'%'+#{villageInfo.villageName}+'%'</if>
-            <if test="dbName == 'mysql'">concat('%',#{villageInfo.villageName},'%')</if>
+        AND b.village_name LIKE
+        <if test="dbName == 'oracle'">'%'||#{villageInfo.villageName}||'%'</if>
+        <if test="dbName == 'mssql'">'%'+#{villageInfo.villageName}+'%'</if>
+        <if test="dbName == 'mysql'">concat('%',#{villageInfo.villageName},'%')</if>
       </if>
     </where>
     <choose>
@@ -115,7 +118,7 @@
         ORDER BY ${page.orderBy}
       </when>
       <otherwise>
-        ORDER BY  b.village_name
+        ORDER BY b.village_name
       </otherwise>
     </choose>
   </select>
@@ -212,7 +215,7 @@
     <include refid="villageLineJoins" />
     <where>
       a.village_info_id = #{villageInfoId}
-      AND a.del_flag =  #{DEL_FLAG_NORMAL}
+      AND a.del_flag = #{DEL_FLAG_NORMAL}
     </where>
     ORDER BY a.product_line ASC
   </select>
@@ -259,30 +262,33 @@
     update_date = #{updateDate}
     WHERE village_info_id = #{villageInfoId} and product_line=#{productLine}
   </update>
-  <!-- 推荐设置  设置首页推荐  add by zhujiao -->
+  <!-- 推荐设置 设置首页推荐 add by zhujiao -->
   <update id="updateMaintRecomModule">
     UPDATE village_line SET
-    set_time = #{setTime},
+    recom_set_state = #{recomSetState},
+    recom_set_time = #{recomSetTime},
     maint_recom_module = #{maintRecomModule},
     maint_recom_module_sort = #{maintRecomModuleSort},
     update_by = #{updateBy.id},
     update_date = #{updateDate}
     WHERE id = #{id}
   </update>
-  <!-- 推荐设置  设置优家推荐（生活模块推荐）  add by zhujiao -->
+  <!-- 推荐设置 设置优家推荐（生活模块推荐） add by zhujiao -->
   <update id="updateLifeRecomModule">
     UPDATE village_line SET
-    set_time = #{setTime},
+    recom_set_state = #{recomSetState},
+    recom_set_time = #{recomSetTime},
     life_recom_module = #{lifeRecomModule},
     life_recom_module_sort = #{lifeRecomModuleSort},
     update_by = #{updateBy.id},
     update_date = #{updateDate}
     WHERE id = #{id}
   </update>
-  <!-- 推荐设置  设置社区推荐（社区模块推荐）  add by zhujiao -->
+  <!-- 推荐设置 设置社区推荐（社区模块推荐） add by zhujiao -->
   <update id="updateCommunityRecomModule">
     UPDATE village_line SET
-    set_time = #{setTime},
+    recom_set_state = #{recomSetState},
+    recom_set_time = #{recomSetTime},
     community_recom_module = #{communityRecomModule},
     community_recom_module_sort = #{communityRecomModuleSort},
     update_by = #{updateBy.id},

@@ -92,4 +92,15 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 		return socialSpeakDao.findForwardsByRootId(rootId);
 	}
 	
+	/**
+	 * @Description：查询app对应User
+	 * @Author：王萌萌
+	 * @Date：2017年8月15日
+	 * @param userId
+	 * @return
+	 */
+	public SocialSpeak findUser(String userId) {
+		return socialSpeakDao.findUser(userId);
+	}
+	
 }

@@ -5,10 +5,14 @@ var vm = new Vue({
             list: "commoditylist.html?id=",
             groupbuy: "../groupbuy/groupbuydetail.html?id=",
             phoneicon: "../../images/telphone.png",
-            goicon: "../../images/grey_go.png"
+            goicon: "../../images/grey_go.png",
+            checkicon: "../../images/02.png",
+            checkedicon: "../../images/01.png"
         },
         order: {},
+        addressList: [],
         timePeriod: [],
+        leaveMessage:"",
         deliveryDate: {
             label: "",
             date: "",
@@ -17,55 +21,32 @@ var vm = new Vue({
             start: "",
             end: ""
         },
-        customer: {
-            contactPerson: "",
-            contactPhone: "",
-            contactAddress: ""
-        },
-        item: {},
-        items2: [],
-        totalMoney: 0,
-        coupons: {
-            name: "不使用优惠券",
-            money: 0
-        }
-		, items3: []
+        couponDiscounted: 0,
+        couponID:"",
+        isOK:true,
+        num:0
     },
     mounted: function () { //页面加载之后自动调用，常用于页面渲染
         this.$nextTick(function () { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
-            this.cartView();
-        })
-    },
-    methods: {
-        // 渲染页面
-        cartView: function () {
-            var _this = this;
-            this.$http("../../data/person.json").then(function (res) {
-                _this.items2 = res.data.data;
-            });
+              var _this = this;
 
-            
-
-            //                 this.$http.get(interfaceUrl +"/live/choiceAddress",
-            //                 {userID: userInfo.userID,
-            //				buildingID: userInfo.buildingID}).then(function(res){
-            //                _this.items2 = res.data.data; });
-
-
-            this.$http.get(interfaceUrl + "/live/confirmBusinessOrder", {
+            var orderData = {
                 userID: userInfo.userID,
                 buildingID: userInfo.buildingID,
                 businessID: getQueryString("id")
-            }).then(function (res) {
-                _this.order = res.data.data;
-                 _this.items3 = res.data.data.coupons;
-                _this.customer.contactPerson = res.data.data.contactPerson;
-                _this.customer.contactPhone = res.data.data.contactPhone;
-                _this.customer.contactAddress = res.data.data.contactAddress;
-                _this.totalMoney = res.data.data.totalMoney;
-                if (res.data.data.deliveryDate && res.data.data.deliveryDate.length > 0) {
-                    var delivery = res.data.data.deliveryDate[0];
-                    var delivery2 = res.data.data.deliveryDate[1];
+            };
+
+            _this.getData(_this, "/live/confirmBusinessOrder", orderData, function (resData) {
+                resData.coupons.forEach(function (coupon, index) {
+                    coupon.isSelected = 0;
+                });
+
+                _this.order = resData;
+                _this.init(  _this.order,_this.order.coupons);
+
+                if (resData.deliveryDate && resData.deliveryDate.length > 0) {
+                    var delivery = resData.deliveryDate[0];
+                    var delivery2 = resData.deliveryDate[1];
                     _this.deliveryDate.date = delivery.date;
                     _this.deliveryDate.date = delivery2.date;
                     if (delivery.timePeriod && delivery.timePeriod.length > 0) {
@@ -90,10 +71,59 @@ var vm = new Vue({
                         }
                     }
                 }
-                _this.timePeriod = res.data.data.deliveryDate[0].timePeriod;
-            })
-            $(".details_spgm_right_2 > img").attr("src", "../../images/01.png");
+                _this.timePeriod = resData.deliveryDate[0].timePeriod;
+            });
 
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID
+            };
+
+            _this.getData(_this, "/live/choiceAddress", data, function (resData) {
+                resData.forEach(function (address, index) {
+                    if (address.address == _this.order.contactAddress) {
+                        address.isSelected = 1;
+                    }
+                    else {
+                        address.isSelected = 0;
+                    }
+                });
+
+                _this.addressList = resData;
+            });
+        })
+    },
+    methods: {
+        // 渲染页面
+        init:function(item,coup){
+        	var arr=new Arrey();
+        	coup.foreach(function(e,i){
+        		if(item.totalMoney >= e.couponCondition){
+        		arr.push(e);
+        	}
+})
+        	if(arr.length>0){
+        		this.isOK=false;
+        		this.num=arr.length;
+        	}
+        	else{
+        		this.isOK=true;
+        	}
+        	
+        	
+        },
+        changeAddress: function (currentAddress) {
+            this.addressList.forEach(function (address, index) {
+                address.isSelected = 0;
+            });
+
+            currentAddress.isSelected = 1;
+
+            this.order.contactPerson = currentAddress.contactPerson;
+            this.order.contactPhone = currentAddress.contactPhone;
+            this.order.contactAddress = currentAddress.address;
+
+            $("#myModal_address").modal('toggle');
         },
         changeDelivery: function (delivery) {
             $("#timeModal .business_mainmenu2 li.selected").removeClass("selected");
@@ -114,9 +144,37 @@ var vm = new Vue({
 
             $("#timeModal").modal('toggle');
         },
+        changeCoupon: function (coupon) {
+            this.order.coupons.forEach(function (coupon, index) {
+                coupon.isSelected = 0;
+                
+            });
+
+            if (coupon) {
+                coupon.isSelected = 1;
+                this.couponID=coupon.couponID;
+                if (coupon.couponType == 0) {
+                    this.couponDiscounted = coupon.couponMoney;
+                }
+                else {
+                this.couponDiscounted = this.order.totalMoney * (100 - coupon.couponMoney) / 100;
+                	if( this.couponDiscounted > coupon.couponCap){
+                		this.couponDiscounted =coupon.couponCap;
+                	}
+                	
+                    
+                }
+            }
+            else {
+                this.couponDiscounted = 0;
+            }
+
+            $("#couponModal").modal('toggle');
+        },
         submitOrder: function () {
             var _this = this;
-            this.$http.post(interfaceUrl + "/live/submitBusinessOrder", {
+
+            var data = {
                 userID: userInfo.userID,
                 buildingID: userInfo.buildingID,
                 businessID: getQueryString("id"),
@@ -126,52 +184,12 @@ var vm = new Vue({
                 isImmediate: 0,
                 deliveryStart: _this.deliveryDate.data + _this.deliveryDate.start,
                 deliveryEnd: _this.deliveryDate.data + _this.deliveryDate.end,
-                leaveMessage: ""
-            }, {
-                emulateJSON: true
-            }).then(function (res) {
-                if (res.data.code == 1000) {
-                    _this.item = res.data.data;
-                } else if (res.data.code == 5000) {
-                    layer.open({
-                        content: res.data.message,
-                        btn: '确定',
-                        shadeClose: false,
-                    });
-                }
-            })
-        },
-        changeStatusAddress: function (item) {
-            $(event.target).attr("src", "../../images/01.png").parents("#place1_ad").siblings().find("#img").attr("src", "../../images/02.png");
-            this.customer.contactPerson = item.contactPerson;
-            this.customer.contactPhone = item.contactPhone;
-            this.customer.contactAddress = item.address;
+                leaveMessage: _this.leaveMessage,
+                couponID:_this.couponID
+            };
 
-            $("#myModal_address").modal('toggle');
-
-        },
-        changeStatusCoupons1: function () {
-            $(".choose_coup_main_right > span > img").attr("src", "../../images/02.png");
-            $(event.target).attr("src", "../../images/01.png");
-            this.coupons.name = "不使用优惠券";
-            this.coupons.money = 0;
-            this.totalMoney = this.order.totalMoney;
-            $("#couponModal").modal('toggle');
-        },
-        changeStatusCoupons2: function (item) {
-            $(".details_spgm_right_2 > img").attr("src", "../../images/02.png");
-            $(event.target).attr("src", "../../images/01.png").parents(".choose_coup_main").siblings().find(".choose_coup_main_right > span > img").attr("src", "../../images/02.png");
-            this.coupons.name = item.couponMoney;
-            this.coupons.money = item.couponMoney;
-            this.calcMonery();
-            $("#couponModal").modal('toggle');
-        },
-        calcMonery: function () {
-            var m = this.order.totalMoney;
-            var d = this.order.deliveryFee;
-            var a = this.order.activityDiscounted;
-
-            this.totalMoney = m + d - this.coupons.money - a;
+            _this.postData(_this, "/live/submitBusinessOrder", data, function (resData) {
+            });
         }
     }
 })

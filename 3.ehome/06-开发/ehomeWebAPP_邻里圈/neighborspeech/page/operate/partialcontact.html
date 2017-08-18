@@ -10,7 +10,7 @@
 			<ul>
 				<li v-for="item in contactList" v-if="item.isSelected">
 					<div class="tupian"><img :src="item.headPicSrc" width="110" height="110"></div>
-					<p>{{item.frendName}}</p>
+					<p>{{item.friendName}}</p>
 				</li>
 				<div class="clear"></div>
 			</ul>
@@ -29,7 +29,7 @@
 				<div class="my_message_left"><img :src="item.headPicSrc" width="80" height="80">
 				</div>
 				<div class="my_message_right">
-					&nbsp;&nbsp;{{item.frendName}}
+					&nbsp;&nbsp;{{item.friendName}}
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -94,8 +94,11 @@
 //				}
 //			},
 			methods: {
+				
 				init: function() {
-					this.$http.get("../../data/contact.json").then(function(res) {
+					this.$http.post(interfaceUrl + "/forward/toUser",{
+					userId:1,
+				},{emulateJSON: true}).then(function(res){
 						var lst = res.data.data;
 						$.each(lst, function(idx, obj) {
 							obj.isSelected = false;

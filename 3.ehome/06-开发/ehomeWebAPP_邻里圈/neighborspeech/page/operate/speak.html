@@ -64,6 +64,16 @@
 				width: 30px;
 				height: 30px;
 			}
+			.pholder:empty:before {
+				content: attr(data-placeholder);
+				color: #bbb;
+			}
+			.pholder:focus:before {
+				content: none;
+			}
+			.atlink {
+				color: #337ab7;
+			}
 		</style>
 	</head>
 
@@ -73,22 +83,24 @@
 			<div id="topPage" :class="{hide:showPopup}">
 				<div class="grey_top">
 					<a href="#" class="fl font12" style="margin-left:10px;">取消</a> 发言
-					<a href="#" class="topic_list_btn2">发送</a>
+					<a href="#" class="topic_list_btn2"  @click="sendOut">发送</a>
 				</div>
 				<div class="main_box">
 
 					<div class="fyxq_main2">
-						<textarea name="" cols="" rows="" class="fyxq2">分享社区的新鲜事!</textarea>
+						<!--<textarea name="" cols="" rows="" class="fyxq2">分享社区的新鲜事!</textarea>-->
+						<div id="editable" class="fyxq pholder" contentEditable="true" :data-placeholder="prompt" v-html="speakDetails" @input="calculation()"></div>
+						
 					</div>
-					<div class="speak_main" v-if="uploadImageNum!=0">
+					<div class="speak_main">
 						<ul>
-							<li v-for="(image,index) in speakData" v-if="image.selected==1">
-								<div class="tupian"><img :src="image.url" width="110" height="110"></div>
-								<div class="close"><img src="../../images/close3.png" width="30" height="30" @click="deleteImg(image)"></div>
+							<li v-for="(image,index) in speakData">
+								<div class="tupian"><img :src="image" width="110" height="110"></div>
+								<div class="close"><img src="../../images/close3.png" width="30" height="30" @click="deleteImg(index)"></div>
 							</li>
-							<li>
+							<!--<li>
 								<div class="wetianjia" @click="openUploading()"></div>
-							</li>
+							</li>-->
 						</ul>
 					</div>
 
@@ -105,9 +117,10 @@
 					</table>
 					<div class="bottom">
 						<ul>
-							<li><img src="../../images/photo.png" @click="openUploading()"/></li>
-							<li><img src="../../images/icon.png" /></li>
-							<li><img src="../../images/icon2.png" /></li>
+							<input type="file" value="上传文件" onchange="getImgURL(this)" style="display:none" name="" id="">  
+							<li><img src="../../images/photo.png" @click="img()"/></li>
+							<li><img src="../../images/icon.png"  @click="seltopic()" /></li>
+							<li><img src="../../images/icon2.png" @click="selwho()"/></li>
 							<li><img src="../../images/xiaolian.png" /></li>
 							<li><span v-text="textnum"></span></li>
 						</ul>
@@ -115,12 +128,12 @@
 				</div>
 			</div>
 			<div id="popupPage" :class="{hide:!showPopup}"></div>
-			<div id="popupPage2" :class="{hide:!showPopup}"></div>
 		</div>
 		<script src="../../js/common/jquery.js"></script>
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/speak.js" type="text/javascript" charset="utf-8"></script>
 	</body>

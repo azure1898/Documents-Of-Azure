@@ -87,7 +87,11 @@ public class MemberDiscountController extends BaseController {
 					md.setRemarks(String.valueOf(couponMoney)+"元券");
 				} else if(couponType.equals(CouponManage.COUPON_TYPE_DISCOUNT)){
 					if(couponMoney!=null){
-						md.setRemarks(String.valueOf(couponMoney/10)+"折券<br/>(上限"+String.valueOf(upperLimitMoney)+"元)");
+						if(upperLimitMoney!=null){
+							md.setRemarks(String.valueOf(couponMoney/10)+"折券<br/>(上限"+String.valueOf(upperLimitMoney)+"元)");
+						} else {
+							md.setRemarks(String.valueOf(couponMoney/10)+"折券<br/>(无上限)");
+						}
 					} else {
 						md.setRemarks(null);
 					}

@@ -156,7 +156,7 @@
 	<select id="getMyPraiseList" resultType="SocialPraiseBean">
 		SELECT * FROM
 			  (SELECT a.Nickname AS nickName, a.Photo AS photo, p.praiseTime AS praiseTime, s.id AS speakId,
-			    '' AS commentId, s.content AS content, s.images AS images, s.userId as spkUserId, '' as cmtUserId, 0 AS isComment,
+			    '' AS commentId, s.content AS content, s.images AS images, s.userId as spkUserId, s.noticeId as noticeId, s.title as title, s.summary as summary, '' as cmtUserId, 0 AS isComment,
 			    (SELECT Nickname FROM account ac WHERE ac.id = s.userId) AS spkUserName,
 			    '' AS cmtUserName
 			  FROM
@@ -170,7 +170,7 @@
 			    AND p.state = 1 
 			  UNION ALL 
 			  SELECT a.Nickname AS nickName, a.Photo AS photo, p.praiseTime AS praiseTime, c.speakId AS speakId,
-			    c.id AS commentId, c.content AS content, '' AS images, '' as spkUserId, c.userId as cmtUserId, 1 AS isComment, 
+			    c.id AS commentId, c.content AS content, '' AS images, '' as spkUserId, '' as noticeId, '' as title, '' as summary, c.userId as cmtUserId, 1 AS isComment, 
 			    '' AS spkUserName,
 			    (SELECT Nickname FROM account ac WHERE ac.id = c.userId) AS cmtUserName
 			  FROM
@@ -218,4 +218,15 @@
 			AND a.touserid = #{touserid}
 		</if>
 	</select>
+	
+	<!-- 根据用户ID查询该用户的点赞数量 -->
+	<select id="countPraiseByUserId" resultType="int">
+		select count(*) from social_praise where userid = #{userId}
+	</select>
+	
+	<!-- 根据发言id和点赞人得到数据 -->
+	<select id="getIsPraise" resultType="int">
+		select count(*) from social_praise where pid = #{pid} and type = 1 and userId = #{userId}
+	</select>
+	
 </mapper>

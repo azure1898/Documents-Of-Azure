@@ -43,11 +43,12 @@
                     </div>
                 </div>
             </div>
+             <div class="bussinessbreak2" v-if="business.isNormal==0">商家休息中</div>
         </div>
         <div class="mt20 clearfix">
             <div class="details_add_main">
                 <div class="details_add_tel">
-                    <a href="'tel:'+business.businessPhone"><img v-bind:src="urlList.phoneicon" width="25" height="25"></a>
+                    <a href="#" v-on:click="callPhone(business.businessPhone)"><img v-bind:src="urlList.phoneicon" width="25" height="25"></a>
                 </div>
                 <div class="details_add_left">
                     <div class="details_add_left_title">
@@ -109,6 +110,7 @@
     <script src="../../js/static/bootstrap.min.js"></script>
     <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/cursom/common/common.js" type="text/javascript"></script>
     <script src="../../js/cursom/business/businessindex.js" type="text/javascript" charset="utf-8"></script>
 </body>

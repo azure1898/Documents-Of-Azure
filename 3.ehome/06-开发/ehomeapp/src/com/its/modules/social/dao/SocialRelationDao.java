@@ -62,6 +62,25 @@ public interface SocialRelationDao extends CrudDao<SocialRelation> {
 	public void deleteByUserIdAndSubUserId(@Param("userId") String userId, @Param("subUserId") String subUserId);
 	
 	/**
+	 * @Description：根据用户ID 查询粉丝数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countFansByUserId(@Param("userId") String userId);
+	
+	/**
+	 * @Description：genuine用户ID 查询关注数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countFocusByUserId(@Param("userId") String userId);
+	
+	
+	/**
 	 * 
 	 * @Description：根据userId和subUserId查询所有数据
 	 * @Author：邵德才
@@ -80,4 +99,25 @@ public interface SocialRelationDao extends CrudDao<SocialRelation> {
 	 * @return
 	 */
 	public List<SocialRelationBean> findToUser(@Param("userId") String userId);
+	
+	/**
+	 * @Description：根据用户ID， 从用户ID 查询用户关系对象
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @param subUserId
+	 * @return
+	 */
+	public SocialRelation getSocialRelation(@Param("userId") String userId, @Param("subUserId") String subUserId);
+	
+	/**
+	 * @Description：是否已关注该用户
+	 * @Author：王萌萌
+	 * @Date：2017年8月14日
+	 * @param userId 当前userid
+	 * @param subUserId 被关注userid
+	 * @return
+	 */
+	public int isFocus(@Param("userId") String userId, @Param("subUserId") String subUserId);
+	
 }

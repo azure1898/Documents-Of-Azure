@@ -61,6 +61,7 @@ public class BusinessBalanceService extends CrudService<BusinessBalanceDao, Busi
 
 		for (BusinessBalanceDetail bbd : businessBalanceDetailList) {
 			bbd.setBusinessBalanceId(businessBalanceId);
+			logger.warn("2.在获得每一条商家结算表实体的同时，生成商家结算子表的实体");
 			businessBalanceDetailService.save(bbd);
 
 			// 3.根据订单号(order_no)、订单表表名，修改订单-商品类的结算状态为已结算

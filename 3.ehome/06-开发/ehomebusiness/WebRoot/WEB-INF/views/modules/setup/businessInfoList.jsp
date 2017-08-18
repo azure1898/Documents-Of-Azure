@@ -16,7 +16,8 @@
 </head>
 
 <body style="border: #ccc solid 1px; padding: 10px">
-    <div style="float: left; width: 40%; height: 100%; padding-right: 20px">
+     <sys:message content="${message}" />
+    <div style="float: left; width: 50%; word-break: break-all; padding-right: 20px">
         <div class="control-group">
             <label class="control-label" style="font-weight: bold;">商家资料</label> <label class="control-label" style="float: right;"> <a href="${ctx}/setup/businessInfo/form">修改资料></a>
             </label>
@@ -37,9 +38,14 @@
                 <label class="control-label">商家地址： </label><span id="address"></span>
             </div>
         </div>
-        <div class="control-group" style="margin-top: 15px">
+        <div class="control-group" style=" margin-top: 15px">
             <div class="controls">
-                <label class="control-label">商家介绍： </label> <span id="desc"></span>
+                <label class="control-label">商家介绍： </label> 
+            </div>
+        </div>
+        <div class="control-group" style="  height:65%;overflow: auto;">
+            <div class="controls">
+                 <span id="desc"></span>
             </div>
         </div>
         <div class="control-group" style="margin-top: 15px">
@@ -48,10 +54,8 @@
             </div>
         </div>
     </div>
-    <div class="contact_pic right" style="float: left; height: 100%;">
         <!--百度地图容器-->
         <div style="width: 500px; height: 350px; border: #ccc solid 1px; font-size: 12px" id="map"></div>
-    </div>
 
 </body>
 <script type="text/javascript">

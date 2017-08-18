@@ -134,12 +134,12 @@ public class LessonInfoController extends BaseController {
 	 *            楼盘ID(不可空)
 	 * @param businessID
 	 *            商家ID（不可空）
-	 *  @param pageIndex
-	 *  		  当前页码数-1  不可空          
+	 * @param pageIndex
+	 *            当前页码数-1 不可空
 	 */
 	@RequestMapping(value = "getCourseItems")
 	@ResponseBody
-	public Map<String, Object> getCourseItems(String userID,@RequestParam(value="pageIndex",required=true,defaultValue="0")int pageIndex, String buildingID, String businessID, HttpServletRequest request) {
+	public Map<String, Object> getCourseItems(String userID, @RequestParam(value = "pageIndex", required = true, defaultValue = "0") int pageIndex, String buildingID, String businessID, HttpServletRequest request) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		if (ValidateUtil.validateParams(toJson, buildingID, businessID)) {
@@ -164,7 +164,7 @@ public class LessonInfoController extends BaseController {
 
 		/* 商家课程项目开始 */
 		List<Map<String, Object>> courseItems = new ArrayList<Map<String, Object>>();
-		List<LessonInfo> lessonInfos = lessonInfoService.getNoLimitList(businessInfo.getId(),pageIndex,PropertiesUtil.getInt("numPerPage"));
+		List<LessonInfo> lessonInfos = lessonInfoService.getNoLimitList(businessInfo.getId(), pageIndex, PropertiesUtil.getInt("numPerPage"));
 		if (lessonInfos != null && lessonInfos.size() != 0) {
 			for (LessonInfo lessonInfo : lessonInfos) {
 				Map<String, Object> courseItem = new HashMap<String, Object>();
@@ -272,10 +272,11 @@ public class LessonInfoController extends BaseController {
 		data.put("businessID", businessInfo.getId());
 		data.put("businessName", businessInfo.getBusinessName());
 		data.put("businessImage", businessInfoService.formatBusinessPic(businessInfo.getBusinessPic(), request));
-		data.put("isNormal", businessInfoService.isBusinessNormal(businessInfo));
 		data.put("isCollection", StringUtils.isNotBlank(userID) ? myCollectService.isCollect(userID, buildingID, businessInfo.getId()) : 0);
+		data.put("isNormal", businessInfoService.isBusinessNormal(businessInfo));
 		data.put("businessAddress", businessInfoService.getAddress(businessInfo));
 		data.put("businessPhone", businessInfo.getPhoneNum());
+		data.put("prodModes", businessInfoService.getBusinessProdTypeList(businessInfo.getId()));
 
 		/* 团购活动开始 */
 		List<Map<String, Object>> groupBuys = new ArrayList<Map<String, Object>>();

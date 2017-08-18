@@ -51,7 +51,7 @@
             messages : {  
                 loginName : {
                     required:"请输入用户名",
-                    remote : "用户登录名已存在"
+                    remote : "用户名已存在"
                 },
                 newPassword:{
                     required:"请输入密码",
@@ -237,7 +237,7 @@
         <div class="control-group">
             <label class="control-label">楼盘权限：</label>
             <div class="controls">
-                <ul id="tree" class="ztree" style="border: 1px solid #ccc; padding: 10px; width: 200px;"></ul>
+                <ul id="tree" class="ztree" style="border: 1px solid #ccc; padding: 10px; width: 200px;" onclick="village()"></ul>
                 <form:input path="villageInfoIds" style="width: 0px; height: 0px; border: 0px"/>
                 <span class="help-inline"><font color="red">*</font> </span>
             </div>
@@ -248,5 +248,20 @@
             <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)" />
         </div>
     </form:form>
+    <script type="text/javascript">
+       function village(){
+    	 //手动清除楼盘权限必填提示
+   	    var msgVillage = "请选择楼盘权限";
+   		//手动清除团购图片必填提示
+   	    var $labelError = $("#tree").parent().find("label.error");
+   	    if ($labelError.size() != 0) {
+   	        $.each($labelError,function(index,value,array){
+   	       		if ($(value).text() == msgVillage) {
+   	            	$(value).remove();
+   	       		}
+   	        });
+   	    }
+       }
+    </script>
 </body>
 </html>

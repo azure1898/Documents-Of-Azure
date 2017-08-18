@@ -42,4 +42,6 @@ public interface FieldPartitionPriceDao extends CrudDao<FieldPartitionPrice> {
      * @return
      */
     FieldPartitionPrice getForUpdate(String id);
+    
+    List<FieldPartitionPrice> getAll(String ymd);//查询某天所有场地 用于取得已约满场地个数
 }

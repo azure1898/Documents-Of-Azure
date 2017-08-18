@@ -93,10 +93,26 @@ public class GoodsInfoController extends BaseController {
         return entity;
     }
 
+    /**
+     * 商品管理列表显示
+     * 
+     * @param goodsInfo
+     *            检索信息
+     * @param sortItem
+     *            排序项目
+     * @param sort
+     *            排序
+     * @param warnNum
+     *            显示库存警告商品
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
     @RequestMapping(value = { "list", "" })
     public String list(GoodsInfo goodsInfo, @RequestParam(required = false) String sortItem,
-            @RequestParam(required = false) String sort, HttpServletRequest request, HttpServletResponse response,
-            Model model) {
+            @RequestParam(required = false) String sort, @RequestParam(required = false) String warnNum,
+            HttpServletRequest request, HttpServletResponse response, Model model) {
 
         // 从SESSION中取得商家信息
         User user = UserUtils.getUser();
@@ -114,6 +130,9 @@ public class GoodsInfoController extends BaseController {
         goodsInfo.setBusinessInfoId(user.getBusinessinfoId());
         goodsInfo.setSort(sort);
         goodsInfo.setSortItem(sortItem);
+
+        // 库存预警数量
+        goodsInfo.setWarnNum(warnNum);
         // 一览显示信息取得
         Page<GoodsInfo> page = goodsInfoService.findPage(new Page<GoodsInfo>(request, response), goodsInfo);
 
@@ -143,13 +162,15 @@ public class GoodsInfoController extends BaseController {
      *            排序的项目
      * @param sort
      *            升序还是降序
-     * @param requestSrc 请求源
+     * @param requestSrc
+     *            请求源
      * @param model
      * @return
      */
     @RequestMapping(value = "form")
     public String form(GoodsInfo goodsInfo, @RequestParam(required = false) String sortItem,
-            @RequestParam(required = false) String sort, @RequestParam(required = false) String requestSrc, HttpServletRequest request, Model model) {
+            @RequestParam(required = false) String sort, @RequestParam(required = false) String requestSrc,
+            HttpServletRequest request, Model model) {
         // 从SESSION中取得商家信息
         User user = UserUtils.getUser();
         SortInfo sortInfo = new SortInfo();
@@ -205,7 +226,7 @@ public class GoodsInfoController extends BaseController {
         goodsInfo.setSortItem(sortItem);
         model.addAttribute("goodsInfo", goodsInfo);
         // 将请求源传到jsp页面
-     	model.addAttribute("requestSrc", requestSrc != null ? requestSrc : StringUtils.EMPTY);
+        model.addAttribute("requestSrc", requestSrc != null ? requestSrc : StringUtils.EMPTY);
         return "modules/goods/goodsInfoForm";
     }
 
@@ -314,7 +335,7 @@ public class GoodsInfoController extends BaseController {
                 } catch (IOException | MyException e) {
                     addMessage(model, "图片删除失败");
                     model.addAttribute("type", "error");
-                    return list(new GoodsInfo(), sortItem, sort, request, response, model);
+                    return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
                 }
 
             }
@@ -333,19 +354,18 @@ public class GoodsInfoController extends BaseController {
                     // 取得文件类型
                     String fileType = goodsInfoPic.getType().split("/")[1];
                     // 将图片上传至工具类，并压缩图片
-                    img_file_id = MyFDFSClientUtils.uploadFile(goodsInfoPic.getImgBase64(), fileType,
-                            true, request);
+                    img_file_id = MyFDFSClientUtils.uploadFile(goodsInfoPic.getImgBase64(), fileType, true, request);
                     img_file_id_list.add(img_file_id);
                 } catch (IOException e) {
                     addMessage(model, "图片保存失败");
                     model.addAttribute("type", "error");
                     // 返回列表页面并保持排序
-                    return list(new GoodsInfo(), sortItem, sort, request, response, model);
+                    return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
                 } catch (MyException e) {
                     addMessage(model, "图片保存失败");
                     model.addAttribute("type", "error");
                     // 返回列表页面并保持排序
-                    return list(new GoodsInfo(), sortItem, sort, request, response, model);
+                    return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
                 }
 
             }
@@ -353,7 +373,7 @@ public class GoodsInfoController extends BaseController {
         // 将上传成功的图片地址更新到DB中
         goodsInfoService.imgNameUpdate(goodsInfo, img_file_id_list);
         addMessage(model, "保存商品成功");
-        return list(new GoodsInfo(), sortItem, sort, request, response, model);
+        return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
     }
 
     @RequestMapping(value = "delete")
@@ -362,7 +382,7 @@ public class GoodsInfoController extends BaseController {
             Model model) {
         goodsInfoService.delete(goodsInfo);
         addMessage(model, "删除商品成功");
-        return list(new GoodsInfo(), sortItem, sort, request, response, model);
+        return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
     }
 
     /**
@@ -384,7 +404,7 @@ public class GoodsInfoController extends BaseController {
         goodsInfoService.muliDelete(goodsid);
         addMessage(model, "勾选商品删除成功");
 
-        return list(new GoodsInfo(), sortItem, sort, request, response, model);
+        return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
     }
 
     /**
@@ -419,7 +439,7 @@ public class GoodsInfoController extends BaseController {
         } else {
             addMessage(model, "勾选商品已上架");
         }
-        return list(new GoodsInfo(), sortItem, sort, request, response, model);
+        return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
     }
 
     /**
@@ -440,7 +460,7 @@ public class GoodsInfoController extends BaseController {
 
         goodsInfoService.muliUndercarriage(goodsid);
         addMessage(model, "勾选商品下架成功");
-        return list(new GoodsInfo(), sortItem, sort, request, response, model);
+        return list(new GoodsInfo(), sortItem, sort, null, request, response, model);
     }
 
     /**

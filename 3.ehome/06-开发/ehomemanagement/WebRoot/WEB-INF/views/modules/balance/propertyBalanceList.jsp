@@ -86,12 +86,12 @@
             <li>
                 <input name="balanceStartTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                     value="<fmt:formatDate value="${propertyBalance.balanceStartTime}" pattern="yyyy-MM-dd"/>"
-                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" placeholder="结算开始时间"/>
             </li>
             <li>
                 <input name="balanceEndTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                     value="<fmt:formatDate value="${propertyBalance.balanceEndTime}" pattern="yyyy-MM-dd"/>"
-                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" placeholder="结算结束时间"/>
             </li>
 			<li>
 				<form:select path="propertyCompanyId" class="input-medium">
@@ -135,10 +135,10 @@
 			</div>
 			<div class="div-inline">
 				<span class="help-inline"> <font color="red"> 订单金额： <fmt:formatNumber
-							type="currency">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
-							type="currency">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
-							type="currency">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
-							type="currency">${sumPayMoney}</fmt:formatNumber> 元
+							type="number" pattern="0.00" maxFractionDigits="2">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
+							type="number" pattern="0.00" maxFractionDigits="2">${sumPayMoney}</fmt:formatNumber> 元
 				</font></span>
 			</div>
 		</div>
@@ -208,9 +208,16 @@
 				</shiro:hasPermission>
                 <shiro:hasPermission name="balance:propertyBalance:edit">
                 <td>
-                    <a href="${ctx}/balance/propertyBalance/check?id=${propertyBalance.id}">
+                <c:choose>
+                    <c:when test="${propertyBalance.checkState==0 }">
+	                    <a href="${ctx}/balance/propertyBalance/check?id=${propertyBalance.id}">
+	                        ${fns:getDictLabel(propertyBalance.checkState, 'checkState', '')}
+	                    </a>
+                    </c:when>
+                    <c:otherwise>
                         ${fns:getDictLabel(propertyBalance.checkState, 'checkState', '')}
-                    </a>
+                    </c:otherwise>
+                </c:choose>
                 </td>
                 </shiro:hasPermission>
 			</tr>
@@ -218,14 +225,5 @@
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
-	
-    <p align="center">
-        <span class="help-inline"> 
-          <font color="red">
-		                  结算金额=订单金额+平台优惠-扣点金额<br/>
-		                  订单金额=物业费用--平台优惠
-          </font>
-        </span>
-    </p>
 </body>
 </html>

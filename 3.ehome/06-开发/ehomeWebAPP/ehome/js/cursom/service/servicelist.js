@@ -1,118 +1,76 @@
 var vm = new Vue({
-	el:"#app",
-	data:{
-		urlList:{
-			list:"servicelist.html?id=",
-			detail:"servicedetail.html?id=",
-			index:"serviceindex.html?id=",
-			bg:"../../images/top_bg3.jpg"
-			},
-		business:{},
-		serviceLists:[],
-		collect:1,
-		item:{}
-			
+	el: "#app",
+	data: {
+		urlList: {
+			list: "servicelist.html?id=",
+			detail: "servicedetail.html?id=",
+			index: "serviceindex.html?id=",
+			bg: "../../images/top_bg3.jpg"
+		},
+		business: {},
+		serviceLists: [],
+		item: {}
 	},
-	mounted:function(){//页面加载之后自动调用，常用于页面渲染
-		this.$nextTick(function(){//在2.0版本中，加mounted的$nextTick方法，才能使用vm
-			this.cartView();
+	mounted: function() { //页面加载之后自动调用，常用于页面渲染
+		this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
+			var _this = this;
+			var data = {
+				userID: userInfo.userID,
+				buildingID: userInfo.buildingID,
+				businessID: getQueryString("id")
+			};
+			this.getData(_this, "/live/getServiceCategory", data, function(resData) {
+				_this.business = resData;
+				if(_this.business.isNormal==0){
+					toast2("商家休息中，暂时不接受订单")}
+				if (_this.business.serviceCategory && _this.business.serviceCategory.length > 0) {
+					var data = {
+						userID: userInfo.userID,
+						buildingID: userInfo.buildingID,
+						businessID: getQueryString("id"),
+						categoryID: _this.business.serviceCategory[0].cagegoryID,
+						pageIndex: 0
+					};
+					_this.getData(_this, "/live/getServiceItems", data, function(resData) {
+						_this.serviceLists = resData;
+						
+				
+					})
+				} else {
+					var data = {
+						userID: userInfo.userID,
+						buildingID: userInfo.buildingID,
+						businessID: getQueryString("id"),
+						pageIndex: 0
+					}
+					_this.getData(_this, "/live/getServiceItems", data, function(resData) {
+						_this.serviceLists = resData;
+					})
+
+				}
+			})
 		});
 	},
-	methods:{
-		// 渲染页面
-		cartView:function(){
-			var _this = this;
-			this.$http.get(interfaceUrl+"/live/getServiceCategory",{
-				userID:userInfo.userID,	
-				buildingID:userInfo.buildingID,
-				businessID:getQueryString("id")
-			}).then(function(res){
-				if(res.data.code == 1000){
-					_this.business = res.data.data;
-					if(_this.business.serviceCategory&&_this.business.serviceCategory.length>0){
-						this.$http.get(interfaceUrl+"/live/getServiceItems",{
-							userID:userInfo.userID,						
-							buildingID:userInfo.buildingID,
-							businessID:getQueryString("id"),
-							categoryID:_this.business.serviceCategory[0].cagegoryID,
-							pageIndex:0
-						}).then(function(res) {
-							if(res.data.code == 1000){
-								_this.serviceLists = res.data.data;
-								 
-							}
-						});
-					}else{
-						this.$http.get(interfaceUrl+"/live/getServiceItems",{
-							userID:userInfo.userID,
-							buildingID:userInfo.buildingID,
-							businessID:getQueryString("id"),
-							pageIndex:0
-						}).then(function(res) {
-							if(res.data.code == 1000){
-								_this.serviceLists = res.data.data;
-								
-							}
-						});
-						
-					}
-					
-					
-				}
-			});
-				
-			
-			
-
-		},
-		
+	methods: {
 		//改变分类
-		changeCategory:function(category){
+		changeCategory: function(category) {
 			var _this = this;
-   	        $("#categoryName").html(category.categoryName);   
-   	        $("#menu_category > li.selected").removeClass("selected");
-            $(event.target).closest("li").addClass("selected");
-            
-            var path=interfaceUrl+"/live/getServiceItems";
-            
-            this.$http.get(path,{
-            	userID:userInfo.userID,
-            	buildingID:userInfo.buildingID,
-				businessID:getQueryString("id"),
-				categoryID:category.cagegoryID
-            }).then(function(res){
-				_this.serviceLists = res.data.data;
-			});
+			$("#categoryName").html(category.categoryName);
+			$("#menu_category > li.selected").removeClass("selected");
+			$(event.target).closest("li").addClass("selected");
+			var data = {
+				userID: userInfo.userID,
+				buildingID: userInfo.buildingID,
+				businessID: getQueryString("id"),
+				categoryID: category.cagegoryID
+			};
+			this.getData(_this, "/live/getServiceItems", data, function(resData) {
+				_this.serviceLists = resData;
+			})
 		},
-collection:function(business){
-				
-					 if(business.isCollection==0){
-					   this.add_collections(business);	               
-					}
-					  else if(business.isCollection==1){	
-					   this.cancel_collections(business);
-					}        
-		},
-		add_collections:function(business){
+		collection: function(item) {
 			var _this = this;
-			this.$http.post(path_add,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;  
-                 business.isCollection = 1;
-					  toast('收藏成功');
-                      })    
-		},
-		cancel_collections:function(business){
-			var _this = this;
-			this.$http.post(path_cancle,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;
-                  business.isCollection = 0;
-                 toast('取消收藏');
-                  })
-			
-		}	
+			_this.myCollection(_this, item);
+		}
 	}
 });

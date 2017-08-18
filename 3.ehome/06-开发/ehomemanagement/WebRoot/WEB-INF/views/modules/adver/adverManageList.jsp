@@ -58,8 +58,8 @@
         <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}" />
         <input type="text" class="hide" id="hidProId" value="${adverManage.villageInfo.addrPro }">
         <input type="text" class="hide" id="hidCityId" value="${adverManage.villageInfo.addrCity }">
-        <input type="text" class="hide" id="hidVillageId" value="${adverManage.villageLineId }">
         <input type="text" class="hide" id="hidPositionId" value="${adverManage.positionId}">
+        <input type="text" class="hide" id="hidVillageId" value="${adverManage.villageInfo.id}">
         <ul class="ul-form">
             <li class="btns">
                 <select id="addrpro" name="villageInfo.addrPro" style="width: 120px" onchange="changeCity()">
@@ -114,8 +114,8 @@
             <tr>
                 <th>序号</th>
                 <th>广告图片</th>
-                <th>广告名称</th>
-                <th>广告位置</th>
+                <th>广告位名称</th>
+                <th>投放位置</th>
                 <th>省份</th>
                 <th>城市</th>
                 <th>投放楼盘</th>
@@ -135,13 +135,13 @@
                     <td>${adverManage.villageInfo.villageName}</td>
                     <c:set var="nowDate" value="<%=System.currentTimeMillis()%>"></c:set>
                     <c:choose>
-                        <c:when test="${nowDate-adverManage.starttime.getTime() < 0}">
+                        <c:when test="${nowDate - adverManage.starttime.getTime() < 0}">
                             <td class="am-hide-sm-only">未开始</td>
                         </c:when>
-                        <c:when test="${nowDate-adverManage.starttime.getTime() > 0&&nowDate-adverManage.endTime.getTime() < 0}">
+                        <c:when test="${nowDate-adverManage.starttime.getTime() > 0&&nowDate-(adverManage.endTime.getTime()+1000*60*60*24) < 0}">
                             <td class="am-hide-sm-only">上线</td>
                         </c:when>
-                        <c:when test="${nowDate-adverManage.endTime.getTime()> 0}">
+                        <c:when test="${nowDate-adverManage.endTime.getTime()-1000*60*60*24> 0}">
                             <td class="am-hide-sm-only">下线</td>
                         </c:when>
                         <c:otherwise>

@@ -43,6 +43,49 @@
 		ORDER BY a.code
 	</select>
 	
+	<select id="getParentIdList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="name != null and name != ''">
+		   AND a.name LIKE
+			 <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+			 <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+			 <if test="dbName == 'mysql'">concat('%',#{name},'%')</if> 
+		</if>
+		ORDER BY a.code
+	</select>
+	
+	<select id="getAreaList" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>		
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	
+		<if test="ids != null and ids.size() > 0">
+		        AND a.id IN
+		        <foreach item="item" collection="ids" separator="," open="(" close=")" index="index">
+		          #{item}
+		        </foreach>
+		    </if>
+		ORDER BY a.code
+	</select>
+	
+	<select id="getPrentListById" resultType="Area">
+		SELECT
+			<include refid="areaColumns"/>
+		FROM sys_area a
+		<include refid="areaJoins"/>		
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}	
+		<if test="id != null and id != ''">
+		  AND a.id = #{id}
+		</if>
+		ORDER BY a.code
+	</select>
+	
 	<select id="findAllList" resultType="Area">
 		SELECT
 			<include refid="areaColumns"/>

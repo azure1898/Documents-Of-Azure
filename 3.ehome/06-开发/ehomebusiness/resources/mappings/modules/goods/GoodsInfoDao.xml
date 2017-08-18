@@ -73,6 +73,9 @@
 		<include refid="goodsInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+		    	AND a.id = #{id}
+		   </if>
             <if test="businessInfoId != null and businessInfoId != ''">
                 AND a.business_info_id = #{businessInfoId}
             </if>
@@ -87,6 +90,9 @@
             </if>
             <if test="stock != null and stock != ''">
                 AND a.stock &lt;= #{stock}
+            </if>
+            <if test="warnNum != null and warnNum != ''">
+                AND a.stock &lt;= #{warnNum}
             </if>
 		</where>
 		<choose>
@@ -280,6 +286,7 @@
         <where>
                 IFNULL(a.Stock,0) = 0
             AND a.id = #{goodsId}
+            AND a.del_flag = "0"
         </where>
     </select>
     

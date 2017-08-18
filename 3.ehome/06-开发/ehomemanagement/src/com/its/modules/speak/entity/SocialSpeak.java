@@ -34,8 +34,17 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	private Date toptime;       // 置顶时间
 	private String readnum;		// 阅读次数
 	private String plateid;		// 发言所属板块 sys_plate.id
+	private int isspeak;		// 发言标识1：发言；0：转发
+	private String reason;		// 转发原因
+	private String fid;		// 转发父id
+	private String rootid;		// 转发原发言id
 	private Date beginCreatetime;		// 开始 发布时间
 	private Date endCreatetime;		// 结束 发布时间
+	
+	private String noticeid;		// 公告ID
+	private String title;		// 标题
+	private String summary;		// 摘要
+	private String remarks;     // 备注
 	
 	private String villageinfoid;  //楼盘Id
 	private String villageinfoname;  //楼盘名称
@@ -45,6 +54,8 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	private String sumforward;  //转发总数
 	private String sumcomment;  //评论总数
 	private String username;  //发言人姓名
+	private String auserid;  //app对应发言人，用户id
+	private String ausername;  //app对应发言人姓名
 	
 	private String addrpro;  //所在省份
 	private String addrcity;  //所在城市
@@ -55,6 +66,8 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	
 	private List<String> imageUrls; //一览用图片路径
 	private int picSize;
+	
+	private int source; //来源
 	
 	private List<SocialSubject> subList;  // 话题list
 	
@@ -308,5 +321,94 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	public void setSubList(List<SocialSubject> subList) {
 		this.subList = subList;
 	}
+
+	public int getSource() {
+		return source;
+	}
+
+	public void setSource(int source) {
+		this.source = source;
+	}
+
+	public String getAuserid() {
+		return auserid;
+	}
+
+	public void setAuserid(String auserid) {
+		this.auserid = auserid;
+	}
+
+	public String getAusername() {
+		return ausername;
+	}
+
+	public void setAusername(String ausername) {
+		this.ausername = ausername;
+	}
+
+	public int getIsspeak() {
+		return isspeak;
+	}
+
+	public void setIsspeak(int isspeak) {
+		this.isspeak = isspeak;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getFid() {
+		return fid;
+	}
+
+	public void setFid(String fid) {
+		this.fid = fid;
+	}
+
+	public String getRootid() {
+		return rootid;
+	}
+
+	public void setRootid(String rootid) {
+		this.rootid = rootid;
+	}
+
+	public String getNoticeid() {
+		return noticeid;
+	}
+
+	public void setNoticeid(String noticeid) {
+		this.noticeid = noticeid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 	
+	@Length(min=0, max=255, message="备注长度必须介于 0 和 255 之间")
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 }

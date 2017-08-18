@@ -6,6 +6,104 @@
 <title>楼盘信息产品线管理</title>
 <meta name="decorator" content="default" />
 <%@include file="/WEB-INF/views/include/treeview.jsp"%>
+<script src="${ctxStatic}/common/layer.js"></script>
+<style type="text/css">
+.none {
+ visibility: hidden;
+}
+
+.content {
+ width: 1200px;
+ margin: 0 auto;
+}
+
+.file_upload {
+ width: 48%;
+ min-height: 400px;
+ margin: 10px;
+ position: relative;
+ display: inline-block;
+ vertical-align: top;
+}
+
+.file_upload>div {
+ width: 100%;
+ height: 100%;
+}
+
+.file_con .hide {
+ width: 120px;
+ height: 30px;
+ opacity: 0;
+ filter: alpha(opacity = 0);
+ position: absolute;
+ left: 0;
+ z-index: 22;
+}
+
+.file_con .file_uploader, .upload_bt {
+ position: absolute;
+ left: 0;
+ top: 0;
+ display: inline-block;
+ padding: 6px 14px;
+ color: #fff;
+ background: #2ECC71;
+ text-align: center;
+ z-index: 11;
+ border-radius: 15px;
+ cursor: pointer;
+}
+
+.upload_bt {
+ left: 130px;
+}
+
+.file_con .hide:hover {
+ box-shadow: 1px 2px #44795b;
+}
+
+.img_holder, .m_img_holder {
+ padding-top: 40px;
+}
+
+.img_holder img, .m_img_holder img {
+ max-width: 200px;
+}
+
+.img_box {
+ position: relative;
+ display: inline-block;
+ vertical-align: initial;
+ border: 1px transparent dashed;
+ /*  padding: 12px;
+                box-shadow: 2px 2px 10px #ccc; */
+}
+
+.img_box:hover {
+ /*border: 1px #ccc dashed;*/
+ 
+}
+
+.img_box:hover .delete {
+ display: block;
+}
+
+.img_box .delete {
+ position: absolute;
+ right: 1px;
+ top: 0;
+ display: none;
+ font-family: Arial;
+ font-size: 12px;
+ cursor: pointer;
+}
+
+.progress {
+ display: inline-block;
+ margin-top: 10px;
+}
+</style>
 <script src="${ctxStatic}/common/setImagePreview.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -18,25 +116,17 @@
                 return true;
             }
         }, "最多只能勾选4个模块");
-        
-        
         $("#inputForm").validate({
             rules : {
                 lifeRecomModuleIds : {
                     checkMaxSize : "param"
                 },
-                rodType: {
-                    required: true,
-                 },
             },
             messages : {
                 lifeRecomModuleIds : {
-                    required : "请选择模块",
+                    required : "请选择推荐模块",
                     checkMaxSize : "最多只能勾选4个模块"
                 },
-                rodType: {
-                    required:"请至少选择一项",
-                 },
             },
             submitHandler : function(form) {
                 var lifeRecomIds="";
@@ -148,7 +238,7 @@
         domRow+='<div class="controls"  id="moduleRow'+total+'" style="border: 1px solid #ccc;margin-top:10px;  padding: 20px;">';
         domRow+='<div id="recomModuleList'+index+'" style="padding-top: 10px;">'
             +'    <lable>推荐一</lable>'
-            +'     <select id="module'+index+'" onchange="getBuslist(this,'+index+')"  name="recomModuleList['+index+'].recomModuleId" class="input-small required">'
+            +'     <select id="module'+index+'" onchange="getBuslist(this,'+index+')"  name="recomModuleList['+index+'].recomModuleId" class="input-small">'
             +'         <option value="" >模块选择</option>'
             +'         <c:forEach items="${moduleList}" var="module">'
             +'             <option value="${module.id}" >${module.moduleName}</option>'
@@ -157,21 +247,26 @@
             +'     <select id="businessinfoId'+index+'" name="recomModuleList['+index+'].recomBusinessId" class="input-small">'
             +'          <option value="">商家名称</option>'
             +'     </select> <input id="HidBusinessinfoId'+(index)+'" type="hidden"/>'
-            +'     <input id="describes'+index+'" name="recomModuleList['+index+'].describes" type="text"  value="'+describes1+'"  maxlength="8" class="min:0 input-small required"/>'
+            +'     <input id="describes'+index+'" name="recomModuleList['+index+'].describes" type="text"  value="'+describes1+'"  maxlength="8" class="min:0 input-small "/>'
             +'     <span> 不超过8个字 </span>'
             //图片上传相关标签 开始
             +'     <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
             +'     <input onchange="synchroImg_module(this,\''+index+'\')" id="module_file_'+index+'" type="file"  name="file'+index+'" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
             +'     </span><lable id="module_lable_'+index+'"> 未选择图片 </lable>'
-            +'     <img id="moduleImg'+index+'" src="" style="width:45px; height:45px;display:none" />'
+            
+            +'     <div class="img_box">'
+            +'       <span id="module_img_del_'+index+'" class="delete" onclick="moduleImgDel('+index+')"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+            +'       <img id="moduleImg'+index+'" src="" style="width:45px; height:45px;display:none" />'
+            +'     </div>'
             +'     <lable class="hide" id="module_lable_size_'+index+'"> 图片尺寸 ***</lable>'
             //图片上传相关标签结束
             +'     <input id="recomModuleFlag'+index+'" type="hidden" name="recomModuleList['+index+'].delFlag"  />'
             +'     <input id="recomModuleId'+index+'" type="hidden" name="recomModuleList['+index+'].id"  />'
+            +'     <input id="delModulePicId'+index+'" type="hidden" name="recomModuleList['+index+'].picId"  />'
             +'  </div>';
          domRow+='<div id="recomModuleList'+(index+1)+'" style="padding-top: 10px;">'
             +'    <lable>推荐二</lable>'
-            +'     <select id="module'+(index+1)+'" onchange="getBuslist(this,'+(index+1)+')"  name="recomModuleList['+(index+1)+'].recomModuleId" class="input-small required">'
+            +'     <select id="module'+(index+1)+'" onchange="getBuslist(this,'+(index+1)+')"  name="recomModuleList['+(index+1)+'].recomModuleId" class="input-small">'
             +'         <option value="" >模块选择</option>'
             +'         <c:forEach items="${moduleList}" var="module">'
             +'             <option value="${module.id}" >${module.moduleName}</option>'
@@ -180,23 +275,37 @@
             +'     <select id="businessinfoId'+(index+1)+'" name="recomModuleList['+(index+1)+'].recomBusinessId" class="input-small">'
             +'             <option value="">商家名称</option>'
             +'     </select><input id="HidBusinessinfoId'+(index+1)+'" type="hidden"/>'
-            +'     <input id="describes'+(index+1)+'" name="recomModuleList['+(index+1)+'].describes" type="text"  value="'+describes2+'"  maxlength="8" class="min:0 input-small required"/>'
+            +'     <input id="describes'+(index+1)+'" name="recomModuleList['+(index+1)+'].describes" type="text"  value="'+describes2+'"  maxlength="8" class="min:0 input-small"/>'
             +'     <span> 不超过8个字 </span>'
             //图片上传相关标签 开始
             +'     <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
             +'     <input onchange="synchroImg_module(this,\''+(index+1)+'\')" id="module_file_'+(index+1)+'" type="file"  name="file'+(index+1)+'" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
             +'     </span><lable id="module_lable_'+(index+1)+'"> 未选择图片 </lable>'
-            +'     <img id="moduleImg'+(index+1)+'" src="" style="width:45px; height:45px;display:none" />'
+            
+            +'     <div class="img_box">'
+            +'       <span id="module_img_del_'+(index+1)+'" class="delete" onclick="moduleImgDel('+(index+1)+')"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+            +'       <img id="moduleImg'+(index+1)+'" src="" style="width:45px; height:45px;display:none" />'
+            +'     </div>'
             +'     <lable class="hide" id="module_lable_size_'+(index+1)+'"> 图片尺寸 ***</lable>'
             //图片上传相关标签结束
             +'     <input id="recomModuleFlag'+(index+1)+'" type="hidden" name="recomModuleList['+(index+1)+'].delFlag"  />'
             +'     <input id="recomModuleId'+(index+1)+'" type="hidden" name="recomModuleList['+(index+1)+'].id"  />'
+            +'     <input id="delModulePicId'+(index+1)+'" type="hidden" name="recomModuleList['+(index+1)+'].picId"  />'
             +'  </div>';
             domRow+='</div>';
             domRow+='<div class="add-remove" style="float: right; margin-top: -20px; margin-right: -60px;"><a onclick="addRowModule()">添加</a>  <a onclick="removeRowModule(this,'+total+')">删除</a></div>';
             $("#recomOne").append($(domRow));
            
            
+    }
+    //移除模块推荐图片
+    function moduleImgDel(index){
+        if(moduleData[index]!='undefined'){
+            $("#delModulePicId"+index).val(moduleData[index].picId);
+        }
+        $("#module_lable_size_"+index).hide();
+        $("#moduleImg"+index).hide();
+        $("#module_lable_"+index).show();
     }
     //商家推荐1 -- 图片上传
     function synchroImg_module(obj,index_num) {
@@ -211,9 +320,14 @@
             index=index_num*2;
         }
         var total = $("#recomOne").find(".controls").size()-1;//
+        if(total==1){
+            top.$.jBox.tip('请至少保留一组商家推荐1数据', 'error');
+            return;
+        }
         if($("#recomModuleId"+index).val()!=""&&$("#recomModuleId"+index_num).val()!=null){
             $(obj).parent().addClass("hide");
             $("#moduleRow"+index_num).addClass("hide");
+            $("#moduleRow"+index_num).removeClass("controls");
             $("#recomModuleFlag"+index).val("1");
             $("#recomModuleFlag"+(index+1)).val("1")
         }else{
@@ -222,26 +336,25 @@
         }
     }
   //绑定商家推荐1
+    var moduleData= ${fns:toJson(villageLine.recomModuleList)};
     function initRecomModule(){
-        var data= ${fns:toJson(villageLine.recomModuleList)};
-        for (var i=0; i<data.length/2-1; i++){
+        for (var i=0; i<moduleData.length/2-1; i++){
             addRowModule();
         }
-        for (var i=0; i<data.length; i++){
-            console.log(data[i].delFlag)
-            $("#recomModuleFlag"+i).val(data[i].delFlag);//给删除标记赋值
-            $("#recomModuleId"+i).val(data[i].id);//给删除标记赋值
-            $("#HidBusinessinfoId"+i).val(data[i].recomBusinessId);
-            $("#module"+i).val(data[i].recomModuleId).trigger("change");
-            $("#businessinfoId"+i).val(data[i].recomBusinessId);
-            $("#describes"+i).val(data[i].describes);
-            if(data[i].picUrl!=undefined){
+        for (var i=0; i<moduleData.length; i++){
+            console.log(moduleData[i].delFlag)
+            $("#recomModuleFlag"+i).val(moduleData[i].delFlag);//给删除标记赋值
+            $("#recomModuleId"+i).val(moduleData[i].id);//给删除标记赋值
+            $("#HidBusinessinfoId"+i).val(moduleData[i].recomBusinessId);
+            $("#module"+i).val(moduleData[i].recomModuleId).trigger("change");
+            $("#businessinfoId"+i).val(moduleData[i].recomBusinessId);
+            $("#describes"+i).val(moduleData[i].describes);
+            if(moduleData[i].picUrl!=undefined){
               $("#module_lable_"+i).hide();
               $("#moduleImg"+i).show();
-              getImgSize($("#module_lable_size_"+i),data[i].picUrl);
+              getImgSize($("#module_lable_size_"+i),moduleData[i].picUrl);
             }
-            
-            $("#moduleImg"+i).attr("src",data[i].picUrl);//给推荐详情的图片赋值
+            $("#moduleImg"+i).attr("src",moduleData[i].picUrl);//给推荐详情的图片赋值
         }
     }
   function getImgSize(obj,picUrl){
@@ -283,8 +396,12 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'0\')" id="specialFile_'+total+'0" type="file"  name="specialFile_'+total+'_0" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'0"> 未选择图片 </lable>'
-                +'          <img id="specialImg'+total+'0" src="" style="width:45px; height:45px;display:none" />'
-                +'          <lable class="hide" id="special_lable_size_'+total+'0"> 图片尺寸 ***</lable>'
+                +'         <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'0" class="delete" onclick="specialImgDel('+total+',0)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+                +'            <img id="specialImg'+total+'0" src="" style="width:45px; height:45px;display:none" />'
+                +'         </div>'
+                +'         <lable class="hide" id="special_lable_size_'+total+'0"> 图片尺寸 ***</lable>'
+                +'         <input id="delSpecialPicId'+total+'0" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[0].picId"  />'
                 //专题推荐图片上传  结束
                 +'      </div>'
                 +'      <div style="margin-top: 10px">'
@@ -309,8 +426,15 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'1\')" id="specialFile_'+total+'1" type="file"  name="specialFile_'+total+'_1" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'1"> 未选择图片 </lable>'
-                +'          <img id="specialImg'+total+'1" src="" style="width:45px; height:45px;display:none" />'
+
+
+                +'          <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'1" class="delete" onclick="specialImgDel('+total+',1)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+                +'           <img id="specialImg'+total+'1" src="" style="width:45px; height:45px;display:none" />'
+                +'          </div>'
                 +'          <lable class="hide" id="special_lable_size_'+total+'1"> 图片尺寸 ***</lable>'
+                +'          <input id="delSpecialPicId'+total+'1" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[1].picId"  />'
+               
                 //专题推荐图片上传  结束'
                 +'      </div>'
                 +'      <div style="margin-top: 10px">'
@@ -335,8 +459,14 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'2\')" id="specialFile_'+total+'2" type="file"  name="specialFile_'+total+'_2" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'2"> 未选择图片 </lable>'
-                +'          <img id="specialImg'+total+'2" src="" style="width:45px; height:45px;display:none" />'
+
+                +'          <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'2" class="delete" onclick="specialImgDel('+total+',2)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+                +'           <img id="specialImg'+total+'2" src="" style="width:45px; height:45px;display:none" />'
+                +'          </div>'
                 +'          <lable class="hide" id="special_lable_size_'+total+'2"> 图片尺寸 ***</lable>'
+                +'          <input id="delSpecialPicId'+total+'2" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[2].picId"  />'
+               
                 //专题推荐图片上传  结束'
                 +'      </div>'
                 +'      <div style="margin-top: 10px">'
@@ -361,8 +491,15 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'3\')" id="specialFile_'+total+'3" type="file"  name="specialFile_'+total+'_3" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'3"> 未选择图片 </lable>'
+
+
+                +'          <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'3" class="delete" onclick="specialImgDel('+total+',3)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
                 +'          <img id="specialImg'+total+'3" src="" style="width:45px; height:45px;display:none" />'
+                +'          </div>'
                 +'          <lable class="hide" id="special_lable_size_'+total+'3"> 图片尺寸 ***</lable>'
+                +'          <input id="delSpecialPicId'+total+'3" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[3].picId"  />'
+               
                 //专题推荐图片上传  结束'
                 +'      </div>'
                 +'      <div style="margin-top: 10px">'
@@ -387,8 +524,15 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'4\')" id="specialFile_'+total+'4" type="file"  name="specialFile_'+total+'_4" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'4"> 未选择图片 </lable>'
+ 
+
+                +'          <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'4" class="delete" onclick="specialImgDel('+total+',4)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
                 +'          <img id="specialImg'+total+'4" src="" style="width:45px; height:45px;display:none" />'
+                +'          </div>'
                 +'          <lable class="hide" id="special_lable_size_'+total+'4"> 图片尺寸 ***</lable>'
+                +'          <input id="delSpecialPicId'+total+'4" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[4].picId"  />'
+               
                 //专题推荐图片上传  结束'
                 +'      </div>'
                 +'      <div style="margin-top: 10px">'
@@ -413,8 +557,12 @@
                 +'          <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                 +'          <input onchange="synchroImg_special(this,\''+total+'5\')" id="specialFile_'+total+'5" type="file"  name="specialFile_'+total+'_5" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                 +'          </span><lable id="special_lable_'+total+'5"> 未选择图片 </lable>'
+                +'          <div class="img_box">'
+                +'           <span id="special_img_del_'+total+'5" class="delete" onclick="specialImgDel('+total+',5)"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
                 +'          <img id="specialImg'+total+'5" src="" style="width:45px; height:45px;display:none" />'
+                +'          </div>'
                 +'          <lable class="hide" id="special_lable_size_'+total+'5"> 图片尺寸 ***</lable>'
+                +'          <input id="delSpecialPicId'+total+'5" type="hidden" name="recomSpecialList['+total+'].recomSpecialDetailList[5].picId"  />'
                 //专题推荐图片上传  结束
                 +'      </div>'
                 +'     <div style="float: left;"></div><input id="recomSpecialFlag'+total+'" type="hidden"  value="0" name="recomSpecialList['+total+'].delFlag"  />'
@@ -426,12 +574,28 @@
     function synchroImg_special(obj,index_num) {
        setImagePreview2($(obj),$("#specialImg"+index_num),$("#recomSpecialList"+index_num),$("#special_lable_size_"+index_num),$("#special_lable_"+index_num));
     };
+    //移除专题推荐图片
+    function specialImgDel(total,index){
+        console.log(specialData[total].recomSpecialDetailList[index].picId);
+        if(specialData[total].recomSpecialDetailList[index]!='undefined'){
+            $("#delSpecialPicId"+total+index).val(specialData[total].recomSpecialDetailList[index].picId);
+        }
+        $("#special_lable_size_"+total+index).hide();
+        $("#specialImg"+total+index).hide();
+        $("#special_lable_"+total+index).show();
+    }
     //专题推荐 移除
     function removeRowSpecial(obj,index_num) {
         var total = $("#recomTwo").find(".controls").size();//
-        if($("#recomSpecialFlag"+index_num).val()!=""&&$("#recomSpecialFlag"+index_num).val()!=null){
+        console.log(total);
+        if(total==1){
+            top.$.jBox.tip('请至少保留一组专题推荐数据', 'error');
+            return;
+        }
+        if($("#recomSpecialId"+index_num).val()!=""&&$("#recomSpecialId"+index_num).val()!=null){
             $(obj).parent().addClass("hide");
             $("#recomSpecialList"+index_num).addClass("hide");
+            $("#recomSpecialList"+index_num).removeClass("controls");
             $("#recomSpecialFlag"+index_num).val("1");
         }else{
             $(obj).parent().remove();
@@ -439,28 +603,28 @@
         }
     }
   //绑定专题推荐
+    var specialData= ${fns:toJson(villageLine.recomSpecialList)};
     function initRecomSpecial(){
-        var data= ${fns:toJson(villageLine.recomSpecialList)};
-        for (var i=0; i<data.length-1; i++){
+        for (var i=0; i<specialData.length-1; i++){
             addSpecial();
         }
-        for (var i=0; i<data.length; i++){
-           $("#specialName"+i).val(data[i].specialName);//给专题名称赋值
-           $("#recomSpecialFlag"+i).val(data[i].delFlag);//给删除标记赋值
-           $("#recomSpecialId"+i).val(data[i].id);//给删除标记赋值
-            for (var j=0; j<data[i].recomSpecialDetailList.length; j++){
-               $("#specialDescribes"+i+j).val(data[i].recomSpecialDetailList[j].describes);
-               $("#HidRecomModuleId"+i+j).val(data[i].recomSpecialDetailList[j].recomModuleId);
-               $("#HidRecomBusinessId"+i+j).val(data[i].recomSpecialDetailList[j].recomBusinessId);
-               $("#HidBusinessCategoryDictId"+i+j).val(data[i].recomSpecialDetailList[j].businessCategoryDictId);
-               $("#recomSpecialDetailId"+i+j).val(data[i].recomSpecialDetailList[j].id);//给推荐详情的ID赋值
-               if(data[i].recomSpecialDetailList[j].picUrl!=undefined){
+        for (var i=0; i<specialData.length; i++){
+           $("#specialName"+i).val(specialData[i].specialName);//给专题名称赋值
+           $("#recomSpecialFlag"+i).val(specialData[i].delFlag);//给删除标记赋值
+           $("#recomSpecialId"+i).val(specialData[i].id);//给删除标记赋值
+            for (var j=0; j<specialData[i].recomSpecialDetailList.length; j++){
+               $("#specialDescribes"+i+j).val(specialData[i].recomSpecialDetailList[j].describes);
+               $("#HidRecomModuleId"+i+j).val(specialData[i].recomSpecialDetailList[j].recomModuleId);
+               $("#HidRecomBusinessId"+i+j).val(specialData[i].recomSpecialDetailList[j].recomBusinessId);
+               $("#HidBusinessCategoryDictId"+i+j).val(specialData[i].recomSpecialDetailList[j].businessCategoryDictId);
+               $("#recomSpecialDetailId"+i+j).val(specialData[i].recomSpecialDetailList[j].id);//给推荐详情的ID赋值
+               if(specialData[i].recomSpecialDetailList[j].picUrl!=undefined){
                    $("#special_lable_"+i+j).hide();
                    $("#specialImg"+i+j).show();
-                   getImgSize($("#special_lable_size_"+i+j),data[i].recomSpecialDetailList[j].picUrl);
+                   getImgSize($("#special_lable_size_"+i+j),specialData[i].recomSpecialDetailList[j].picUrl);
                }
-               $("#specialImg"+i+j).attr("src",data[i].recomSpecialDetailList[j].picUrl);//给推荐详情的图片赋值
-               var recomType=data[i].recomSpecialDetailList[j].recomType;
+               $("#specialImg"+i+j).attr("src",specialData[i].recomSpecialDetailList[j].picUrl);//给推荐详情的图片赋值
+               var recomType=specialData[i].recomSpecialDetailList[j].recomType;
                $(":radio[name='recomSpecialList["+i+"].recomSpecialDetailList["+j+"].recomType'][value='" + recomType + "']").prop("checked", "checked").trigger("change");
             }
         }
@@ -501,7 +665,7 @@
               +'        </select>'
               +'      </div>'
               +'      <input id="recomBusTypeFlag'+total+'" type="hidden" name="recomBusTypeList['+total+'].delFlag"  />'
-              +'      <input id="recomBusTypeId'+total+'" type="hidden" name="recomModuleList['+total+'].id"  />'
+              +'      <input id="recomBusTypeId'+total+'" type="hidden" name="recomBusTypeList['+total+'].id"  />'
               +'    </div>';
          domRow+='<div class="add-remove" style="float: right; margin-top: -20px; margin-right: -60px;"><a onclick="addBusType()">添加</a>  <a onclick="removeRowBusType(this,'+total+')">删除</a></div>';
         $("#recomThree").append($(domRow));
@@ -522,19 +686,29 @@
                 //开始添加分类信息
                 var domRow='';
                 $.each(data, function(indx, item) {
+                    console.log(indx);
                     domRow+='<div id="recomBusTypeDetailList'+index_num+indx+'" style="margin-top: 10px;">'
-                          +'  <input value="'+item.prodType+'" onclick="getBusTypeId(this,\''+index_num+indx+'\')" id="cbType'+index_num+indx+'" type="checkbox" name="rodType" class="min:1" >'
+                          +'  <input value="'+item.prodType+'" onclick="getBusTypeId(this,\''+index_num+indx+'\')" id="cbType'+index_num+indx+'" type="checkbox" class="min:1" >'
                           +'  <input id="buy_type_id_'+index_num+indx+'" class="hide"  name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].id">'
                           +'  <input id="prodTypeId'+index_num+indx+'" class="hide" name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].prodType">'
                           +'  <span>'+item.categoryName+'</span>'
                           +'  <span id="scan" style="position: relative" class="btn btn-primary input-group-addon">上传图片'
                           +'  <input onchange="synchroImg(this,\''+index_num+indx+'\')" id="busTyefile_'+index_num+indx+'" type="file"  name="busTyefile_'+index_num+'_'+indx+'" style="width: 100px; height: 40px; position: absolute; top: -6px; left: -4px; opacity: 0; filter: alpha(opacity = 0)" >'
                           +'  </span><lable id="type_lable_'+index_num+indx+'"> 未选择图片 </lable>'
-                          +'  <img id="imgPreview_'+index_num+indx+'" src="" style="width:45px; height:45px;display:none" onclick="openBrowse2();"/>'
+                          
+                        
+                          
+                          +'  <div class="img_box">'
+                          +'     <span id="busType_img_del_'+index_num+indx+'" class="delete" onclick="buyTypeImgDel('+index_num+','+indx+')"> <img src="${ctxStatic}/images/a7.png" class="close-upimg"></span>'
+                          +'     <img id="imgPreview_'+index_num+indx+'" src="" style="width:45px; height:45px;display:none" />'
+                          +'  </div>'
                           +'  <lable class="hide" id="lable_size_'+index_num+indx+'"> 图片尺寸 ***</lable>'
+                          +'  <input id="delBusTypePicDetailId'+index_num+indx+'" type="hidden" name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].picId"  />'
+                          
+                          
                           +'  <input disabled="disabled" onclick="getDefaultFlagId(this,\''+index_num+indx+'\','+index_num+')" id="defaultFlag'+index_num+indx+'" type="radio" value="1"  name="defaultFlag['+index_num+']"><span>设置默认</span>'
                           +'  <input id="defaultFlag_'+index_num+indx+'" class="hide"  name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].defaultFlag">'
-                          +'  <input id="busType_del_Flag_'+index_num+indx+'" class="hide"  name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].delFlag">'
+                          +'  <input id="busType_del_Flag_'+index_num+indx+'" value="0" class="hide"  name="recomBusTypeList['+index_num+'].recomBusTypeDetailList['+indx+'].delFlag">'
                           +'</div>'
                 })
                 $("#recomBusTypeList"+index_num).append($(domRow));
@@ -548,6 +722,16 @@
         //console.log($("#imgPreview_"+index_num));
         setImagePreview2($(obj),$("#imgPreview_"+index_num),$("#recomBusTypeDetailList"+index_num),$("#lable_size_"+index_num),$("#type_lable_"+index_num));
     };
+    //移除专题推荐图片
+    function buyTypeImgDel(total,index){
+        console.log(busData[total].recomBusTypeDetailList[index].picId);
+        if(busData[total].recomBusTypeDetailList[index]!='undefined'){
+            $("#delBusTypePicDetailId"+total+index).val(busData[total].recomBusTypeDetailList[index].picId);
+        }
+        $("#lable_size_"+total+index).hide();
+        $("#imgPreview_"+total+index).hide();
+        $("#type_lable_"+total+index).show();
+    }
     //根据商家分类的选中状态  修改默认状态的显示状态- 获取商家分类的ID  
     function getBusTypeId(obj,index_num){
         //console.log($(obj).attr('checked'))
@@ -573,18 +757,24 @@
     //商家推荐2 移除
     function removeRowBusType(obj,index_num) {
         var total = $("#recomThree").find(".controls").size();//
-        if(total>1){
-            if($("#recomBusTypeId"+index_num).val()!=""&&$("#recomBusTypeId"+index_num).val()!=null){
-                $(obj).parent().addClass("hide");
-                $("#recomBusTypeModule"+index_num).addClass("hide");
-                $("#recomBusTypeFlag"+index_num).val("1");
-            }else{
-                $(obj).parent().remove();
-                $("#recomBusTypeModule"+index_num).remove();
-            }
+        if(total==1){
+            top.$.jBox.tip('请至少保留一组商家推荐2数据', 'error');
+            return;
+        }
+        if($("#recomBusTypeId"+index_num).val()!=""&&$("#recomBusTypeId"+index_num).val()!=null){
+            $(obj).parent().addClass("hide");
+            $("#recomBusTypeModule"+index_num).addClass("hide");
+            $("#recomBusTypeModule"+index_num).removeClass("controls");
+            $("#recomBusTypeFlag"+index_num).val("1");
+        }else{
+            $(obj).parent().remove();
+            $("#recomBusTypeModule"+index_num).remove();
+        }
+        /* if(total>1){
+           
         }else{
             $(obj).hide();
-        }
+        } */
     }
     //绑定商家推荐2
     function initRecomBusType(){
@@ -603,34 +793,35 @@
     function initBusType(){
         for (var i=0; i<busData.length; i++){
             var soreNum="",defaultFlag="",detailId="",picUrl="";
-            for (var j=0; j<busData[i].recomBusTypeDetailList.length; j++){
-               soreNum+=busData[i].recomBusTypeDetailList[j].sortNum+",";
-               defaultFlag+=busData[i].recomBusTypeDetailList[j].defaultFlag+",";
-               detailId+=busData[i].recomBusTypeDetailList[j].id+","
-               picUrl+=busData[i].recomBusTypeDetailList[j].picUrl+","
-            }
-            
-            var sortNumArr=soreNum.split(",")
-            var defaultFlagArr=defaultFlag.split(",");
-            var idArr=detailId.split(",");
-            var picUrlArr=picUrl.split(",");
-            //console.log(picUrlArr);
-            for(var h=0;h<sortNumArr.length;h++){
-               var num=sortNumArr[h];
-               $("#cbType"+i+num).prop("checked","checked");
-               $("#defaultFlag"+i+num).prop("disabled","");
-               $("#prodTypeId"+i+num).val($("#cbType"+i+num).val());
-               $("#buy_type_id_"+i+num).val(idArr[h]);
-               if(picUrlArr[h]!="undefined"){
-                   $("#type_lable_"+i+num).hide();
-                   $("#imgPreview_"+i+num).show();
-                   $("#imgPreview_"+i+num).attr("src",picUrlArr[h]);//给推荐详情的图片赋值
-                   getImgSize($("#lable_size_"+i+num),picUrlArr[h]);
-               }
-               if(defaultFlagArr[h]==1){
-                  $("#defaultFlag"+i+num).prop("checked","checked");
-                  $("#defaultFlag_"+i+num).val("1");//给设置默认赋值
-               }
+            if(busData[i].recomBusTypeDetailList!=undefined){
+                for (var j=0; j<busData[i].recomBusTypeDetailList.length; j++){
+                   soreNum+=busData[i].recomBusTypeDetailList[j].sortNum+",";
+                   defaultFlag+=busData[i].recomBusTypeDetailList[j].defaultFlag+",";
+                   detailId+=busData[i].recomBusTypeDetailList[j].id+","
+                   picUrl+=busData[i].recomBusTypeDetailList[j].picUrl+","
+                }
+                var sortNumArr=soreNum.split(",")
+                var defaultFlagArr=defaultFlag.split(",");
+                var idArr=detailId.split(",");
+                var picUrlArr=picUrl.split(",");
+                //console.log(picUrlArr);
+                for(var h=0;h<sortNumArr.length;h++){
+                   var num=sortNumArr[h];
+                   $("#cbType"+i+num).prop("checked","checked");
+                   $("#defaultFlag"+i+num).prop("disabled","");
+                   $("#prodTypeId"+i+num).val($("#cbType"+i+num).val());
+                   $("#buy_type_id_"+i+num).val(idArr[h]);
+                   if(picUrlArr[h]!="undefined"){
+                       $("#type_lable_"+i+num).hide();
+                       $("#imgPreview_"+i+num).show();
+                       $("#imgPreview_"+i+num).attr("src",picUrlArr[h]);//给推荐详情的图片赋值
+                       getImgSize($("#lable_size_"+i+num),picUrlArr[h]);
+                   }
+                   if(defaultFlagArr[h]==1){
+                      $("#defaultFlag"+i+num).prop("checked","checked");
+                      $("#defaultFlag_"+i+num).val("1");//给设置默认赋值
+                   }
+                }
             }
          }
     }
@@ -707,11 +898,20 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">首页推荐模块<br>可推荐4个
+            <label class="control-label">推荐模块1<br>可推荐4个
             </label>
             <div class="controls" style="border: 1px solid #ccc; padding: 20px" id="addLifeRecomModule"></div>
             <div class="controls" style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
-                <form:checkboxes items="${lifeModuleList}" path="lifeRecomModuleIds" itemLabel="moduleName" itemValue="id" class="required" />
+                <c:choose>
+                    <c:when test="${lifeModuleList.size()>0}">
+                        <form:checkboxes items="${lifeModuleList}" path="lifeRecomModuleIds" itemLabel="moduleName" itemValue="id" class="required" />
+                    </c:when>
+                    <c:otherwise>
+                        <font color="red">没有可选择的模块，请在"模块管理"-"设置管理" 进行楼盘模块设置 </font>
+                        <form:input path="lifeRecomModuleIds" style="width: 0px; height: 0px; border: 0px;opacity: 0;" class="required" />
+                    </c:otherwise>
+                </c:choose>
+
                 <span class="help-inline">
                     <font color="red">*</font>
                 </span>
@@ -737,14 +937,29 @@
                 <input id="btnSubmit" class="btn btn-success" type="submit" value="保 存" />&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="module:villageLine:batchSetModule">
-                <input id="" class="btn btn-success" type="button" value="预览" />&nbsp;
+                <input onclick="showPage()" id="" class="btn btn-success" type="button" value="预览" />&nbsp;
             </shiro:hasPermission>
             <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)" />
         </div>
+        <script type="text/javascript">
+            function showPage(){
+                layer.open({
+                    type: 2,
+                    title:'生活推荐预览',
+                    area: ['414px', '736px'],
+                    scrollbar: true,
+                    maxmin: true,
+                    content: '//218.28.28.186:9088/ehomeweb/page/home/index.html',
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    },
+                });
+            }
+        </script>
     </form:form>
 </body>
-<script type="text/javascript">
 
-</script>
+
 
 </html>

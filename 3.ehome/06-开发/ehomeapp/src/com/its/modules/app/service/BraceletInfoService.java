@@ -46,6 +46,17 @@ public class BraceletInfoService extends CrudService<BraceletInfoDao, BraceletIn
 	}
 
 	/**
+	 * 获取用户绑定某个mac地址的手环信息
+	 * 
+	 * @param accountId
+	 * @param villageInfoId
+	 * @return
+	 */
+	public BraceletInfo getAccountBraceletSpe(String accountId, String villageInfoId,String bandMac) {
+		return dao.getAccountBraceletSpe(accountId, villageInfoId,bandMac);
+	}
+	
+	/**
 	 * 获取用户绑定的所有手环
 	 * 
 	 * @param accountId

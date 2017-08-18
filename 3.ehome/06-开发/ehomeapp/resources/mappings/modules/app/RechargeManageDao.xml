@@ -110,7 +110,8 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- ============================================================ -->
+	
+	<!-- 获取楼盘下的充值计划集合 -->
 	<select id="getVillageRechargeList" resultType="RechargeManage">
 		SELECT 
 			<include refid="rechargeManageColumns"/>
@@ -120,4 +121,5 @@
 		</where>
 		ORDER BY a.recharge_money
 	</select>
+	
 </mapper>

@@ -21,7 +21,11 @@
 		a.isspeak AS "isspeak",
 		a.reason AS "reason",
 		a.fid AS "fid",
-		a.rootid AS "rootid"
+		a.rootid AS "rootid",
+		a.noticeid AS "noticeid",
+		a.title AS "title",
+		a.summary AS "summary",
+		a.remarks AS "remarks"
 	</sql>
 	
 	<sql id="socialSpeakJoins">
@@ -95,7 +99,11 @@
 			isspeak,
 			reason,
 			fid,
-			rootid
+			rootid,
+			noticeid,
+			title,
+			summary,
+			remarks
 		) VALUES (
 			#{id},
 			#{userid},
@@ -115,25 +123,38 @@
 			#{isspeak},
 			#{reason},
 			#{fid},
-			#{rootid}
+			#{rootid},
+			#{noticeid},
+			#{title},
+			#{summary},
+			#{remarks}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE social_speak SET 	
+			userid = #{userid},
+			tag = #{tag},
+			content = #{content},
+			visrange = #{visrange},
 			forbitcomment = #{forbitcomment},
 			forbidforward = #{forbidforward},
 			createtime = #{createtime},
 			istop = #{istop},
 			toptime = #{toptime},
 			readnum = #{readnum},
+			plateid = #{plateid},
 			villageinfoid = #{villageinfoid},
 			images = #{images},
 			delflag = #{delflag},
 			isspeak = #{isspeak},
 			reason = #{reason},
 			fid = #{fid},
-			rootid = #{rootid}
+			rootid = #{rootid},
+			noticeid = #{noticeid},
+			title = #{title},
+			summary = #{summary},
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
@@ -148,8 +169,8 @@
 			<include refid="socialSpeakColumns"/>,
 			(SELECT COUNT(*) FROM social_relation r WHERE r.userId = #{userId} AND r.subUserId = a.userId) AS isFocus,
 			(SELECT COUNT(*) FROM social_praise p WHERE p.userId = #{userId} AND p.pid = a.id AND p.state = 1) AS isPraise,
-			(SELECT COUNT(*) FROM social_speak f  where f.fid = a.id ) as countForward,
-			(SELECT COUNT(*) FROM social_comment c where c.speakid = a.id ) as countComment,
+			(SELECT COUNT(*) FROM social_speak f  where f.fid = a.id and f.delflag != 0) as countForward,
+			(SELECT COUNT(*) FROM social_comment c where c.speakid = a.id and c.delflag != 0) as countComment,
 			(select count(*) from social_praise pr where pr.pid = a.id AND pr.state = 1) as countPraise,
 			ac.Nickname as nickName,
 			ac.photo as photo
@@ -258,7 +279,23 @@
             <if test="subjectName != null and subjectName != '' ">
                 AND ss.subname like concat('%',#{subjectName},'%')
             </if>
+            <if test="subjectId != null and subjectId != '' ">
+                AND ss.id = #{subjectId} 
+            </if>
         ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize}
     </select>
+	
+	<!-- 根据speakid查询转发数量 -->
+	<select id="countSpeak" resultType="int">
+		SELECT count(*)
+		FROM social_speak a 
+		where 1=1 
+		<if test="socialSpeak != null and socialSpeak.userid != null and socialSpeak.userid != ''">
+			and a.userId = #{socialSpeak.userid}
+		</if>
+		<if test="socialSpeak != null and socialSpeak.villageinfoid != null and socialSpeak.villageinfoid != ''">
+			and a.villageinfoid = #{socialSpeak.villageinfoid}
+		</if>
+	</select>
 	
 </mapper>

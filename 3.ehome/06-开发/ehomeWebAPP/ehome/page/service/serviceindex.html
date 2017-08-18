@@ -1,125 +1,110 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>商家首页</title>
-		<!-- Bootstrap -->
-		<link href="../../css/bootstrap.min.css" rel="stylesheet">
-		<link href="../../css/common.css" rel="stylesheet">
-		<link href="../../css/main.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/cursom/service.css"/>
-		<!--<link rel="stylesheet" type="text/css" href="../../css/layer.css"/>-->
-		
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>商家首页</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cursom/service.css" />
+    <!--<link rel="stylesheet" type="text/css" href="../../css/layer.css"/>-->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-
-      
     <![endif]-->
-
-    
-	</head>
-	
-
-	<body>
-		<div id="app" v-cloak>
-			<div class="details_top">
-				<div class="container-fluid top">
-					<div class="h20"></div>
-					<div class="topbtn_region">
-						<div class="fl" >
-							<span class="back_btn" onclick="javascript:history.go(-1)"></span>
-						</div>
-						<div class="fr">
-  						<span v-bind:class="item1.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(item1)"></span>
-						
-						</div>
-					</div>
-				</div>
-				<div id="myCarousel" class="carousel slide">
-					
-					<ul class="carousel-inner">
-						<li class="item active" >
-							<img :src="item1.businessImage" />
-						</li>
-						
-					</ul>
-				</div>
-			</div>
-			<div class="mt20 clearfix">
-				<div class="details_add_main">
-					<div class="details_add_tel">
-						<a :href="'tel:'+item1.businessPhone"><img src="../../images/telphone.png" width="25" height="25"></a>
-					</div>
-					<div class="details_add_left">
-						<div class="details_add_left_title oneLine2" v-bind:data-id="item1.businessID"><a href="#">{{item1.businessName}}</a></div>
-						<div class="details_add_left_text"><a href="#">{{item1.businessAddress}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="mt10"></div>
-				<div class="details_spgm">
-					<div class="details_spgm_right">
-						<a :href="urlList.list + item1.businessID"><img src="../../images/grey_go.png" width="9" height="16"></a>
-					</div>
-					<div class="details_spgm_left">服务预约</div>
-					<div class="clear"></div>
-				</div>
-				
-				<div v-if="item1.groupBuy && item1.groupBuy.length>0">
-					<div class="xq_jstitle">商家团购</div>
-					<div class="line_ec"></div>
-					<div class="plr10 sort_list" v-for="item2 in groupBuy">
-						<a v-bind:href="item2.groupBuyUrl" style="color:black">
-							<div class="goods_list" v-bind:data-id="item2.groupBuyID">
-								<div class="goods_pic"><a :href="urlList.groupbuy+item2.groupBuyID+'&type='+groupbuytype"><img v-bind:src="item2.groupBuyImage"></a></div>
-								<div class="goods_right">
-									<div class="goods_name"><a :href="urlList.groupbuy+item2.groupBuyID+'&type='+groupbuytype">{{item2.groupBuyName}}</a></div>
-									<div class="">
-										<div class="fl mt10">
-											<div class="font_orange fl">{{item2.groupBuyPrice|formatDecimal}}</div>
-											<div class="font14 fl ml10"><del>{{item2.marketPrice|formatDecimal}}{{item2.groupBuyUnit}}</del></div>
-										</div>
-										<div class="goods_num fr">已售{{item2.soldNum}}件</div>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="order_whitebox" style="text-align:center;" @click="getMore(item1)" v-if="item1.groupBuy&&item1.groupBuy.length>=2">查看更多团购</div>
-				</div>
-				<div class="xq_jstitle">商家信息</div>
-				<div class="details_sjxx">
-					<p>.营业时间：{{item1.businessHours}}</p>
-					<p>.商家标签：<span v-for="item3  in item1.businessLabels">{{item3.labelName}},</span></p>
-					<p>.服务方式：{{item1.serviceWay}}</p>
-					<p v-if="item1.serviceCharge!=0">.服&nbsp;&nbsp;务&nbsp;&nbsp;费：{{item1.serviceCharge|formatDecimal}}</p>
-					<p>.活动优惠：<span v-html="item1.businessDesc"></span></p>
-				</div>
-
-			</div>
-		</div>
-	</body>
-
-	<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
-	
-	<!--<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>-->
-	<script type="text/javascript" src="../../js/cursom/common/common.js"></script>
-		<!--<script type="text/javascript" src="../../js/cursom/common/layer.js"></script>-->
-	
-	<script src="../../js/cursom/service/serviceindex.js" type="text/javascript" charset="utf-8"></script>
-
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="details_top">
+            <div class="container-fluid top">
+                <div class="h20"></div>
+                <div class="topbtn_region">
+                    <div class="fl">
+                        <span class="back_btn" onclick="javascript:history.go(-1)"></span>
+                    </div>
+                    <div class="fr">
+                        <span v-bind:class="item1.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(item1)"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="myCarousel" class="carousel slide">
+                <ul class="carousel-inner">
+                    <li class="item active">
+                        <img v-bind:src="item1.businessImage" />
+                    </li>
+                </ul>
+            </div>
+       <div class="bussinessbreak" v-if="item1.isNormal==0">商家休息中</div>
+        </div>
+        <div class="mt20 clearfix">
+            <div class="details_add_main">
+                <div class="details_add_tel">
+                    <a href="#" v-on:click="callPhone(item1.businessPhone)">
+                        <img src="../../images/telphone.png" width="25" height="25">
+                    </a>
+                </div>
+                <div class="details_add_left">
+                    <div class="details_add_left_title oneLine2" v-bind:data-id="item1.businessID"><a href="#">{{item1.businessName}}</a></div>
+                    <div class="details_add_left_text"><a href="#">{{item1.businessAddress}}</a></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="mt10"></div>
+            <div class="details_spgm">
+                <div class="details_spgm_right">
+                    <a v-bind:href="urlList.list + item1.businessID"><img src="../../images/grey_go.png" width="9" height="16"></a>
+                </div>
+                <div class="details_spgm_left">服务预约</div>
+                <div class="clear"></div>
+            </div>
+            <div v-if="item1.groupBuy && item1.groupBuy.length>0">
+                <div class="xq_jstitle">商家团购</div>
+                <div class="line_ec"></div>
+                <div class="plr10 sort_list" v-for="item2 in groupBuy">
+                    <a v-bind:href="item2.groupBuyUrl" style="color:black">
+                        <div class="goods_list" v-bind:data-id="item2.groupBuyID">
+                            <div class="goods_pic"><a v-bind:href="urlList.groupbuy+item2.groupBuyID+'&type='+groupbuytype"><img v-bind:src="item2.groupBuyImage"></a></div>
+                            <div class="goods_right">
+                                <div class="goods_name"><a v-bind:href="urlList.groupbuy+item2.groupBuyID+'&type='+groupbuytype">{{item2.groupBuyName}}</a></div>
+                                <div class="">
+                                    <div class="fl mt10">
+                                        <div class="font_orange fl">{{item2.groupBuyPrice|formatDecimal}}</div>
+                                        <div class="font14 fl ml10"><del>{{item2.marketPrice|formatDecimal}}{{item2.groupBuyUnit}}</del></div>
+                                    </div>
+                                    <div class="goods_num fr">已售{{item2.soldNum}}件</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="order_whitebox" style="text-align:center;" v-on:click="getMore(item1)" v-if="item1.groupBuy&&item1.groupBuy.length>=2">查看更多团购</div>
+            </div>
+            <div class="xq_jstitle">商家信息</div>
+            <div class="details_sjxx">
+                <p>.营业时间：{{item1.businessHours}}</p>
+                <p>.商家标签：<span v-for="item3  in item1.businessLabels">{{item3.labelName}},</span></p>
+                <p>.服务方式：{{item1.serviceWay}}</p>
+                <p v-if="item1.serviceCharge!=0">.服&nbsp;&nbsp;务&nbsp;&nbsp;费：{{item1.serviceCharge|formatDecimal}}</p>
+                <p>.活动优惠：<span v-html="item1.businessDesc"></span></p>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>-->
+    <script type="text/javascript" src="../../js/cursom/common/common.js"></script>
+    <!--<script type="text/javascript" src="../../js/cursom/common/layer.js"></script>-->
+    <script src="../../js/cursom/service/serviceindex.js" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>

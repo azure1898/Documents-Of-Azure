@@ -193,14 +193,20 @@
             END AS payMoney,
             o.Pay_Type AS payType,
             o.Pay_Org AS payOrg,
-            o.Over_Time AS tradeCompleteTime
+            o.Over_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
         FROM
-            order_goods o,
-            business_info bi
+            order_goods o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
         WHERE
             o.check_state = '0'
-        AND o.business_info_id = bi.id
         AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
         AND o.order_state = '3'
         AND o.del_flag = #{DEL_FLAG_NORMAL}
       <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
@@ -230,14 +236,20 @@
             END AS payMoney,
             o.Pay_Type AS payType,
             o.Pay_Org AS payOrg,
-            o.Over_Time AS tradeCompleteTime
+            o.Over_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
         FROM
-            order_service o,
-            business_info bi
+            order_service o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
         WHERE
             o.check_state = '0'
-        AND o.business_info_id = bi.id
         AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
         AND o.order_state = '2'
         AND o.del_flag = #{DEL_FLAG_NORMAL}
       <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
@@ -267,14 +279,20 @@
             END AS payMoney,
             o.Pay_Type AS payType,
             o.Pay_Org AS payOrg,
-            o.Pay_Time AS tradeCompleteTime
+            o.Pay_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
         FROM
-            order_lesson o,
-            business_info bi
+            order_lesson o         
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
         WHERE
             o.check_state = '0'
-        AND o.business_info_id = bi.id
         AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
         AND o.order_state = '1'
         AND o.del_flag = #{DEL_FLAG_NORMAL}
       <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
@@ -304,14 +322,20 @@
             END AS payMoney,
             o.Pay_Type AS payType,
             o.Pay_Org AS payOrg,
-            o.Pay_Time AS tradeCompleteTime
+            o.Pay_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
         FROM
-            order_field o,
-            business_info bi
+            order_field o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
         WHERE
             o.check_state = '0'
-        AND o.business_info_id = bi.id
         AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
         AND o.order_state = '1'
         AND o.del_flag = #{DEL_FLAG_NORMAL}
       <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
@@ -341,16 +365,21 @@
             END AS payMoney,
             o.Pay_Type AS payType,
             o.Pay_Org AS payOrg,
-            ol.Consume_Time AS tradeCompleteTime
+            ol.Consume_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
         FROM
-            order_group_purc o,
-            order_group_purc_list ol,
-            business_info bi
+            order_group_purc o
+         LEFT JOIN order_group_purc_list ol ON o.id = ol.Group_Purchase_ID
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
         WHERE
             o.check_state = '0'
-        AND o.business_info_id = bi.id
-        AND o.id = ol.Group_Purchase_ID
         AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
         AND o.order_state = '1'
         AND ol.Group_Purc_State = '1'
         AND o.del_flag = #{DEL_FLAG_NORMAL}

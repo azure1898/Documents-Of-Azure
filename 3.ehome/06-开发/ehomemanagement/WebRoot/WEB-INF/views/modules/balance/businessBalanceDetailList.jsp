@@ -84,10 +84,10 @@
 			</div>
 	        <div class="div-inline">
 	            <span class="help-inline"> <font color="red"> 订单金额： <fmt:formatNumber
-	                        type="currency">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
-	                        type="currency">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
-	                        type="currency">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
-	                        type="currency">${sumPayMoney}</fmt:formatNumber> 元
+	                        type="number" pattern="0.00" maxFractionDigits="2">${sumOrderMoney}</fmt:formatNumber> 元 平台优惠： <fmt:formatNumber
+	                        type="number" pattern="0.00" maxFractionDigits="2">${sumCouponMoney}</fmt:formatNumber> 元 扣点金额： <fmt:formatNumber
+	                        type="number" pattern="0.00" maxFractionDigits="2">${sumDeductionMoney}</fmt:formatNumber> 元 应付金额： <fmt:formatNumber
+	                        type="number" pattern="0.00" maxFractionDigits="2">${sumPayMoney}</fmt:formatNumber> 元
 	            </font></span>
 	        </div>
 		</div>

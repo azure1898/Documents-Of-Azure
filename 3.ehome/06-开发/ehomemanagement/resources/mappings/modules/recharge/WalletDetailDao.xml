@@ -8,7 +8,8 @@
 		a.village_info_id AS "villageInfoId",
 		a.trade_type AS "tradeType",
 		a.trade_date AS "tradeDate",
-		a.money AS "money",
+		a.wallet_principal AS "walletPrincipal",
+		a.wallet_present AS "walletPresent",
 		a.terminal_source AS "terminalSource",
 		a.mobile_unique_code AS "mobileUniqueCode",
 		a.pay_type AS "payType",
@@ -86,8 +87,11 @@
 			<if test="tradeType != null and tradeType != ''">
 				AND a.trade_type = #{tradeType}
 			</if>
-			<if test="beginTradeDate != null and endTradeDate != null and beginTradeDate != '' and endTradeDate != ''">
-				AND a.trade_date BETWEEN #{beginTradeDate} AND #{endTradeDate}
+			<if test="beginTradeDate != null and beginTradeDate != ''">
+				AND a.trade_date <![CDATA[>= ]]> #{beginTradeDate}
+			</if>
+			<if test="endTradeDate != null and endTradeDate != ''">
+				AND a.trade_date <![CDATA[<]]> DATE_ADD(#{endTradeDate},INTERVAL 1 DAY)
 			</if>
 			<if test="villageInfoId != null and villageInfoId != ''">
 				AND a.village_info_id = #{villageInfoId}
@@ -130,7 +134,8 @@
 			village_info_id,
 			trade_type,
 			trade_date,
-			money,
+			wallet_principal,
+			wallet_present,
 			terminal_source,
 			mobile_unique_code,
 			pay_type,
@@ -146,7 +151,8 @@
 			#{villageInfoId},
 			#{tradeType},
 			#{tradeDate},
-			#{money},
+			#{wallet_principal},
+			#{wallet_present},
 			#{terminalSource},
 			#{mobileUniqueCode},
 			#{payType},

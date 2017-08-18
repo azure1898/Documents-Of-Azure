@@ -17,7 +17,7 @@ import com.its.modules.app.entity.GroupPurchasetime;
 public interface GroupPurchasetimeDao extends CrudDao<GroupPurchasetime> {
 
 	/**
-	 * 更新团购子表已售数量
+	 * 团购子表减少库存，增加已售数量
 	 * 
 	 * @param count
 	 *            变动的数值
@@ -25,10 +25,10 @@ public interface GroupPurchasetimeDao extends CrudDao<GroupPurchasetime> {
 	 *            团购子表ID
 	 * @return 操作的行数
 	 */
-	public int updateSaleNum(@Param("count") int count, @Param("groupPurchaseTimeId") String groupPurchaseTimeId);
+	public int reduceStockNumAddSaleNum(@Param("count") int count, @Param("groupPurchaseTimeId") String groupPurchaseTimeId);
 
 	/**
-	 * 减少团购子表已售数量
+	 * 团购子表增加库存，减少已售数量
 	 * 
 	 * @param count
 	 *            变动的数值
@@ -36,5 +36,5 @@ public interface GroupPurchasetimeDao extends CrudDao<GroupPurchasetime> {
 	 *            团购子表ID
 	 * @return 操作的行数
 	 */
-	public int reduceSaleNum(@Param("count") int count, @Param("groupPurchaseTimeId") String groupPurchaseTimeId);
+	public int addStockNumReduceSaleNum(@Param("count") int count, @Param("groupPurchaseTimeId") String groupPurchaseTimeId);
 }

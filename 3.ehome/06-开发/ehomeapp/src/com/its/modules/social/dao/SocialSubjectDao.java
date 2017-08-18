@@ -54,4 +54,13 @@ public interface SocialSubjectDao extends CrudDao<SocialSubject> {
 	 * @return
 	 */
 	public int findSocialSubjectBySubName(@Param("subjectName") String subjectName);
+	
+	/**
+	 * @Description：查询所有热门话题
+	 * @Author：王萌萌
+	 * @Date：2017年8月15日
+	 * @param isRecommend 是否推荐
+	 * @return
+	 */
+	public List<SocialSubject> findHotSubjectList(@Param("isRecommend") int isRecommend);
 }

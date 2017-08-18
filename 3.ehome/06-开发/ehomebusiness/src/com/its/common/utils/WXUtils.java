@@ -22,12 +22,17 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.its.common.utils.WXUtilsConfig.SignType;
+import com.its.modules.gen.util.GenUtils;
 
 public class WXUtils {
+
+    private static Logger logger = LoggerFactory.getLogger(WXUtils.class);
 
     private static Properties props = new Properties();;
 
@@ -41,11 +46,13 @@ public class WXUtils {
      * @param total_fee
      *            订单金额
      * @param refund_fee
-     *            refund_fee
+     *            退款金额
+     * @param refund_desc
+     *            退款原因
      */
     static public Map<String, String> doRefund(String out_trade_no, String out_refund_no, String total_fee,
-            String refund_fee) {
-
+            String refund_fee, String refund_desc) {
+        logger.warn("微信退款------------>订单号：" + out_trade_no + "退款开始");
         // 加载配置信息
         InputStream in = null;
         in = WXUtils.class.getClassLoader().getResourceAsStream("wx-config.properties");
@@ -63,12 +70,18 @@ public class WXUtils {
         data.put("refund_fee", refund_fee);
         data.put("refund_fee_type", "CNY");
         data.put("op_user_id", props.getProperty("MCH_ID"));
+        data.put("refund_desc", refund_desc);
 
         try {
             result = refund(data);
+            logger.warn("微信退款返回数据------>" + result.toString());
+            logger.warn("微信退款------------>退款金额：" + total_fee + "（分）");
+            logger.warn("微信退款------------>订单号：" + out_trade_no + "退款正常结束");
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.warn("微信退款------------>异常：" + e.toString());
+            logger.warn("微信退款------------>订单号：" + out_trade_no + "退款异常结束");
         }
         return result;
     }

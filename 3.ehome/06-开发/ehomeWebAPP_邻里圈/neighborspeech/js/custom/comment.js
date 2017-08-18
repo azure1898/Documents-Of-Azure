@@ -48,6 +48,7 @@ var vm = new Vue({
 			}
 
 		},
+		//发送发言
 		sendOut: function() {
 			var sTest = $('#editable').text();
 			var sHtml = $('#editable').html();
@@ -119,7 +120,7 @@ var vm = new Vue({
 		},
 		appendAt:function(){
 			this.atwhos.forEach(function(obj,index){
-				$('#editable').append('&nbsp;<a href="#" data-atid="' + obj.frendId + '" class="atlink" contentEditable="false">' + obj.frendName + '</a>&nbsp;');
+				$('#editable').append('&nbsp;<a href="#" data-atid="' + obj.friendId + '" class="atlink" contentEditable="false">' + obj.friendName + '</a>&nbsp;');
 				vm.calculation();//插入标签后触发input事件
 			});
 			

@@ -51,7 +51,7 @@ public class ServiceInfoService extends CrudService<ServiceInfoDao, ServiceInfo>
             orderBy.append(SYMBOL_COMMA);
         } else {
             // 默认根据创建时间升序排序
-            orderBy.append("a.create_date ASC,");
+            orderBy.append("a.create_date DESC,");
         }
 
         // 去掉末尾逗号

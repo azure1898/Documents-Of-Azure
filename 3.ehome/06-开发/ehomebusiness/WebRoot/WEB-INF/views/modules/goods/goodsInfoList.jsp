@@ -43,10 +43,7 @@
 		 */
 		function allCheck(obj) {
 			var checked = obj.checked;
-			// 如果是非选中的状态清除隐藏域的商品ID信息
-			if (!checked) {
-				$("#checkedGoodsId").val("");
-			}
+			$("#checkedGoodsId").val("");
 			var checkBoxs = $('input[name="itemCheckbox"]');
 			for (var i = 0;i < checkBoxs.length; i++) {
 				checkBoxs[i].checked=checked;

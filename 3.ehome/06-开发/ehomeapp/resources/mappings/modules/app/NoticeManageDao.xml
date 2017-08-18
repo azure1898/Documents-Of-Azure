@@ -124,7 +124,7 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- ======================================== -->
+
 	<!-- 最新一条公告 -->
 	<select id="getLatestNotice" resultType="NoticeManage">
 		SELECT <include refid="noticeManageColumns"/>
@@ -134,6 +134,7 @@
 			ORDER BY a.create_date DESC LIMIT 1
 		</where>
 	</select>
+	
 	<select id="getNoticeList" resultType="NoticeManage">
 		SELECT 
 			<include refid="noticeManageColumns"/>
@@ -144,4 +145,5 @@
 				ORDER BY a.create_date DESC
 		LIMIT #{pageIndex},#{numPerPage}
 	</select>
+	
 </mapper>

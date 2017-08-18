@@ -121,7 +121,7 @@
         <tbody>
         <c:forEach items="${page.list}" var="orderGroupPurc" varStatus="status">
            	<tr>
-                <td><a style="color: #60C1F7;" href="${ctx}/order/orderGroupPurc/form?id=${orderGroupPurc.id}">
+                <td><a style="color: #60C1F7;" href="${ctx}/order/orderGroupPurc/form?id=${orderGroupPurc.id}&tag=1">
                     ${orderGroupPurc.orderNo}
                 </a></td>
                 <td>

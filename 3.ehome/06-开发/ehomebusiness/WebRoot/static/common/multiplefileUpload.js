@@ -7,9 +7,10 @@ $(function() {
         $(".file").removeClass("file");
     }
     var defaults = {
-        fileType : [ "jpg", "png", "bmp", "jpeg" ], // 上传文件的类型
+//        fileType : [ "jpg", "png", "bmp", "jpeg" ], // 上传文件的类型
+        fileType : [ "jpg", "png"], // 上传文件的类型
         fileSize : 1024 * 1024 * 1
-    // 上传文件的大小 10M
+    // 上传文件的大小 1M
     };
     
     /**
@@ -284,10 +285,10 @@ $(function() {
             var file = files[i];
             if (file.size >= defaults.fileSize) {
                 alertx('您这个"' + file.name + '"图片大小超过1M。');
-            } else if (arrImgs[i].height > 563) {
-                alertx('您这个"' + file.name + '"图片高度超过563像素。');
-            } else if (arrImgs[i].width > 750) {
-                alertx('您这个"' + file.name + '"图片宽度超过750像素。');
+            } else if (arrImgs[i].height > 400) {
+                alertx('您这个"' + file.name + '"图片高度超过400像素。');
+            } else if (arrImgs[i].width > 640) {
+                alertx('您这个"' + file.name + '"图片宽度超过640像素。');
             } else {
                 arrFiles.push(file);
             }

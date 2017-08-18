@@ -98,7 +98,8 @@
         <div class="control-group">
             <label class="control-label">公号名称：</label>
             <div class="controls">
-                <form:input path="" htmlEscape="false" class="input-xlarge required" /> <span class="help-inline"><font color="red">*</font> </span>
+                <form:hidden path="auserid" value="${auserid }" />
+                ${ausername }
             </div>
         </div>
         <div class="control-group">

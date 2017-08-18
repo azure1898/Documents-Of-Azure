@@ -34,6 +34,17 @@
 			[v-cloak] {
 				display: none;
 			}
+				.collection_btn{
+				display: inline-block;
+			    width: 50px;
+			    height: 24px;
+			    /*background: #C0C0C0;*/
+			   border: 1px solid #df2d1f;
+			    border-radius: 4px;
+			    text-align: center;
+			    line-height: 24px;
+			    color: #df2d1f;
+			}
     	.bottom_icon6 {
 	    background: url(../../images/bot_icon3.png) left center no-repeat;
 	    padding-left: 25px;
@@ -62,6 +73,7 @@
 				</div>
 			</div>
 			
+			
 			<div class="grey_top">
 				<a href="#" class="black_back" onclick="javascript :history.go(-1);"></a>
 				@我的发言
@@ -75,7 +87,9 @@
 							<p><span>{{item.creatTime}}</span></p>
 						</div>
 					</div>
-					<div class="fyxq_main_r"><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(index)"></div>
+					<div class="fyxq_main_r" v-if="item.isFocus==1" ><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(index)"></div>
+					<div class="fyxq_main_r" v-else ><span class="collection_btn" @click="attention(item)">+关注</span>&nbsp;&nbsp;<span @click="shield()">X</span></div>
+					
 					<div class="clear"></div>
 				</div>
 				<div class="fyxq_main2">
@@ -115,6 +129,7 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/myspeech.js"></script>
 	</body>

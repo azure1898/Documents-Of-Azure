@@ -233,6 +233,8 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- ============================================================= -->
+	
 	<!-- 根据订单号获取订单信息 -->
 	<select id="getByOrderNo" resultType="OrderGoods">
 		SELECT 
@@ -260,6 +262,8 @@
 		<result property="orderNo" column="orderNo" />
 		<result property="createDate" column="createDate" />
 		<result property="payType" column="payType" />
+		<result property="orderState" column="orderState" />
+		<result property="payState" column="payState" />
 		<association property="businessInfo" javaType="BusinessInfo">
 			<result property="businessName" column="Business_Name" />
 			<result property="phoneNum" column="Phone_Num" />
@@ -317,4 +321,20 @@
 		)
 	</select>
 	
+	<!-- 根据用户id，订单状态查询未配送订单 -->
+	<select id="findListByUserIdAndOrderState" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			<if test="orderGoods.accountId !=null and orderGoods.accountId != ''">
+				AND a.account_id = #{orderGoods.accountId}
+			</if>
+			<if test="orderGoods.orderState !=null and orderGoods.orderState != ''">
+				AND a.order_state = #{orderGoods.orderState}
+			</if>
+		</where>
+		limit #{pageIndex}, #{pageSize}
+	</select>
 </mapper>

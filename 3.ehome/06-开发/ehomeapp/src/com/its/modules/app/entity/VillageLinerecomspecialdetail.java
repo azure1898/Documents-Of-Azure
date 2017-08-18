@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.entity;
 
 import org.hibernate.validator.constraints.Length;
@@ -9,24 +6,28 @@ import com.its.common.persistence.DataEntity;
 
 /**
  * 楼盘产品线专题推荐明细Entity
+ * 
  * @author sushipeng
- * @version 2017-08-07
+ * 
+ * @version 2017-08-15
  */
-public class VillageLinerecomspecialdetail extends DataEntity<VillageLinerecomspecialdetail> {
+public class VillageLineRecomSpecialDetail extends DataEntity<VillageLineRecomSpecialDetail> {
 	
 	private static final long serialVersionUID = 1L;
 	private String villageLineRecomSpecialId;		// 楼盘产品线专题推荐ID
 	private String recomType;		// 推荐类型：0商家  1模块
 	private Integer sortNum;		// 排序序号
-	private String recomBusinessModuleId;		// 推荐商家ID/模块ID
+	private String recomModuleId;		// 推荐商家ID/模块ID
+	private String businessCategoryDictId;		// business_category_dict_id
+	private String recomBusinessId;		// recom_business_id
 	private String describes;		// 描述
 	private String picUrl;		// 图片
 	
-	public VillageLinerecomspecialdetail() {
+	public VillageLineRecomSpecialDetail() {
 		super();
 	}
 
-	public VillageLinerecomspecialdetail(String id){
+	public VillageLineRecomSpecialDetail(String id){
 		super(id);
 	}
 
@@ -57,12 +58,30 @@ public class VillageLinerecomspecialdetail extends DataEntity<VillageLinerecomsp
 	}
 	
 	@Length(min=0, max=64, message="推荐商家ID/模块ID长度必须介于 0 和 64 之间")
-	public String getRecomBusinessModuleId() {
-		return recomBusinessModuleId;
+	public String getRecomModuleId() {
+		return recomModuleId;
 	}
 
-	public void setRecomBusinessModuleId(String recomBusinessModuleId) {
-		this.recomBusinessModuleId = recomBusinessModuleId;
+	public void setRecomModuleId(String recomModuleId) {
+		this.recomModuleId = recomModuleId;
+	}
+	
+	@Length(min=0, max=64, message="business_category_dict_id长度必须介于 0 和 64 之间")
+	public String getBusinessCategoryDictId() {
+		return businessCategoryDictId;
+	}
+
+	public void setBusinessCategoryDictId(String businessCategoryDictId) {
+		this.businessCategoryDictId = businessCategoryDictId;
+	}
+	
+	@Length(min=0, max=64, message="recom_business_id长度必须介于 0 和 64 之间")
+	public String getRecomBusinessId() {
+		return recomBusinessId;
+	}
+
+	public void setRecomBusinessId(String recomBusinessId) {
+		this.recomBusinessId = recomBusinessId;
 	}
 	
 	@Length(min=0, max=64, message="描述长度必须介于 0 和 64 之间")

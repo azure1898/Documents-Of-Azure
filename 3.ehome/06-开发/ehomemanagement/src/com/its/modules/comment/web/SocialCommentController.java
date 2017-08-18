@@ -25,7 +25,6 @@ import com.its.common.web.BaseController;
 import com.its.common.utils.StringUtils;
 import com.its.modules.comment.entity.SocialComment;
 import com.its.modules.comment.service.SocialCommentService;
-import com.its.modules.speak.entity.SocialSpeak;
 import com.its.modules.sys.utils.UserUtils;
 
 /**

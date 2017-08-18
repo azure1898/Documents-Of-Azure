@@ -1,20 +1,22 @@
 package com.its.modules.sys.service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.its.common.utils.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-import com.its.modules.sys.entity.SysCodeMax;
+import com.its.common.utils.DateUtils;
 import com.its.modules.sys.dao.SysCodeMaxDao;
+import com.its.modules.sys.entity.SysCodeMax;
 
 /**
  * 最大编码表Service
  * 
- * @author xzc
+ * @author xizhuangchui
  * 
  * @version 2017-07-11
  */
@@ -48,7 +50,7 @@ public class SysCodeMaxService extends CrudService<SysCodeMaxDao, SysCodeMax> {
 	 * 获取流水号
 	 * 
 	 * @param id_in
-	 *            流水类型编号（001：订单类型，002：模块类型）
+	 *            流水类型编号（001：订单类型，007：优惠券号）
 	 * @param small_in
 	 *            最小值
 	 * @param is_day_update_in
@@ -78,11 +80,24 @@ public class SysCodeMaxService extends CrudService<SysCodeMaxDao, SysCodeMax> {
 	 */
 	@Transactional(readOnly = false)
 	public String getOrdNo(String villageInfoId, String moduleManageId) {
-		Date date = new Date();
 		String year = DateUtils.getYear();
 		String month = DateUtils.getMonth();
 		String day = DateUtils.getDay();
 		String no = String.format("%04d", this.getCodeNo("001", 1, "true"));
+		return villageInfoId + moduleManageId + year.substring(2, 4) + month + day + no;
+	}
+
+	/**
+	 * 获取优惠券号
+	 * 
+	 * @return 优惠券号
+	 */
+	@Transactional(readOnly = false)
+	public String getDiscountNum() {
+		String year = DateUtils.getYear();
+		String month = DateUtils.getMonth();
+		String day = DateUtils.getDay();
+		String no = String.format("%06d", this.getCodeNo("007", 1, "true"));
 		return year.substring(2, 4) + month + day + no;
 	}
 }

@@ -6,7 +6,7 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			fillPro();//加载全部省市区数据；
+// 			fillPro();//加载全部省市区数据；
 			 $("#btnExport").click(function() {
 			        top.$.jBox.confirm("确认要导出充值记录数据吗？", "系统提示", function(v,h,f){
 			            if(v == 'ok'){
@@ -23,51 +23,58 @@
 		function page(n,s){
 			$("#pageNo").val(n);
 			$("#pageSize").val(s);
-			$("#searchForm").submit();
+			if ($("#endTradeDate").val() != null && $("#endTradeDate").val() != "" 
+			    && $("#beginTradeDate").val() != null && $("#beginTradeDate").val() != "" 
+			    && $("#endTradeDate").val() < $("#beginTradeDate").val()) {
+				alertx("您输入的开始时间在结束时间之后，请重新输入！");
+			} else {
+			    $("#searchForm").submit();
+			}
         	return false;
         }
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/recharge/walletDetail/">充值记录</a></li>
+		<li class="active"><a href="${ctx}/recharge/walletDetail/list?villageInfoId=${villageInfoId}">充值记录</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="walletDetail" action="${ctx}/recharge/walletDetail/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<input type="text" class="hide" id="hidProId"  value="">
-		<input type="text" class="hide" id="hidCityId" value="">
-		<input type="text" class="hide" id="hidAreaId" value="">
-		<input type="text" class="hide" id="hidVillageId" value="${villageInfoId}">
+<!-- 		<input type="text" class="hide" id="hidProId"  value=""> -->
+<!-- 		<input type="text" class="hide" id="hidCityId" value=""> -->
+<!-- 		<input type="text" class="hide" id="hidAreaId" value=""> -->
+<%-- 	<input type="text" class="hide" id="hidVillageId" value="${villageInfoId}"> --%>
+			<input type="hidden" name="villageInfoId" value="${villageInfoId}">
 		<ul class="ul-form">
-			<li><label>交易时间：</label>
-				<input name="beginTradeDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${walletDetail.beginTradeDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
-				<input name="endTradeDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="<fmt:formatDate value="${walletDetail.endTradeDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+			<li>
+				<input id="beginTradeDate" name="beginTradeDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+					value="<fmt:formatDate value="${walletDetail.beginTradeDate}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/> - 
+				<input id="endTradeDate" name="endTradeDate" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+					value="<fmt:formatDate value="${walletDetail.endTradeDate}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</li>
-			<li class="btns">
-				<select id="addrpro" name="" style="width: 120px" onchange="changeCity()">
-					<option value="">全部省份</option>
-				</select>
-			</li>
-			<li class="btns">
-				<select id="addrcity" name="" style="width: 120px" onchange="changeVillage()">
-					<option value="">全部城市</option>
-				</select>
-			</li>
-			<li class="btns" style="display:none;">
-				<select id="addrarea" name="" style="width: 120px;display:none;">
-					<option value="">全部区域</option>
-				</select>
-			</li>
-			<li class="btns">
-				<select id="addrVillage" name="villageInfoId" style="width: 120px">
-					<option value="">全部楼盘</option>
-				</select>
-			</li>
+<!-- 			<li class="btns"> -->
+<!-- 				<select id="addrpro" name="" style="width: 120px" onchange="changeCity()"> -->
+<!-- 					<option value="">全部省份</option> -->
+<!-- 				</select> -->
+<!-- 			</li> -->
+<!-- 			<li class="btns"> -->
+<!-- 				<select id="addrcity" name="" style="width: 120px" onchange="changeVillage()"> -->
+<!-- 					<option value="">全部城市</option> -->
+<!-- 				</select> -->
+<!-- 			</li> -->
+<!-- 			<li class="btns" style="display:none;"> -->
+<!-- 				<select id="addrarea" name="" style="width: 120px;display:none;"> -->
+<!-- 					<option value="">全部区域</option> -->
+<!-- 				</select> -->
+<!-- 			</li> -->
+<!-- 			<li class="btns"> -->
+<!-- 				<select id="addrVillage" name="villageInfoId" style="width: 120px"> -->
+<!-- 					<option value="">全部楼盘</option> -->
+<!-- 				</select> -->
+<!-- 			</li> -->
 			<li class="btns">
 				<form:select path="tradeType" class="input-medium">
 					<form:option value="" label="交易方式"/>
@@ -86,7 +93,6 @@
 	<ul style="margin:10px;">
       <li style="list-style-type:none;">
          <shiro:hasPermission name="recharge:walletDetail:view">
-<!--          onclick="exportList()" -->
          	<a class="btn btn-primary" id="btnExport" href="#" ><i class="icon-eye-open icon-custom"></i>导出明细</a>
          </shiro:hasPermission>
          <span style="float:right;"><font id="rechargeBalance" color="red">充值余额：${rechargeBalance}元</font></span>
@@ -154,7 +160,7 @@
 							+
 						</c:otherwise>
 					</c:choose>
-					${walletDetail.money}
+					${fns:doubleFormat(walletDetail.money)}
 				</td>
 				<td>
 					${fns:getDictLabel(walletDetail.terminalSource, 'terminal_source', '')}

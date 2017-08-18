@@ -1,10 +1,7 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.web;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,17 +19,20 @@ import com.its.common.utils.DateUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.common.AppUtils;
+import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.BraceletExerciseRecord;
 import com.its.modules.app.entity.BraceletInfo;
 import com.its.modules.app.service.BraceletExerciseRecordService;
 import com.its.modules.app.service.BraceletInfoService;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
  * 每日运动记录Controller
  * 
  * @author like
+ * 
  * @version 2017-07-24
  */
 @Controller
@@ -41,6 +41,7 @@ public class BraceletExerciseRecordController extends BaseController {
 
 	@Autowired
 	private BraceletExerciseRecordService braceletExerciseRecordService;
+	
 	@Autowired
 	private BraceletInfoService braceletInfoService;
 
@@ -51,59 +52,65 @@ public class BraceletExerciseRecordController extends BaseController {
 	 *            用户ID(不可空)
 	 * @param buildingID
 	 *            楼盘ID(不可空)
-	 * @param bandID
+	 * @param bandMac
 	 *            手环ID(不可空)
-	 * @param date
-	 *            日期(不可空)
-	 * @param motionType
-	 *            运动类型(不可空)
-	 * @param stepCounts
-	 *            步数(数字，不可空)
-	 * @param kilometers
-	 *            公里数(数字，不可空)
-	 * @param calories
-	 *            消耗卡路里(数字，不可空)
-	 * @return
+	 * @param data
+	 *            Json运动数据(不可空)
+	 * @return Map<String, Object>
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitMotionData", method = RequestMethod.POST)
-	public String submitMotionData(String userID, String buildingID, String bandID, String date, String motionType, String stepCounts, String kilometers,
-			String calories) {
-		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandID) || StringUtils.isBlank(date)
-				|| StringUtils.isBlank(motionType) || !AppUtils.isNumeric(stepCounts) || !AppUtils.isNumeric(kilometers) || !AppUtils.isNumeric(calories)) {
-			json.put("code", Global.CODE_PROMOT);
-			json.put("message", "参数错误");
-			return JSONObject.fromObject(json).toString();
+	public Map<String, Object> submitMotionData(String userID, String buildingID, String bandMac, String data) {
+		data = data.replaceAll("&quot;", "\"");
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, userID, buildingID, bandMac, data)) {
+			return toJson;
 		}
-		// 查询当天已经上传的数据
-		BraceletExerciseRecord record = braceletExerciseRecordService.getAccountDateExercise(userID, buildingID, bandID, DateUtils.parseDate(date));
-		if (record == null) {
-			record = new BraceletExerciseRecord();
-			record.setAccountId(userID);
-			record.setVillageinfoId(buildingID);
-			record.setBraceletId(bandID);
-			record.setRecordDate(DateUtils.parseDate(date));
+		BraceletInfo braceletInfo = braceletInfoService.getAccountBraceletSpe(userID, buildingID, bandMac);
+		if (braceletInfo == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "手环尚未绑定");
+			return toJson;
 		}
-		if ("1".equals(motionType)) {
-			record.setWalkNumber(Integer.parseInt(stepCounts));
-			record.setWalkMileage(Double.parseDouble(kilometers));
-			record.setWalkCalorie(Double.parseDouble(calories));
-			record.setRunNumber(0);
-			record.setRunMileage((double) 0);
-			record.setRunCalorie((double) 0);
-		} else if ("2".equals(motionType)) {
-			record.setRunNumber(Integer.parseInt(stepCounts));
-			record.setRunMileage(Double.parseDouble(kilometers));
-			record.setRunCalorie(Double.parseDouble(calories));
-			record.setWalkNumber(0);
-			record.setWalkMileage((double) 0);
-			record.setWalkCalorie((double) 0);
+		// 替换成类中的属性
+		data = data.replaceAll("\"allNumData\":", "\"totalNumber\":")
+				.replaceAll("\"date\":", "\"recordDate\":")
+				.replaceAll("\"distance\":", "\"totalMileage\":")
+				.replaceAll("\"distanceRun\":", "\"runMileage\":")
+				.replaceAll("\"distanceWalk\":", "\"walkMileage\":")
+				.replaceAll("\"kCal\":", "\"totalCalorie\":")
+				.replaceAll("\"kCalRun\":", "\"runCalorie\":")
+				.replaceAll("\"kCalWalk\":", "\"walkCalorie\":")
+				.replaceAll("\"runNumData\":", "\"runNumber\":")
+				.replaceAll("\"type\":", "\"type\":")
+				.replaceAll("\"walkNumData\":", "\"walkNumber\":");
+		
+		
+		JSONArray jsonArray = JSONArray.fromObject(data);
+		if (jsonArray != null && jsonArray.size() != 0) {
+			for (Object object : jsonArray) {
+				JSONObject jsonobject = JSONObject.fromObject(object);
+				Date recordDate = DateUtils.parseDate(jsonobject.get("recordDate"));
+				// 查询当天已经上传的数据
+				BraceletExerciseRecord record = braceletExerciseRecordService.getSpeAccountDateExercise(userID, buildingID, braceletInfo.getId(), recordDate);
+				BraceletExerciseRecord exerciseRecord= (BraceletExerciseRecord) JSONObject.toBean(jsonobject, BraceletExerciseRecord.class);
+				exerciseRecord.setAccountId(userID);
+				exerciseRecord.setVillageinfoId(buildingID);
+				exerciseRecord.setBraceletId(braceletInfo.getId());
+				exerciseRecord.setRecordDate(recordDate);
+				if (record == null) {
+					braceletExerciseRecordService.save(exerciseRecord);
+				} else {
+					exerciseRecord.setId(record.getId());
+					int row = braceletExerciseRecordService.update(exerciseRecord);
+					System.out.println(row);
+				}
+			}
+			
 		}
-		braceletExerciseRecordService.save(record);
-		json.put("code", Global.CODE_SUCCESS);
-		json.put("message", "成功");
-		return JSONObject.fromObject(json).toString();
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("message", "成功");
+		return toJson;
 	}
 
 	/**
@@ -113,111 +120,115 @@ public class BraceletExerciseRecordController extends BaseController {
 	 *            用户ID(不可空)
 	 * @param buildingID
 	 *            楼盘ID(不可空)
-	 * @param bandID
-	 *            手环ID(不可空)
-	 * @param dates
-	 *            日期(不可空)
-	 * @return
+	 * @param bandMac
+	 *            手环mac(不可空)
+	 * @param startDate
+	 *            开始日期(不可空)
+	 * @param endDate
+	 *            结束日期(不可空)
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getMotionData")
-	public String getMotionData(String userID, String buildingID, String bandID, String date) {
+	public String getMotionData(String userID, String buildingID, String bandMac, String startDate, String endDate) {
 		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandID) || StringUtils.isBlank(date)) {
+		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandMac) || StringUtils.isBlank(startDate) || StringUtils.isBlank(endDate)) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "参数错误");
 			return JSONObject.fromObject(json).toString();
 		}
-		BraceletInfo info = braceletInfoService.get(bandID);
+		BraceletInfo info = braceletInfoService.getAccountBraceletSpe(userID, buildingID, bandMac);
 		if (info == null) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "手环尚未绑定");
 			return JSONObject.fromObject(json).toString();
 		}
-		BraceletExerciseRecord record = braceletExerciseRecordService.getAccountDateExercise(userID, buildingID, bandID, DateUtils.parseDate(date));
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("totalStep", record.getWalkNumber() + record.getRunNumber());
-		data.put("totalKilometer", record.getWalkMileage() + record.getRunMileage());
-		data.put("totalCalories", record.getWalkCalorie() + record.getRunCalorie());
-		data.put("motionTarget", info.getTargetStep());
+		Date sDate= DateUtils.parseDate(startDate);
+		Date eDate=DateUtils.parseDate(endDate);
+		List<BraceletExerciseRecord> recordList = braceletExerciseRecordService.getAccountPeriodExerciseByBraceletId(userID, buildingID, info.getId(), sDate, eDate);
+		List<BraceletExerciseRecord> recordListcpy=new ArrayList<BraceletExerciseRecord>();
 		List<Map<String, Object>> details = new ArrayList<>();
-		Map<String, Object> walk = new HashMap<>();
-		walk.put("motionType", 1);// 走
-		walk.put("stepCounts", record.getWalkNumber());
-		walk.put("kilometers", record.getWalkMileage());
-		walk.put("calories", record.getWalkCalorie());
-		details.add(walk);
-		Map<String, Object> run = new HashMap<>();
-		run.put("motionType", 2);// 跑
-		run.put("stepCounts", record.getRunNumber());
-		run.put("kilometers", record.getRunMileage());
-		run.put("calories", record.getRunCalorie());
-		details.add(run);
-		data.put("details", details);
-		json.put("code", Global.CODE_SUCCESS);
-		json.put("data", data);
-		json.put("message", "成功");
-		return JSONObject.fromObject(json).toString();
-	}
-
-	/**
-	 * 获取运动统计信息
-	 * 
-	 * @param userID
-	 *            用户ID
-	 * @param buildingID
-	 *            楼盘ID
-	 * @param bandID
-	 *            手环ID
-	 * @param week
-	 *            周数(0->上周;1->本周)
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/getMotionStatistics")
-	public String getMotionStatistics(String userID, String buildingID, String bandID, String week) {
-		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandID) || !AppUtils.isNumeric(week)) {
-			json.put("code", Global.CODE_PROMOT);
-			json.put("message", "参数错误");
-			return JSONObject.fromObject(json).toString();
+		
+		//找出没有数据的日期集合
+		Map<BraceletExerciseRecord, Date> objDateMap=new HashMap<BraceletExerciseRecord, Date>();
+		for(BraceletExerciseRecord b:recordList){
+			objDateMap.put(b, b.getRecordDate());
 		}
-		List<Date> weekDate = null;
-		if ("1".equals(week)) {
-			weekDate = AppUtils.getWeek(new Date(), 1);
-		} else if ("0".equals(week)) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			cal.add(Calendar.DAY_OF_YEAR, -7);
-			weekDate = AppUtils.getWeek(cal.getTime(), 1);
+		int tianshu=AppUtils.dateSpan(sDate,eDate);
+		String strDate="";
+		Date dateDate=null;
+		for(int i=0;i<=tianshu;i++){
+			boolean flag=true;
+			strDate=AppUtils.getSpecifiedDayAfter(sDate,i);
+			dateDate=DateUtils.parseDate(strDate);
+			for (Map.Entry<BraceletExerciseRecord, Date> entry : objDateMap.entrySet()) { 
+				  if(entry.getValue().equals(dateDate)){
+					  flag=false;
+					//数据库有
+					  recordListcpy.add(entry.getKey());
+				  }
+				}
+			if(flag){
+				//数据库无数据
+				Map<String, Object> detail = new HashMap<>();
+				detail.put("distance", 0);
+				detail.put("kCal", 0);
+				detail.put("allNumData", 0);
+				detail.put("runNumData", 0);
+				detail.put("distanceRun", 0);
+				detail.put("kCalRun", 0);
+				detail.put("walkNumData", 0);
+				detail.put("distanceWalk", 0);
+				detail.put("kCalWalk", 0);
+				detail.put("targetStep", 10000);
+				detail.put("targetPercent", "0%");
+				detail.put("exercise", "较少");
+				detail.put("date", DateFormatUtils.format(dateDate, "yyyy-MM-dd"));
+				details.add(detail);
+			}
 		}
-		if (weekDate == null) {
-			json.put("code", Global.CODE_PROMOT);
-			json.put("message", "参数错误");
-			return JSONObject.fromObject(json).toString();
+		//数据库数据处理
+		Integer targets = info.getTargetStep();
+		if(targets==null || targets==0){
+			targets=10000;
 		}
-		List<BraceletExerciseRecord> recordList = braceletExerciseRecordService.getWeekExercise(userID, buildingID, bandID, weekDate.get(0), weekDate.get(1));
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("period", DateFormatUtils.format(weekDate.get(0), "yyyy-MM-dd") + " - " + DateFormatUtils.format(weekDate.get(1), "yyyy-MM-dd"));
-		int totalStep = 0;
-		double totalKilometer = 0;
-		double totalCalories = 0;
-		List<Map<String, Object>> details = new ArrayList<>();
-		for (BraceletExerciseRecord record : recordList) {
+		int steps = 0;
+		String exercise = "";
+		for (BraceletExerciseRecord record : recordListcpy) {
 			Map<String, Object> detail = new HashMap<>();
+			steps = record.getTotalNumber();
+			detail.put("distance", record.getTotalMileage());
+			detail.put("kCal", record.getTotalCalorie());
+			detail.put("allNumData", steps);
+			detail.put("runNumData", record.getRunNumber());
+			detail.put("distanceRun", record.getRunMileage());
+			detail.put("kCalRun", record.getRunCalorie());
+			detail.put("walkNumData", record.getWalkNumber());
+			detail.put("distanceWalk", record.getWalkMileage());
+			detail.put("kCalWalk", record.getWalkCalorie());
+
+			detail.put("targetStep", targets);
+			double percent = 0.00;
+			if (targets > 0) {
+				percent = steps * 1.00 / targets;
+			}
+			NumberFormat fmt = NumberFormat.getPercentInstance();
+			String rates = fmt.format(percent);
+			detail.put("targetPercent", rates);
+
+			if (percent <= 0.50) {
+				exercise = "较少";
+			} else if (percent > 0.50 && percent <= 1.00) {
+				exercise = "良好";
+			} else {
+				exercise = "过量";
+			}
+			detail.put("exercise", exercise);
 			detail.put("date", DateFormatUtils.format(record.getRecordDate(), "yyyy-MM-dd"));
-			detail.put("stepCounts", record.getWalkNumber() + record.getRunNumber());
 			details.add(detail);
-			totalStep += (record.getWalkNumber() + record.getRunNumber());
-			totalKilometer += (record.getWalkMileage() + record.getRunMileage());
-			totalCalories += (record.getWalkCalorie() + record.getRunCalorie());
 		}
-		data.put("totalStep", totalStep);
-		data.put("totalKilometer", totalKilometer);
-		data.put("totalCalories", totalCalories);
-		data.put("details", details);
 		json.put("code", Global.CODE_SUCCESS);
-		json.put("data", data);
+		json.put("data", details);
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
 	}

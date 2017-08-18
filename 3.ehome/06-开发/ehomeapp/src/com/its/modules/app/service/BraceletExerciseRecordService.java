@@ -40,12 +40,56 @@ public class BraceletExerciseRecordService extends CrudService<BraceletExerciseR
 	public void save(BraceletExerciseRecord braceletExerciseRecord) {
 		super.save(braceletExerciseRecord);
 	}
+	
+	@Transactional(readOnly = false)
+	public int update(BraceletExerciseRecord braceletExerciseRecord) {
+		return dao.update(braceletExerciseRecord);
+	}
 
 	@Transactional(readOnly = false)
 	public void delete(BraceletExerciseRecord braceletExerciseRecord) {
 		super.delete(braceletExerciseRecord);
 	}
 
+	/**
+	 * 根据手环ID获取用户某一时段的运动记录
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletId
+	 *            手环ID
+	  * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public  List<BraceletExerciseRecord> getAccountPeriodExerciseByBraceletId(String accountId, String villageinfoId, String braceletId, Date startDate, Date endDate) {
+		return dao.getAccountPeriodExerciseByBraceletId(accountId, villageinfoId, braceletId,startDate,endDate);
+	}
+	
+	
+	/**
+	 * 根据mac获取用户某一时段的运动记录
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletId
+	 *            手环ID
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public  List<BraceletExerciseRecord> getAccountPeriodExerciseByMac(String accountId, String villageinfoId, String braceletMac, Date startDate, Date endDate) {
+		return dao.getAccountPeriodExerciseByMac(accountId, villageinfoId, braceletMac,startDate,endDate);
+	}
+	
 	/**
 	 * 获取用户某一天的运动记录
 	 * 
@@ -59,8 +103,8 @@ public class BraceletExerciseRecordService extends CrudService<BraceletExerciseR
 	 *            日期
 	 * @return
 	 */
-	public BraceletExerciseRecord getAccountDateExercise(String accountId, String villageinfoId, String braceletId, Date recordDate) {
-		return dao.getAccountDateExercise(accountId, villageinfoId, braceletId, recordDate);
+	public BraceletExerciseRecord getSpeAccountDateExercise(String accountId, String villageinfoId, String braceletId, Date recordDate) {
+		return dao.getSpeAccountDateExercise(accountId, villageinfoId, braceletId, recordDate);
 	}
 
 	/**

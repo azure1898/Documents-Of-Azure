@@ -58,8 +58,8 @@ public class AccountService extends CrudService<AccountDao, Account> {
 	}
 
 	@Transactional(readOnly = false)
-	public void update(Account account) {
-		dao.update(account);
+	public int update(Account account) {
+		return dao.update(account);
 	}
 
 	@Transactional(readOnly = false)
@@ -67,7 +67,6 @@ public class AccountService extends CrudService<AccountDao, Account> {
 		super.delete(account);
 	}
 
-	// --------------------------------------------------
 	public Account getByPhoneNum(String phoneNum) {
 		return dao.getByPhoneNum(phoneNum);
 	}
@@ -91,9 +90,9 @@ public class AccountService extends CrudService<AccountDao, Account> {
 	public void saveAccountVillageID(String id, String villageID) {
 		dao.saveAccountVillageID(id, villageID);
 	}
-	
+
 	@Transactional(readOnly = false)
-	public void loginUpdate(Account account){
+	public void loginUpdate(Account account) {
 		account.setLastLoginTime(new Date());
 		this.save(account);
 	}
@@ -109,8 +108,7 @@ public class AccountService extends CrudService<AccountDao, Account> {
 	@Async
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public void certifyCustomer(Account account) {
-		if (account == null || StringUtils.isBlank(account.getPhoneNum()) || StringUtils.isBlank(account.getVillageInfoId())
-				|| "1".equals(account.getCertifyState())) {
+		if (account == null || StringUtils.isBlank(account.getPhoneNum()) || StringUtils.isBlank(account.getVillageInfoId()) || "1".equals(account.getCertifyState())) {
 			return;
 		}
 		String url = Global.getConfig("customerPath");
@@ -180,5 +178,4 @@ public class AccountService extends CrudService<AccountDao, Account> {
 			}
 		}
 	}
-
 }

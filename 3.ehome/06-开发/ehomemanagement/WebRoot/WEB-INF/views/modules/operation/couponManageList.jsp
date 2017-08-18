@@ -8,7 +8,7 @@
 	$(document).ready(function() {
 		fillPro(); // 加载全部省市区数据
 		$("#btuElemEdit").click(function(){
-			if(elemEdit()){
+			if(elemEdit("优惠券")){
 				var activeState = $("#"+$("#selectElemId").val()).html();
 				if(activeState=="待开始"){
 					return true;
@@ -26,7 +26,7 @@
                 var elemId = $("#selectElemId").val();
                 var tempHref = $("#btuElemDelete").attr("href") + elemId;
 	            if(activeState=="待开始"){
-	                if (confirmx("确认删除此优惠券活动？",tempHref)) {
+	                if (confirmx("确定删除此优惠券活动？",tempHref)) {
 	                    return true;
 	                } else {
 	                    return false;
@@ -36,7 +36,7 @@
 	                return false;
 	            }
 	        } else {
-	            alertx("请选择要删除的行");
+	            alertx("请选择要删除的优惠券活动");
 	            return false;
 	        }
 		});
@@ -56,7 +56,7 @@
                     return false;
                 }
             } else {
-                alertx("请选择要关闭的行");
+                alertx("请选择要关闭的优惠券活动");
                 return false;
             }
         });
@@ -103,14 +103,14 @@
 					<option value="">全部区域</option>
 			</select> <select id="addrVillage" name="villageInfoId" style="width: 120px">
 					<option value="">全部楼盘</option>
-			</select> <input type="text" class="hide" id="hidProId" value=""> <input
-				type="text" class="hide" id="hidCityId" value=""> <input
+			</select> <input type="text" class="hide" id="hidProId" value="${couponManage.addrPro}"> <input
+				type="text" class="hide" id="hidCityId" value="${couponManage.addrCity}"> <input
 				type="text" class="hide" id="hidAreaId" value=""> <input
 				type="text" class="hide" id="hidVillageId"
 				value="${couponManage.villageInfoId}"></li>
 			<li><form:select path="activeState" placeholder="活动状态"
 					class="input-medium">
-					<form:option value="" label="" />
+					<form:option value="" label="活动状态" />
 					<form:options items="${fns:getDictList('active_state')}"
 						itemLabel="label" itemValue="value" htmlEscape="false" />
 				</form:select></li>
@@ -168,7 +168,7 @@
 					<td>${status.count}<input id="elemId" type="hidden"
 						value="${couponManage.id}" />
 					</td>
-					<td>${couponManage.villageInfoId}</td>
+					<td>${couponManage.villageName}</td>
 					<td>${couponManage.couponName}</td>
 					<td><c:choose>
 							<c:when test="${couponManage.couponType==0}">
@@ -176,7 +176,14 @@
 					       </c:when>
 							<c:otherwise>
 					           ${couponManage.couponMoney/10}折券<br />
-					           （上限 ${couponManage.upperLimitMoney}元）
+					           <c:choose>
+					               <c:when test="${couponManage.upperLimitMoney==null}">
+						                                      （无上限）    
+					               </c:when>
+					               <c:otherwise>
+					                                                   （上限 ${couponManage.upperLimitMoney}元）
+					               </c:otherwise>
+					           </c:choose>
 					       </c:otherwise>
 						</c:choose></td>
 					<td><c:choose>

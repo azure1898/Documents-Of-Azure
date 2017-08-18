@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.dao;
 
 import java.util.List;
@@ -19,6 +16,7 @@ import com.its.modules.app.entity.NoticeManage;
  */
 @MyBatisDao
 public interface NoticeManageDao extends CrudDao<NoticeManage> {
+
 	/**
 	 * 获取最新一条公告
 	 * 
@@ -34,5 +32,5 @@ public interface NoticeManageDao extends CrudDao<NoticeManage> {
 	 * @param villageInfoId
 	 * @return
 	 */
-	public List<NoticeManage> getNoticeList(@Param("villageInfoId") String villageInfoId,@Param("pageIndex")int pageIndex,@Param("numPerPage")int numPerPage);
+	public List<NoticeManage> getNoticeList(@Param("villageInfoId") String villageInfoId, @Param("pageIndex") int pageIndex, @Param("numPerPage") int numPerPage);
 }

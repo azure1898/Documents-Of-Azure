@@ -133,6 +133,16 @@
 	    WHERE userid = #{userId} and subuserid = #{subUserId}
 	</update>
 	
+	<!-- 根据用户ID 查询粉丝数量 -->
+	<select id="countFansByUserId" resultType="int">
+		select count(*) from social_relation where subuserid = #{userId}
+	</select>
+
+	<!-- 根据用户ID 查询关注数量 -->
+	<select id="countFocusByUserId" resultType="int">
+		select count(*) from social_relation where userid = #{userId}
+	</select>
+	
 	<!-- 根据userId和subUserId查询所有数据 -->
 	<select id="findListByUserIdAndSubUserId" resultType="SocialRelation">
 		SELECT 
@@ -160,5 +170,21 @@
 	        and r.userid = a.subuserid 
 	        and ac.id = a.subuserid 
 	        and a.userid = #{userId} 
+	</select>
+
+	<!-- 根据用户ID， 从用户ID 查询用户关系对象 -->
+	<select id="getSocialRelation" resultType="SocialRelation">
+	    SELECT 
+	        <include refid="socialRelationColumns"/>
+	    FROM social_relation a 
+	    WHERE a.userid = #{userId}
+	        and a.subuserid = #{subUserId}
+	</select>
+	
+	<!-- 是否已关注该用户 -->
+	<select id="isFocus" resultType="int">
+	    SELECT count(*)
+	    FROM social_relation a 
+	    WHERE a.userid = #{userId} and subuserid = #{subUserId}
 	</select>
 </mapper>

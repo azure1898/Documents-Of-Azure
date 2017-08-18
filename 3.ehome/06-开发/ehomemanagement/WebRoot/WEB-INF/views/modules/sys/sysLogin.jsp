@@ -23,8 +23,8 @@
 					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
 				},
 				messages: {
-					username: {required: "请填写用户名."},password: {required: "请填写密码."},
-					validateCode: {remote: "验证码不正确.", required: "请填写验证码."}
+					username: {required: "用户名不能为空"},password: {required: "密码不能为空"},
+					validateCode: {remote: "验证码填写有误", required: "请输入验证码"}
 				},
 				errorLabelContainer: "#messageBox",
 				errorPlacement: function(error, element) {
@@ -43,19 +43,21 @@
 	<!--[if lte IE 6]><br/><div class='alert alert-block' style="text-align:left;padding-bottom:10px;"><a class="close" data-dismiss="alert">x</a><h4>温馨提示：</h4><p>你使用的浏览器版本过低。为了获得更好的浏览体验，我们强烈建议您 <a href="http://browsehappy.com" target="_blank">升级</a> 到最新版本的IE浏览器，或者使用较新版本的 Chrome、Firefox、Safari 等。</p></div><![endif]-->
 	<div class="header">
 		<div id="messageBox" class="alert alert-error ${empty message ? 'hide' : ''}"><button data-dismiss="alert" class="close">×</button>
-			<label id="loginError" class="error">${message}</label>
+		    <c:if test="${message !=null && message !=''}">
+			   <label id="loginError" class="error">${message}</label>
+		    </c:if>	
 		</div>
 	</div>
 	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
 		<label class="input-label" for="username">用户名</label>
-		<input type="text" id="username" name="username" class="input-block-level required" value="${username}">
+		<input type="text" id="username" name="username" class="input-block-level" >
 		<label class="input-label" for="password">密码</label>
-		<input type="password" id="password" name="password" class="input-block-level required">
-		<c:if test="${isValidateCodeLogin}"><div class="validateCode">
+		<input type="password" id="password" name="password" class="input-block-level">
+		<%--<c:if test="${isValidateCodeLogin}"><div class="validateCode">
 			<label class="input-label mid" for="validateCode">验证码</label>
 			<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
-		</div></c:if><%--
+		</div></c:if>
 		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
 		<input class="btn btn-large btn-success" type="submit" value="登 录"/>&nbsp;&nbsp;
 		<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>

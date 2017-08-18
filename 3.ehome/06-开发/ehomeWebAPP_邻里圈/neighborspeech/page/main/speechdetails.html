@@ -131,7 +131,7 @@
 						<div class="clear"></div>
 					</div>
 					<div class="fyxq_main2_2" :class="{'baseline':comment.secCountCmt>0}">
-						<p class="ftc5050">{{comment.content}}</p>
+						<p class="ftc5050" v-html="comment.content"></p>
 					</div>
 					<div class="ckqtpl" v-if="comment.secCountCmt>0">查看其他人对这条评论的
 						<a :href="urlList.commentdetail+comment.cmtId"><font class="ftcred">{{comment.secCountCmt}}条评论></font></a>

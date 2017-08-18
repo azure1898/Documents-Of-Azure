@@ -88,7 +88,7 @@ public class LoginController extends BaseController{
 		if(principal != null){
 			return "redirect:" + adminPath;
 		}
-
+		
 		String username = WebUtils.getCleanParam(request, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
 		boolean rememberMe = WebUtils.isTrue(request, FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM);
 		boolean mobile = WebUtils.isTrue(request, FormAuthenticationFilter.DEFAULT_MOBILE_PARAM);
@@ -122,7 +122,6 @@ public class LoginController extends BaseController{
 		if (mobile){
 	        return renderString(response, model);
 		}
-		
 		return "modules/sys/sysLogin";
 	}
 
@@ -226,7 +225,6 @@ public class LoginController extends BaseController{
 	@RequestMapping("${adminPath}/out")
 	public String logout(){
 		UserUtils.clearCache();//清除缓存
-		CacheUtils.remove("menuNamePathMap");//清除菜单名称
 		return "redirect:" + adminPath + "/logout";
 	}
 }

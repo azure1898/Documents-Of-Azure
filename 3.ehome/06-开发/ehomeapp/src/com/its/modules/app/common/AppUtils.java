@@ -48,6 +48,31 @@ public class AppUtils {
 	public static String getTodayBegin() {
 		return DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00");
 	}
+	
+	/*
+	 * 
+	 * 格式化数字
+	 */
+	public static String format(int i){
+		if(i>=10){
+			return i+"";
+		}else{
+			return "0"+i;
+		}
+	} 
+	
+	/*
+	 * 
+	 * 格式化数字
+	 */
+	public static String format(String i){
+		int m=Integer.parseInt(i);
+		if(m>=10){
+			return i;
+		}else{
+			return "0"+i;
+		}
+	} 
 
 	/**
 	 * 返回：MM/dd
@@ -183,7 +208,20 @@ public class AppUtils {
 			return day2 - day1;
 		}
 	}
-
+	/** 
+	* 获得指定日期+n天后的日期 
+	* @param specifiedDay 
+	* @return 
+	*/ 
+	public static String getSpecifiedDayAfter(Date date,int n){ 
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(date); 
+		int day=c.get(Calendar.DATE); 
+		c.set(Calendar.DATE,day+n); 
+		String dayAfter=new SimpleDateFormat("yyyy-MM-dd").format(c.getTime()); 
+		return dayAfter; 
+	} 
+	
 	public static void main(String[] args) {
 		// System.out.println(AppUtils.formatDateWeek("2017-07-13"));
 		// Calendar cal = Calendar.getInstance();
@@ -193,9 +231,12 @@ public class AppUtils {
 		// List<Date> week = getWeek(new Date(), 1);
 		// System.out.println(week.get(0));
 		// System.out.println(week.get(1));
-		String d1 = "2017-7-26";
-		String d2 = "2017-7-27";
-		System.out.println(dateSpan(DateUtils.parseDate(d1), DateUtils.parseDate(d2)));
+		
+//		String d1 = "2017-7-26";
+//		String d2 = "2017-7-27";
+//		System.out.println(dateSpan(DateUtils.parseDate(d1), DateUtils.parseDate(d2)));
+		
+		System.out.println(getSpecifiedDayAfter(DateUtils.parseDate("2017-8-10"),1));
 	}
 
 }

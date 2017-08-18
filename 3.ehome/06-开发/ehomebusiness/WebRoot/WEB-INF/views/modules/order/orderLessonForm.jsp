@@ -93,7 +93,6 @@
                 <th>支付状态</th>
                 <th>订单状态</th>
                 <th>时间</th>
-                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -118,19 +117,6 @@
                 </td>
                 <td <c:if test="${orderLesson.orderState == 0}">style="color:red"</c:if>>
                         ${fns:getDictLabel(orderLesson.orderState, 'order_lesson_state', "")}
-                </td>
-                <td>
-                    <c:if test="${orderLesson.createDate !=null && orderLesson.createDate !=''}">
-                        <span>下单：<fmt:formatDate value="${orderLesson.createDate}" pattern="yyyy-MM-dd HH:mm"/></span><br/>
-                    </c:if>
-                    <c:if test="${orderLesson.payTime !=null && orderLesson.payTime !=''}">
-                        <span>支付：<fmt:formatDate value="${orderLesson.payTime}" pattern="yyyy-MM-dd HH:mm"/></span>
-                    </c:if>
-                </td>
-                <td>
-                    <c:if test="${orderLesson.payState ==  '0' && orderLesson.orderState ==  '0'}">
-                        <input id="btuElemCancel" type="button" class="commonsmallbtn" value="取消" style="width:40px;"  data-toggle="modal" data-target="#myModal">
-                    </c:if>
                 </td>
             </tr>
         </tbody>
@@ -193,7 +179,8 @@
                     ${orderTrack.createName}
                 </td>
                 <td style="width:25%">
-                    ${orderTrack.remarks}
+                    <c:if test="${not empty orderTrack.remarks}">${orderTrack.remarks}</c:if>
+                    <c:if test="${orderTrack.stateMsg == '提交订单'}">${orderLesson.accountMsg}</c:if>
                 </td>
         </c:forEach>
         </tbody>

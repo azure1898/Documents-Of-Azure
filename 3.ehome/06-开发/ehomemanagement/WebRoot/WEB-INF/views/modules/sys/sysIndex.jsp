@@ -226,7 +226,7 @@ line-height: 14px;
 				<ul id="userControl" class="nav pull-right" >
 					<li><a href="${pageContext.request.contextPath}${fns:getFrontPath()}/index-${fnc:getCurrentSiteId()}.html" target="mainFrame" title="访问网站主页"><div class="nav_right">首页</div></a></li>
 					<li><a title="个人信息"><div class="nav_left">您好，${fns:getUser().name}</div></a></li>
-					<li><a href="${ctx}/logout" title="退出登录"><div class="nav_left">退出</div></a></li>
+					<li><a href="${ctx}/out" title="退出登录"><div class="nav_left">退出</div></a></li>
 					<li id="userInfo"><a href="${ctx}/sys/user/modifyPwd" target="mainFrame"><div class="nav_left">修改密码</div></a></li>
 					<li>&nbsp;</li>
 				</ul>

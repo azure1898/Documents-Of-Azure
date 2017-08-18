@@ -1,7 +1,6 @@
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +62,11 @@ public class CouponManageController extends BaseController {
 			return toJson;
 		}
 		Account account = accountService.get(userID);
+		if (account == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "用户不存在");
+			return toJson;
+		}
 		List<CouponManageBean> couponManageBeans = couponManageService.getValidCoupons(buildingID, userID);
 		if (couponManageBeans == null || couponManageBeans.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
@@ -114,6 +118,11 @@ public class CouponManageController extends BaseController {
 			return toJson;
 		}
 		Account account = accountService.get(userID);
+		if (account == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "用户不存在");
+			return toJson;
+		}
 		List<CouponManageBean> couponManageBeans = couponManageService.getInvalidCoupons(buildingID, userID);
 		if (couponManageBeans == null || couponManageBeans.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
@@ -177,14 +186,16 @@ public class CouponManageController extends BaseController {
 			Map<String, Object> data = new HashMap<String, Object>();
 			// 传递优惠券ID（不传递会员的优惠券ID）
 			data.put("couponID", couponManage.getId());
-			data.put("couponMoney", couponManageService.getCouponMoney(couponManage));
+			data.put("couponType", couponManage.getCouponType());
+			data.put("couponMoney", ValidateUtil.validateDouble(couponManage.getCouponMoney()));
 			data.put("couponName", couponManageService.getCouponName(couponManage));
-			data.put("couponCondition", ("0".equals(couponManage.getUseRule()) ? "无限制" : "满" + couponManage.getFullUseMoney() + "元可用"));
+			data.put("couponCondition", couponManageService.getCouponCondition(couponManage));
+			data.put("couponCap", ValidateUtil.validateDouble(couponManage.getUpperLimitMoney()));
 			int receiveNum = 0;
 			// 买家领取规则：0无限制 1每人每日限领1张 2每人限领1张
-			if ("1".equals(couponManage.getReceiveRule())) {
+			if (CommonGlobal.COUPON_RECEIVE_RULE_LIMITONE.equals(couponManage.getReceiveRule())) {
 				receiveNum = memberDiscountService.getTodayReceiveCount(buildingID, userID, couponManage.getId());
-			} else if ("2".equals(couponManage.getReceiveRule())) {
+			} else if (CommonGlobal.COUPON_RECEIVE_RULE_ONLYONE.equals(couponManage.getReceiveRule())) {
 				receiveNum = memberDiscountService.getReceiveCount(buildingID, userID, couponManage.getId());
 			}
 			data.put("couponStatus", couponManageService.getCouponStatus(couponManage, receiveNum));
@@ -206,53 +217,69 @@ public class CouponManageController extends BaseController {
 	 *            用户ID（不可空）
 	 * @param conponID
 	 *            优惠劵ID（不可空）
+	 * @param buildingID
+	 *            楼盘ID（不可空）
 	 * @return Map<String, Object>
 	 */
 	@RequestMapping(value = "receiveCoupon", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> receiveCoupon(String userID, String conponID) {
+	public Map<String, Object> receiveCoupon(String userID, String couponID, String buildingID) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
-		if (ValidateUtil.validateParams(toJson, userID, conponID)) {
+		if (ValidateUtil.validateParams(toJson, userID, couponID, buildingID)) {
 			return toJson;
 		}
-		CouponManage couponManage = couponManageService.get(conponID);
+		Account account = accountService.get(userID);
+		if (account == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "用户不存在");
+			return toJson;
+		}
+		CouponManage couponManage = couponManageService.get(couponID);
 		if (couponManage == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "优惠券不存在");
 			return toJson;
 		}
-
-		MemberDiscount memberDiscount = new MemberDiscount();
-		memberDiscount.setVillageInfoId(couponManage.getVillageInfoId());
-		memberDiscount.setDiscountId(couponManage.getId());
-		// 优惠券号
-		memberDiscount.setDiscountNum(null);
-		memberDiscount.setAccountId(userID);
-		memberDiscount.setObtainDate(new Date());
-		// 计算优惠券有效时间
-		Date validStart = null;
-		Date validEnd = null;
-		if ("0".equals(couponManage.getValidityType())) {
-			validStart = couponManage.getValidityStartTime();
-			validEnd = couponManage.getValidityEndTime();
-		} else {
-			validStart = new Date();
+		if (CommonGlobal.COUPON_GRANT_TYPE_LIMIT.equals(couponManage.getGrantType())) {
+			if (ValidateUtil.validateInteger(couponManage.getLimitedNum()) <= ValidateUtil.validateInteger(couponManage.getReceiveNum())) {
+				toJson.put("code", Global.CODE_PROMOT);
+				toJson.put("message", "优惠券库存不足");
+				return toJson;
+			}
 		}
-		memberDiscount.setValidStart(validStart);
-		memberDiscount.setValidEnd(validEnd);
-		memberDiscount.setUseState(CommonGlobal.DISCOUNT_USE_STATE_UNUSED);
-		memberDiscount.setReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_RECEIVE);
-		// 新增会员的优惠券
-		memberDiscountService.save(memberDiscount);
-		// 修改优惠券领取总量
-		couponManageService.updateReceiveNumById(couponManage.getReceiveNum() + 1, couponManage.getId());
+		int receiveNum = 0;
+		// 买家领取规则：0无限制 1每人每日限领1张 2每人限领1张
+		if (CommonGlobal.COUPON_RECEIVE_RULE_LIMITONE.equals(couponManage.getReceiveRule())) {
+			receiveNum = memberDiscountService.getTodayReceiveCount(couponManage.getVillageInfoId(), userID, couponManage.getId());
+		} else if (CommonGlobal.COUPON_RECEIVE_RULE_ONLYONE.equals(couponManage.getReceiveRule())) {
+			receiveNum = memberDiscountService.getReceiveCount(couponManage.getVillageInfoId(), userID, couponManage.getId());
+		}
+		if (!"立即领取".equals(couponManageService.getCouponStatus(couponManage, receiveNum))) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "优惠券无法领取");
+			return toJson;
+		}
 
+		MemberDiscount memberDiscount = couponManageService.createMemberDiscount(couponManage, userID);
+		if (memberDiscount == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "数据更新失败");
+			return toJson;
+		}
+		/* Data数据开始 */
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("couponMoney", couponManageService.getCouponMoney(couponManage));
+		data.put("couponID", memberDiscount.getId());
+		data.put("couponType", couponManage.getCouponType());
+		data.put("couponMoney", ValidateUtil.validateDouble(couponManage.getCouponMoney()));
 		data.put("couponName", couponManageService.getCouponName(couponManage));
-		data.put("couponCondition", ("0".equals(couponManage.getUseRule()) ? "无限制" : "满" + couponManage.getFullUseMoney() + "元可用"));
-		data.put("couponValidDate", memberDiscount.getValidStart() + "至" + memberDiscount.getValidEnd());
+		data.put("couponCondition", couponManageService.getCouponCondition(couponManage));
+		data.put("limitUser", account.getPhoneNum());
+		data.put("couponCap", ValidateUtil.validateDouble(couponManage.getUpperLimitMoney()));
+		data.put("couponStart", DateFormatUtils.format(memberDiscount.getValidStart(), "yyyy-MM-dd"));
+		data.put("couponEnd", DateFormatUtils.format(memberDiscount.getValidEnd(), "yyyy-MM-dd"));
+		data.put("couponStatus", memberDiscount.getUseState());
+		/* Data数据结束 */
 
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("data", data);

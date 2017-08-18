@@ -96,6 +96,9 @@ public class CouponManage extends DataEntity<CouponManage> {
 	private String activeState; // 活动状态
 	private String lastId;
 	private int receiveCount; // 领取总量
+	private String villageName; // 楼盘名称
+	private String addrPro; // 地址_省
+	private String addrCity; // 地址_市
 
 	public CouponManage() {
 		super();
@@ -392,6 +395,30 @@ public class CouponManage extends DataEntity<CouponManage> {
 
 	public void setReceiveCount(int receiveCount) {
 		this.receiveCount = receiveCount;
+	}
+
+	public String getVillageName() {
+		return villageName;
+	}
+
+	public void setVillageName(String villageName) {
+		this.villageName = villageName;
+	}
+
+	public String getAddrPro() {
+		return addrPro;
+	}
+
+	public void setAddrPro(String addrPro) {
+		this.addrPro = addrPro;
+	}
+
+	public String getAddrCity() {
+		return addrCity;
+	}
+
+	public void setAddrCity(String addrCity) {
+		this.addrCity = addrCity;
 	}
 
 }

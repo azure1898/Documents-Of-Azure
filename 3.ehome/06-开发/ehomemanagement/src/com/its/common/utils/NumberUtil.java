@@ -20,6 +20,9 @@ public class NumberUtil extends NumberUtils{
         if (number == null) {
             return "";
         }
+        if (number.equals(DOUBLE_ZERO)) {
+            return "0.00";
+        }
         DecimalFormat df = new DecimalFormat(".00");
         df.setRoundingMode(RoundingMode.HALF_UP);  
         return df.format(number);

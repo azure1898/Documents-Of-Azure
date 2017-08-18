@@ -120,8 +120,12 @@ function elemFrozen(fieldName, moduleName, option, alertMsgFlg) {
             } else {
                 var elemId = $("#selectElemId").val();
                 var tempHref = $("#btuElemFozen").attr("href") + elemId + "&" + fieldName + "=" + frozen;
+                var msgFozenConfirm = "确认要冻结此行吗？";
+                if (moduleName != undefined && moduleName != '') {
+                    msgFozenConfirm = "确认冻结此" + moduleName + "吗？";
+                }
                 if (alertMsgFlg) {
-                    if (confirmx("确认冻结此" + moduleName + "吗？", tempHref)) {
+                    if (confirmx(msgFozenConfirm, tempHref)) {
                         return true;
                     } else {
                         return false;
@@ -147,8 +151,12 @@ function elemFrozen(fieldName, moduleName, option, alertMsgFlg) {
             } else {
                 var elemId = $("#selectElemId").val();
                 var tempHref = $("#btuElemFozen").attr("href") + elemId + "&" + fieldName + "=" + unFrozen;
+                var msgUnFozenConfirm = "确认要取消冻结此行吗？";
+                if (moduleName != undefined && moduleName != '') {
+                    msgUnFozenConfirm = "确认取消冻结此" + moduleName + "吗？";
+                }
                 if (alertMsgFlg) {
-                    if (confirmx("确认取消冻结此" + moduleName + "吗？", tempHref)) {
+                    if (confirmx(msgUnFozenConfirm, tempHref)) {
                         return true;
                     } else {
                         return false;

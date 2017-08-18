@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,28 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.HttpUtils;
 import com.its.common.utils.NumberUtil;
 import com.its.common.utils.WXUtils;
 import com.its.common.utils.WXUtilsConfig;
+import com.its.modules.order.entity.Account;
 import com.its.modules.order.entity.OrderGoods;
 import com.its.modules.order.entity.OrderGoodsList;
 import com.its.modules.order.entity.OrderRefundInfo;
 import com.its.modules.order.entity.OrderTrack;
+import com.its.modules.order.entity.WalletDetail;
+import com.its.modules.setup.dao.BusinessInfoDao;
+import com.its.modules.setup.entity.BusinessInfo;
+import com.its.modules.sys.entity.User;
+import com.its.modules.sys.utils.UserUtils;
+
 import com.its.modules.goods.dao.GoodsInfoDao;
 import com.its.modules.goods.dao.GoodsSkuPriceDao;
 import com.its.modules.goods.entity.GoodsInfo;
 import com.its.modules.goods.entity.GoodsSkuPrice;
+import com.its.modules.order.dao.AccountDao;
 import com.its.modules.order.dao.OrderGoodsDao;
+import com.its.modules.order.dao.WalletDetailDao;
 
 /**
  * 订单-商品类Service
@@ -57,11 +68,25 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
     @Autowired
     private GoodsInfoDao goodsInfoDao;
 
+    /** 钱包明细Dao */
+    @Autowired
+    private WalletDetailDao walletDetailDao;
+
+    /**
+     * 会员信息DAO
+     */
+    @Autowired
+    private AccountDao accountDao;
+
     /**
      * 商品规格价格Dao
      */
     @Autowired
     private GoodsSkuPriceDao goodsSkuPriceDao;
+
+    /** 商户分类Service */
+    @Autowired
+    private BusinessInfoDao businessInfoDao;
 
     public OrderGoods get(String id) {
         return super.get(id);
@@ -151,22 +176,22 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
     /**
      * 订单取消
      * 
-     * @param orderGoods
+     * @param orderGoodsFromJsp
      *            订单取消信息
      * @return 更新结果
      */
     @Transactional(readOnly = false)
-    public int cancel(OrderGoods orderGoods) {
-        orderGoods.preUpdate();
+    public int cancel(OrderGoods orderGoodsFromJsp) {
+        orderGoodsFromJsp.preUpdate();
         // 订单状态更新为：已取消
-        int result = this.dao.cancel(orderGoods);
+        int result = this.dao.cancel(orderGoodsFromJsp);
         // 影响条数为0，更新失败
         if (0 == result) {
             return result;
         }
 
         // 数据库中订单数据（参数是画面传递过来的信息）
-        OrderGoods orderGoodsInfo = super.get(orderGoods.getId());
+        OrderGoods orderGoodsInfo = super.get(orderGoodsFromJsp.getId());
         // 如果订单支付状态为1：已支付的话，执行退款处理
         if ("1".equals(orderGoodsInfo.getPayState())) {
             // 如果是支付宝的话，生成退款信息，交由总后台进行退款
@@ -203,7 +228,9 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                         // 微信退款是以分为单位
                         NumberUtil.yuanToFen(orderGoodsInfo.getPayMoney()),
                         // 微信退款是以分为单位
-                        NumberUtil.yuanToFen(orderGoodsInfo.getPayMoney()));
+                        NumberUtil.yuanToFen(orderGoodsInfo.getPayMoney()),
+                        // 退款原因
+                        orderGoodsFromJsp.getCancelRemarks());
                 // 订单支付成功的话
                 if (StringUtils.isNotBlank(refund_result.get("result_code"))
                         && WXUtilsConfig.SUCCESS.equals(refund_result.get("result_code"))) {
@@ -240,12 +267,60 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                     orderRefundInfo.setRefundOverTime(new Date());
 
                     // 退款原因
-                    orderRefundInfo.setRefundReason(orderGoods.getCancelRemarks());
+                    orderRefundInfo.setRefundReason(orderGoodsFromJsp.getCancelRemarks());
 
                     orderRefundInfoService.save(orderRefundInfo);
                 } else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 }
+                // 如果是用户钱包支付的话
+            } else if ("2".equals(orderGoodsInfo.getPayOrg())) {
+                // 取得用户信息,并施加行级锁
+                Account userInfo = accountDao.getForUpdate(orderGoodsInfo.getAccountId());
+                if (userInfo == null) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                }
+                // 根据订单ID取得支付明细（即本金支付多少，赠送金额支付多少）
+                WalletDetail payInfo = walletDetailDao.getByOrderId(orderGoodsInfo.getId());
+
+                // 钱包本金追加
+                userInfo.setWalletPrincipal(userInfo.getWalletPrincipal() + payInfo.getWalletPrincipal());
+                // 钱包赠送金额追加
+                userInfo.setWalletPresent(userInfo.getWalletPresent() + payInfo.getWalletPresent());
+                // 钱包余额追加(当前余额 + 本金支付金额 + 赠送支付金额)
+                userInfo.setWalletBalance(
+                        userInfo.getWalletBalance() + payInfo.getWalletPrincipal() + payInfo.getWalletPresent());
+
+                // 执行更新处理
+                userInfo.preUpdate();
+                result = accountDao.update(userInfo);
+                // 若更新失败则回滚事务
+                if (result == 0) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return result;
+                }
+
+                // 钱包明细追加一条退款记录
+                WalletDetail walletDetail = new WalletDetail();
+                walletDetail.preInsert();
+                // 会员ID
+                walletDetail.setAccountId(orderGoodsInfo.getAccountId());
+                // 楼盘ID
+                walletDetail.setVillageInfoId(orderGoodsInfo.getVillageInfoId());
+                // 订单ID
+                walletDetail.setOrderId(orderGoodsInfo.getId());
+                // 交易类型：5-退款(订单取消)
+                walletDetail.setTradeType("5");
+                // 本金退款金额
+                walletDetail.setWalletPrincipal(payInfo.getWalletPrincipal());
+                // 赠送金退款金额
+                walletDetail.setWalletPresent(payInfo.getWalletPresent());
+                // 退款时间
+                walletDetail.setTradeDate(new Date());
+                // 支付类型
+                walletDetail.setPayType("0");
+                // 执行插入操作
+                walletDetailDao.insert(walletDetail);
             }
         }
         // 若更新失败则回滚事务
@@ -256,7 +331,7 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         // 商品订单明细取得
         OrderGoodsList orderGoodsList = new OrderGoodsList();
         // 根据订单号检索
-        orderGoodsList.setOrderNo(orderGoods.getOrderNo());
+        orderGoodsList.setOrderNo(orderGoodsInfo.getOrderNo());
         // 取得该订单对应的信息
         List<OrderGoodsList> orderGoodsInfoList = orderGoodsListService.findList(orderGoodsList);
 
@@ -311,16 +386,36 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         }
 
         OrderTrack orderTrack = new OrderTrack();
-        orderTrack.setOrderId(orderGoods.getId());
-        orderTrack.setOrderNo(orderGoods.getOrderNo());
-        orderTrack.setOrderType(orderGoods.getProdType());
+        orderTrack.setOrderId(orderGoodsInfo.getId());
+        orderTrack.setOrderNo(orderGoodsInfo.getOrderNo());
+        orderTrack.setOrderType(orderGoodsInfo.getProdType());
         orderTrack.setStateMsg("已取消");
         orderTrack.setHandleMsg("商家取消订单（自动退款）");
         orderTrack.setStateMsgPhone("已取消");
         orderTrack.setHandleMsgPhone("订单已成功取消");
         orderTrack.setCreateName("商家账号");
-        orderTrack.setRemarks(orderGoods.getCancelRemarks());
+        orderTrack.setRemarks(orderGoodsFromJsp.getCancelRemarks());
         orderTrackService.save(orderTrack);
+
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        // 向用户推送订单取消信息
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("businessId", user.getBusinessinfoId());
+        BusinessInfo businessInfo = businessInfoDao.get(user.getBusinessinfoId());
+        paramMap.put("businessName", (businessInfo != null) ? businessInfo.getBusinessName() : "");
+        paramMap.put("cancelReason", orderGoodsFromJsp.getCancelRemarks());
+        paramMap.put("orderId", orderGoodsInfo.getId());
+        paramMap.put("toUserId", orderGoodsInfo.getAccountId());
+        paramMap.put("sendType", "2.2");
+
+        JSONObject msg_result = HttpUtils.sendPost("/rongCloudMsg/cancelOrderMsg", paramMap);
+        // 若信息发送失败则回滚
+        if (!"1000".equals(String.valueOf(msg_result.get("code")))) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result;
+        }
+
         return result;
     }
 
@@ -352,6 +447,24 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         orderTrack.setHandleMsgPhone("商家开始配送，等待送达");
         orderTrack.setCreateName("商家账号");
         orderTrackService.save(orderTrack);
+
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        // 向用户推送商品配送信息
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("businessId", user.getBusinessinfoId());
+        BusinessInfo businessInfo = businessInfoDao.get(user.getBusinessinfoId());
+        paramMap.put("businessName", (businessInfo != null) ? businessInfo.getBusinessName() : "");
+        paramMap.put("orderId", orderGoods.getId());
+        paramMap.put("toUserId", orderGoods.getAccountId());
+        paramMap.put("sendType", "2.1");
+
+        JSONObject msg_result = HttpUtils.sendPost("/rongCloudMsg/sendGoodsMsg", paramMap);
+        // 若信息发送失败则回滚
+        if (!"1000".equals(String.valueOf(msg_result.get("code")))) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result;
+        }
         return result;
 
     }

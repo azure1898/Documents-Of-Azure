@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.UnauthorizedException;
+//import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.google.common.collect.Maps;
 import com.its.common.config.Global;
 import com.its.common.security.shiro.session.SessionDAO;
-import com.its.common.servlet.ValidateCodeServlet;
+//import com.its.common.servlet.ValidateCodeServlet;
 import com.its.common.utils.CacheUtils;
 import com.its.common.utils.CookieUtils;
-import com.its.common.utils.IdGen;
+//import com.its.common.utils.IdGen;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.sys.security.FormAuthenticationFilter;
@@ -111,12 +111,12 @@ public class LoginController extends BaseController{
 		}
 		
 		// 非授权异常，登录失败，验证码加1。
-		if (!UnauthorizedException.class.getName().equals(exception)){
-			model.addAttribute("isValidateCodeLogin", isValidateCodeLogin(username, true, false));
-		}
+//		if (!UnauthorizedException.class.getName().equals(exception)){
+//			model.addAttribute("isValidateCodeLogin", isValidateCodeLogin(username, true, false));
+//		}
 		
 		// 验证失败清空验证码
-		request.getSession().setAttribute(ValidateCodeServlet.VALIDATE_CODE, IdGen.uuid());
+//		request.getSession().setAttribute(ValidateCodeServlet.VALIDATE_CODE, IdGen.uuid());
 		
 		// 如果是手机登录，则返回JSON字符串
 		if (mobile){
@@ -222,5 +222,11 @@ public class LoginController extends BaseController{
 			loginFailMap.remove(useruame);
 		}
 		return loginFailNum >= 3;
+	}
+	
+	@RequestMapping("${adminPath}/out")
+	public String logout(){
+		UserUtils.clearCache();//清除缓存
+		return "redirect:" + adminPath + "/logout";
 	}
 }

@@ -62,7 +62,44 @@ public class BraceletSleepRecordService extends CrudService<BraceletSleepRecordD
 	public BraceletSleepRecord getAccountDayRecord(String accountId, String villageinfoId, String braceletId, Date recordDate) {
 		return dao.getAccountDayRecord(accountId, villageinfoId, braceletId, recordDate);
 	}
-
+	
+	/**
+	 * 根据手环ID获取某段时间的睡眠数据
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletId
+	 *            手环ID
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public List<BraceletSleepRecord> getPeriodSleepRecordByBraceletId(String accountId, String villageinfoId, String braceletId, Date startDate, Date endDate) {
+		return dao.getPeriodSleepRecordByBraceletId(accountId, villageinfoId, braceletId, startDate, endDate);
+	}
+	/**
+	 * 根据mac获取某段时间的睡眠数据
+	 * 
+	 * @param accountId
+	 *            用户ID
+	 * @param villageinfoId
+	 *            楼盘ID
+	 * @param braceletMac
+	 *            手环braceletMac
+	 * @param startDate
+	 *            开始日期
+	 * @param endDate
+	 *            结束日期
+	 * @return
+	 */
+	public List<BraceletSleepRecord> getPeriodSleepRecordByMac(String accountId, String villageinfoId, String braceletMac, Date startDate, Date endDate) {
+		return dao.getPeriodSleepRecordByMac(accountId, villageinfoId, braceletMac, startDate, endDate);
+	}
+	
 	/**
 	 * 获取周运动数据
 	 * 

@@ -83,8 +83,8 @@ public class LessonInfoController extends BaseController {
 	 */
 	@RequestMapping(value = {"list", ""})
 	public String list(LessonInfo lessonInfo, @RequestParam(required = false) String sortItem,
-            @RequestParam(required = false) String sort, HttpServletRequest request, HttpServletResponse response,
-            Model model) {
+            @RequestParam(required = false) String sort, @RequestParam(required = false) String isfull,
+            HttpServletRequest request, HttpServletResponse response, Model model) {
 		// 取得当前登录的商家信息
 		User user = UserUtils.getUser();
 
@@ -92,6 +92,7 @@ public class LessonInfoController extends BaseController {
 		lessonInfo.setBusinessInfoId(user.getBusinessinfoId());
 		lessonInfo.setSort(sort);
 		lessonInfo.setSortItem(sortItem);
+		lessonInfo.setIsfull(sortItem);
 		// 取得列表数据
 		Page<LessonInfo> page = lessonInfoService.findPage(new Page<LessonInfo>(request, response), lessonInfo); 
 		
@@ -245,10 +246,10 @@ public class LessonInfoController extends BaseController {
 		} catch (IOException | MyException e) {
 			addMessage(model, "图片保存失败");
             model.addAttribute("msgType", MSG_TYPE_ERROR);
-			return list(new LessonInfo(), sortItem, sort, request, response, model);
+			return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 		}
 		addMessage(model, "保存课程/培训成功");
-		return list(new LessonInfo(), sortItem, sort, request, response, model);
+		return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 	}
 	
 	/**
@@ -267,7 +268,7 @@ public class LessonInfoController extends BaseController {
 			Model model) {
 		lessonInfoService.delete(lessonInfo);
 		addMessage(model, "删除课程/培训成功");
-		return list(new LessonInfo(), sortItem, sort, request, response, model);
+		return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 	}
 	
 	/**
@@ -287,7 +288,7 @@ public class LessonInfoController extends BaseController {
 			Model model) {
 		lessonInfoService.muliDelete(lessonIds);
 		addMessage(model, "勾选课程/培训删除成功");
-		return list(new LessonInfo(), sortItem, sort, request, response, model);
+		return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 	}
 
 	/**
@@ -323,7 +324,7 @@ public class LessonInfoController extends BaseController {
 		} else {
 			addMessage(model, "勾选课程/培训已上架");
 		}
-		return list(new LessonInfo(), sortItem, sort, request, response, model);
+		return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 	}
 
 	/**
@@ -343,7 +344,7 @@ public class LessonInfoController extends BaseController {
 			Model model) {
 		lessonInfoService.muliUndercarriage(lessonIds);
 		addMessage(model, "勾选课程/培训已下架");
-		return list(new LessonInfo(), sortItem, sort, request, response, model);
+		return list(new LessonInfo(), sortItem, sort, null, request, response, model);
 	}
 	
 	/**

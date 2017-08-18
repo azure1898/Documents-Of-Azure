@@ -47,19 +47,19 @@
         function hrefByProdType(value) {
             if ('0' == value) {
                 // 迁移至商品订单列表页面
-                window.location.href = "${ctx}/order/orderField";
+                window.location.href="${ctx}/order/orderGoods";
             } else if ('1' == value) {
                 // 迁移至服务订单列表页面
-                window.location.href = "${ctx}/order/orderService";
+                window.location.href="${ctx}/order/orderService";
             } else if ('2' == value) {
                 // 迁移至课程培训订单列表页面
-                window.location.href = "${ctx}/order/orderLesson";
+                window.location.href="${ctx}/order/orderLesson";
             } else if ('3' == value) {
                 // 迁移至场地预约订单列表页面
-                window.location.href = "${ctx}/order/orderField";
+                window.location.href="${ctx}/order/orderField";
             } else {
                 // 迁移至团购订单列表页面
-                window.location.href = "${ctx}/order/orderGroupPurc";
+                window.location.href="${ctx}/order/orderGroupPurc";
             }
         }
         // 根据按钮不同改变searchForm的ACTION

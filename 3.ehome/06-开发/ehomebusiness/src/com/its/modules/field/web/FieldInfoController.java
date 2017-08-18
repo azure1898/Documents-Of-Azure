@@ -80,13 +80,36 @@ public class FieldInfoController extends BaseController {
 	 */
 	@RequiresPermissions("field:fieldInfo:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(FieldInfo fieldInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(FieldInfo fieldInfo, HttpServletRequest request, HttpServletResponse response, Model model,String isfull) {
 		if (fieldInfo.getPartitionPrice()==null){
 			fieldInfo.setPartitionPrice(new FieldPartitionPrice());
 			fieldInfo.getPartitionPrice().setAppointmentTime(new Date());
 		}
 //		Page<FieldInfo> page = fieldInfoService.findPage(new Page<FieldInfo>(request, response), fieldInfo);
 		List<FieldInfo> list = fieldInfoService.findList(fieldInfo);
+		
+		boolean _b = true;
+		
+		if((isfull==null?"0":isfull).equals("1")){//只查询约满的场地
+			for(int i=0;i<list.size();i++){
+				List<FieldPartitionPrice> fppList =  list.get(i).getFieldPartitionPriceList();
+				if(fppList==null || fppList.size()<1){
+					list.remove(i);
+					i--;
+					continue;
+				}
+				_b=true;
+				for(FieldPartitionPrice fpp:fppList){
+					if(fpp.getState().equals("0")){//可预约
+						_b=false;break;
+					}
+				}
+				if(!_b){
+					list.remove(i);
+					i--;
+				}
+			}
+		}
 		model.addAttribute("list", list);
 		return "modules/field/fieldInfoList";
 	}

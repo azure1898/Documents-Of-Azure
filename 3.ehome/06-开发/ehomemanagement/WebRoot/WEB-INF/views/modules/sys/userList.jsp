@@ -76,8 +76,7 @@
         <ul class="ul-form">
             <li>
                 <form:select path="loginFlag" class="input-medium">
-                    <form:option value="" label="全部类型" />
-                    <form:options items="${fns:getDictList('useable')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                    <form:options items="${fns:getDictList('userstate')}" itemLabel="label" itemValue="value" htmlEscape="false" />
                 </form:select>
             </li>
             <li class="btns">

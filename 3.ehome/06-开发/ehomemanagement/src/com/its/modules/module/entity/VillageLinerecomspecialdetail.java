@@ -24,6 +24,7 @@ public class VillageLinerecomspecialdetail extends DataEntity<VillageLinerecomsp
     private String businessCategoryDictId; // 商家分类ID
     private String describes; // 描述
     private String picUrl; // 图片
+    private String picId; // 图片
 
     public VillageLinerecomspecialdetail() {
         super();
@@ -100,6 +101,14 @@ public class VillageLinerecomspecialdetail extends DataEntity<VillageLinerecomsp
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getPicId() {
+        return picId;
+    }
+
+    public void setPicId(String picId) {
+        this.picId = picId;
     }
 
 }

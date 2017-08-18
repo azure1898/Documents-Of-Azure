@@ -6,7 +6,10 @@
 <meta name="decorator" content="default" />
 <script type="text/javascript">
 	function home(){
-		window.location.href="${ctx}/order/orderGroupPurc/";
+		if("${tag}"=="1"){
+			window.location.href="${ctx}/order/orderGroupPurc/";
+		}
+		history.go(-1);
 	}
 </script>
 </head>

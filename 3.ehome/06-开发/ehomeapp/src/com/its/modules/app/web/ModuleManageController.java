@@ -18,16 +18,20 @@ import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.common.AppGlobal;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
 import com.its.modules.app.entity.ModuleManage;
+import com.its.modules.app.entity.OrderGroupPurc;
 import com.its.modules.app.entity.OrderTrack;
 import com.its.modules.app.entity.RoomCertify;
 import com.its.modules.app.entity.VillageInfo;
 import com.its.modules.app.entity.VillageLine;
+import com.its.modules.app.service.AccountApplicationService;
 import com.its.modules.app.service.AccountService;
 import com.its.modules.app.service.CouponManageService;
 import com.its.modules.app.service.ModuleManageService;
+import com.its.modules.app.service.OrderGroupPurcService;
 import com.its.modules.app.service.OrderTrackService;
 import com.its.modules.app.service.RoomCertifyService;
 import com.its.modules.app.service.VillageInfoService;
@@ -37,26 +41,146 @@ import com.its.modules.app.service.VillageLineService;
  * 模块管理Controller
  * 
  * @author like
+ * 
  * @version 2017-07-03
  */
 @Controller
-@RequestMapping(value = "${appPath}/my")
+@RequestMapping(value = "${appPath}")
 public class ModuleManageController extends BaseController {
 
 	@Autowired
 	private AccountService accountService;
+
 	@Autowired
 	private CouponManageService couponManageService;
+
 	@Autowired
 	private ModuleManageService moduleManageService;
+
 	@Autowired
 	private OrderTrackService orderTrackService;
+
 	@Autowired
 	private RoomCertifyService roomCertifyService;
+
 	@Autowired
 	private VillageInfoService villageInfoService;
+
 	@Autowired
 	private VillageLineService villageLineService;
+
+	@Autowired
+	private OrderGroupPurcService orderGroupPurcService;
+
+	@Autowired
+	private AccountApplicationService accountApplicationService;
+
+	/**
+	 * 首页模块推荐
+	 * 
+	 * @param userID
+	 *            用户ID（可空）
+	 * @param buildingID
+	 *            楼盘ID（不可空）
+	 * @return Map<String, Object>
+	 */
+	@RequestMapping(value = "home/getRecommendModule")
+	@ResponseBody
+	public Map<String, Object> getRecommendModule(String userID, String buildingID, HttpServletRequest request) {
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, buildingID)) {
+			return toJson;
+		}
+		VillageLine villageLine = villageLineService.getByVillageInfoId(buildingID);
+		if (villageLine == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "楼盘产品线不存在");
+			return toJson;
+		}
+		List<ModuleManage> moduleManages = null;
+		List<String> accountApplication = accountApplicationService.getAccountApplicationList(userID, buildingID);
+		if (accountApplication == null || accountApplication.size() == 0) {
+			// 如果用户没有设置常用应用，获取首页推荐模块数据
+			moduleManages = moduleManageService.getModuleManageList(villageLine.getMaintRecomModule());
+		} else {
+			// 如果用户设置了常用应用，获取用户的常用应用数据
+			moduleManages = moduleManageService.getModuleManageList(accountApplication);
+		}
+		if (moduleManages == null || moduleManages.size() == 0) {
+			toJson.put("code", Global.CODE_SUCCESS);
+			toJson.put("message", "暂无数据");
+			return toJson;
+		}
+
+		/* Data数据开始 */
+		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
+		for (ModuleManage moduleManage : moduleManages) {
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("moduleID", moduleManage.getId());
+			data.put("moduleType", CommonGlobal.MODULE_TYPE_COMMUNITY.equals(moduleManage.getModuleType()) ? 2 : 1);
+			data.put("moduleIcon", ValidateUtil.getImageUrl(moduleManage.getModuleIcon(), ValidateUtil.ZERO, request));
+			data.put("moduleName", moduleManage.getModuleName());
+			data.put("moduleUrl", moduleManage.getModuleUrl());
+
+			datas.add(data);
+		}
+		/* Data数据结束 */
+
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", datas);
+		toJson.put("message", "信息已获取");
+		return toJson;
+	}
+
+	/**
+	 * 社区顶部模块推荐位
+	 * 
+	 * @param userID
+	 *            用户ID（可空）
+	 * @param buildingID
+	 *            楼盘ID（不可空）
+	 * @return Map<String, Object>
+	 */
+	@RequestMapping(value = "community/getTopModule")
+	@ResponseBody
+	public Map<String, Object> getTopModule(String userID, String buildingID, HttpServletRequest request) {
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, buildingID)) {
+			return toJson;
+		}
+		VillageLine villageLine = villageLineService.getByVillageInfoId(buildingID);
+		if (villageLine == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "楼盘产品线不存在");
+			return toJson;
+		}
+		List<ModuleManage> moduleManages = moduleManageService.getModuleManageList(villageLine.getCommunityRecomModule());
+		if (moduleManages == null || moduleManages.size() == 0) {
+			toJson.put("code", Global.CODE_SUCCESS);
+			toJson.put("message", "暂无数据");
+			return toJson;
+		}
+
+		/* Data数据开始 */
+		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
+		for (ModuleManage moduleManage : moduleManages) {
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("moduleID", moduleManage.getId());
+			data.put("moduleIcon", ValidateUtil.getImageUrl(moduleManage.getModuleIcon(), ValidateUtil.ZERO, request));
+			data.put("moduleName", moduleManage.getModuleName());
+			data.put("moduleUrl", moduleManage.getModuleUrl());
+
+			datas.add(data);
+		}
+		/* Data数据结束 */
+
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", datas);
+		toJson.put("message", "信息已获取");
+		return toJson;
+	}
 
 	/**
 	 * 获取我的首页信息
@@ -67,7 +191,7 @@ public class ModuleManageController extends BaseController {
 	 *            楼盘ID（不可空）
 	 * @return Map<String, Object>
 	 */
-	@RequestMapping(value = "getUserHomePage")
+	@RequestMapping(value = "my/getUserHomePage")
 	@ResponseBody
 	public Map<String, Object> getUserHomePage(String userID, String buildingID, HttpServletRequest request) {
 		Map<String, Object> toJson = new HashMap<String, Object>();
@@ -137,15 +261,25 @@ public class ModuleManageController extends BaseController {
 					if (account != null) {
 						List<MyOrderViewBean> myOrderViewBeans = orderTrackService.getRecentMyOrderView(buildingID, userID);
 						for (MyOrderViewBean myOrderViewBean : myOrderViewBeans) {
-							Map<String, Object> m = new HashMap<>();
-							m.put("orderID", myOrderViewBean.getOrderId());
-							m.put("orderType", myOrderViewBean.getOrderType());
-							m.put("orderCode", myOrderViewBean.getOrderNo());
-							m.put("orderTime", myOrderViewBean.getCreateDate());
-							m.put("orderMoney", ValidateUtil.validateDouble(myOrderViewBean.getPayMoney()));
-							OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(myOrderViewBean.getOrderId());
-							m.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
-							orders.add(m);
+							Map<String, Object> map = new HashMap<>();
+							map.put("orderID", myOrderViewBean.getOrderId());
+							map.put("orderType", myOrderViewBean.getOrderType());
+							ModuleManage moduleManage = moduleManageService.get(myOrderViewBean.getModuleManageId());
+							map.put("orderModuleID", moduleManage == null ? "" : moduleManage.getId());
+							map.put("orderModuleName", moduleManage == null ? "" : moduleManage.getModuleName());
+							map.put("orderCode", myOrderViewBean.getOrderNo());
+							map.put("orderTime", myOrderViewBean.getCreateDate());
+							map.put("orderMoney", ValidateUtil.validateDouble(myOrderViewBean.getPayMoney()));
+							// 团购订单状态额外处理
+							if (myOrderViewBean.getOrderType() == 5) {
+								OrderGroupPurc orderGroupPurc = orderGroupPurcService.get(myOrderViewBean.getOrderId());
+								map.put("orderStatus", orderGroupPurc == null ? "" : orderGroupPurcService.getOrderGroupPurStatus(orderGroupPurc));
+							} else {
+								OrderTrack orderTrack = orderTrackService.getRecentOrderStatus(myOrderViewBean.getOrderId());
+								map.put("orderStatus", orderTrack == null ? "" : orderTrack.getStateMsgPhone());
+							}
+							map.put("orderUrl", null);
+							orders.add(map);
 						}
 					}
 					order.put("orders", orders);
@@ -239,39 +373,11 @@ public class ModuleManageController extends BaseController {
 					bracelet.put("moduleIcon", StringUtils.isNotBlank(module.getModuleIcon()) ? MyFDFSClientUtils.get_fdfs_file_url(request, module.getModuleIcon()) : "");
 					bracelet.put("moduleUrl", StringUtils.value(module.getModuleUrl()));
 					bracelet.put("moduleType", 2);
-					// List<Map<String, Object>> bands = new ArrayList<>();
-					// // Map<String, Object> m1 = new HashMap<>();
-					// // m1.put("bandName", "致加手环");
-					// // m1.put("bandIcon", "");
-					// // m1.put("bandUrl", "");
-					// // bands.add(m1);
-					// Map<String, Object> m2 = new HashMap<>();
-					// m2.put("bandName", "运动成绩");
-					// m2.put("bandIcon", "");
-					// m2.put("bandUrl", "");
-					// bands.add(m2);
-					// Map<String, Object> m3 = new HashMap<>();
-					// m3.put("bandName", "睡眠结果");
-					// m3.put("bandIcon", "");
-					// m3.put("bandUrl", "");
-					// bands.add(m3);
-					// Map<String, Object> m4 = new HashMap<>();
-					// m4.put("bandName", "羊城通");
-					// m4.put("bandIcon", "");
-					// m4.put("bandUrl", "");
-					// bands.add(m4);
-					// bracelet.put("bands", bands);
 					modules.add(bracelet);
 				} else if (AppGlobal.MODULE_COMPLAINT.equals(module.getPhoneModuleCode()) || AppGlobal.MODULE_REPAIRS.equals(module.getPhoneModuleCode()) || AppGlobal.MODULE_PHONE_OPEN_DOOR.equals(module.getPhoneModuleCode())) {// 我的投诉、我的报修、访客邀请
 					Map<String, Object> complain = new HashMap<>();
 					complain.put("appName", StringUtils.value(module.getModuleName()));
 					complain.put("appCode", module.getPhoneModuleCode());
-					// complain.put("moduleIcon", (module != null &&
-					// StringUtils.isNotBlank(module.getModuleIcon()))
-					// ? MyFDFSClientUtils.get_fdfs_file_url(request,
-					// module.getModuleIcon()) : "");
-					// complain.put("moduleUrl", "");
-					// complain.put("moduleType", 0);
 					myApplications.add(complain);
 				}
 			}

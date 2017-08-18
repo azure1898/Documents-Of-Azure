@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
+import com.its.modules.app.bean.BusinessInfoBean;
 import com.its.modules.app.common.AppUtils;
 import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
@@ -114,8 +116,8 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
 	 *            1->默认排序;2->商家销量排序;3->商家发布时间排序
 	 * @return List<BusinessInfo>
 	 */
-	public List<BusinessInfo> getBusinessList(int prodType, String villageInfoID,String moduleManageID, int sort) {
-		return dao.getBusinessList(prodType, villageInfoID,moduleManageID, sort);
+	public List<BusinessInfo> getBusinessList(int prodType, String villageInfoID, String moduleManageID, int sort) {
+		return dao.getBusinessList(prodType, villageInfoID, moduleManageID, sort);
 	}
 
 	/**
@@ -224,7 +226,7 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
 	 *            楼盘ID
 	 * @return List<BusinessInfo>
 	 */
-	public List<BusinessInfo> getNormalBusinessList(String villageInfoId) {
+	public List<BusinessInfoBean> getNormalBusinessList(String villageInfoId) {
 		return dao.getNormalBusinessList(villageInfoId);
 	}
 
@@ -392,13 +394,36 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
 		calendar.add(Calendar.DAY_OF_MONTH, amount);
 		return calendar;
 	}
-	
+
 	/**
 	 * 根据商家分类字典表，获取商家的商品模式
-	 * @param id	商家分类字典表ID
-	 * @return
+	 * 
+	 * @param id
+	 *            商家分类字典表ID
+	 * @return String
 	 */
-	public String getProdTypeByCategoryDictId(String id){
+	public String getProdTypeByCategoryDictId(String id) {
 		return dao.getProdTypeByCategoryDictId(id);
+	}
+
+	/**
+	 * 获取某商家的产品模式集合
+	 * 
+	 * @param businessInfoId
+	 *            商家ID
+	 * @return List<Map<String, Object>>
+	 */
+	public List<Map<String, Object>> getBusinessProdTypeList(String businessInfoId) {
+		List<Map<String, Object>> prodModes = new ArrayList<Map<String, Object>>();
+		List<String> prodTypes = dao.getBusinessProdTypeList(businessInfoId);
+		if (prodTypes != null && prodTypes.size() != 0) {
+			for (String string : prodTypes) {
+				Map<String, Object> prodMode = new HashMap<String, Object>();
+				prodMode.put("modeID", string);
+
+				prodModes.add(prodMode);
+			}
+		}
+		return prodModes;
 	}
 }

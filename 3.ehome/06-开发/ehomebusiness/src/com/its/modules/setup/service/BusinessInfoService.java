@@ -146,4 +146,13 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
     public void updateSetting(BusinessInfo businessInfo) {
         businessInfoDao.updateSetting(businessInfo);
     }
+    
+    /**
+     * 根据商家ID查询产品模式
+     * @param id
+     * @return
+     */
+    public List<String> getPtlistById(String id){
+    	return this.dao.getPtlistById(id);
+    }
 }

@@ -36,6 +36,7 @@
             },
             messages : {
                 maintRecomModuleIds : {
+                    required : "请选择首页推荐模块",
                     checkMinSize : "首页推荐模块推荐个数不足5个",
                     checkMaxSize : "最多只能勾选5个模块"
                 },
@@ -111,7 +112,9 @@
 <body>
     <ul class="nav nav-tabs">
         <li>
-            <span><a href="${ctx}/module/villageLine/recommendList">模块管理 </a>> <a href="${ctx}/module/villageLine/recommendList">推荐管理 > </a><a>设置管理</a></span>
+            <span>
+                <a href="${ctx}/module/villageLine/recommendList">模块管理 </a>> <a href="${ctx}/module/villageLine/recommendList">推荐管理 > </a><a>设置管理</a>
+            </span>
         </li>
     </ul>
     <ul class="nav nav-tabs">
@@ -121,7 +124,7 @@
         <li>
             <a href="${ctx}/module/villageLine/communityRecomFrom?id=${villageLine.id}">社区推荐</a>
         </li>
-        <li >
+        <li>
             <a href="${ctx}/module/villageLine/lifeRecomFrom?id=${villageLine.id}">生活推荐</a>
         </li>
     </ul>
@@ -141,8 +144,18 @@
             <div class="controls" style="border: 1px solid #ccc; padding: 5px;">
                 <div style="border: 1px solid #ccc; padding: 20px" id="addMaintRecomModule"></div>
                 <div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px;">
-                    <form:checkboxes items="${moduleList}" path="maintRecomModuleIds" itemLabel="moduleName" itemValue="id" class="required" />
-                    <span class="help-inline"><font color="red">*</font> </span>
+                    <c:choose>
+                        <c:when test="${moduleList.size()>0}">
+                            <form:checkboxes items="${moduleList}" path="maintRecomModuleIds" itemLabel="moduleName" itemValue="id" class="required" />
+                        </c:when>
+                        <c:otherwise>
+                            <font color="red">没有可选择的模块，请在"模块管理"-"设置管理" 进行楼盘模块设置 </font>
+                            <form:input path="maintRecomModuleIds" style="width: 0px; height: 0px; border: 0px;opacity: 0;"  class="required" />
+                        </c:otherwise>
+                    </c:choose>
+                    <span class="help-inline">
+                        <font color="red">*</font>
+                    </span>
                 </div>
             </div>
         </div>
@@ -151,10 +164,27 @@
                 <input id="btnSubmit" class="btn btn-success" type="submit" value="保 存" />&nbsp;
             </shiro:hasPermission>
             <shiro:hasPermission name="module:villageLine:batchSetModule">
-                <input id="" class="btn btn-success" type="button" value="预览" />&nbsp;
+                <input id="" onclick="showPage()" class="btn btn-success" type="button" value="预览" />&nbsp;
             </shiro:hasPermission>
             <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)" />
         </div>
+        <script src="${ctxStatic}/common/layer.js"></script>
+        <script type="text/javascript">
+            function showPage(){
+                layer.open({
+                    type: 2,
+                    title:'首页推荐预览',
+                    area: ['414px', '736px'],
+                    scrollbar: true,
+                    maxmin: true,
+                    content: '//218.28.28.186:9088/ehomeweb/page/home/index.html',
+                    zIndex: layer.zIndex, //重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    },
+                });
+            }
+        </script>
     </form:form>
 </body>
 

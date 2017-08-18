@@ -257,6 +257,9 @@
 		<result property="orderNo" column="orderNo" />
 		<result property="createDate" column="createDate" />
 		<result property="payType" column="payType" />
+		<result property="orderState" column="orderState" />
+		<result property="payState" column="payState" />
+		<result property="supportType" column="Support_Type" />
 		<association property="businessInfo" javaType="BusinessInfo">
 			<result property="phoneNum" column="Phone_Num" />
 		</association>
@@ -276,7 +279,7 @@
 			<include refid="orderGroupPurcColumns"/>,
 			b.Phone_Num,
 			c.Group_Purchase_ID,
-			c.Name AS Group_Purchase_Name,
+			c. NAME AS Group_Purchase_Name,
 			c.End_Time,
 			c.Imgs AS Group_Purchase_Imgs,
 			c.Group_Purc_Number,
@@ -290,12 +293,11 @@
 		WHERE
 			a.Business_Info_ID = b.ID
 		AND c.Order_Group_Purc_ID = a.ID
-		AND d.id=c.Group_Purchase_ID
-		AND d.Module_ID=a.Module_Manage_ID
-		AND d.BusinessInfo_ID=a.Business_Info_ID
+		AND a.Group_Purchase_ID = d.ID
 		AND a.Del_Flag = 0
 		AND b.del_flag = 0
 		AND c.Del_Flag = 0
+		AND d.del_flag = 0
 		AND a.ID = #{orderId}
 		AND a.Account_ID = #{accountId}
 	</select>
@@ -311,6 +313,17 @@
 		AND a.ID = #{orderId}
 		AND a.Account_ID = #{accountId}
 		AND a.Pay_State = '0'
+	</select>
+	
+	<!-- 获取团购券临近期的信息 -->
+	<select id="findTicketExpireMsg" resultType="OrderGroupPurcRCBean">
+	SELECT 
+		A.Order_No AS "orderNo",A.`Name` AS "name",A.Account_ID AS "accountId",A.Account_Name AS "accountName"
+		,B.BusinessInfo_ID AS "businessinfoId",B.Group_Purc_Name AS "groupPurcName",B.Validity_Start_Time AS "validityStartTime",B.Validity_End_Time AS "validityEndTime"
+	FROM 
+		order_group_purc A INNER JOIN group_purchase B ON A.Group_Purchase_ID = B.ID
+	WHERE 
+		A.Order_State = '1' AND A.Del_Flag = '0' AND datediff(B.Validity_End_Time,curdate()) = #{numDays}
 	</select>
 	
 </mapper>

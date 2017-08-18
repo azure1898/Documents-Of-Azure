@@ -8,40 +8,40 @@ import org.springframework.transaction.annotation.Transactional;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 
-import com.its.modules.app.dao.VillageLinerecomspecialDao;
-import com.its.modules.app.entity.VillageLinerecomspecial;
+import com.its.modules.app.dao.VillageLineRecomSpecialDao;
+import com.its.modules.app.entity.VillageLineRecomSpecial;
 
 /**
  * 楼盘产品线专题推荐Service
  * 
  * @author sushipeng
  * 
- * @version 2017-08-07
+ * @version 2017-08-15
  */
 @Service
 @Transactional(readOnly = true)
-public class VillageLinerecomspecialService extends CrudService<VillageLinerecomspecialDao, VillageLinerecomspecial> {
+public class VillageLineRecomSpecialService extends CrudService<VillageLineRecomSpecialDao, VillageLineRecomSpecial> {
 
-	public VillageLinerecomspecial get(String id) {
+	public VillageLineRecomSpecial get(String id) {
 		return super.get(id);
 	}
 
-	public List<VillageLinerecomspecial> findList(VillageLinerecomspecial villageLinerecomspecial) {
-		return super.findList(villageLinerecomspecial);
+	public List<VillageLineRecomSpecial> findList(VillageLineRecomSpecial villageLineRecomSpecial) {
+		return super.findList(villageLineRecomSpecial);
 	}
 
-	public Page<VillageLinerecomspecial> findPage(Page<VillageLinerecomspecial> page, VillageLinerecomspecial villageLinerecomspecial) {
-		return super.findPage(page, villageLinerecomspecial);
-	}
-
-	@Transactional(readOnly = false)
-	public void save(VillageLinerecomspecial villageLinerecomspecial) {
-		super.save(villageLinerecomspecial);
+	public Page<VillageLineRecomSpecial> findPage(Page<VillageLineRecomSpecial> page, VillageLineRecomSpecial villageLineRecomSpecial) {
+		return super.findPage(page, villageLineRecomSpecial);
 	}
 
 	@Transactional(readOnly = false)
-	public void delete(VillageLinerecomspecial villageLinerecomspecial) {
-		super.delete(villageLinerecomspecial);
+	public void save(VillageLineRecomSpecial villageLineRecomSpecial) {
+		super.save(villageLineRecomSpecial);
+	}
+
+	@Transactional(readOnly = false)
+	public void delete(VillageLineRecomSpecial villageLineRecomSpecial) {
+		super.delete(villageLineRecomSpecial);
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class VillageLinerecomspecialService extends CrudService<VillageLinerecom
 	 *            推荐位置：00 首页专题推荐 10 社区推荐 20 生活推荐
 	 * @param villageInfoId
 	 *            楼盘ID
-	 * @return VillageLinerecomspecial
+	 * @return VillageLineRecomSpecial
 	 */
-	public VillageLinerecomspecial getVillageLinerecomspecial(String recommendPosition, String villageInfoId) {
-		return dao.getVillageLinerecomspecial(recommendPosition, villageInfoId);
+	public VillageLineRecomSpecial getVillageLineRecomSpecial(String recommendPosition, String villageInfoId) {
+		return dao.getVillageLineRecomSpecial(recommendPosition, villageInfoId);
 	}
 }

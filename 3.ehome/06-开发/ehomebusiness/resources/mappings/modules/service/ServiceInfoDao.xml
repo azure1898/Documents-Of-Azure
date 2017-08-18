@@ -84,6 +84,9 @@
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+			<if test="id != null and id != ''">
+		    	AND a.id = #{id}
+		   </if>
 			<if test="sortInfoId != null and sortInfoId != ''">
 				AND a.sort_info_id = #{sortInfoId}
 			</if>

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.its.modules.app.dao.VillageLinerecomspecialdetailDao">
+<mapper namespace="com.its.modules.app.dao.VillageLineRecomSpecialDetailDao">
     
-	<sql id="villageLinerecomspecialdetailColumns">
+	<sql id="villageLineRecomSpecialDetailColumns">
 		a.id AS "id",
 		a.village_line_recom_special_id AS "villageLineRecomSpecialId",
 		a.recom_type AS "recomType",
 		a.sort_num AS "sortNum",
-		a.recom_business_module_id AS "recomBusinessModuleId",
+		a.recom_module_id AS "recomModuleId",
+		a.business_category_dict_id AS "businessCategoryDictId",
+		a.recom_business_id AS "recomBusinessId",
 		a.describes AS "describes",
 		a.pic_url AS "picUrl",
 		a.create_by AS "createBy.id",
@@ -18,22 +20,22 @@
 		a.del_flag AS "delFlag"
 	</sql>
 	
-	<sql id="villageLinerecomspecialdetailJoins">
+	<sql id="villageLineRecomSpecialDetailJoins">
 	</sql>
     
-	<select id="get" resultType="VillageLinerecomspecialdetail">
+	<select id="get" resultType="VillageLineRecomSpecialDetail">
 		SELECT 
-			<include refid="villageLinerecomspecialdetailColumns"/>
+			<include refid="villageLineRecomSpecialDetailColumns"/>
 		FROM village_linerecomspecialdetail a
-		<include refid="villageLinerecomspecialdetailJoins"/>
+		<include refid="villageLineRecomSpecialDetailJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="VillageLinerecomspecialdetail">
+	<select id="findList" resultType="VillageLineRecomSpecialDetail">
 		SELECT 
-			<include refid="villageLinerecomspecialdetailColumns"/>
+			<include refid="villageLineRecomSpecialDetailColumns"/>
 		FROM village_linerecomspecialdetail a
-		<include refid="villageLinerecomspecialdetailJoins"/>
+		<include refid="villageLineRecomSpecialDetailJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
@@ -47,11 +49,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="VillageLinerecomspecialdetail">
+	<select id="findAllList" resultType="VillageLineRecomSpecialDetail">
 		SELECT 
-			<include refid="villageLinerecomspecialdetailColumns"/>
+			<include refid="villageLineRecomSpecialDetailColumns"/>
 		FROM village_linerecomspecialdetail a
-		<include refid="villageLinerecomspecialdetailJoins"/>
+		<include refid="villageLineRecomSpecialDetailJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -71,7 +73,9 @@
 			village_line_recom_special_id,
 			recom_type,
 			sort_num,
-			recom_business_module_id,
+			recom_module_id,
+			business_category_dict_id,
+			recom_business_id,
 			describes,
 			pic_url,
 			create_by,
@@ -85,7 +89,9 @@
 			#{villageLineRecomSpecialId},
 			#{recomType},
 			#{sortNum},
-			#{recomBusinessModuleId},
+			#{recomModuleId},
+			#{businessCategoryDictId},
+			#{recomBusinessId},
 			#{describes},
 			#{picUrl},
 			#{createBy.id},
@@ -102,7 +108,9 @@
 			village_line_recom_special_id = #{villageLineRecomSpecialId},
 			recom_type = #{recomType},
 			sort_num = #{sortNum},
-			recom_business_module_id = #{recomBusinessModuleId},
+			recom_module_id = #{recomModuleId},
+			business_category_dict_id = #{businessCategoryDictId},
+			recom_business_id = #{recomBusinessId},
 			describes = #{describes},
 			pic_url = #{picUrl},
 			update_by = #{updateBy.id},
@@ -118,9 +126,9 @@
 	</update>
 	
 	<!-- 获取某专题推荐的明细列表 -->
-	<select id="getVillageLinerecomspecialdetailList" resultType="VillageLinerecomspecialdetail">
+	<select id="getRecomSpecialDetailList" resultType="VillageLineRecomSpecialDetail">
 		SELECT
-			<include refid="villageLinerecomspecialdetailColumns"/>
+			<include refid="villageLineRecomSpecialDetailColumns"/>
 		FROM
 			Village_LineRecomSpecialDetail a
 		WHERE

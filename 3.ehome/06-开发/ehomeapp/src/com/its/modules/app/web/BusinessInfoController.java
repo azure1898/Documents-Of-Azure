@@ -45,10 +45,13 @@ public class BusinessInfoController extends BaseController {
 
 	@Autowired
 	private BusinessInfoService businessInfoService;
+
 	@Autowired
 	private GoodsInfoService goodsInfoService;
+
 	@Autowired
 	private GroupPurchaseService groupPurchaseService;
+
 	@Autowired
 	private MyCollectService myCollectService;
 
@@ -59,7 +62,7 @@ public class BusinessInfoController extends BaseController {
 	 *            用户ID
 	 * @param buildingID
 	 *            楼盘ID
-	 * @param moduleID         
+	 * @param moduleID
 	 * @param sort
 	 *            1->默认排序;2->商家销量排序;3->商家发布时间排序
 	 */
@@ -70,8 +73,7 @@ public class BusinessInfoController extends BaseController {
 		if (StringUtils.isBlank(buildingID) || StringUtils.isBlank(moduleID)) {
 			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
 		}
-		List<BusinessInfo> list = businessInfoService.getBusinessList(Integer.parseInt(AppGlobal.MODEL_GOODS), buildingID,moduleID,
-				(StringUtils.isNoneBlank(sort) && StringUtils.isNumeric(sort)) ? Integer.parseInt(sort) : 1);
+		List<BusinessInfo> list = businessInfoService.getBusinessList(Integer.parseInt(AppGlobal.MODEL_GOODS), buildingID, moduleID, (StringUtils.isNoneBlank(sort) && StringUtils.isNumeric(sort)) ? Integer.parseInt(sort) : 1);
 		if (list.size() == 0) {
 			return "{\"code\":" + Global.CODE_SUCCESS + ",\"data\":[],\"message\":\"该模式暂无商家\"}";
 		}
@@ -143,7 +145,7 @@ public class BusinessInfoController extends BaseController {
 			}
 			Map<String, Object> group = new HashMap<String, Object>();
 			GroupPurchaseBean gp = gpl.get(i);
-			group.put("groupBuyID", gp.getId());
+			group.put("groupBuyID", gp.getGroupPurchaseTimeId());
 			group.put("groupBuyName", gp.getGroupPurcName());
 			group.put("groupBuyImage", MyFDFSClientUtils.get_fdfs_file_url(request, gp.getGroupPurcPic()));
 			group.put("groupBuyPrice", gp.getGroupPurcMoney());
@@ -200,7 +202,7 @@ public class BusinessInfoController extends BaseController {
 			}
 			Map<String, Object> group = new HashMap<String, Object>();
 			GroupPurchaseBean gp = gpl.get(i);
-			group.put("groupBuyID", gp.getId());
+			group.put("groupBuyID", gp.getGroupPurchaseTimeId());
 			group.put("groupBuyName", gp.getGroupPurcName());
 			group.put("groupBuyImage", MyFDFSClientUtils.get_fdfs_file_url(request, gp.getGroupPurcPic()));
 			group.put("groupBuyPrice", gp.getGroupPurcMoney());
@@ -212,7 +214,6 @@ public class BusinessInfoController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.putAll(getGoodsModelJson(info, request));
 		data.put("isCollection", StringUtils.isNotBlank(userID) ? myCollectService.isCollect(userID, buildingID, businessID) : 0);
-		// data.put("activities", getBusinessSalse(businessID));// 商家满减活动
 		data.put("groupBuy", groupJson);// 商家团购活动
 		data.put("businessDesc", info.getBusinessIntroduce());// 商家介绍[富文本内容，需要特殊处理]
 
@@ -233,14 +234,14 @@ public class BusinessInfoController extends BaseController {
 		data.put("businessImage", MyFDFSClientUtils.get_fdfs_file_url(request, info.getBusinessPic()));// 商家图片
 		data.put("businessAddress", businessInfoService.getAddress(info));// 地址
 		data.put("businessPhone", info.getPhoneNum());// 联系电话
+		data.put("prodModes", businessInfoService.getBusinessProdTypeList(info.getId()));
 		data.put("businessHours", info.getBusinessHours());// 营业时间
 		data.put("isNormal", businessInfoService.isBusinessNormal(info));
 		data.put("sendMoney", "1".equals(info.getFullDistributeFlag()) ? info.getFullDistributeMoney() : 0);
 		data.put("deliveryFee", info.getDistributeCharge() != null ? info.getDistributeCharge() : 0);// 配送费用
 		data.put("isFeeActivity", "1".equals(info.getFreeDistributeFlag()) ? 1 : 0);// 是否配送费活动
 		if ("1".equals(info.getFreeDistributeFlag())) {
-			data.put("deliveryFeeActivity",
-					"满" + info.getFreeDistributeMoney() + "元免" + (info.getDistributeCharge() != null ? info.getDistributeCharge() : 0) + "元运费");// 配送费活动内容
+			data.put("deliveryFeeActivity", "满" + info.getFreeDistributeMoney() + "元免" + (info.getDistributeCharge() != null ? info.getDistributeCharge() : 0) + "元运费");// 配送费活动内容
 		}
 		data.put("businessLabels", businessInfoService.getBusinessLabelList(info));
 		data.put("businessUrl", "");

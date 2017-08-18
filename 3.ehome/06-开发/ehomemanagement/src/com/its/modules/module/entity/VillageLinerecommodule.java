@@ -25,6 +25,7 @@ public class VillageLinerecommodule extends DataEntity<VillageLinerecommodule> {
     private String recomBusinessId; // 推荐商家ID
     private String describes; // 描述
     private String picUrl; // 图片
+    private String picId; // 图片
 
     public VillageLinerecommodule() {
         super();
@@ -104,6 +105,14 @@ public class VillageLinerecommodule extends DataEntity<VillageLinerecommodule> {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getPicId() {
+        return picId;
+    }
+
+    public void setPicId(String picId) {
+        this.picId = picId;
     }
 
 }

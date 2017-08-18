@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.drew.lang.StringUtil;
 import com.its.common.config.Global;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
@@ -72,16 +73,16 @@ public class BraceletInfoController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/isBindBand")
-	public String isBindBand(String userID, String buildingID) {
+	public String isBindBand(String userID, String buildingID,String bandMac) {
 		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID)) {
+		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandMac)) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "参数错误");
 			return JSONObject.fromObject(json).toString();
 		}
-		List<BraceletInfo> list = braceletInfoService.getAccountBracelets(userID, buildingID);
+		BraceletInfo list = braceletInfoService.getAccountBraceletSpe(userID, buildingID,bandMac);
 		Map<String, Object> data = new HashMap<String, Object>();
-		if (list.size() > 0) {
+		if (list!= null) {
 			data.put("isBind", 1);
 		} else {
 			data.put("isBind", 0);
@@ -116,6 +117,10 @@ public class BraceletInfoController extends BaseController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("bandID", info.getId());
 			map.put("bandName", info.getName());
+			map.put("bandSerNum", info.getSerialNumber());
+			map.put("bandTypeName", info.getModelName());
+			map.put("bandPairType", info.getPairType());
+			map.put("bandVersion", info.getVersion());
 			map.put("bandType", info.getModel());
 			map.put("bandMac", info.getMac());
 			data.add(map);
@@ -171,22 +176,20 @@ public class BraceletInfoController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/uploadBand", method = RequestMethod.POST)
-	public String uploadBand(String userID, String buildingID, String bandName, String bandType, String bandMac) {
+	public String uploadBand(String userID, String buildingID, String bandName, int bandType, String bandMac,String bandTypeName,String bandSerNum,int bandPairType,String bandVersion) {
 		Map<String, Object> json = new HashMap<String, Object>();
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandName) || StringUtils.isBlank(bandType)
-				|| StringUtils.isBlank(bandMac)) {
+		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID) || StringUtils.isBlank(bandName) || StringUtils.isBlank(String.valueOf(bandType))
+				|| StringUtils.isBlank(bandMac) || StringUtils.isBlank(bandTypeName) || StringUtils.isBlank(bandSerNum) || StringUtils.isBlank(String.valueOf(bandPairType)) 
+				 || StringUtils.isBlank(bandVersion)) {
 			json.put("code", Global.CODE_PROMOT);
 			json.put("message", "参数错误");
 			return JSONObject.fromObject(json).toString();
 		}
 		// 判断此手环是否已绑定
 		boolean exist = false;
-		List<BraceletInfo> list = braceletInfoService.getAccountBracelets(userID, buildingID);
-		for (BraceletInfo info : list) {
-			if (bandMac.equals(info.getMac())) {
-				exist = true;
-				break;
-			}
+		BraceletInfo list = braceletInfoService.getAccountBraceletSpe(userID, buildingID,bandMac);
+		if(list!=null){
+			exist=true;
 		}
 		if (exist) {
 			json.put("code", Global.CODE_PROMOT);
@@ -200,6 +203,10 @@ public class BraceletInfoController extends BaseController {
 		info.setTargetStep(0);
 		info.setModel(bandType);
 		info.setMac(bandMac);
+		info.setModelName(bandTypeName);
+		info.setSerialNumber(bandSerNum);
+		info.setPairType(bandPairType);
+		info.setVersion(bandVersion);
 		braceletInfoService.save(info);
 		json.put("code", Global.CODE_SUCCESS);
 		json.put("message", "绑定成功");

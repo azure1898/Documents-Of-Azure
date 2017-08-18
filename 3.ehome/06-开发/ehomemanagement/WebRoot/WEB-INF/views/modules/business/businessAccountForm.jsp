@@ -109,7 +109,7 @@
         <div class="control-group" style="display: none">
             <label class="control-label">用户状态:</label>
             <div class="controls">
-                <form:input path="loginFlag" value="1" htmlEscape="false" maxlength="100" />
+                <input name="loginFlag" value="${not empty user.id?user.loginFlag:1}" htmlEscape="false" maxlength="100" />
             </div>
         </div>
         <div class="control-group">

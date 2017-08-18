@@ -79,4 +79,24 @@ public interface SocialPraiseDao extends CrudDao<SocialPraise> {
 	 * @return
 	 */
 	public List<SocialPraise> findListByToUserId(@Param("touserid") String touserid);
+	
+	/**
+	 * @Description：根据用户ID查询该用户的点赞数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countPraiseByUserId(String userId);
+	
+	/**
+	 * 
+	 * @Description：根据发言id和点赞人得到数据
+	 * @Author：邵德才
+	 * @Date：2017年8月16日
+	 * @param userId
+	 * @param pid
+	 * @return
+	 */
+	public int getIsPraise(@Param("userId")String userId, @Param("pid")String pid);
 }

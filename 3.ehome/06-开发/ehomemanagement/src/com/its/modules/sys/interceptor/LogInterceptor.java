@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.its.common.service.BaseService;
 import com.its.common.utils.DateUtils;
+import com.its.common.utils.Exceptions;
 import com.its.modules.sys.entity.Log;
 import com.its.modules.sys.utils.LogUtils;
 
@@ -51,6 +52,11 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, 
 			Object handler, Exception ex) throws Exception {
 
+
+		//不知为何  ex总为null 无法获取到异常
+		Throwable ex1 = Exceptions.getThrowable(request);
+		if(ex1!=null)
+			ex = new Exception(Exceptions.getStackTraceAsString(ex));
 		// 保存日志 操作日志
 		LogUtils.saveLog(request, handler, ex, null,Log.TYPE_OPERATE);
 		

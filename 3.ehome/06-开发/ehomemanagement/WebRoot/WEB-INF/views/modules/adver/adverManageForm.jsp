@@ -38,15 +38,58 @@
         var prodectLine = 0;
         if ('${adverManage.adverPosition.id}' != '') {
             prodectLine = '${adverManage.adverPosition.id}';
+        }else{
+            $("input[name='adverPosition']").eq(0).prop("checked","checked");
         }
         bindPosition(prodectLine);
         bindTree(prodectLine);
         hideAdver('${adverManage.adverType}');
-        /* 绑定分类下拉值  */
-        changeBusiness($("#HidCategoryId").val());
-        /* 绑定商品下拉值 */
-        changeGoods($("#HidGoodsId").val());
-        $("#displayTimeInterval").prop("disabled", true);
+        if ('${adverManage.adverType}' == '4') {
+            /* 绑定分类下拉值  */
+            changeBusiness($("#HidCategoryId").val());
+            /* 绑定商品下拉值 */
+            changeGoods($("#HidGoodsId").val());
+        }
+        if ($("input[name='displayType']:checked").val() != 1) {
+            $("#displayTimeInterval").prop("disabled", true);
+        }
+        $.validator.addMethod("checkVillage", function(value, element, params) {
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getCheckedNodes(true);
+            var ids = [];
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].isParent != true) {
+                    ids.push(nodes[i].id);
+                }
+            }
+            if (ids.length == 0) {
+                return false;
+            } else {
+                $("#villageIds").val(ids);
+                return true;
+            }
+        }, "请选择投放楼盘");
+        $.validator.addMethod("checkPositionId", function(value, element, params) {
+            var positionIdList = '';
+            $("input[name='positionId']").each(function() {
+                if ($(this).attr("checked") == 'checked') {
+                    positionIdList += $(this).val();
+                }
+            });
+            if (positionIdList == '') {
+                return false;
+            } else {
+                return true;
+            }
+        }, "请选择广告位置");
+        jQuery.validator.addMethod("checkImg", function(value, element, params) {
+            var imgArea = $("#imgArea").children().find(".up-section").val();
+            if (imgArea != '') {
+                return false;
+            } else {
+                return true;
+            }
+        }, "请上传广告图片");
         $("#inputForm").validate({
             rules : {
                 starttime : {
@@ -54,6 +97,12 @@
                 },
                 endTime : {
                     required : true
+                },
+                villageIds : {
+                    checkVillage : "param",
+                },
+                checkImg : {
+                    checkImg : "params"
                 },
             },
             messages : {
@@ -75,41 +124,20 @@
                 endTime : {
                     required : "请选择投放结束时间"
                 },
-
+                villageIds : {
+                    checkVillage : "请选择投放楼盘",
+                },
+                checkImg : {
+                    checkImg : "请上传广告图片"
+                },
             },
             submitHandler : function(form) {
-                //通过循环获取投放楼盘线的ID
-                var treeObj = $.fn.zTree.getZTreeObj("tree");
-                var nodes = treeObj.getCheckedNodes(true);
-                var ids = [];
-                for (var i = 0; i < nodes.length; i++) {
-                    ids.push(nodes[i].id);
-                }
-                //通过循环获取广告位置的ID
-                var positionIdList = '';
-                $("input[name='positionId']").each(function() {
-                    if ($(this).attr("checked") == 'checked') {
-                        positionIdList += $(this).val();
-                    }
-                });
                 if (KindEditor.instances[0].html().length > 6500) {
                     $(".word_message").show();
                     return;
                 }
-                //获取是否有广告图片
-                var imgArea = $("#imgArea").children().find(".up-section").val();
-                if (positionIdList == '') {
-                    top.$.jBox.tip('请选择广告位置', 'error');
-                } else if (ids.length == 0) {
-                    top.$.jBox.tip('请选择投放楼盘', 'error');
-                } else if (imgArea != '') {
-                    top.$.jBox.tip('请上传广告图片', 'error');
-                    return;
-                } else {
-                    $("#villageIds").val(ids);
-                    loading('正在提交，请稍等...');
-                    form.submit();
-                }
+                loading('正在提交，请稍等...');
+                form.submit();
             },
             errorContainer : "#messageBox",
             errorPlacement : function(error, element) {
@@ -128,10 +156,14 @@
         });
         /* 根据产品线显示不同的位置信息*/
         $("input[name='displayType']").click(function() {
+            $("#displayTimeInterval").prop("disabled",false);
             if ($(this).val() == 1) {
-                $("#displayTimeInterval").prop("disabled", "");
+                $("#displayTimeInterval").prop("readonly", "");
             } else {
-                $("#displayTimeInterval").prop("disabled", true);
+                $("#displayTimeInterval").val("");
+                $("#displayTimeInterval").next().remove();
+                $("#displayTimeInterval").removeClass("required");
+                $("#displayTimeInterval").prop("readonly", true);
             }
         });
         /* 根据广告位置确定是否显示开屏跳过时间 */
@@ -252,7 +284,7 @@
             dataType : "JSON",
             success : function(data) {
                 $("#businessinfoId").empty();
-                var option = "";
+                var option = "<option value=''>商家名称</option>";
                 $.each(data, function(indx, item) {
                     option += "<option value='"+item.id+"'>" + item.businessName + "</option>";
                 })
@@ -273,7 +305,7 @@
             success : function(data) {
                 console.log(data);
                 $("#goodsId").empty();
-                var option = "";
+                var option = "<option value=''>商品名称</option>";
                 $.each(data, function(indx, item) {
                     option += "<option value='"+item.id+"'>" + item.name + "</option>";
                 })
@@ -339,7 +371,7 @@
             } else {
                 return true;
             }
-        }, "结束日期必须大于开始日期");
+        }, "投放结束时间应该大于等于投放结束时间");
     });
 </script>
 </head>
@@ -432,6 +464,7 @@
                             </p>
                         </div>
                     </aside>
+                    <input id="checkImg" name="checkImg" value="" style="width: 0px; height: 0px; border: 0px;">
                     <span class="help-inline">
                         <font color="red">*</font>
                     </span>
@@ -495,7 +528,7 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">投放开始时间：</label>
+            <label class="control-label">投放起始时间：</label>
             <div class="controls">
                 <input id="starttime" name="starttime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required" value="<fmt:formatDate value="${adverManage.starttime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
                 <span class="help-inline">
@@ -516,7 +549,7 @@
             <label class="control-label">投放范围：</label>
             <div class="controls">
                 <ul id="tree" class="ztree" style="border: 1px solid #ccc; padding: 10px; width: 200px;"></ul>
-                <form:hidden path="villageIds" />
+                <form:input path="villageIds" style="width: 0px; height: 0px; border: 0px" />
                 <span class="help-inline">
                     <font color="red">*</font>
                 </span>

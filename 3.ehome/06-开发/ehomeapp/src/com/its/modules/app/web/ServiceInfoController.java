@@ -212,7 +212,7 @@ public class ServiceInfoController extends BaseController {
 	 */
 	@RequestMapping(value = "getServiceItems")
 	@ResponseBody
-	public Map<String, Object> getServiceItems(String userID, @RequestParam(value="pageIndex", required=true, defaultValue="0")int pageIndex, String buildingID, String businessID, String categoryID, HttpServletRequest request) {
+	public Map<String, Object> getServiceItems(String userID, @RequestParam(value = "pageIndex", required = true, defaultValue = "0") int pageIndex, String buildingID, String businessID, String categoryID, HttpServletRequest request) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		if (ValidateUtil.validateParams(toJson, buildingID, businessID)) {
@@ -330,10 +330,11 @@ public class ServiceInfoController extends BaseController {
 		data.put("businessID", businessInfo.getId());
 		data.put("businessName", businessInfo.getBusinessName());
 		data.put("businessImage", businessInfoService.formatBusinessPic(businessInfo.getBusinessPic(), request));
-		data.put("isNormal", businessInfoService.isBusinessNormal(businessInfo));
 		data.put("isCollection", StringUtils.isNotBlank(userID) ? myCollectService.isCollect(userID, buildingID, businessInfo.getId()) : 0);
+		data.put("isNormal", businessInfoService.isBusinessNormal(businessInfo));
 		data.put("businessAddress", businessInfoService.getAddress(businessInfo));
 		data.put("businessPhone", businessInfo.getPhoneNum());
+		data.put("prodModes", businessInfoService.getBusinessProdTypeList(businessInfo.getId()));
 
 		/* 团购活动开始 */
 		List<Map<String, Object>> groupBuys = new ArrayList<Map<String, Object>>();

@@ -29,186 +29,67 @@ var vm = new Vue({
         cartView: function () {
             var _this = this;
 
-            this.$http.get(interfaceUrl + "/live/getCommodityCategory",
-			{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: getQueryString("id") }).then(function (res) {
-			    _this.business = res.data.data;
-			    _this.getShoppingCart();
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id")
+            };
 
-			    if (_this.business.commodityCategory && _this.business.commodityCategory.length > 0) {
-			        this.$http.get(
-						interfaceUrl + "/live/getCommoditiesByCategory",
-						{
-						    userID: userInfo.userID,
-						    buildingID: userInfo.buildingID,
-						    businessID: getQueryString("id"),
-						    categoryID: _this.business.commodityCategory[0].categoryID,
-						    pageIndex: 0
-						}).then(function (res) {
-						    _this.commodityList = res.data.data;
-						});
-			    }
-			    else {
-			        this.$http.get(
-						interfaceUrl + "/live/getCommoditiesByCategory",
-						{
-						    userID: userInfo.userID,
-						    buildingID: userInfo.buildingID,
-						    businessID: getQueryString("id"),
-						    pageIndex: 0
-						}).then(function (res) {
-						    _this.commodityList = res.data.data;
-						});
-			    }
-			});
+            _this.getData(_this, "/live/getCommodityCategory", data, function (resData) {
+                _this.business = resData;
+                 if(_this.business.isNormal==0){
+					toast2("商家休息中，暂时不接受订单")
+				}
+                _this.getShoppingCart();
 
+                if (resData.commodityCategory && resData.commodityCategory.length > 0) {
+                    _this.getCommodityByCategory(resData.commodityCategory[0]);
+                }
+                else {
+                    _this.getCommodity();
+                }
+            });
         },
-        getShoppingCart: function () {
+        getCommodity: function () {
             var _this = this;
 
-            this.$http.get(
-				interfaceUrl + "/live/getShoppingCart",
-				{
-				    userID: userInfo.userID,
-				    buildingID: userInfo.buildingID,
-				    businessID: getQueryString("id")
-				}).then(function (res) {
-				    _this.shoppingcart.commodities = res.data.data.commodities;
-				    _this.shoppingcart.totalMoney = res.data.data.totalMoney;
-				    _this.shoppingcart.num = res.data.data.totalNumber;
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id"),
+                pageIndex: 0
+            };
 
-				    if (_this.business.sendMoney > 0) {
-				        if (_this.business.sendMoney > _this.shoppingcart.totalMoney) {
-				            _this.shoppingcart.lessMoney = _this.business.sendMoney - _this.shoppingcart.totalMoney;
-				        }
-				        else {
-				            _this.shoppingcart.lessMoney = 0;
-				        }
-				    }
-				    else {
-				        _this.shoppingcart.lessMoney = 0;
-				    }
-				});
+            _this.getData(_this, "/live/getCommoditiesByCategory", data, function (resData) {
+                _this.commodityList = resData;
+            });
+        },
+        getCommodityByCategory: function (category) {
+            var _this = this;
+
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id"),
+                categoryID: category.categoryID,
+                pageIndex: 0
+            };
+
+            _this.getData(_this, "/live/getCommoditiesByCategory", data, function (resData) {
+                _this.commodityList = resData;
+            });
         },
         changeCategory: function (category) {
-            var _this = this;
             $("#categoryName").html(category.categoryName);
             $("#menu_category > li.selected").removeClass("selected");
             $(event.target).closest("li").addClass("selected");
 
-            this.$http.get(interfaceUrl + "/live/getCommoditiesByCategory",
-			{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: getQueryString("id"), categoryID: category.categoryID }).then(function (res) {
-			    _this.commodityList = res.data.data;
-			});
+            this.getCommodityByCategory(category);
         },
-        openShoppingCart: function () {
+        collection: function (business) {
             var _this = this;
 
-            this.$http.get(interfaceUrl + "/live/getShoppingCart",
-			{
-			    userID: userInfo.userID, buildingID: userInfo.buildingID,
-			    businessID: getQueryString("id")
-			}).then(function (res) {
-			    _this.shoppingcart.commodities = res.data.data.commodities;
-			    _this.shoppingcart.totalMoney = res.data.data.totalMoney;
-			});
-
-            $(".gwcView").fadeIn("3000");
-        },
-        closeShoppingCart: function () {
-            $(".gwcView").fadeOut("3000");
-        },
-        addShoppingCart: function (commodity) {
-            var _this = this;
-
-            this.$http.get(interfaceUrl + "/live/addShoppingCart",
-			{
-			    userID: userInfo.userID, buildingID: userInfo.buildingID,
-			    businessID: getQueryString("id"),
-			    commodityID: commodity.commodityID,
-			    specificationID: commodity.currentSpeID
-			}).then(function (res) {
-			    _this.shoppingcart.totalMoney = res.data.data.totalMoney;
-			    _this.shoppingcart.num = res.data.data.commodityNumber;
-			    commodity.commodityNumber += 1;
-
-			    if (commodity.isMoreSpe == 1) {
-			        commodity.specifications.forEach(function (specification, index) {
-			            if (specification.specificationID == commodity.currentSpeID) {
-			                specification.specificationNumber = commodity.commodityNumber;
-			            }
-			        })
-			    }
-
-			    _this.getShoppingCart();
-			});
-        },
-        reduceShoppingCart: function (type, commodity) {
-            var _this = this;
-
-            if (type == 1) {
-                this.$http.get(interfaceUrl + "/live/reduceShoppingCart",
-				{
-				    userID: userInfo.userID, buildingID: userInfo.buildingID,
-				    businessID: getQueryString("id"),
-				    commodityID: commodity.commodityID,
-				    specificationID: commodity.currentSpeID
-				}).then(function (res) {
-				    _this.shoppingcart.totalMoney = res.data.data.totalMoney;
-				    _this.shoppingcart.num = res.data.data.commodityNumber;
-				    commodity.commodityNumber -= 1;
-
-				    _this.getShoppingCart();
-				});
-            }
-            else {
-                this.$http.get(interfaceUrl + "/live/reduceShoppingCart",
-				{
-				    userID: userInfo.userID, buildingID: userInfo.buildingID,
-				    businessID: getQueryString("id"),
-				    commodityID: commodity.commodityID,
-				    specificationID: commodity.specificationID
-				}).then(function (res) {
-				    _this.shoppingcart.totalMoney = res.data.data.totalMoney;
-				    _this.shoppingcart.num = res.data.data.commodityNumber;
-				    commodity.commodityNumber -= 1;
-
-				    _this.getShoppingCart();
-				});
-            }
-
-        },
-        clearShoppingCart: function () {
-            var _this = this;
-            layer.open({
-                content: '确定要清空购物车？'
-					    , btn: ['确定', '取消']
-					    , time: 0 //2秒后自动关闭
-					    , yes: function (index) {
-					        _this.$http.get(interfaceUrl + "/live/emptiedShoppingCart",
-                       {
-                           userID: userInfo.userID, buildingID: userInfo.buildingID,
-                           businessID: getQueryString("id")
-                       }).then(function (res) {
-                           _this.shoppingcart.totalMoney = 0;
-                           _this.shoppingcart.num = 0;
-
-                           for (var commodity in _this.commodityList) {
-                               _this.commodityList[commodity].commodityNumber = 0;
-                           }
-
-                           _this.getShoppingCart();
-
-
-                       });
-
-					        layer.close(index);
-					        _this.closeShoppingCart()
-					    }
-
-            });
-
-
-
+            _this.myCollection(_this, business);
         },
         openMoreSpe: function (commodity) {
             this.currentCommodity = commodity;
@@ -230,44 +111,200 @@ var vm = new Vue({
                     commodity.commodityNumber = _this.currentSpecification.specificationNumber;
                     commodity.currentSpeID = _this.currentSpecification.specificationID;
                 }
-            })
+            });
 
             $("#moreSpeModal").modal('toggle');
         },
-        collection: function (business) {
-
-            if (business.isCollection == 0) {
-                this.add_collections(business);
-            }
-            else if (business.isCollection == 1) {
-                this.cancel_collections(business);
-            }
-        },
-        add_collections: function (business) {
+        getShoppingCart: function () {
             var _this = this;
-            this.$http.post(path_add,
-				{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: business.businessID },
-				{ emulateJSON: true }).then(function (res) {
-				    _this.item = res.data.data;
-				    business.isCollection = 1;
-				    toast('收藏成功');
-				})
-        },
-        cancel_collections: function (business) {
-            var _this = this;
-            this.$http.post(path_cancle,
-				{ userID: userInfo.userID, buildingID: userInfo.buildingID, businessID: business.businessID },
-				{ emulateJSON: true }).then(function (res) {
-				    _this.item = res.data.data;
-				    business.isCollection = 0;
-				    toast('取消收藏');
-				})
 
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id")
+            };
+
+            _this.getData(_this, "/live/getShoppingCart", data, function (resData) {
+                _this.shoppingcart.commodities = resData.commodities;
+                _this.shoppingcart.totalMoney = resData.totalMoney;
+                _this.shoppingcart.num = resData.totalNumber;
+
+                if (_this.business.sendMoney > 0) {
+                    if (_this.business.sendMoney > _this.shoppingcart.totalMoney) {
+                        _this.shoppingcart.lessMoney = _this.business.sendMoney - _this.shoppingcart.totalMoney;
+                    }
+                    else {
+                        _this.shoppingcart.lessMoney = 0;
+                    }
+                }
+                else {
+                    _this.shoppingcart.lessMoney = 0;
+                }
+            });
+        },
+        openShoppingCart: function () {
+            var _this = this;
+
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id")
+            };
+
+            _this.getData(_this, "/live/getShoppingCart", data, function (resData) {
+                _this.shoppingcart.commodities = resData.commodities;
+                _this.shoppingcart.totalMoney = resData.totalMoney;
+            });
+
+            $(".gwcView").fadeIn("3000");
+        },
+        closeShoppingCart: function () {
+            $(".gwcView").fadeOut("3000");
+        },
+        addShoppingCart: function (type, commodity) {
+            var _this = this;
+
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id"),
+                commodityID: commodity.commodityID,
+                specificationID: type == 1 ? commodity.currentSpeID : commodity.specificationID
+            };
+
+            _this.postData(_this, "/live/addShoppingCart", data, function (resData) {
+                _this.shoppingcart.totalMoney = resData.totalMoney;
+                _this.shoppingcart.num = resData.commodityNumber;
+                commodity.commodityNumber += 1;
+
+                if (commodity.isMoreSpe == 1) {
+                    commodity.specifications.forEach(function (specification, index) {
+                        if (specification.specificationID == commodity.currentSpeID) {
+                            specification.specificationNumber = commodity.commodityNumber;
+                        }
+                    })
+                }
+
+                if (type == 2) {
+                    _this.addCommodityNum(commodity);
+                }
+
+                _this.getShoppingCart();
+            });
+        },
+        addCommodityNum: function (commodity) {
+            var _this = this;
+
+            _this.commodityList.forEach(function (currentCommodity, index) {
+                if (currentCommodity.commodityID == commodity.commodityID) {
+                    if (currentCommodity.currentSpeID == commodity.specificationID) {
+                        currentCommodity.commodityNumber = commodity.commodityNumber;
+                    }
+
+                    if (currentCommodity.isMoreSpe == 1) {
+                        currentCommodity.specifications.forEach(function (specification, index) {
+                            if (specification.specificationID == commodity.specificationID) {
+                                specification.specificationNumber = commodity.commodityNumber;
+                            }
+                        });
+                    }
+                    else {
+                        currentCommodity.commodityNumber = commodity.commodityNumber;
+                    }
+                }
+            });
+        },
+        reduceShoppingCart: function (type, commodity) {
+            var _this = this;
+
+            var data = {
+                userID: userInfo.userID,
+                buildingID: userInfo.buildingID,
+                businessID: getQueryString("id"),
+                commodityID: commodity.commodityID,
+                specificationID: type == 1 ? commodity.currentSpeID : commodity.specificationID
+            };
+
+            _this.postData(_this, "/live/reduceShoppingCart", data, function (resData) {
+                _this.shoppingcart.totalMoney = resData.totalMoney;
+                _this.shoppingcart.num = resData.commodityNumber;
+                commodity.commodityNumber -= 1;
+
+                if (commodity.isMoreSpe == 1) {
+                    commodity.specifications.forEach(function (specification, index) {
+                        if (specification.specificationID == commodity.currentSpeID) {
+                            specification.specificationNumber = commodity.commodityNumber;
+                        }
+                    });
+                }
+
+                if (type == 2) {
+                    _this.reduceCommodityNum(commodity);
+                }
+
+                _this.getShoppingCart();
+            });
+        },
+        reduceCommodityNum: function (commodity) {
+            var _this = this;
+
+            _this.commodityList.forEach(function (currentCommodity, index) {
+                if (currentCommodity.commodityID == commodity.commodityID) {
+                    if (currentCommodity.currentSpeID == commodity.specificationID) {
+                        currentCommodity.commodityNumber = commodity.commodityNumber;
+                    }
+
+                    if (currentCommodity.isMoreSpe == 1) {
+                        currentCommodity.specifications.forEach(function (specification, index) {
+                            if (specification.specificationID == commodity.specificationID) {
+                                specification.specificationNumber = commodity.commodityNumber;
+                            }
+                        });
+                    }
+                    else {
+                        currentCommodity.commodityNumber = commodity.commodityNumber;
+                    }
+                }
+            });
+        },
+        clearShoppingCart: function () {
+            var _this = this;
+
+            layer.open({
+                content: '确定要清空购物车？',
+                btn: ['确定', '取消'],
+                time: 0, //2秒后自动关闭
+                yes: function (index) {
+                    var data = {
+                        userID: userInfo.userID,
+                        buildingID: userInfo.buildingID,
+                        businessID: getQueryString("id")
+                    };
+
+                    _this.postData(_this, "/live/emptiedShoppingCart", data, function (resData) {
+                        _this.shoppingcart.totalMoney = 0;
+                        _this.shoppingcart.num = 0;
+
+                        for (var commodity in _this.commodityList) {
+                            _this.commodityList[commodity].commodityNumber = 0;
+                        }
+
+                        _this.closeShoppingCart();
+                    });
+
+                    layer.close(index);
+                }
+            });
         }
     }
 });
 
 $("#moreSpeModal").on("show.bs.modal", function () {
     vm.currentSpecification = {};
-    $("#moreSpeModal .tanchukuang_fenlei a:eq(0) > span").click();
+
+    vm.currentCommodity.specifications.forEach(function (specification, index) {
+        if (specification.specificationID == vm.currentCommodity.currentSpeID) {
+            $("#moreSpeModal .tanchukuang_fenlei a:eq(" + index + ") > span").click();
+        }
+    });
 });

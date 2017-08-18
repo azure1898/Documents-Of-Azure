@@ -45,6 +45,7 @@ public class OrderLesson extends DataEntity<OrderLesson> {
     private String payType; // 支付方式(0在线支付)
     private String payOrg; // 支付机构(0微信1支付宝2平台钱包)
     private Date payTime; // 支付时间
+    private String transactionID; // 微信或支付宝交易号
     private String payUserName; // 支付账号
     private String payState; // 支付状态:0未支付1已支付2退款中3已退款
     private Date beginCreateDate; // 开始 创建时间
@@ -55,7 +56,8 @@ public class OrderLesson extends DataEntity<OrderLesson> {
     private List<OrderTrack> orderTrackList; // 订单跟踪明细
     private String searchFlg; // 检索按钮按下标示
 
-    private int pending;//是否查询待完成标记
+    private int pending;// 是否查询待完成标记
+
     public OrderLesson() {
         super();
     }
@@ -73,7 +75,7 @@ public class OrderLesson extends DataEntity<OrderLesson> {
         this.businessInfoId = businessInfoId;
     }
 
-    @ExcelField(title = "订单号", type = 1, align = 2, sort = 1, width= 4000)
+    @ExcelField(title = "订单号", type = 1, align = 2, sort = 1, width = 4000)
     @Length(min = 0, max = 64, message = "订单号长度必须介于 0 和 64 之间")
     public String getOrderNo() {
         return orderNo;
@@ -342,7 +344,7 @@ public class OrderLesson extends DataEntity<OrderLesson> {
         this.updateDateString = updateDateString;
     }
 
-    @ExcelField(title = "时间", type = 1, align = 2, sort = 8, width= 6000)
+    @ExcelField(title = "时间", type = 1, align = 2, sort = 8, width = 6000)
     public String getTimeForExcel() {
         return timeForExcel;
     }
@@ -367,11 +369,20 @@ public class OrderLesson extends DataEntity<OrderLesson> {
         this.searchFlg = searchFlg;
     }
 
-	public int getPending() {
-		return pending;
-	}
+    public int getPending() {
+        return pending;
+    }
 
-	public void setPending(int pending) {
-		this.pending = pending;
-	}
+    public void setPending(int pending) {
+        this.pending = pending;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
+
 }

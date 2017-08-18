@@ -39,14 +39,14 @@
 			    padding-left: 25px;
 			    }
 			.grey_top {
-	    height: 44px;
-	    background-color: #f8f8f8;
-	    width: 100%;
-	    text-align: center;
-	    line-height: 44px;
-	    color: #333;
-	    font-size: 17px;
-	    /* border-bottom: solid 1px #ececec; */
+			    height: 44px;
+			    background-color: #f8f8f8;
+			    width: 100%;
+			    text-align: center;
+			    line-height: 44px;
+			    color: #333;
+			    font-size: 17px;
+	    	/* border-bottom: solid 1px #ececec; */
 }
 		</style>
 	</head>
@@ -55,8 +55,10 @@
 		<div id="app" v-cloak>
 
 			<div class="grey_top">
-				<div class="topic_list_top">#装修作业#</div>
-				<div class="topic_list_top_close"><img src="../../images/close.png" width="15" height="15"></div>
+				<!--<div class="topic_list_top">#装修作业#</div>-->
+				<input class="topic_list_top" placeholder="#装修作业#"  v-model="searchValue">
+				
+				<div class="topic_list_top_close"><img src="../../images/close.png" width="15" height="15" @click="searchValue=''"></div>
 				取消
 			</div>
 			<div class="main_box" style="border-top:solid 1px #ececec;" v-for="(releaseDetail,index) in releaseDetails" :class="{ mt10: index!=0 }">
@@ -77,7 +79,7 @@
 						<!--<font class="ftcred">@优米的米</font>-->
 					</p>
 				</div>
-				<div class="fyxq_main3" v-if="releaseDetail.imgList.length>0">
+				<div class="fyxq_main3" v-if="releaseDetail.imgList&&releaseDetail.imgList.length>0">
 					<ul>
 						<li v-for="image in releaseDetail.imgList"><img :src="image.imgUrl" width="110" height="110"></li>
 						<div class="clear"></div>
@@ -128,6 +130,7 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/topiclist.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 

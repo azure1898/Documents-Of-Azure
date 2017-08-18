@@ -2,7 +2,7 @@ var vm = new Vue({
 	el:"#app",
 	data:{
 		mymessages:{},
-		unread:0,
+		unread:0,//未读标示
 		urlList: {
 			speechdetail: "../main/speechdetails.html?id=",
 			commentdetail: "../main/commentdetails.html?id=",
@@ -22,13 +22,15 @@ var vm = new Vue({
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
-			this.$http.get("../../data/mymessages.json").then(function(res){
-				_this.mymessages = res.data.data;
+			this.$http.post(interfaceUrl + "/message/countMsg",{
+				userID:1
+			},{emulateJSON: true}).then(function(res){
+				_this.mymessages = res.data.data[0];
 				for(obj in _this.mymessages){
-					if(_this.mymessages[obj]==1){
-						_this.unread=1
-					}else{
+					if(_this.mymessages[obj]!=0){
 						_this.unread=0
+					}else{
+						_this.unread=1
 					}
 					
 				}

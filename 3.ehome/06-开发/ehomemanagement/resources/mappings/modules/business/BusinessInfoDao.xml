@@ -104,6 +104,7 @@
     f.name AS "addrArea",
     GROUP_CONCAT(c.category_name) AS "businessCategorydict.categoryName",
     GROUP_CONCAT(c.Prod_Type) AS "businessCategorydict.prodType",
+    GROUP_CONCAT(c.id) AS cId,
     a.use_state AS "useState",
     a.create_date AS "createDate"
 
@@ -124,6 +125,7 @@
   </select>
 
   <select id="findList" resultType="BusinessInfo">
+    SELECT * from (  
     SELECT
     <include refid="listColumns" />
     FROM business_info a
@@ -170,9 +172,7 @@
         AND a.create_date <![CDATA[< ]]>
         DATE_ADD(#{endCreateDate},INTERVAL 1 DAY)
       </if>
-      <if test="businessCategorydict != null and businessCategorydict.id != null and businessCategorydict.id != ''">
-        AND c.ID =#{businessCategorydict.id}
-      </if>
+     
     </where>
     GROUP BY a.business_name
     <choose>
@@ -183,6 +183,10 @@
         ORDER BY a.create_date DESC
       </otherwise>
     </choose>
+    ) temp 
+    <if test="businessCategorydict != null and businessCategorydict.id != null and businessCategorydict.id != ''">
+       where  FIND_IN_SET(#{businessCategorydict.id},temp.cId)
+    </if>
   </select>
 
   <select id="findAllList" resultType="BusinessInfo">
@@ -362,13 +366,18 @@
     FROM business_info a
     WHERE a.business_name = #{businessName} AND a.del_flag = #{DEL_FLAG_NORMAL}
   </select>
-  <!-- 插入商家信息分类关联表数据 -->
+  <!-- 插入商家信息分类关联表数据  add by zhujiao-->
   <insert id="insertInfoCategory">
     INSERT INTO business_categoryinfo(BusinessInfo_ID, Business_Category_Dict_ID,del_flag, create_by,create_date)
     <foreach collection="categoryList" item="category" separator=" union all ">
       SELECT #{id}, #{category.id},#{delFlag}, #{createBy.id},#{createDate} FROM dual
     </foreach>
   </insert>
+  <!-- 删除商家信息分类关联表数据 add by zhujiao-->
+  <delete id="deleteInfoCategory">
+    DELETE FROM business_categoryinfo WHERE BusinessInfo_ID = #{id}
+  </delete>
+  <!-- 修改银行账号信息 add by zhujiao -->
   <update id="editBank">
     UPDATE business_info SET
     deposit_bank = #{depositBank},
@@ -378,6 +387,7 @@
     update_date = #{updateDate}
     WHERE id = #{id}
   </update>
+  <!-- 修改商家状态  add by zhujiao -->
   <update id="updateState">
     UPDATE business_info SET
     use_state = #{useState},
@@ -396,7 +406,6 @@
   <delete id="deleteInfoServiceScope">
     DELETE FROM business_servicescope WHERE BusinessInfo_ID = #{id}
   </delete>
-
   <!--根据模块获取商家列表信息 -->
   <select id="getBusListByModule" resultType="BusinessInfo">
     SELECT

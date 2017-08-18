@@ -373,7 +373,12 @@
 	
 	<!-- 修改会员优惠券的使用状态 -->
 	<select id="updateUserState">
-		UPDATE member_discount a SET a.use_state=#{newState} WHERE a.id=#{id}
+		UPDATE Member_Discount a
+		SET a.Use_State = #{useState},
+		a.Use_Order_ID = #{orderId}
+		WHERE
+			a.del_flag = '0'
+		AND a.ID = #{memberDiscountId}
 	</select>
 	
 </mapper>

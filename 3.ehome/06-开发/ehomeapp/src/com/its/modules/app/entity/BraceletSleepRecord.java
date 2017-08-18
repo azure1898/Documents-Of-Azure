@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 import com.its.common.persistence.DataEntity;
 
 /**
- * 手环睡眠记录Entity
- * @author like
- * @version 2017-07-26
+ * 睡眠记录Entity
+ * @author yinxiaoyin
+ * @version 2017-08-18
  */
 public class BraceletSleepRecord extends DataEntity<BraceletSleepRecord> {
 	
@@ -25,8 +25,8 @@ public class BraceletSleepRecord extends DataEntity<BraceletSleepRecord> {
 	private Double sleepTime;		// 睡眠时长
 	private Double deepSleepTime;		// 深睡时长
 	private Double lightSleepTime;		// 浅睡时长
-	private Date sleepStart;		// 睡眠时段开始
-	private Date sleepEnd;		// 睡眠时段结束
+	private String sleepStart;		// 睡眠时段开始
+	private String sleepEnd;		// 睡眠时段结束
 	
 	public BraceletSleepRecord() {
 		super();
@@ -97,21 +97,21 @@ public class BraceletSleepRecord extends DataEntity<BraceletSleepRecord> {
 		this.lightSleepTime = lightSleepTime;
 	}
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Date getSleepStart() {
+	@Length(min=0, max=64, message="睡眠时段开始长度必须介于 0 和 64 之间")
+	public String getSleepStart() {
 		return sleepStart;
 	}
 
-	public void setSleepStart(Date sleepStart) {
+	public void setSleepStart(String sleepStart) {
 		this.sleepStart = sleepStart;
 	}
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Date getSleepEnd() {
+	@Length(min=0, max=64, message="睡眠时段结束长度必须介于 0 和 64 之间")
+	public String getSleepEnd() {
 		return sleepEnd;
 	}
 
-	public void setSleepEnd(Date sleepEnd) {
+	public void setSleepEnd(String sleepEnd) {
 		this.sleepEnd = sleepEnd;
 	}
 	

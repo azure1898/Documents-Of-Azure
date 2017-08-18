@@ -6,27 +6,32 @@ package com.its.modules.app.entity;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.validation.constraints.NotNull;
 
 import com.its.common.persistence.DataEntity;
 
 /**
  * 每日运动记录Entity
- * @author like
- * @version 2017-07-24
+ * @author yinxiaoyin
+ * @version 2017-08-18
  */
 public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 	
 	private static final long serialVersionUID = 1L;
-	private String accountId;		// account_id
+	private String accountId;		// 会员ID
 	private String villageinfoId;		// 楼盘ID
-	private String braceletId;		// bracelet_id
-	private Date recordDate;		// record_date
-	private Integer walkNumber;		// walk_number
-	private Double walkMileage;		// walk_mileage
-	private Double walkCalorie;		// walk_calorie
-	private Integer runNumber;		// run_number
-	private Double runMileage;		// run_mileage
-	private Double runCalorie;		// run_calorie
+	private String braceletId;		// 手环ID
+	private Date recordDate;		// 记录日期
+	private Integer walkNumber;		// 走步步数
+	private Double walkMileage;		// 走步里程
+	private Integer walkCalorie;		// walk_calorie
+	private Integer runNumber;		// 跑步步数
+	private Double runMileage;		// 跑步里程
+	private Integer runCalorie;		// run_calorie
+	private Integer totalNumber;		// 总运动步数
+	private Double totalMileage;		// 总运动里程
+	private Integer totalCalorie;		// 总运动热量
+	private Integer type;		// 运动类型
 	
 	public BraceletExerciseRecord() {
 		super();
@@ -36,7 +41,7 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 		super(id);
 	}
 
-	@Length(min=0, max=64, message="account_id长度必须介于 0 和 64 之间")
+	@Length(min=1, max=64, message="会员ID长度必须介于 1 和 64 之间")
 	public String getAccountId() {
 		return accountId;
 	}
@@ -45,7 +50,7 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 		this.accountId = accountId;
 	}
 	
-	@Length(min=0, max=64, message="楼盘ID长度必须介于 0 和 64 之间")
+	@Length(min=1, max=64, message="楼盘ID长度必须介于 1 和 64 之间")
 	public String getVillageinfoId() {
 		return villageinfoId;
 	}
@@ -54,7 +59,7 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 		this.villageinfoId = villageinfoId;
 	}
 	
-	@Length(min=0, max=64, message="bracelet_id长度必须介于 0 和 64 之间")
+	@Length(min=1, max=64, message="手环ID长度必须介于 1 和 64 之间")
 	public String getBraceletId() {
 		return braceletId;
 	}
@@ -64,6 +69,7 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 	}
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@NotNull(message="记录日期不能为空")
 	public Date getRecordDate() {
 		return recordDate;
 	}
@@ -88,11 +94,11 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 		this.walkMileage = walkMileage;
 	}
 	
-	public Double getWalkCalorie() {
+	public Integer getWalkCalorie() {
 		return walkCalorie;
 	}
 
-	public void setWalkCalorie(Double walkCalorie) {
+	public void setWalkCalorie(Integer walkCalorie) {
 		this.walkCalorie = walkCalorie;
 	}
 	
@@ -112,12 +118,44 @@ public class BraceletExerciseRecord extends DataEntity<BraceletExerciseRecord> {
 		this.runMileage = runMileage;
 	}
 	
-	public Double getRunCalorie() {
+	public Integer getRunCalorie() {
 		return runCalorie;
 	}
 
-	public void setRunCalorie(Double runCalorie) {
+	public void setRunCalorie(Integer runCalorie) {
 		this.runCalorie = runCalorie;
+	}
+	
+	public Integer getTotalNumber() {
+		return totalNumber;
+	}
+
+	public void setTotalNumber(Integer totalNumber) {
+		this.totalNumber = totalNumber;
+	}
+	
+	public Double getTotalMileage() {
+		return totalMileage;
+	}
+
+	public void setTotalMileage(Double totalMileage) {
+		this.totalMileage = totalMileage;
+	}
+	
+	public Integer getTotalCalorie() {
+		return totalCalorie;
+	}
+
+	public void setTotalCalorie(Integer totalCalorie) {
+		this.totalCalorie = totalCalorie;
+	}
+	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 	
 }

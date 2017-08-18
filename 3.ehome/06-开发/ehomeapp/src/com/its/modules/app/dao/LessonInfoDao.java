@@ -36,10 +36,10 @@ public interface LessonInfoDao extends CrudDao<LessonInfo> {
 	 *            商户信息ID
 	 * @return List<LessonInfo>
 	 */
-	public List<LessonInfo> getNoLimitList(@Param("businessInfoId")String businessInfoId,@Param("pageIndex")int pageIndex,@Param("numPerPage")int numPerPage);
+	public List<LessonInfo> getNoLimitList(@Param("businessInfoId") String businessInfoId, @Param("pageIndex") int pageIndex, @Param("numPerPage") int numPerPage);
 
 	/**
-	 * 更新课程已售数量
+	 * 更新课程库存、已购数量
 	 * 
 	 * @param lessonInfoId
 	 *            课程ID

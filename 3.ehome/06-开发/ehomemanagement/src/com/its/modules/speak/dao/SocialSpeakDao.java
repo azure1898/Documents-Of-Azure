@@ -48,4 +48,13 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @return
 	 */
 	public List<SocialSpeak> findForwardsByRootId(@Param("rootId") String rootId);
+	
+	/**
+	 * @Description：查询app对应User
+	 * @Author：王萌萌
+	 * @Date：2017年8月15日
+	 * @param userId
+	 * @return
+	 */
+	public SocialSpeak findUser(@Param("userId") String userId);
 }

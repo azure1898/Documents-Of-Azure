@@ -13,7 +13,6 @@ import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.modules.social.bean.SocialRelationBean;
 import com.its.modules.social.dao.SocialRelationDao;
-import com.its.modules.social.dao.SocialSpeakDao;
 import com.its.modules.social.entity.SocialRelation;
 
 /**
@@ -121,6 +120,52 @@ public class SocialRelationService extends CrudService<SocialRelationDao, Social
 	 */
 	public List<SocialRelationBean> findToUser(String userId) {
 		return socialRelationDao.findToUser(userId);
+	}
+	
+	/**
+	 * @Description：根据用户ID查询粉丝数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countFansByUserId(String userId) {
+		return socialRelationDao.countFansByUserId(userId);
+	}
+
+	/**
+	 * @Description：根据用户ID查询关注数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @return
+	 */
+	public int countFocusByUserId(String userId) {
+		return socialRelationDao.countFocusByUserId(userId);
+	}
+	
+	/**
+	 * @Description：根据用户ID， 从用户ID 查询用户关系对象
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param userId
+	 * @param subUserId
+	 * @return
+	 */
+	public SocialRelation getSocialRelation(String userId, String subUserId){
+		return socialRelationDao.getSocialRelation(userId, subUserId);
+	}
+	
+	/**
+	 * @Description：是否已关注该用户
+	 * @Author：王萌萌
+	 * @Date：2017年8月14日
+	 * @param userId 当前userid
+	 * @param subUserId 被关注userid
+	 * @return
+	 */
+	public int isFocus(String userId, String subUserId) {
+		return socialRelationDao.isFocus(userId, subUserId);
 	}
 	
 }

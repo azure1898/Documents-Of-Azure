@@ -13,6 +13,34 @@ public class CommonGlobal {
 	/** 女 */
 	public static final String WOMAN = "1";
 
+	/* <============================钱包明细交易类型============================> */
+	/** 钱包明细交易类型：0-充值 */
+	public static final String WALLET_TRADE_TYPE_RECHARGE = "0";
+	/** 钱包明细交易类型：1-充值赠送 */
+	public static final String WALLET_TRADE_TYPE_PRESENT = "1";
+	/** 钱包明细交易类型：2-钱包支付(订单消费) */
+	public static final String WALLET_TRADE_TYPE_ORDER_PAY = "2";
+	/** 钱包明细交易类型：3-手环支付 */
+	public static final String WALLET_TRADE_TYPE_BRACELET = "3";
+	/** 钱包明细交易类型：4-刷脸支付 */
+	public static final String WALLET_TRADE_TYPE_FACE = "4";
+	/** 钱包明细交易类型：5-退款(订单取消) */
+	public static final String WALLET_TRADE_TYPE_REFUND = "5";
+
+	/* <============================钱包明细终端来源============================> */
+	/** 钱包明细终端来源：0-Android */
+	public static final String WALLET_TERMINAL_SOURCE_ANDROID = "0";
+	/** 钱包明细终端来源：1-IOS */
+	public static final String WALLET_TERMINAL_SOURCE_IOS = "1";
+
+	/* <============================钱包明细支付方式============================> */
+	/** 钱包明细支付方式：0-余额支付 */
+	public static final String WALLET_PAY_TYPE_BALANCE = "0";
+	/** 钱包明细支付方式：1-微信支付 */
+	public static final String WALLET_PAY_TYPE_WECHAT = "1";
+	/** 钱包明细支付方式：2-支付宝支付 */
+	public static final String WALLET_PAY_TYPE_ALIPAY = "2";
+
 	/* <============================访客邀请状态描述============================> */
 	/** 访客邀请状态描述：正常 */
 	public static final String VISITOR_INVITE_STATE_NOMAL = "0";
@@ -37,13 +65,13 @@ public class CommonGlobal {
 	/** 精品团购：文字描述 */
 	public static final String GROUP_PURCHASE_DESC = "精品团购";
 
-	/* <==============================推荐类型==============================> */
+	/* <===============================推荐类型===============================> */
 	/** 推荐类型：商家 */
 	public static final String RECOMMEND_TYPE_BUSINESS = "0";
 	/** 推荐类型：模块 */
 	public static final String RECOMMEND_TYPE_MODULE = "1";
 
-	/* <==============================推荐位置==============================> */
+	/* <===============================推荐位置===============================> */
 	/** 推荐位置：首页 */
 	public static final String RECOMMEND_MAINT = "00";
 	/** 推荐位置：社区 */
@@ -52,6 +80,14 @@ public class CommonGlobal {
 	public static final String RECOMMEND_COMMUNITY_MORE = "11";
 	/** 推荐位置：生活 */
 	public static final String RECOMMEND_LIFE = "20";
+
+	/* <===============================模块类型===============================> */
+	/** 模块类型：主导航 */
+	public static final String MODULE_TYPE_MAIN = "0";
+	/** 模块类型：社区 */
+	public static final String MODULE_TYPE_COMMUNITY = "1";
+	/** 模块类型：生活 */
+	public static final String MODULE_TYPE_LIFE = "2";
 
 	/* <==============================楼盘的主导航==============================> */
 	/** 主导航：首页 */
@@ -112,6 +148,12 @@ public class CommonGlobal {
 	public static final String COUPON_GRANT_TYPE_UNLIMIT = "0";
 	/** 优惠券发放类型：限量发送 */
 	public static final String COUPON_GRANT_TYPE_LIMIT = "1";
+
+	/* <==============================优惠券有效期类型==============================> */
+	/** 优惠券有效期类型：起止日期 */
+	public static final String COUPON_VALIDITY_TYPE_START_END = "0";
+	/** 优惠券有效期类型：天 */
+	public static final String COUPON_VALIDITY_TYPE_DAYS = "1";
 
 	/* <==============================优惠券领取规则==============================> */
 	/** 优惠券领取规则：无限制 */

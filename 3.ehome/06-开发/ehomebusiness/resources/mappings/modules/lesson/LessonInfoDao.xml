@@ -47,6 +47,9 @@
 		<include refid="lessonInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+		    	AND a.id = #{id}
+		  	</if>
 			<if test="businessInfoId != null and businessInfoId != ''">
                 AND a.business_info_id = #{businessInfoId}
             </if>
@@ -56,9 +59,16 @@
             <if test="state != null and state != ''">
                 AND a.state = #{state}
             </if>
-            <if test="peopleLimit != null and peopleLimit != ''">
-                AND a.people_limit &lt;= #{peopleLimit}
-            </if>
+            <choose>
+	            <when test="peopleLimit != null and peopleLimit != ''">
+					AND a.people_limit &lt;= #{peopleLimit}
+				</when>
+				<when test="isfull != null and isfull == '1'">
+					AND a.people_limit = 0
+				</when>
+				<otherwise>
+				</otherwise>
+            </choose>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
@@ -97,7 +107,7 @@
 	<!-- 手动添加，非自动生成 Start -->
 	<select id="findAllListCount" resultType="Integer">
 		SELECT
-			count(1)
+			count(0)
 		FROM lesson_info a
 		<include refid="lessonInfoJoins"/>
 		<where>

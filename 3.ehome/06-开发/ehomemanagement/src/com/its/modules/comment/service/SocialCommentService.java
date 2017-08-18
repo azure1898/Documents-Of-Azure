@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.modules.comment.entity.SocialComment;
-import com.its.modules.speak.entity.SocialSpeak;
 import com.its.modules.comment.dao.SocialCommentDao;
 
 /**

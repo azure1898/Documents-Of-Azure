@@ -339,4 +339,26 @@ public class VillageInfoController extends BaseController {
         addMessage(redirectAttributes, flagName + "楼盘成功");
         return "redirect:" + Global.getAdminPath() + "/village/villageInfo/?repage";
     }
+    
+    /**
+     * 验证楼盘名称是否合法（判断依据：同一城市下是否重复）
+     * @param addrCity 当前选中的城市ID
+     * @param oldAddrCity 编辑前的城市ID
+     * @param villageName 当前填写的楼盘名
+     * @param oldVillageName 编辑前的楼盘名
+     * @return 是否合法
+     */
+	@ResponseBody
+	@RequiresPermissions("village:villageInfo:view")
+	@RequestMapping(value = "checkVillageName")
+	public String checkVillageName(String addrCity, String oldAddrCity, String villageName, String oldVillageName) {
+		if (StringUtils.isNotBlank(oldAddrCity) && StringUtils.isNotBlank(oldVillageName) 
+				&& oldAddrCity.equals(addrCity) && oldVillageName.equals(villageName)) {
+			return "true";
+		} else if (StringUtils.isNotBlank(addrCity) && StringUtils.isNotBlank(villageName) 
+				&& !villageInfoService.checkVillageNameDuplicate(addrCity, villageName)) {
+			return "true";
+		}
+		return "false";
+	}
 }

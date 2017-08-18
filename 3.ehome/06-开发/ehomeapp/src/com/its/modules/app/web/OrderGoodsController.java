@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.its.common.config.Global;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
+
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.GoodsInfoBean;
 import com.its.modules.app.common.AppGlobal;
@@ -115,7 +116,7 @@ public class OrderGoodsController extends BaseController {
 				data.put("contactPerson", address.getContact());
 				data.put("contactPhone", address.getPhoneNum());
 				if ("0".equals(address.getAddressType())) {
-					data.put("contactAddress", address.getBuilding() + address.getHouseNumber());
+					data.put("contactAddress", addressService.getAddressDetail(address));
 				} else if ("1".equals(address.getAddressType())) {
 					data.put("contactAddress", address.getAddress());
 				}
@@ -266,14 +267,6 @@ public class OrderGoodsController extends BaseController {
 					return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"优惠券不可使用\"}";
 				}
 			}
-			// contactPerson = StringUtils.isNotBlank(contactPerson) ?
-			// URLDecoder.decode(contactPerson, "UTF-8") : "";
-			// contactPhone = StringUtils.isNotBlank(contactPhone) ?
-			// URLDecoder.decode(contactPhone, "UTF-8") : "";
-			// contactAddress = StringUtils.isNotBlank(contactAddress) ?
-			// URLDecoder.decode(contactAddress, "UTF-8") : "";
-			// leaveMessage = StringUtils.isNotBlank(leaveMessage) ?
-			// URLDecoder.decode(leaveMessage, "UTF-8") : "";
 			// 终端类型
 			OrderGoods order = new OrderGoods();
 			order.setAccountId(userID);
@@ -312,4 +305,5 @@ public class OrderGoodsController extends BaseController {
 			}
 		}
 	}
+
 }

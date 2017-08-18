@@ -16,6 +16,7 @@ import com.its.modules.setup.service.BusinessCategorydictService;
 import com.its.modules.setup.service.BusinessInfoService;
 import com.its.modules.sys.entity.User;
 import com.its.modules.sys.utils.UserUtils;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -171,9 +172,11 @@ public class OrderFieldController extends BaseController {
         OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
         // 根据订单号检索信息
         orderRefundInfo.setOrderNo(orderField.getOrderNo());
-        orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
-        // 将退款完成时间添加到画面中
-        model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        orderRefundInfo = orderRefundInfoService.findOrderRefundInfoByOrderNo(orderRefundInfo);
+        if (null != orderRefundInfo) {
+            // 将退款完成时间添加到画面中
+            model.addAttribute("refundOverTime", orderRefundInfo.getRefundOverTime());
+        }
         model.addAttribute("orderField", orderField);
         return "modules/order/orderFieldForm";
     }
@@ -319,12 +322,16 @@ public class OrderFieldController extends BaseController {
      */
     @RequiresPermissions("order:orderField:edit")
     @RequestMapping(value = "cancel")
-    public String cancel(OrderField orderField, Model model, RedirectAttributes redirectAttributes) {
+    public String cancel(OrderField orderField, Model model, RedirectAttributes redirectAttributes,String redirectUrl) {
+    	if(redirectUrl!=null && redirectUrl!="")
+    		redirectUrl="redirect:" + Global.getAdminPath() +redirectUrl;
+    	else
+    		redirectUrl="redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderFieldService.check(orderField.getId(), orderField.getUpdateDateString())) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
-            return "redirect:" + Global.getAdminPath() + "/order/orderGoods/?repage";
+            return redirectUrl;
         }
         // 返回影响条数
         int result = 0;
@@ -334,7 +341,7 @@ public class OrderFieldController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至场地订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
+            return redirectUrl;
         }
 
         // 若没更新则显示操作
@@ -342,11 +349,11 @@ public class OrderFieldController extends BaseController {
             addMessage(redirectAttributes, "操作失败");
             redirectAttributes.addFlashAttribute("type", "error");
             // 迁移至场地订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
+            return redirectUrl;
         } else {
             addMessage(redirectAttributes, "操作成功");
             // 迁移至场地订单列表页面
-            return "redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
+            return redirectUrl;
         }
     }
 }

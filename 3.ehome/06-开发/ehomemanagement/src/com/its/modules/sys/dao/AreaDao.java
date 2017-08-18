@@ -58,5 +58,33 @@ public interface AreaDao extends TreeDao<Area> {
 	 * @return
 	 */
 	public List<Area> findCountrAreaByUserCode(Area area);
+	
+	/**
+	 * 查询城市的父级ids(为查询查询城市列表页做准备)
+	 * 
+	 * @author caojing
+	 * @param area
+	 * @return
+	 */
+	public List<Area> getParentIdList(Area area);
+	
+	/**
+	 * 查询城市列表页
+	 * 
+	 * @author caojing
+	 * @param area
+	 * @return
+	 */
+	public List<Area> getAreaList(Area area);
+	
+	/**
+	 * 依据id，查询父级区域数据
+	 * 
+	 * @author caojing
+	 * @param area
+	 * @return
+	 */
+	public Area getPrentListById(Area area);
+	
 
 }

@@ -103,7 +103,16 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @param subjectName 话题名称
 	 * @return
 	 */
-	public List<SocialSpeakBean> findByAddIdAndSubName(@Param("addressId") String addressId, @Param("subjectName") String subjectName, 
+	public List<SocialSpeakBean> findByAddIdAndSubName(@Param("addressId") String addressId, @Param("subjectName") String subjectName, @Param("subjectId") String subjectId, 
 			@Param("userId") String userId, @Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize);
+	
+	/**
+	 * @Description：根据用户id 查询该用户的发言数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param socialSpeak
+	 * @return
+	 */
+	public int countSpeak(@Param("socialSpeak") SocialSpeak socialSpeak);
 
 }

@@ -1,19 +1,14 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-import com.its.modules.app.entity.NoticeManage;
-import com.its.modules.app.common.PropertiesUtil;
 import com.its.modules.app.dao.NoticeManageDao;
+import com.its.modules.app.entity.NoticeManage;
 
 /**
  * 公告管理Service
@@ -64,7 +59,7 @@ public class NoticeManageService extends CrudService<NoticeManageDao, NoticeMana
 	 * @param villageInfoId
 	 * @return
 	 */
-	public List<NoticeManage> getNoticeList(String villageInfoId,int pageIndex,int numPerPage) {
-		return dao.getNoticeList(villageInfoId,pageIndex*numPerPage,numPerPage);
+	public List<NoticeManage> getNoticeList(String villageInfoId, int pageIndex, int numPerPage) {
+		return dao.getNoticeList(villageInfoId, pageIndex * numPerPage, numPerPage);
 	}
 }

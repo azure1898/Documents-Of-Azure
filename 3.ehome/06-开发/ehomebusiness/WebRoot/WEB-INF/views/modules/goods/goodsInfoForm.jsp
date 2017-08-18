@@ -130,6 +130,12 @@
 					}
 				}
 			});
+			
+			//初始化限购单位（1为限购）
+			var quotaUnit = '${goodsInfo.baseUnitId}';
+			if (quotaUnit != null && quotaUnit != "") {
+			    chooseUnit(document.getElementById("baseUnitId"));
+			}
 		});
         window.onload = function() {
         	// 如果浏览器不支持HTML5则提示无法上传图片
@@ -218,10 +224,12 @@
                 $('#stock')[0].value="";
                 $('#benefitPrice')[0].value="";
                 stockSum();
+                $("#contentTable").show();
             } else {
                 $('#stock')[0].disabled=false;
                 $('#stock')[0].value="";
                 $('#benefitPrice')[0].disabled=false;
+                $("#contentTable").hide();
             }
 		}
 		
@@ -489,7 +497,11 @@
                             // 如果有规格情报，则算出总库存
                             if ($("#contentTable").find("tr").length > 0) {
                             	stockSum();
+                            	$("#contentTable").show();
+                            } else {
+                            	$("#contentTable").hide();
                             }
+                            chooseUnit($("#baseUnitId")[0]);
                         });
                     </script>
 			</div>

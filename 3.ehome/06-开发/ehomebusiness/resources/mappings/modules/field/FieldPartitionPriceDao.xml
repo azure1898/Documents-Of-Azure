@@ -185,4 +185,9 @@
 		WHERE id = #{id}
 	</update>
 	
+	<select id="getAll" parameterType="String" resultType="FieldPartitionPrice">
+		select * from field_partition_price where DATE_FORMAT(start_time ,'%Y%m%d')= #{ymd}
+		AND business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		 order by field_info_id
+	</select>
 </mapper>

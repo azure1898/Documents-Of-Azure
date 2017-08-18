@@ -125,9 +125,9 @@
 		WHERE id = #{id}
 	</update>
 	
-	<!-- ============================================================ -->
+	<!-- =========================================================== -->
 	
-	<!-- 获取某楼盘下的模块列表（商户分类） -->
+	<!-- 获取某楼盘下的模块列表（关联在产品模式下的模块） -->
 	<select id="getModuleListByVillageInfoId" resultType="ModuleManage">
 		SELECT DISTINCT
 			<include refid="moduleManageColumns"/>
@@ -181,25 +181,23 @@
 		)
 	</select>
 	
-	<!-- 获取某楼盘下某种类型的模块推荐信息 -->
+	<!-- 获取生活首页模块推荐列表 -->
 	<select id="getModuleList" resultType="ModuleManageBean">
 		SELECT
 			<include refid="moduleManageColumns"/>,
 			b.Prod_Type as prodType
 		FROM
-			Module_Manage a,Business_CategoryDict b
+			Module_Manage a, Business_CategoryDict b
 		WHERE
-			a.Business_Category_Dict_Flag=1 AND
-			a.Business_Category_Dict_ID=b.id AND
-			a.del_flag = 0
-		AND a.ID IN 
+			a.Business_Category_Dict_Flag = '1' AND
+			a.Business_Category_Dict_ID = b.ID AND
+			a.del_flag = '0'
+		AND a.ID IN
 			<foreach collection="list" item="moduleIds" index="index" open="(" close=")" separator=",">
        			 #{moduleIds}
       		</foreach>
-			
 		LIMIT 4
 	</select>
-	
 	
 	<!-- 获取某楼盘下某推荐位置的商家列表 -->
 	<select id="getRecommendBusinessList" resultType="java.util.Map">
@@ -207,17 +205,25 @@
 			a.Describes AS recommendDes,
 			a.Pic_Url AS recommendPic,
 			c.ID AS businessId,
-			c.Business_Name AS businessName
+			c.Business_Name AS businessName,
+			e.Prod_Type AS prodType
 		FROM
 			Village_LineRecomModule a,
 			Village_Line b,
-			Business_Info c
+			Business_Info c,
+			Module_Manage d,
+			Business_CategoryDict e
 		WHERE
 			a.Village_Line_ID = b.ID
 		AND a.Recom_Business_ID = c.ID
+		AND a.Recom_Module_ID=d.ID
+		AND d.Business_Category_Dict_ID=e.id
 		AND a.del_flag = '0'
 		AND b.del_flag = '0'
 		AND c.del_flag = '0'
+		AND d.del_flag = '0'
+		AND e.del_flag = '0'
+		AND d.Business_Category_Dict_Flag='1'
 		AND a.Recom_Position = #{recommendPosition}
 		AND a.Recom_Type = '0'
 		AND b.Village_Info_ID = #{villageInfoId}
@@ -226,6 +232,7 @@
 		ORDER BY
 			a.Sort_Num
 	</select>
+	
 	<!-- 根据手机端模块编码获取模块信息 -->
 	<select id="getModuleByPhoneCode" resultType="ModuleManage">
 		SELECT 
@@ -233,4 +240,21 @@
 		FROM module_manage a
 		WHERE a.del_flag = '0' AND a.phone_module_code = #{phoneModuleCode}
 	</select>
+	
+	<!-- 获取模块管理列表 -->
+	<select id="getModuleManageList" resultType="ModuleManage">
+		SELECT
+			<include refid="moduleManageColumns"/>
+		FROM
+			Module_Manage a
+		WHERE
+			a.del_flag = '0'
+		AND a.ID IN
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		ORDER BY
+			INSTR(#{inStr}, a.ID)
+	</select>
+	
 </mapper>

@@ -1,60 +1,55 @@
 .bg {
-	background-color:#000;
-	display: none; 
-	opacity: 0.5;
-	filter:alpha(opacity=50); 
-	width:100%; 
-	height:100%; 
-	position:absolute; 
-	z-index:888; 
-	padding-top:45px;
+    background-color: #000;
+    display: none;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 888;
+    padding-top: 45px;
 }
 
 .pointer {
-    cursor: pointer;	
+    cursor: pointer;
 }
 
-.labelEllipsis{
-    text-overflow: ellipsis;
-    white-space:nowrap;
+.gwcView {
+    display: none;
 }
 
-.gwcView{
-  	display:none;
+.cursor {
+    cursor: pointer;
 }
 
-.cursor{
-  	cursor:pointer;
+.guige {
+    display: none;
 }
 
-.guige{
-	display:none;
+.nomarginleft {
+    margin-left: 0px;
 }
 
-.nomarginleft{
-	margin-left: 0px;
+.nocommodity {
+    color: #c8c8c8;
 }
 
-.nocommodity{
-	color:#c8c8c8;
+.bggrey {
+    background-color: #c8c8c8;
 }
 
-.bggrey{
-	background-color:#c8c8c8;
+.fontcenter {
+    text-align: center;
 }
 
-.fontcenter{
-	text-align: center;
+.moreSpeModal {
+    width: 300px;
 }
 
-.moreSpeModal{
-	width:300px;
+.spepadding {
+    padding: 5px;
 }
 
-.spepadding{
-	padding: 5px;
-}
-
-.nopadding{
-  	padding:2px 0px 0px 1px;
+.nopadding {
+    padding: 2px 0px 0px 1px;
 }

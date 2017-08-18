@@ -35,6 +35,7 @@ public class OrderField extends DataEntity<OrderField> {
     private Double sumMoney; // 总金额
     private Double benefitMoney = 0.0; // 商家优惠金额
     private Double couponMoney = 0.0; // 平台优惠金额
+    private String transactionID; // 微信或支付宝交易号
     private Double payMoney; // 实际支付金额
     private String orderState; // 订单状态:0待预约、1预约成功、2已取消
     private String checkOrderState; // 支付对账状态:0未对账1正常2异常
@@ -60,8 +61,8 @@ public class OrderField extends DataEntity<OrderField> {
     private String fieldNameForExcel; // 预约场地（EXCEL导出用）
     private String cancelRemarks; // 取消原因
     private List<OrderTrack> orderTrackList; // 订单跟踪明细
-    
-    private int pending;//查询未完成标记
+
+    private int pending;// 查询未完成标记
 
     public OrderField() {
         super();
@@ -425,12 +426,20 @@ public class OrderField extends DataEntity<OrderField> {
         this.orderTrackList = orderTrackList;
     }
 
-	public int getPending() {
-		return pending;
-	}
+    public int getPending() {
+        return pending;
+    }
 
-	public void setPending(int pending) {
-		this.pending = pending;
-	}
+    public void setPending(int pending) {
+        this.pending = pending;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
 
 }

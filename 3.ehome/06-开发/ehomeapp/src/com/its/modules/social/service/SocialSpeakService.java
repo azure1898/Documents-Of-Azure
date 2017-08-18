@@ -131,8 +131,8 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 	 * @param subjectName 话题名称
 	 * @return
 	 */
-	public List<SocialSpeakBean> findByAddIdAndSubName(String addressId, String subjectName, String userId, int pageIndex, int pageSize) {
-		return socialSpeakDao.findByAddIdAndSubName(addressId, subjectName, userId, pageIndex, pageSize);
+	public List<SocialSpeakBean> findByAddIdAndSubName(String addressId, String subjectName, String subjectId, String userId, int pageIndex, int pageSize) {
+		return socialSpeakDao.findByAddIdAndSubName(addressId, subjectName, subjectId, userId, pageIndex, pageSize);
 	}
 	
 	/**
@@ -144,5 +144,16 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 	 */
 	public SocialSpeakBean findSpeakBySpeakId(String speakId) {
 		return socialSpeakDao.findSpeakBySpeakId(speakId);
+	}
+	
+	/**
+	 * @Description：根据用户id 查询该用户的发言数量
+	 * @Author：刘浩浩
+	 * @Date：2017年8月14日
+	 * @param socialSpeak
+	 * @return
+	 */
+	public int countSpeak(SocialSpeak socialSpeak) {
+		return socialSpeakDao.countSpeak(socialSpeak);
 	}
 }

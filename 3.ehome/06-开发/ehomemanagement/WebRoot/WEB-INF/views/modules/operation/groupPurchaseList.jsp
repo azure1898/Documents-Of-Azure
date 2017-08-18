@@ -33,7 +33,7 @@
 	    <input type="text" class="hide" id="hidAreaId" value=""/>
 	    <input type="text" class="hide" id="hidVillageId" value="${groupPurchase.villageInfoId}"/>		
 		<ul class="ul-form">
-			<li>
+			<li class="btns">
 				<input name="startTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
 					value="<fmt:formatDate value="${groupPurchase.startTime}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/> - 
@@ -46,43 +46,43 @@
 			    <select id="addrpro" name="addrPro" style="width: 120px; display:none;" onchange="changeCity()">
 			     <option value="">全部省份</option>
 			    </select>
-			   </li>
-			   <li class="btns">
+			 </li>
+			 <li class="btns">
 			    <select id="addrcity" name="addrCity" style="width: 120px; display:none;" onchange="changeVillage()">
 			     <option value="">全部城市</option>
 			    </select>
-			   </li>
-			   <li class="btns">
+			 </li>
+			 <li class="btns">
 			    <select id="addrarea" name="addrArea" style="width: 120px;display:none;">
 			     <option value="">全部区域</option>
 			    </select>
-			   </li>
-			   <li class="btns">
+			 </li>
+			 <li class="btns">
 			    <select id="addrVillage" name="villageInfoId" style="width: 120px">
 			     <option value="">全部楼盘</option>
 			    </select>
-			   </li>
+			 </li>
 			
-			<li class="btns">
+		     <li class="btns">
 				<select id="businessinfoId" name="businessinfoId" class="input-medium">
 						<c:forEach items="${groupBusinessInfoList}" var="business">
 							<option value="${business.businessinfoId}" ${groupPurchase.businessinfoId eq business.businessinfoId ? 'selected="selected"' : ''}>${business.businessName}</option>
 						</c:forEach>
 				</select>
-			</li>
-			<li class="btns">
+			 </li>
+			 <li class="btns">
 				<form:select path="groupPurcState" class="input-mini">
 					<form:option value="1" label="活动中"/>
 					<form:option value="0" label="待开始"/>
 					<form:option value="2" label="已结束"/>
 					<form:option value="3" label="已撤消"/>
 				</form:select>	
-			</li>
-			<li class="btns">
+			 </li>
+			 <li class="btns">
 				<form:input path="groupPurcName" placeholder="请输入团购名、商家名" htmlEscape="false" maxlength="100" class="input-medium"/>
-			</li>
-			<li class="btns"><input id="btnSubmit" class="btn btn-success" type="submit" value="查询"/></li>
-			<li class="clearfix"></li>
+			 </li>
+			 <li class="btns"><input id="btnSubmit" class="btn btn-success" type="submit" value="查询"/></li>
+			 <li class="clearfix"></li>
 		</ul>
 	</form:form>
 	<div style="margin: 10px">
@@ -271,7 +271,7 @@
 				var elemId = $("#selectElemId").val();
 				var tempHref = $("#btuElemDelete").attr("href") + elemId;
 							
-				if (confirmx("确实删除此"+ moduleName +"？",tempHref)) {
+				if (confirmx("确定删除此"+ moduleName +"？",tempHref)) {
 					return true;
 				} else {
 					return false;

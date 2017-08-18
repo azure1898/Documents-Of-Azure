@@ -1,15 +1,16 @@
 package com.its.modules.websocket.web;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.its.modules.websocket.MyWebSocket;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.websocket.Session;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.websocket.Session;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.its.modules.websocket.MyWebSocket;
 
 @Controller
 @RequestMapping(value = "/websocket/socket")

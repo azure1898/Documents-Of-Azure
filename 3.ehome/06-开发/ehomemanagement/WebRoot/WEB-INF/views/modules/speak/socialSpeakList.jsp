@@ -253,8 +253,8 @@
                         <c:forEach items="${socialSpeak.imageUrls}" var="imgUrl">
                             <img src="${imgUrl}" />
                         </c:forEach>
-                        <br>
                         <c:if test="${socialSpeak.picSize > 0}">
+                        	<br>
                             <span>${socialSpeak.picSize}张</span>
                         </c:if>
                         <c:if test="${socialSpeak.picSize <= 0}">
@@ -263,8 +263,18 @@
                         <%-- <img id="preview" src="${socialSpeak.images}" style="width:45px; height:45;" />--%></td>
                     <td>${fns:getDictLabel(socialSpeak.visrange, 'visRange', '')}</td>
                     <td>${socialSpeak.readnum}/${socialSpeak.sumcomment}/${socialSpeak.sumforward}</td>
-                    <td></td>
-                    <td>${socialSpeak.username}</td>
+                    <td>
+                    	<c:if test="${socialSpeak.source > 0}">
+                    		公号
+                    	</c:if>
+                    	<c:if test="${socialSpeak.source <= 0}">
+                    		会员
+                    	</c:if>
+                    </td>
+                    <td>
+                    	<input type="hidden" value="${socialSpeak.auserid }"/>
+                    	${socialSpeak.ausername}
+                    </td>
                     <td>${fns:getDictLabel(socialSpeak.delflag, 'social_delflag', '')}
                         <input type="text" id="speak_delflag" value="${socialSpeak.delflag }" style="display:none" />
                     </td>

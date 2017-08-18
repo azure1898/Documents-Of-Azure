@@ -140,8 +140,9 @@ public class OrderGroupPurcController extends BaseController {
 	 */
 	@RequiresPermissions("order:OrderGroupPurc:view")
 	@RequestMapping(value = "form")
-	public String form(OrderGroupPurc orderGroupPurc, Model model) {
-
+	public String form(OrderGroupPurc orderGroupPurc, Model model,String tag) {
+		tag = tag==null?"0":tag;
+		model.addAttribute("tag", tag);
 		model.addAttribute("OrderGroupPurc", orderGroupPurc);
 		// 商品订单明细取得
 		OrderGroupPurcList orderGroupPurcList = new OrderGroupPurcList();
@@ -153,7 +154,7 @@ public class OrderGroupPurcController extends BaseController {
 		groupPurc.setId(orderGroupPurc.getGroupPurchaseId());
 		groupPurc = groupPurchaseService.get(groupPurc);
 		model.addAttribute("groupPurc", groupPurc);
-
+		
 		// 迁移至商品订单详细页面
 		return "modules/order/orderGroupPurcForm";
 	}

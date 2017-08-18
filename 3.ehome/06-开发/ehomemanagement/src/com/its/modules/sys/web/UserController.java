@@ -76,7 +76,13 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		//页面初始化为正常
+		if(user!=null && StringUtils.isBlank(user.getLoginFlag())){
+			user.setLoginFlag(LOGIN_FLAG_UNFROZEN);
+		}
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
+		
         model.addAttribute("page", page);
 		return "modules/sys/userList";
 	}
@@ -146,7 +152,7 @@ public class UserController extends BaseController {
 		String flagName="";
 		if(user.getLoginFlag().equals(FLAG_FROM_JSP_UNFROZEN)){
 			user.setLoginFlag(LOGIN_FLAG_UNFROZEN);
-			flagName="解冻";
+			flagName="取消冻结";
 		}else{
 			user.setLoginFlag(LOGIN_FLAG_FROZEN);
 			flagName="冻结";

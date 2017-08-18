@@ -3,6 +3,8 @@
  */
 package com.its.modules.rong.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
 import com.its.modules.rong.entity.SocialMsg;
@@ -14,5 +16,15 @@ import com.its.modules.rong.entity.SocialMsg;
  */
 @MyBatisDao
 public interface SocialMsgDao extends CrudDao<SocialMsg> {
+	
+	/**
+	 * @Description：查询未读消息的数量
+	 * @Author：王萌萌
+	 * @Date：2017年8月17日
+	 * @param toUserId 用户id
+	 * @param secType 消息类型
+	 * @return
+	 */
+	public int countUnRead(@Param("toUserId") String toUserId, @Param("secType") Integer secType, @Param("isRead") Integer isRead, @Param("firType") Integer firType);
 	
 }

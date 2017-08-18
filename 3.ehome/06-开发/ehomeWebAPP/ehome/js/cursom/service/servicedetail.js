@@ -1,77 +1,48 @@
 var vm = new Vue({
 	el: "#app",
 	data: {
-		urlList:{
-				list:"servicelist.html?id=",
-				detail:"servicedetail.html?id=",
-				index:"serviceindex.html?id=",
-				order:"serviceorder.html?id=",
-			},
+		urlList: {
+			list: "servicelist.html?id=",
+			detail: "servicedetail.html?id=",
+			index: "serviceindex.html?id=",
+			order: "serviceorder.html?id=",
+		},
 		detail: {},
-		collect:1,
-		item:{}
+		collect: 1,
+		item: {}
 	},
 	mounted: function() { //页面加载之后自动调用，常用于页面渲染
 		this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
-			this.cartView();
+			var _this = this;
+			var data = {
+				userID: userInfo.userID,
+				serviceID: getQueryString("id"),
+				buildingID: userInfo.buildingID
+			};
+			this.getData(_this, "/live/getServiceItemDetail", data, function(resData) {
+				_this.detail = resData;
+				if(_this.detail.isNormal==0){
+					toast2("商家休息中，暂时不接受订单")}
+			})
 			$('#myCarousel').carousel({
 				//自动4秒播放
 				interval: 3000,
 			});
-            var myElement= document.getElementById('myCarousel')
-            var hm=new Hammer(myElement);
-            hm.on("swipeleft",function(){
-                $('#myCarousel').carousel('next')
-            })
-            hm.on("swiperight",function(){
-                $('#myCarousel').carousel('prev')
-            })
-
+			var myElement = document.getElementById('myCarousel')
+			var hm = new Hammer(myElement);
+			hm.on("swipeleft", function() {
+				$('#myCarousel').carousel('next')
+			})
+			hm.on("swiperight", function() {
+				$('#myCarousel').carousel('prev')
+			})
 		})
 	},
 	methods: {
-		cartView: function() {
+		
+		collection: function(item) {
 			var _this = this;
-			this.$http.get(interfaceUrl+"/live/getServiceItemDetail",{
-					userID:userInfo.userID,
-				serviceID:getQueryString("id"),
-				buildingID:userInfo.buildingID
-			}).then(function(res) {
-				if(res.data.code == 1000){
-					_this.detail = res.data.data;
-					
-				}
-			})
-		},
-			collection:function(business){
-				
-					 if(business.isCollection==0){
-					   this.add_collections(business);	               
-					}
-					  else if(business.isCollection==1){	
-					   this.cancel_collections(business);
-					}        
-		},
-		add_collections:function(business){
-			var _this = this;
-			this.$http.post(path_add,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;  
-                 business.isCollection = 1;
-					  toast('收藏成功');
-                      })    
-		},
-		cancel_collections:function(business){
-			var _this = this;
-			this.$http.post(path_cancle,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;
-                  business.isCollection = 0;
-                 toast('取消收藏');
-                  })
-			
-		}	
+			_this.myCollection(_this, item);
+		}
 	}
 });

@@ -12,6 +12,7 @@ import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.modules.app.bean.GroupPurchaseBean;
 import com.its.modules.app.bean.OrderGroupPurcBean;
+import com.its.modules.app.bean.OrderGroupPurcRCBean;
 import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.OrderGroupPurcDao;
@@ -177,10 +178,9 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		/* 生成订单结束 */
 
 		// 修改团购已购数量
-		groupPurchasetimeService.updateSaleNum(payNumber, groupPurchaseBean.getGroupPurchaseTimeId());
+		groupPurchasetimeService.reduceStockNumAddSaleNum(payNumber, groupPurchaseBean.getGroupPurchaseTimeId());
 		// 插入订单追踪
 		orderTrackService.createTrackSubmit(OrderGlobal.ORDER_GROUP_PURCHASE, orderGroupPurcId, orderNo);
-
 		return orderGroupPurcId;
 	}
 
@@ -247,8 +247,8 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 			return false;
 		}
 
-		// 减少团购已售数量
-		int row = groupPurchasetimeService.updateSaleNum(orderGroupPurcLists.size(), orderGroupPurcLists.get(0).getGroupPurchaseId());
+		// 团购子表增加库存，减少已售数量
+		int row = groupPurchasetimeService.addStockNumReduceSaleNum(orderGroupPurcLists.size(), orderGroupPurcLists.get(0).getGroupPurchaseId());
 		if (row == 0) {
 			// 事务回滚
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -274,6 +274,12 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		GroupPurchase groupPurchase = groupPurchaseService.get(orderGroupPurc.getGroupPurchaseId());
 		if (orderGroupPurcLists == null || orderGroupPurcLists.size() == 0 || groupPurchase == null) {
 			return "";
+		}
+		if (OrderGlobal.ORDER_PAY_STATE_UNPAY.equals(orderGroupPurc.getPayState())) {
+			return "未支付";
+		}
+		if (OrderGlobal.ORDER_GROUP_PURHCASE_CANCELED.equals(orderGroupPurc.getOrderState())) {
+			return "已取消";
 		}
 		int[] supportType = groupPurchaseService.getSupportType(groupPurchase.getSupportType());
 
@@ -320,5 +326,17 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * 获取团购券的临近期
+	 * 
+	 * @param numDays
+	 *            临近天数
+	 * @return List<OrderGroupPurcRCBean>
+	 */
+	public List<OrderGroupPurcRCBean> findTicketExpireMsg(String numDays) {
+		List<OrderGroupPurcRCBean> rtn = dao.findTicketExpireMsg(numDays);
+		return rtn;
 	}
 }

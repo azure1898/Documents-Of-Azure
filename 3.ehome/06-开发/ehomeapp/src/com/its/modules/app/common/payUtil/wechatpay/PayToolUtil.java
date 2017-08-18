@@ -1,9 +1,7 @@
 package com.its.modules.app.common.payUtil.wechatpay;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SortedMap;
 
 import com.its.common.utils.StringUtils;
@@ -31,7 +29,7 @@ public class PayToolUtil {
 
 		// 算出摘要
 		String mysign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toLowerCase();
-		String tenpaySign = packageParams.get("sign").toLowerCase();
+		String tenpaySign = packageParams.get("sign").toUpperCase();
 		return tenpaySign.equals(mysign);
 	}
 
@@ -44,16 +42,15 @@ public class PayToolUtil {
 	 *            请求参数
 	 * @return 签名
 	 */
-	public static String createSign(String characterEncoding, SortedMap<Object, Object> packageParams, String API_KEY) {
+	public static String createSign(String characterEncoding, SortedMap<String, String> packageParams, String API_KEY) {
 		StringBuffer sb = new StringBuffer();
-		Set es = packageParams.entrySet();
-		Iterator it = es.iterator();
+		Iterator<Entry<String, String>> it = packageParams.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String k = (String) entry.getKey();
-			String v = (String) entry.getValue();
-			if (null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
-				sb.append(k + "=" + v + "&");
+			Entry<String, String> entry = it.next();
+			String key = entry.getKey();
+			String value = entry.getValue();
+			if (null != value && !"".equals(value) && !"sign".equals(key) && !"key".equals(key)) {
+				sb.append(key + "=" + value + "&");
 			}
 		}
 		sb.append("key=" + API_KEY);
@@ -68,19 +65,18 @@ public class PayToolUtil {
 	 *            请求参数
 	 * @return XML格式的字符串
 	 */
-	public static String getRequestXml(SortedMap<Object, Object> parameters) {
+	public static String getRequestXml(SortedMap<String, String> parameters) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<xml>");
-		Set es = parameters.entrySet();
-		Iterator it = es.iterator();
+		Iterator<Entry<String, String>> it = parameters.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String k = (String) entry.getKey();
-			String v = (String) entry.getValue();
-			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {
-				sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
+			Entry<String, String> entry = it.next();
+			String key = entry.getKey();
+			String value = entry.getValue();
+			if ("attach".equalsIgnoreCase(key) || "body".equalsIgnoreCase(key) || "sign".equalsIgnoreCase(key)) {
+				sb.append("<" + key + ">" + "<![CDATA[" + value + "]]></" + key + ">");
 			} else {
-				sb.append("<" + k + ">" + v + "</" + k + ">");
+				sb.append("<" + key + ">" + value + "</" + key + ">");
 			}
 		}
 		sb.append("</xml>");

@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.service;
 
 import java.util.List;
@@ -18,6 +15,7 @@ import com.its.modules.app.entity.WalletDetail;
  * 钱包明细Service
  * 
  * @author like
+ * 
  * @version 2017-07-17
  */
 @Service
@@ -53,13 +51,20 @@ public class WalletDetailService extends CrudService<WalletDetailDao, WalletDeta
 	 *            用户ID
 	 * @param pageNum
 	 *            分页页码(从0开始为起始页)
-	 * @return
+	 * @return List<WalletDetail>
 	 */
 	public List<WalletDetail> getWalletDetail(String accountId, int pageNum) {
 		int pageSize = AppGlobal.WALLET_PAGE_SIZE;
 		return dao.getWalletDetail(accountId, pageSize * pageNum, pageSize);
 	}
 
+	/**
+	 * 获取交易类型描述
+	 * 
+	 * @param type
+	 *            交易类型：0-充值；1-充值赠送；2-钱包支付(订单消费)；3-手环支付；4-刷脸支付；5-退款(订单取消)
+	 * @return String
+	 */
 	public String getTradeTypeString(String type) {
 		String result = "";
 		if (AppGlobal.TRADE_TYPE_RECHARGE.equals(type)) {
@@ -76,5 +81,18 @@ public class WalletDetailService extends CrudService<WalletDetailDao, WalletDeta
 			result = "退款";
 		}
 		return result;
+	}
+
+	/**
+	 * 获取钱包订单支付或退款的详情
+	 * 
+	 * @param orderId
+	 *            订单ID
+	 * @param tradeType
+	 *            交易类型：0-充值；1-充值赠送；2-钱包支付(订单消费)；3-手环支付；4-刷脸支付；5-退款(订单取消)
+	 * @return WalletDetail
+	 */
+	public WalletDetail getWalletDetailOfOrder(String orderId, String tradeType) {
+		return dao.getWalletDetailOfOrder(orderId, tradeType);
 	}
 }

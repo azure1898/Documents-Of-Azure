@@ -22,11 +22,11 @@ public class SocialMsg extends DataEntity<SocialMsg> {
 	private String username;		// 发送消息用户名称
 	private String touserid;		// 接受消息用户ID
 	private String content;		// 消息内容
-	private String isnotice;		// 是否通知 1:已经通知 0 ：未通知
+	private int isnotice;		// 是否通知 1:已经通知 0 ：未通知
 	private Date noticetime;		// 通知时间
-	private String firtype;		// 1：订单消息2：管理员消息：3：邻里圈消息
-	private String sectype;		// 1:配送消息2：取消订单3：临期提醒4：团购已消费 5：团购退款  11：公告通知 12：管理员发言  21：@我的消息 22：评论我的消息 23：关注我的消息
-	private String isread;		// 是否已读 1：已读 0：未读
+	private int firtype;		// 1：订单消息2：管理员消息：3：邻里圈消息
+	private int sectype;		// 2.1:配送消息2.2：取消订单 2.3：临期提醒2.4：团购已消费 2.5：团购退款  3.1：公告通知 3.2：管理员发言  4.1：@我的消息 4.2：评论我的消息 4.3：关注我的消息
+	private int isread;		// 是否已读 1：已读 0：未读
 	
 	public SocialMsg() {
 		super();
@@ -72,11 +72,11 @@ public class SocialMsg extends DataEntity<SocialMsg> {
 	}
 	
 	@Length(min=0, max=11, message="是否通知 1:已经通知 0 ：未通知长度必须介于 0 和 11 之间")
-	public String getIsnotice() {
+	public int getIsnotice() {
 		return isnotice;
 	}
 
-	public void setIsnotice(String isnotice) {
+	public void setIsnotice(int isnotice) {
 		this.isnotice = isnotice;
 	}
 	
@@ -90,29 +90,29 @@ public class SocialMsg extends DataEntity<SocialMsg> {
 	}
 	
 	@Length(min=0, max=11, message="1：订单消息2：管理员消息：3：邻里圈消息长度必须介于 0 和 11 之间")
-	public String getFirtype() {
+	public int getFirtype() {
 		return firtype;
 	}
 
-	public void setFirtype(String firtype) {
+	public void setFirtype(int firtype) {
 		this.firtype = firtype;
 	}
 	
 	@Length(min=0, max=11, message="1:配送消息2：取消订单3：临期提醒4：团购已消费 5：团购退款  11：公告通知 12：管理员发言  21：@我的消息 22：评论我的消息 23：关注我的消息长度必须介于 0 和 11 之间")
-	public String getSectype() {
+	public int getSectype() {
 		return sectype;
 	}
 
-	public void setSectype(String sectype) {
+	public void setSectype(int sectype) {
 		this.sectype = sectype;
 	}
 	
 	@Length(min=0, max=11, message="是否已读 1：已读 0：未读长度必须介于 0 和 11 之间")
-	public String getIsread() {
+	public int getIsread() {
 		return isread;
 	}
 
-	public void setIsread(String isread) {
+	public void setIsread(int isread) {
 		this.isread = isread;
 	}
 	

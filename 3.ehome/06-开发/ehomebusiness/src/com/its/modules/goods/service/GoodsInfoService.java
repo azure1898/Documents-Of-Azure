@@ -42,16 +42,18 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
      */
     public GoodsInfo get(String id) {
         GoodsInfo goodsInfo = super.get(id);
-        goodsInfo.setGoodsSkuPriceList(goodsSkuPriceDao.findList(new GoodsSkuPrice(goodsInfo)));
-        // 根据查询出来的规格库存信息，使画面上规格项被选中
-        String[] checkedSkuValue = new String[goodsInfo.getGoodsSkuPriceList().size()];
-        int i = 0;
-        // 将应该选中的规格的ID放在画面上
-        for (GoodsSkuPrice goodsSkuPrice : goodsInfo.getGoodsSkuPriceList()) {
-            checkedSkuValue[i] = goodsSkuPrice.getSkuValueId();
-            i++;
+        if(goodsInfo!=null){
+        	 goodsInfo.setGoodsSkuPriceList(goodsSkuPriceDao.findList(new GoodsSkuPrice(goodsInfo)));
+             // 根据查询出来的规格库存信息，使画面上规格项被选中
+             String[] checkedSkuValue = new String[goodsInfo.getGoodsSkuPriceList().size()];
+             int i = 0;
+             // 将应该选中的规格的ID放在画面上
+             for (GoodsSkuPrice goodsSkuPrice : goodsInfo.getGoodsSkuPriceList()) {
+                 checkedSkuValue[i] = goodsSkuPrice.getSkuValueId();
+                 i++;
+             }
+             goodsInfo.setCheckedSkuValue(checkedSkuValue);
         }
-        goodsInfo.setCheckedSkuValue(checkedSkuValue);
         return goodsInfo;
     }
 

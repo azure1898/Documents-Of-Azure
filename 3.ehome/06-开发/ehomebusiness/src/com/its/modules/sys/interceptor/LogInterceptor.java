@@ -8,14 +8,17 @@ import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.its.common.service.BaseService;
 import com.its.common.utils.DateUtils;
+import com.its.common.utils.Exceptions;
 import com.its.modules.sys.entity.Log;
 import com.its.modules.sys.utils.LogUtils;
+import com.its.modules.sys.utils.UserUtils;
 
 /**
  * 日志拦截器
@@ -30,6 +33,15 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, 
 			Object handler) throws Exception {
+		
+		
+		/*验证用户是否可以登录*/
+		if(UserUtils.getUserLoginFlag()!=0){
+			response.sendRedirect(request.getContextPath()+adminPath+"/out");
+			return false;
+		}
+		
+		
 		if (logger.isDebugEnabled()){
 			long beginTime = System.currentTimeMillis();//1、开始时间  
 	        startTimeThreadLocal.set(beginTime);		//线程绑定变量（该数据只有当前请求的线程可见）  
@@ -47,10 +59,17 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 		}
 	}
 
+	@Value("${adminPath}")
+	private String adminPath;
+	
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, 
 			Object handler, Exception ex) throws Exception {
-
+		
+		//不知为何  ex总为null 无法获取到异常
+		Throwable ex1 = Exceptions.getThrowable(request);
+		if(ex1!=null)
+			ex = new Exception(Exceptions.getStackTraceAsString(ex));
 		// 保存日志 操作日志
 		LogUtils.saveLog(request, handler, ex, null,Log.TYPE_OPERATE);
 		

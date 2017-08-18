@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 
 .back_btn{ float:left;}
@@ -217,11 +217,12 @@ height:32px;
 .index2_menu ul li p{ text-align:center;}
 .index2_menu ul li p a{ color:#808080;}
 
-.index2_topmain2{width:100%; background:#fff; padding:10px 5%}
+.index2_topmain2{width:100%; background:#fff; padding:10px 1%}
 /*.index2_topmain2 ul{ width:100%;}
 .index2_topmain2 ul li{ width:49%; height:70px; float:left;}
 .index2_topmain2 ul li{}*/
-.media{ width:49%; float:left; background:#f3f3f3; padding:10px;}
+.media{ width:49%; float:left; background:#f3f3f3; padding:10px;margin-top:5px!important;}
+.index2_topmain2 .media:nth-child(2n){ margin-left:5px;}
 .media-right{ float:right;}
 .media-body{ width:70%; float:left; display:inline-block;}
 .index_redft{ color:#f0222c;}
@@ -240,8 +241,8 @@ height:32px;
 .i2_con1{ background:url(../images/foot2_icon.png) 0 0 no-repeat; 
 display:inline-block; 
 width:40px; 
-height:32px; 
-}
+height:32px; }
+
 .i2_con1_2{ background:url(../images/foot2_icon.png) 0px -32px no-repeat; display:inline-block;  width:40px; height:32px;}
 .i2_con2{ background:url(../images/foot2_icon.png) -40px 0px no-repeat; display:inline-block;  width:40px; height:32px; }
 .i2_con2_2{ background:url(../images/foot2_icon.png) -40px -32px no-repeat; display:inline-block;  width:40px; height:32px;}
@@ -249,3 +250,9 @@ height:32px;
 .i2_con3_2{ background:url(../images/foot2_icon.png) -80px 0px no-repeat; display:inline-block; width:40px; height:32px;}
 .i2_con4{ background:url(../images/foot2_icon.png) -123px -32px no-repeat;display:inline-block;  width:32px; height:32px;}
 .i2_con4_2{ background:url(../images/foot2_icon.png) -123px 0px no-repeat; display:inline-block; width:32px; height:32px;}
+
+
+
+
+
+

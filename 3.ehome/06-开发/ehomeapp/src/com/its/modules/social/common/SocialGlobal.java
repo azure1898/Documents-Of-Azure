@@ -5,30 +5,28 @@ package com.its.modules.social.common;
  *
  */
 public class SocialGlobal {
+	
+	/** 板块ID */
+	public static final int SYS_PLATE_ID = 1;
+	
+	/** 分页信息 首页10条，其他的20条 */
+	public static final int PAGE_SIZE_INDEX = 10;
+	public static final int PAGE_SIZE = 20;
 
 	/** 查看发言列表是否全部   0：只看我关注的； 1：查看全部 */
 	public static final int SPEAK_LIST_NOT_ALL = 0;
 
 	public static final int SPEAK_LIST_ALL = 1;
 	
-	/** 发言每页显示20 */
-	public static final int SPEAK_PAGE_SIZE = 20;
-	
 	/** 发言删除标识 0：已删除  1： 未删除 */
 	public static final int SPEAK_DEL_FLAG_YES = 0;
 	
 	public static final int SPEAK_DEL_FLAG_NO = 1;
 
-	/** 转发每页显示20 */
-	public static final int FORWARD_PAGE_SIZE = 20;
-	
 	/** 话题关系类型  1：发言 2：评论*/
 	public static final int SUB_RELATION_SPK = 1;
 	
 	public static final int SUB_RELATION_CMT = 2;
-	
-	/** 评论每页显示20 */
-	public static final int COMMENT_PAGE_SIZE = 20;
 	
 	/** 评论删除标识 0：已删除  1： 未删除 */
 	public static final int COMMENT_DEL_FLAG_YES = 0;
@@ -44,23 +42,6 @@ public class SocialGlobal {
 	public static final int TIPS_TYPE_COMMENT = 2;
 	public static final int TIPS_TYPE_FORWARD = 3;
 	
-	/** 消息一级类型1：订单；2：后台管理 ；3：领礼券。*/
-	public static final int MSG_FIRTYPE_ORDER = 1;
-	public static final int MSG_FIRTYPE_ADMIN = 2;
-	public static final int MSG_FIRTYPE_SOCIAL = 3;
-	
-	/** 消息二级类型1:配送消息2：取消订单3：临期提醒4：团购已消费 5：团购退款  11：公告通知 12：管理员发言  21：@我的消息 22：评论我的消息 23：关注我的消息。*/
-	public static final int MSG_SECTYPE_PS = 1;
-	public static final int MSG_SECTYPE_QXDD = 2;
-	public static final int MSG_SECTYPE_LQTX = 3;
-	public static final int MSG_SECTYPE_TGYXF = 4;
-	public static final int MSG_SECTYPE_TGTK = 5;
-	public static final int MSG_SECTYPE_GGTZ = 11;
-	public static final int MSG_SECTYPE_GLYFY = 12;
-	public static final int MSG_SECTYPE_ATWD = 21;
-	public static final int MSG_SECTYPE_PLWD = 22;
-	public static final int MSG_SECTYPE_GZWD = 23;
-	
 	/** 是否通知 1：已通知 0：未通知*/
 	public static final int TIPS_IS_NOTICE_YES = 1;
 	public static final int TIPS_IS_NOTICE_NO = 0;
@@ -68,9 +49,6 @@ public class SocialGlobal {
 	/** 是否评论 1：是 0 ：否 */
 	public static final int COMMENT_ISCOMMENT_YES = 1;
 	public static final int COMMENT_ISCOMMENT_NO = 0;
-	
-	/** 点赞每页显示20 */
-	public static final int PRAISE_PAGE_SIZE = 20;
 	
 	/** 点赞状态 1：已赞  0：取消赞 */
 	public static final int PRAISE_STATE_YES = 1;
@@ -97,15 +75,6 @@ public class SocialGlobal {
 	public static final int FORWARD_FORBIT_FORWARD_YES = 1;
 	
 	public static final int FORWARD_FORBIT_FORWARD_NO = 0;
-	
-	/** 我家 我的发言每页显示20 */
-	public static final int MYHOME_MYSPEAK_PAGE_SIZE = 20;
-	
-	/** 我家 我的关注每页显示20 */
-	public static final int MYHOME_MYFOCUS_PAGE_SIZE = 20;
-
-	/** 我家 我的赞每页显示10 */
-	public static final int MYHOME_MYPRAISE_PAGE_SIZE = 10;
 	
 	/** 我家 我的赞是否是评论 */
 	public static final int MYHOME_MYPRAISE_COMMENT_YES = 1;

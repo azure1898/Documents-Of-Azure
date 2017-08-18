@@ -12,12 +12,18 @@ var vm = new Vue({
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
-			this.$http.get("../../data/myfans.json").then(function(res){
-				_this.myfansData = res.data.data;
-			});
+//			this.$http.get("../../data/myfans.json").then(function(res){
+//				_this.myfansData = res.data.data;
+//			});
+ 			this.$http.post(interfaceUrl+"/myHome/myFansList",{
+ 				userId:userInfo.userID,
+ 				pageIndex:0
+ 			},{emulateJSON: true}).then(function(res){
+ 				_this.myfansData = res.data.data;
+ 			})
 		},
 	follow:function(fans){
-			var _this = this;
+		var _this = this;
 		if(fans.relation==2){//取消关注
 			layer.open({
 			 title: [
@@ -26,28 +32,30 @@ var vm = new Vue({
 		    content: '确定取消关注？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(index){
-		   	  fans.relation=1;
-		      layer.close(index);
+		      _this.$http.post(interfaceUrl + "/focus/saveFocus",{
+		      	userId:userInfo.userID,
+		      	subUserId:fans.subUserId,     //fans.subUserId
+		      	type:0
+		      },{emulataJSON:true}).then(function(res){
+		      	 if(res.data.code==1000){
+		      	 	fans.relation=1;
+		      		layer.close(index);
+		      	 }
+		      })
+		   	
 		    }
 		  });
-			
-//			this.$http.post("/speak/saveComment"{
-//				 	userId:,
-//					subUserId:personalpage.id,
-//				 	type:0
-//				 }).then(function(res){
-//						_this.followInformation = res.data.message;		
-//					});
-			
-		}else{
-			fans.relation=2;
-		//			this.$http.post("/speak/saveComment"{
-//				 	userId:,
-//					subUserId:personalpage.id,
-//				 	type:1
-//				 }).then(function(res){
-//						_this.followInformation = res.data.message;		
-//					});
+		}else{//关注
+			_this.$http.post(interfaceUrl + "/focus/saveFocus",{
+				userId:userInfo.userID,
+		      	subUserId:1 ,     //fans.subUserId
+		      	type:0
+			},{emulataJSON:true}).then(function(res){
+				if(res.data.code==1000){
+					fans.relation=2;
+				}
+			})
+	
 		}
 	}
 		

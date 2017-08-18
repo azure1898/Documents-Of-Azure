@@ -41,11 +41,11 @@
 							<tr>
 								<td width="15">
 									<a href="#" v-on:click="commentPraise()">
-										<img v-if="commentDetail.isPraise===1" src="../../images/zan_02.png" width="14" height="13">
+										<img v-if="commentDetail.isPraise==1" src="../../images/zan_02.png" width="14" height="13">
 										<img v-else src="../../images/zan_01.png" width="14" height="13">
 									</a>
 								</td>
-								<td width="15" v-bind:class="{ftcred:commentDetail.isPraise===1}" style="padding-top:5px;">{{commentDetail.countPraise}}</td>
+								<td width="15" v-bind:class="{ftcred:commentDetail.isPraise==1}" style="padding-top:5px;">{{commentDetail.countPraise}}</td>
 							</tr>
 						</table>
 					</div>
@@ -56,7 +56,8 @@
 				</div>
 				<div class="fyxq_main2_2" style="border-bottom:none;">
 					<p class="ftcred">
-						<a href="speechdetails.html">查看原发言</a>
+						<!--<a href="speechdetails.html">查看原发言</a>-->
+						<a  onclick="javascript :history.go(-1)">查看原发言</a>
 					</p>
 				</div>
 			</div>

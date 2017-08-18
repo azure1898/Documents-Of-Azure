@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>首页</title>
-
     <!-- Bootstrap -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/swiper-3.4.2.min.css" />
     <link href="../../css/main.css" rel="stylesheet">
     <link href="../../css/common.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cursom/common.css"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -65,201 +66,246 @@
             color: white;
             z-index: 0;
         }
+
+        .active2 {
+            width: 12px;
+            height: 12px;
+            margin: 0;
+            background-color: red !important;
+        }
     </style>
 </head>
 <body>
     <div id="app" v-cloak>
         <div class="grey_top">优家</div>
-        <div class="index2_ad" v-if="topAd">
+        <!--头部广告-->
+        <div class="index2_ad" v-if="topAd && topAd.length>0">
             <div id="myCarousel" class="carousel slide">
-                <ol class="carousel-indicators">
-                    <li data-target="#myCarousel" v-for="(item1,index) in topAd" data-slide-to="index" class="{'active':index==0}"></li>
-                </ol>
-                <ul class="carousel-inner index_ad">
-                    <li class="item" v-for="(item1,index) in topAd" class="{'active':index==0}"><img src="item1.adImage" class="img-responsive" style="height: 90px;" /></li>
+                <ul class="carousel-inner">
+                    <li class="item" v-for="(image,index) in topAd" v-bind:class="{'active':index==0}">
+                    	<span v-if="image.adType=='0'">
+                    		
+                    		<img v-bind:src="image.adImage" style="height: 90px;" />
+                    	</span>
+                    	<span v-else-if="image.adType=='1'">
+                    		<a v-bind:href="image.adUrl"><img v-bind:src="image.adImage" style="height: 90px;" /></a>
+                    	</span>
+                    	<span v-else-if="image.adType=='2'" v-on:click="moduleClick(image)">
+                    		<a v-bind:href="image.adUrl"><img v-bind:src="image.adImage" style="height: 90px;" /></a>
+                    	</span>
+                    	<span v-else-if="image.adType=='3'" v-on:click="topAdClick(image)">
+                    		<a v-bind:href="image.adUrl"><img v-bind:src="image.adImage" style="height: 90px;" /></a>
+                    	</span>
+                    	<span v-else-if="image.adType=='4'" v-on:click="topAdClick_p(image)">
+                    		<a v-bind:href="image.adUrl"><img v-bind:src="image.adImage" style="height: 90px;" /></a>
+                    	</span>
+                    
+                    </li>
                 </ul>
             </div>
+              <!--<div class="swiper-container_1" style="height:90px;overflow: hidden;">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="image in topAd">
+                        <img v-bind:src="image.adImage" style="height: 90px;" />
+                    </div>
+                      </div>
+                        </div>-->
+            
         </div>
         <div class="index2_ad" v-else><a href="#"><img src="../../images/top_bg7.jpg"></a></div>
-        <!--头部广告-->
-        <div class="index2_topmain" v-if="topModule">
+        <!--模块推荐-->
+        <div class="index2_topmain" v-if="topModule && topModule.length>0">
             <div class="index2_menu">
                 <ul>
-                    <li v-for="item2 in topModule" @click="jump(item2)">
-                        <img v-bind:src="item2.moduleIcon" width="50px">
-                        <p>{{item2.moduleName}}</p>
+                    <li v-for="module in topModule" v-on:click="moduleClick(module)">
+                        <img v-bind:src="module.moduleIcon" style="width:50px">
+                        <p>{{module.moduleName}}</p>
                     </li>
                 </ul>
                 <div class="clear"></div>
             </div>
         </div>
-        <!--模块推荐-->
-        <div class="index2_topmain2 mt10" v-if="topBusiness">
-
-            <div class="media" style="margin-right:2%" v-for="item3 in topBusiness">
+        <!--顶部商家推荐-->
+        <div class="index2_topmain2 mt10" v-if="topBusiness && topBusiness.length>0">
+            <div class="media" v-for="business_t in topBusiness" v-on:click="topBusinessClick(business_t)">
                 <div class="media-body">
-                    <h4 class="media-heading ft16" v-bind:data-id="item3.businessID">{{item3.businessName}}</h4>
-                    <font class="index_redft ft12">{{item3.businessDesc}}</font>
+                    <h4 class="media-heading ft16 labelEllipsis">{{business_t.businessName}}</h4>
+                    <font class="index_redft ft12">{{business_t.businessDesc}}</font>
                 </div>
                 <div class="media-right" style="padding-left:0;">
-                    <a href="item3.businessUrl">
-                        <img class="media-object" v-bind:src="item3.businessImage" width="42" height="50">
+                    <a>
+                        <img class="media-object" v-bind:src="business_t.businessImage" width="42" height="50">
                     </a>
                 </div>
             </div>
             <div class="clear"></div>
         </div>
-        <!--顶部商家推荐-->
+        <!--团购推荐-->
         <div class="goods_list" v-if="groupBuy && groupBuy.length>0">
-
-            <div class="goods_right" style="margin-left:0">
-                <div class="goods_pic" style="border:none; margin:8px;"><a href="item.groupBuyUrl"><img v-bind:src="item.groupBuyImage"></a></div>
-                <div class="details_title_box">
-                    <div class="plr10">
-                        <div class="details_title">{{item.groupBuyName}}</div>
-                        <div class="mt4 clearfix">
-                            <div class="fl">
-                                <div class="font_orange font18 fl">{{item.groupBuyPrice|formatDecimal}}</div>
-                                <div class="font14 fl ml10 mt4"><del>{{item.marketPrice|formatDecimal}}</del></div>
+          
+             <div id="myCarousel_gro" class="carousel slide">
+                <ul class="carousel-inner">
+                    <li class="item" v-for="(group,index) in groupBuy" v-bind:class="{'active':index==0}" style="70px;">
+                    	
+                    	<div class="goods_right" style="margin-left:0">
+                            <div class="goods_pic" style="border:none; margin:8px;"><a v-bind:href="group.groupBuyUrl"><img v-bind:src="group.groupBuyImage"></a></div>
+                            <div class="details_title_box">
+                                <div class="plr10">
+                                    <div class="details_title oneLine">{{group.groupBuyName}}</div>
+                                    <div class="mt4 clearfix">
+                                        <div class="fl">
+                                            <div class="font_orange font18 fl">{{group.groupBuyPrice|formatDecimal}}</div>
+                                            <div class="font14 fl ml10 mt4"><del>{{group.marketPrice|formatDecimal}}</del></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
+                        <div class="goods_num fr" style="margin-right:10px; margin-top:-47px;" onclick="javascript:location.href='../groupbuy/modulelist.html'"><img src="../../images/list_inbtn.png" width="9" height="16"></div>
+                    	
+                    </li>
+                </ul>
+            </div>
+          
+          
+          <!--<div class="swiper-container" style="height:70px;overflow: hidden;z-index: -100;">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="group in groupBuy">-->
+                        <!--<div class="goods_right" style="margin-left:0">
+                            <div class="goods_pic" style="border:none; margin:8px;"><a v-bind:href="group.groupBuyUrl"><img v-bind:src="group.groupBuyImage"></a></div>
+                            <div class="details_title_box">
+                                <div class="plr10">
+                                    <div class="details_title oneLine">{{group.groupBuyName}}</div>
+                                    <div class="mt4 clearfix">
+                                        <div class="fl">
+                                            <div class="font_orange font18 fl">{{group.groupBuyPrice|formatDecimal}}</div>
+                                            <div class="font14 fl ml10 mt4"><del>{{group.marketPrice|formatDecimal}}</del></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goods_num fr" style="margin-right:10px; margin-top:-47px;" onclick="javascript:location.href='../groupbuy/modulelist.html'"><img src="../../images/list_inbtn.png" width="9" height="16"></div>-->
+                    <!--</div>
+                </div>
+            </div>-->
+        </div>
+        <!--专题推荐-->
+        <div class="teshkj" v-if="topicData && topicData.length==6">
+            <div class="xq_jstitle">{{topic.topicName}}</div>
+            <div class="Boutique_buy_main_pic3">
+                <div v-for="(item9,index) in topicData" v-bind:class="'Boutique_buy_main_tupian3',isClass" v-bind:data-id="item9.recommendID">
+                    <img v-bind:src="item9.recommendImage">
+                    <div class="Boutique_buy_main_biaoti1">
+                        <a href="#" style="color: white;padding-left:3px;">{{item9.recommendName}}</a>
                     </div>
                 </div>
-
-            </div>
-            <div class="goods_num fr" style="margin-right:10px; margin-top:-47px;" onclick="javascript:location.href='../groupbuy/modulelist.html'"><img src="../../images/list_inbtn.png" width="9" height="16"></div>
-
-        </div>
-        <!--团购-->
-        <div class="teshkj">
-            <div class="xq_jstitle">图腾生活空间</div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
-            </div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
-            </div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
-            </div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
-            </div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
-            </div>
-            <div class="Boutique_buy_main_pic3">
-                <div class="Boutique_buy_main_tupian3">
-                    <img src="../../images/index_pic1.jpg">
-                    <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">抢购中</a></div>
-                </div>
+                <div class="clear"></div>
             </div>
             <div class="clear"></div>
         </div>
-        <!--
-                <div class="teshkj" v-if="topic&&topic.topicData.length==6">
-                        <div class="xq_jstitle">{{topic.topicName}}</div>
-                        <div class="Boutique_buy_main_pic3">
-                            <div v-for="(item9,index) in topic.topicData" :class="'Boutique_buy_main_tupian3',isClass" ><img :src="item9.img">
-                                <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">{{item9.name}}</a></div>
-                            </div>
-                            <div class="clear"></div>
-                            </div>
-                        <div class="clear"></div>
-                          </div>
-              -->
-        <!--<div class="teshkj" v-else-if="topic&&topic.topicData.length==5">
-                  <div class="xq_jstitle">{{topic.topicName}}</div>
-                  <div class="Boutique_buy_main_pic3">
-                      <div v-for="(item9,index) in topic.topicData" :class="[index==0||index==1 ? 'Boutique_buy_main_tupian2' : 'Boutique_buy_main_tupian3']" ><img :src="item9.img">
-                          <div :class="index == 0||index == 1?'Boutique_buy_main_biaoti':'Boutique_buy_main_biaoti1'"><a href="#" style="color: white;">{{item9.name}}</a></div>
-                      </div>
-                      <div class="clear"></div>
-                  </div>
-                  <div class="clear"></div>
-              </div>
-                <div class="teshkj" v-else-if="topic&&topic.topicData.length==4">
-                  <div class="xq_jstitle">{{topic.topicName}}</div>
-                  <div class="Boutique_buy_main_pic3">
-                      <div v-for="(item9,index) in topic.topicData" :class="'Boutique_buy_main_tupian2',isClass" ><img :src="item9.img">
-                          <div class="Boutique_buy_main_biaoti"><a href="#" style="color: white;">{{item9.name}}</a></div>
-                      </div>
-                      <div class="clear"></div>
-                  </div>
-                  <div class="clear"></div>
-              </div>
-                <div class="teshkj" v-else-if="topic&&topic.topicData.length==3">
-                  <div class="xq_jstitle">{{topic.topicName}}</div>
-                  <div class="Boutique_buy_main_pic3">
-                      <div v-for="(item9,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian3',isClass" ><img :src="item9.img">
-                          <div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">{{item9.name}}</a></div>
-                      </div>
-                      <div class="clear"></div>
-                  </div>
-                  <div class="clear"></div>
-              </div>
-                <div class="teshkj" v-else-if="topic&&topic.topicData.length==2">
-                  <div class="xq_jstitle">{{topic.topicName}}</div>
-                  <div class="Boutique_buy_main_pic3">
-                      <div v-for="(item9,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian2',isClass" ><img :src="item9.img">
-                          <div class="Boutique_buy_main_biaoti"><a href="#" style="color: white;">{{item9.name}}</a></div>
-                      </div>
-                      <div class="clear"></div>
-                  </div>
-                  <div class="clear"></div>
-              </div>
-          -->
-        <!--图腾-->
-        <!--<div class="Boutique_buy" v-if="middleBusiness">
-          <div class="xq_jstitle" style="padding-top:10px;"v-for="item5 in middleBusiness" v-bind:data-id="item5.businessID">{{item5.businessName}}</div>
-          <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=1915b262a28c42edab0d3899f11831c1'">
-            <div class="Boutique_buy_main_tupian" v-for="item6 in item5.modes"><img v-bind:src="item6.modeImage"> </div>
-          </div>
-        </div>-->
-        <div class="Boutique_buy">
-            <div class="xq_jstitle" style="padding-top:10px;">实地会所</div>
-            <div class="Boutique_buy_main2" onclick="javascript:location.href='../site/modulelist.html?id=2eb042c512014a89a867c439089af071'">
-                <div class="Boutique_buy_main_tupian"><img src="../../images/pic9.jpg"> </div>
+        <div class="teshkj" v-else-if="topicData && topicData.length==5">
+            <div class="xq_jstitle">{{topic.topicName}}</div>
+            <div class="Boutique_buy_main_pic3">
+                <div v-for="(item9,index) in topicData" v-bind:data-id="item9.recommendID" v-bind:class="[index==0||index==1 ? 'Boutique_buy_main_tupian2' : 'Boutique_buy_main_tupian3']">
+                    <img v-bind:src="item9.recommendImage">
+                    <div class="index == 0||index == 1?'Boutique_buy_main_biaoti':'Boutique_buy_main_biaoti1'">
+                        <a href="#" style="color: white;padding-left:3px;">{{item9.recommendName}}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="teshkj" v-else-if="topicData && topicData.length==4">
+            <div class="xq_jstitle">{{topic.topicName}}</div>
+            <div class="Boutique_buy_main_pic3">
+                <div v-for="(item9,index) in topicData" v-bind:data-id="item9.recommendID" v-bind:class="'Boutique_buy_main_tupian2',isClass">
+                    <img v-bind:src="item9.recommendImage">
+                    <div class="Boutique_buy_main_biaoti">
+                        <a href="#" style="color: white;padding-left:3px;">{{item9.recommendName}}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="teshkj" v-else-if="topicData && topicData.length==3">
+            <div class="xq_jstitle">{{topic.topicName}}</div>
+            <div class="Boutique_buy_main_pic3">
+                <div v-for="(item9,index) in topicData" v-bind:data-id="item9.recommendID" v-bind:class="'Boutique_buy_main_tupian3',isClass">
+                    <img v-bind:src="item9.recommendImage">
+                    <div class="Boutique_buy_main_biaoti1">
+                        <a href="#" style="color: white;padding-left:3px;">{{item9.recommendName}}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="teshkj" v-else-if="topicData && topicData.length==2">
+            <div class="xq_jstitle">{{topic.topicName}}</div>
+            <div class="Boutique_buy_main_pic3">
+                <div v-for="(item9,index) in topicData" v-bind:data-id="item9.recommendID" v-bind:class="'Boutique_buy_main_tupian2',isClass">
+                    <img v-bind:src="item9.recommendImage">
+                    <div class="Boutique_buy_main_biaoti">
+                        <a href="#" style="color: white;padding-left:3px;">{{item9.recommendName}}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--中部商家-->
+        <div class="Boutique_buy" v-if="middleBusiness && middleBusiness.length>0" v-for="business_m in middleBusiness">
+            <div class="xq_jstitle" style="padding-top:10px;">{{business_m.businessName}}</div>
+            <div id="myCarousel_m_b" class="carousel slide">
+                <ul class="carousel-inner">
+                    <li class="item" v-for="(mode,index) in business_m.modes" v-bind:class="{'active':index==0}">
+                        <div class="Boutique_buy_main2" v-on:click="middleBusinessClick(business_m.businessID,mode)">
+                            <div class="Boutique_buy_main_tupian"><img v-bind:src="mode.modeImage"> </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
-        <!--实地会所-->
-        <div class="xq_jstitle" style="background:#fff; margin-bottom:0; padding:10px 0; border-bottom:1px solid #edecec;" v-if="footerBusiness">推荐商家</div>
-        <div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;" v-for="item7 in footerBusiness" v-if="footerBusiness">
-            <div class="sortlist_top2">
-                <div class="business_price_box">
-                    <div class="business_pic75 fl"> <a href="item7.businessUrl"><img v-bind:src="item7.businessImage"></a></div>
-                    <div class="business_nr2 font_black">
-                        <div style="height:26px;">
-                            <div class="business_name fl" v-bind:data-id="item7.businessID">{{item7.businessName}}</div>
-                            <div class="fr"></div>
+        <!--底部商家-->
+        <div v-if="footerBusiness && footerBusiness.length>0">
+            <div class="xq_jstitle" style="background:#fff; margin-bottom:0; padding:10px 0; border-bottom:1px solid #edecec;" v-if="footerBusiness">推荐商家</div>
+            <div class="sort_list2 clearfix" style="border-bottom:1px solid #f2f2f2;" v-for="business_f in footerBusiness" v-on:click="footBusinessClick(business_f)">
+                <div class="sortlist_top2">
+                    <div class="business_price_box">
+                        <div class="business_pic75 fl labelEllipsis">
+                            <a href="#"><img v-bind:src="business_f.businessImage"></a>
                         </div>
-                        <div class="business_type fl"><span v-for="item8 in item7.businessLabels">{{item8.labelName}}</span></div>
-                        <div class="business_start"></div><br>
-                        <div class="full_cut clearfix" v-if="item7.isFeeActivity==0"><span class="fl ">免配送</span></div>
-                        <div class="full_cut clearfix" v-else><span class="fl ">运费{{item7.deliveryFee}}</span></div>
-
+                        <div class="business_nr2 font_black">
+                            <div style="height:26px;">
+                                <div class="business_name fl labelEllipsis">{{business_f.businessName}}</div>
+                                <div class="fr"></div>
+                            </div>
+                            <div class="business_type fl">
+                                <span v-for="label in business_f.businessLabels">{{label.labelName}}</span>
+                            </div>
+                            <div class="business_start"></div><br>
+                            <div class="full_cut clearfix" v-if="business_f.isFeeActivity == 0 && business_f.deliveryFee > 0">
+                                <span class="fl">配送费 {{business_f.deliveryFee | formatDecimal}}</span>
+                            </div>
+                            <div class="full_cut clearfix" v-if="business_f.isFeeActivity == 1">
+                                <span class="fl labelEllipsis" >{{business_f.deliveryFeeActivity}}</span>
+                            </div>
+                            <div class="full_cut clearfix" v-if="business_f.isFeeActivity == 0 && business_f.deliveryFee == 0">
+                                <span class="fl">免运费</span>
+                            </div>
+                            <div class="full_cut clearfix" v-for="activity in business_f.activities">
+                                <span class="orange_bg20 fl">满减</span>
+                                <span class="fl ml10 labelEllipsis">{{activity.desc}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--底部商家-->
-        <div class="he100"></div>
+        <!--<div class="he100"></div>
         <div class="foot2">
             <div class="foot2_bg">
                 <ul>
@@ -270,8 +316,9 @@
                     <li><a href="#"><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
                 </ul>
             </div>
-        </div>
+        </div>-->
     </div>
+
     <!--jQuery (necessary for Bootstrap's JavaScript plugins)-->
     <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script> -->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -279,6 +326,7 @@
     <script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/swiper-3.4.2.jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>

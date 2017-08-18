@@ -7,34 +7,33 @@ function getQueryString(name) {
 function toast(content) {
     layer.open({
         content: content,
-        skin: 'msg',
-        time: 2 //2秒后自动关闭
+        skin:'msg',
+        time:2
     })
 }
+function toast2(content) {
+    layer.open({
+        content: content,
+        btn:"确定",
+        shadeClose: false
+    })
+}
+function judge(item, id) {
+    if (item == 1) {
+        $(id).removeClass().addClass('sc_business2')
+    }
+    else {
+        $(id).removeClass().addClass('sc_business2_2')
 
+    }
+}
+//var interfaceUrl = "http://218.28.28.186:9088/ehomeapp/app";
 var interfaceUrl = "http://192.168.6.8:8081/ehomeapp/app";
-var path_add = interfaceUrl + "/live/addBusinessCollection";
-var path_cancle = interfaceUrl + "/live/cancelBusinessCollection";
+
 var userInfo = {
     userID: 'ad46667a7c8a4ef9abc777da68783f4c',
     buildingID: '1'
 };
-
-function validateCode(code, message) {
-    if (code == 1000) {
-
-        return true;
-    }
-    else {
-        //提示
-        layer.open({
-            content: message,
-            btn: '确定',
-            shadeClose: false,
-        });
-        return false;
-    }
-}
 
 Vue.filter("formatDecimal", function (value) {
     var f = parseFloat(value);
@@ -53,3 +52,91 @@ Vue.filter("formatDecimal", function (value) {
     }
     return "¥" + s;
 });
+
+Vue.filter("spliceActivity", function (activities) {
+    var activityDesc = "";
+    if (activities) {
+        activities.forEach(function (activity, index) {
+            if (index == activities.length - 1) {
+                activityDesc += activity.desc;
+            }
+            else {
+                activityDesc += activity.desc + ',';
+            }
+        });
+    }
+
+    return activityDesc;
+});
+
+Vue.prototype.getData = function (vm, url, data, func) {
+    vm.$http.get(interfaceUrl + url, data).then(function (response) {
+        if (response.data.code == 1000) {
+            func(response.data.data);
+        }
+        else if (response.data.code == 4000) {
+            layer.open({
+                content: response.data.message,
+                btn: '确定',
+                shadeClose: false,
+            });
+        }
+        else if (response.data.code == 5000) {
+            layer.open({
+                content: response.data.message,
+                btn: '确定',
+                shadeClose: false,
+            });
+        }
+    });
+};
+
+Vue.prototype.postData = function (vm, url, data, func) {
+    vm.$http.post(interfaceUrl + url, data, { emulateJSON: true }).then(function (response) {
+        if (response.data.code == 1000) {
+            func(response.data.data);
+        }
+        else if (response.data.code == 4000) {
+            layer.open({
+                content: response.data.message,
+                btn: '确定',
+                shadeClose: false,
+            });
+        }
+        else if (response.data.code == 5000) {
+            layer.open({
+                content: response.data.message,
+                btn: '确定',
+                shadeClose: false,
+            });
+        }
+    });
+};
+
+Vue.prototype.myCollection = function (vm, business) {
+    var data = {
+        userID: userInfo.userID,
+        buildingID: userInfo.buildingID,
+        businessID: business.businessID
+    };
+
+    if (business.isCollection == 0) {
+        vm.postData(vm, "/live/addBusinessCollection", data, function (resData) {
+            vm.item = resData;
+            business.isCollection = 1;
+            toast('收藏成功');
+        });
+    }
+    else if (business.isCollection == 1) {
+        vm.postData(vm, "/live/cancelBusinessCollection", data, function (resData) {
+            vm.item = resData;
+            business.isCollection = 0;
+            toast('取消收藏');
+        });
+    }
+};
+
+Vue.prototype.callPhone = function (phoneCode) {
+    var json = { "data": phoneCode };
+    window.location.href = "protocol://android?code=call&data=" + JSON.stringify(json);
+}

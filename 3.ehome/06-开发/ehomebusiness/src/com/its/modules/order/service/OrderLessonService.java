@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,15 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.HttpUtils;
 import com.its.modules.order.entity.OrderLesson;
 import com.its.modules.order.entity.OrderLessonList;
-import com.its.modules.order.entity.OrderRefundInfo;
 import com.its.modules.order.entity.OrderTrack;
+import com.its.modules.setup.dao.BusinessInfoDao;
+import com.its.modules.setup.entity.BusinessInfo;
+import com.its.modules.sys.entity.User;
+import com.its.modules.sys.utils.UserUtils;
+
 import com.its.modules.lesson.dao.LessonInfoDao;
 import com.its.modules.lesson.entity.LessonInfo;
 import com.its.modules.order.dao.OrderLessonDao;
@@ -34,10 +40,6 @@ import com.its.modules.order.dao.OrderLessonDao;
 @Transactional(readOnly = true)
 public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson> {
 
-    /** 退款信息明细表Service */
-    @Autowired
-    private OrderRefundInfoService orderRefundInfoService;
-
     /** 订单跟踪表Service */
     @Autowired
     private OrderTrackService orderTrackService;
@@ -49,6 +51,10 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
     /** 课程培训DAO接口 */
     @Autowired
     private LessonInfoDao lessonInfoDao;
+
+    /** 商户信息Dao */
+    @Autowired
+    private BusinessInfoDao businessInfoDao;
 
     public OrderLesson get(String id) {
         return super.get(id);
@@ -110,34 +116,6 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
         if (0 == result) {
             return result;
         }
-
-        // 数据库中订单数据（参数是画面传递过来的信息）
-        OrderLesson orderLessonInfo = super.get(orderLesson.getId());
-        // 如果订单支付状态为1：已支付的话，执行退款处理
-        if ("1".equals(orderLessonInfo.getPayState())) {
-            orderLessonInfo.preUpdate();
-            // 将该订单的支付状态改为2：退款中
-            orderLessonInfo.setPayState("2");
-            super.save(orderLessonInfo);
-
-            // 生成退款信息，交由总后台进行退款
-            OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
-            orderRefundInfo.setBusinessInfoId(orderLessonInfo.getBusinessInfoId());
-            orderRefundInfo.setOrderNo(orderLessonInfo.getOrderNo());
-            // 因为是课程培训订单发生退款，所以固定为0：课程培训类
-            orderRefundInfo.setOrderType("0");
-            orderRefundInfo.setPayType(orderLessonInfo.getPayType());
-            orderRefundInfo.setOrderMoney(orderLessonInfo.getPayMoney());
-            // 终端类型固定为商家后台
-            orderRefundInfo.setType("2");
-            orderRefundInfo.setModuleManageId(orderLessonInfo.getModuleManageId());
-            // 产品模式固定为0:课程培训购买
-            orderRefundInfo.setProdType("0");
-            orderRefundInfo.setRefundMoney(orderLessonInfo.getPayMoney());
-            orderRefundInfo.setRefundType(orderLessonInfo.getPayOrg());
-            orderRefundInfoService.save(orderRefundInfo);
-        }
-
         // 课程培训订单明细取得
         OrderLessonList orderLessonList = new OrderLessonList();
         // 根据订单号检索
@@ -151,9 +129,8 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
         Map<String, Integer> serviceStock = new HashMap<String, Integer>();
         for (OrderLessonList orderLessonListTemp : orderLessonInfoList) {
             lessonId.add(orderLessonListTemp.getLessonInfoId());
-            // 算出该订单每种课程培训一共多少库存
-            int stock = nullToZero(orderLessonListTemp.getPeopleLimit())
-                    + nullToZero(serviceStock.get(orderLessonListTemp.getLessonInfoId()));
+            // 库存回退（课程限制人数+1）
+            int stock = Integer.valueOf(1) + nullToZero(serviceStock.get(orderLessonListTemp.getLessonInfoId()));
             serviceStock.put(orderLessonListTemp.getLessonInfoId(), stock);
         }
         // 虽然逻辑上不会有课程培训为空的订单，为了程序的健壮性依然增加了该判断
@@ -186,6 +163,25 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
         orderTrack.setHandleMsgPhone("订单已成功取消");
         orderTrack.setRemarks(orderLesson.getCancelRemarks());
         orderTrackService.save(orderTrack);
+
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        // 向用户推送订单取消信息
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("businessId", user.getBusinessinfoId());
+        BusinessInfo businessInfo = businessInfoDao.get(user.getBusinessinfoId());
+        paramMap.put("businessName", (businessInfo != null) ? businessInfo.getBusinessName() : "");
+        paramMap.put("cancelReason", orderLesson.getCancelRemarks());
+        paramMap.put("orderId", orderLesson.getId());
+        paramMap.put("toUserId", orderLesson.getAccountId());
+        paramMap.put("sendType", "2.2");
+
+        JSONObject msg_result = HttpUtils.sendPost("/rongCloudMsg/cancelOrderMsg", paramMap);
+        // 若信息发送失败则回滚
+        if (!"1000".equals(String.valueOf(msg_result.get("code")))) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result;
+        }
         return result;
     }
 
@@ -205,6 +201,7 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 
     /**
      * 本周订单个数
+     * 
      * @return
      */
     public Integer findAllListCount() {
@@ -213,6 +210,7 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 
     /**
      * 本周订单金额
+     * 
      * @return
      */
     public Double findAllListMoney() {

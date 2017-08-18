@@ -61,7 +61,7 @@
                 </select>
             </li>
             <li class="btns">
-                <form:select path="setState" class="input-medium">
+                <form:select path="recomSetState" class="input-medium">
                     <form:option value="" label="设置状态" />
                     <form:options items="${fns:getDictList('setState')}" itemLabel="label" itemValue="value" htmlEscape="false" />
                 </form:select>
@@ -110,8 +110,8 @@
                     <td>${villageLine.villageInfo.propertyCompanyName }</td>
                     <td>${villageLine.villageInfo.villageName}</td>
                     <td>${fns:getDictLabel(villageLine.productLine, 'product_line', '')}</td>
-                    <td><fmt:formatDate value="${villageLine.setTime}" pattern="yyyy-MM-dd" /></td>
-                    <td>${fns:getDictLabel(villageLine.setState, 'set_state', '')}</td>
+                    <td><fmt:formatDate value="${villageLine.recomSetTime}" pattern="yyyy-MM-dd" /></td>
+                    <td>${villageLine.recomSetState==1?'已设置':'未设置'}</td>
                 </tr>
             </c:forEach>
         </tbody>

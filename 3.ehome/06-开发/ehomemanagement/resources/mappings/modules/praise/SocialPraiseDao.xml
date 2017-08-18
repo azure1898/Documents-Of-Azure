@@ -63,11 +63,11 @@
 	
 	<select id="findBySpeakId" resultType="SocialPraise">
 		SELECT 
-			<include refid="socialPraiseColumns"/>, su.name AS username
-		FROM social_praise a , sys_user su
+			<include refid="socialPraiseColumns"/>, ac.nickname AS username
+		FROM social_praise a , account ac
 		<include refid="socialPraiseJoins"/>
 		<where>
-			a.type = '${type}' AND a.pid = '${pid}' AND a.userid = su.id
+			a.type = '${type}' AND a.pid = '${pid}' AND a.userid = ac.id
 		</where>
 	</select>
 	

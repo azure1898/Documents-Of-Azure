@@ -14,6 +14,10 @@
 		a.run_number AS "runNumber",
 		a.run_mileage AS "runMileage",
 		a.run_calorie AS "runCalorie",
+		a.total_number AS "totalNumber",
+		a.total_mileage AS "totalMileage",
+		a.total_calorie AS "totalCalorie",
+		a.type AS "type",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -82,6 +86,10 @@
 			run_number,
 			run_mileage,
 			run_calorie,
+			total_number,
+			total_mileage,
+			total_calorie,
+			type,
 			create_by,
 			create_date,
 			update_by,
@@ -100,6 +108,10 @@
 			#{runNumber},
 			#{runMileage},
 			#{runCalorie},
+			#{totalNumber},
+			#{totalMileage},
+			#{totalCalorie},
+			#{type},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -121,6 +133,10 @@
 			run_number = #{runNumber},
 			run_mileage = #{runMileage},
 			run_calorie = #{runCalorie},
+			total_number = #{totalNumber},
+			total_mileage = #{totalMileage},
+			total_calorie = #{totalCalorie},
+			type = #{type},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -132,8 +148,46 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- ============================================ -->
-	<select id="getAccountDateExercise" resultType="BraceletExerciseRecord">
+	<!-- ========================================================= -->
+	<!-- 根据手环ID获取用户某一时段的运动记录 -->
+	<select id="getAccountPeriodExerciseByBraceletId" resultType="BraceletExerciseRecord">
+		SELECT 
+			<include refid="braceletExerciseRecordColumns"/>
+		FROM bracelet_exercise_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = #{braceletId}
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+	</select>
+	
+	<!-- 根据mac获取用户某一时段的运动记录 -->
+	<select id="getAccountPeriodExerciseByMac" resultType="BraceletExerciseRecord">
+		SELECT 
+			<include refid="braceletExerciseRecordColumns"/>
+		FROM bracelet_exercise_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = (
+				select b.id 
+				FROM Bracelet_Info b
+				WHERE b.Mac=#{braceletMac}
+				AND b.del_flag='0' 
+			)
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+		GROUP BY a.Record_date
+		ORDER BY a.record_date ASC
+	</select>
+	
+	<!-- 获取用户某一天的运动记录 -->
+	<select id="getSpeAccountDateExercise" resultType="BraceletExerciseRecord">
 		SELECT 
 			<include refid="braceletExerciseRecordColumns"/>
 		FROM bracelet_exercise_record a
@@ -145,6 +199,7 @@
 			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') = DATE_FORMAT(#{recordDate},'%Y-%m-%d')
 		</where>
 	</select>
+	
 	<!-- 获取周运动数据 -->
 	<select id="getWeekExercise" resultType="BraceletExerciseRecord">
 		SELECT 
@@ -160,4 +215,5 @@
 		</where>
 		ORDER BY a.record_date ASC
 	</select>
+	
 </mapper>

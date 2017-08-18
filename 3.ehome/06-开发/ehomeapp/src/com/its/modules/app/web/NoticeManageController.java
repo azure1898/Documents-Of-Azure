@@ -1,10 +1,6 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
 import com.its.common.web.BaseController;
-import com.its.modules.app.common.AppUtils;
 import com.its.modules.app.common.PropertiesUtil;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.NoticeManage;
@@ -31,24 +26,24 @@ import com.its.modules.app.service.NoticeManageService;
  * @version 2017-08-03
  */
 @Controller
-@RequestMapping(value = { "${appPath}/home", "${appPath}/community" })
+@RequestMapping(value = "${appPath}/community")
 public class NoticeManageController extends BaseController {
 
 	@Autowired
 	private NoticeManageService noticeManageService;
 
 	/**
-	 * 顶部社区公告
+	 * 最新公告展示
 	 * 
 	 * @param userID
 	 *            用户ID（可空）
 	 * @param buildingID
 	 *            楼盘ID（不可空）
-	 * @return
+	 * @return Map<String, Object>
 	 */
-	@RequestMapping(value = "getCommunityBulletin")
+	@RequestMapping(value = "getHomeBulletin")
 	@ResponseBody
-	public Map<String, Object> getCommunityBulletin(String userID, String buildingID) {
+	public Map<String, Object> getHomeBulletin(String userID, String buildingID) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		if (ValidateUtil.validateParams(toJson, buildingID)) {
@@ -58,9 +53,9 @@ public class NoticeManageController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		if (notice != null) {
 			data.put("bulletinID", notice.getId());
-			data.put("isNew", AppUtils.dateSpan(notice.getCreateDate(), new Date()) < 7 ? 1 : 0);
 			data.put("bulletinTitle", notice.getNoticeTitle());
-			data.put("bulletinUrl", "");
+			data.put("bulletinContent", notice.getNoticeContent());
+			data.put("publishDate", DateFormatUtils.format(notice.getCreateDate(), "MM-dd HH:mm"));
 		}
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("data", data);
@@ -75,7 +70,7 @@ public class NoticeManageController extends BaseController {
 	 *            用户ID（可空）
 	 * @param buildingID
 	 *            楼盘ID（不可空）
-	 * @return
+	 * @return Map<String, Object>
 	 */
 	@RequestMapping(value = "getBulletinList")
 	@ResponseBody
@@ -106,7 +101,7 @@ public class NoticeManageController extends BaseController {
 	 *            用户ID
 	 * @param bulletinID
 	 *            公告ID
-	 * @return
+	 * @return Map<String, Object>
 	 */
 	@RequestMapping(value = "getBulletinDetail")
 	@ResponseBody

@@ -28,7 +28,6 @@ import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.sys.entity.Area;
 import com.its.modules.sys.service.AreaService;
-import com.its.modules.sys.utils.UserUtils;
 
 /**
  * 区域Controller
@@ -54,30 +53,30 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(Area area, Model model) {
-		model.addAttribute("list", areaService.findAll());
+		List<Area> list = areaService.getAreaList(area);
+		model.addAttribute("list", list);
+		model.addAttribute("proId", area.getAddrPro());
+        model.addAttribute("cityId", area.getAddrCity());
+        model.addAttribute("areaId", area.getAddrArea());
 		return "modules/sys/areaList";
 	}
 
 	@RequiresPermissions("sys:area:view")
 	@RequestMapping(value = "form")
-	public String form(Area area, Model model) {
-		if (area.getParent()==null||area.getParent().getId()==null){
-			area.setParent(UserUtils.getUser().getOffice().getArea());
+	public String form(Area area, Model model,String mode) {
+		//添加下一级区域的场合，上级区域不可选择
+		if("subAdd".equals(mode)){
+			model.addAttribute("editFlag","1");
 		}
-		area.setParent(areaService.get(area.getParent().getId()));
-//		// 自动获取排序号
-//		if (StringUtils.isBlank(area.getId())){
-//			int size = 0;
-//			List<Area> list = areaService.findAll();
-//			for (int i=0; i<list.size(); i++){
-//				Area e = list.get(i);
-//				if (e.getParent()!=null && e.getParent().getId()!=null
-//						&& e.getParent().getId().equals(area.getParent().getId())){
-//					size++;
-//				}
-//			}
-//			area.setCode(area.getParent().getCode() + StringUtils.leftPad(String.valueOf(size > 0 ? size : 1), 4, "0"));
-//		}
+				
+		//if (area.getParent()==null||area.getParent().getId()==null){
+		//	area.setParent(UserUtils.getUser().getOffice().getArea());
+		//}
+		
+		if(area.getParent()!=null && area.getParent().getId()!=null){
+		    area.setParent(areaService.get(area.getParent().getId()));
+		}
+
 		model.addAttribute("area", area);
 		return "modules/sys/areaForm";
 	}
@@ -90,7 +89,7 @@ public class AreaController extends BaseController {
 			return "redirect:" + adminPath + "/sys/area";
 		}
 		if (!beanValidator(model, area)){
-			return form(area, model);
+			return form(area, model,"");
 		}
 		areaService.save(area);
 		addMessage(redirectAttributes, "保存区域'" + area.getName() + "'成功");
@@ -118,7 +117,8 @@ public class AreaController extends BaseController {
 	@RequestMapping(value = "treeData")
 	public List<Map<String, Object>> treeData(@RequestParam(required=false) String extId, HttpServletResponse response) {
 		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<Area> list = areaService.findAll();
+		Area area = new Area();
+		List<Area> list = areaService.getAreaList(area);
 		for (int i=0; i<list.size(); i++){
 			Area e = list.get(i);
 			if (StringUtils.isBlank(extId) || (extId!=null && !extId.equals(e.getId()) && e.getParentIds().indexOf(","+extId+",")==-1)){
@@ -144,7 +144,7 @@ public class AreaController extends BaseController {
 		List<Area> allList = areaService.findAll();
 		List<Area> proList = new ArrayList<Area>();
 		for(Area area : allList){
-			if("1".equals(area.getType())){
+			if("2".equals(area.getType())){
 				proList.add(area);
 			}
 		}
@@ -162,7 +162,7 @@ public class AreaController extends BaseController {
 		List<Area> allList = areaService.findAll();
 		List<Area> cityList = new ArrayList<Area>();
 		for(Area area : allList){
-			if("2".equals(area.getType())){
+			if("3".equals(area.getType())){
 				cityList.add(area);
 			}
 		}

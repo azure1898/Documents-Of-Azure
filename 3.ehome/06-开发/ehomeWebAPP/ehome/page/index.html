@@ -1,356 +1,228 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>首页</title>
-
-		<!-- Bootstrap -->
-		<link href="../css/bootstrap.min.css" rel="stylesheet">
-		<link href="../css/common.css" rel="stylesheet">
-		<link href="../css/style.css" rel="stylesheet">
-		<link href="../css/main.css" rel="stylesheet">
-
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>首页</title>
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+    <link href="../css/common.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style type="text/css">
-		 [v-cloak] {
-		  display: none;
-		}
-    	.centre{
-    		width:28% !important;
-    		padding-top:0 !important;
-    		height:100px !important;
-    	}
-    	.Boutique_buy_main_pic3 {
-		    margin: 0 5%;
-/*    		position: relative;*/
-		    
-		}
-    	.Boutique_buy_main_tupian2 {
-    		position: relative;
-    		width: 50%;
-    		float: left;
-    		padding: 5px;
-		}
-		.Boutique_buy_main_tupian3 {
-			padding: 5px;
-			position: relative;
-		    width: 33.33%;
-		    float: left;
-		    
-		}
-		.Boutique_buy_main_biaoti {
-		    position: absolute;
-		    left: 5px;
-		    top: 88px; 
-		    /*bottom: 20px;*/
-		    width: 67px;
-		    height: 25px;
-		    background: #000;
-		    opacity: 0.5;
-		    filter: alpha(opacity=50);
-		    color: white;
-		    z-index: 0;
-		    
-		}
-		.Boutique_buy_main_biaoti1 {
-		    position: absolute;
-		    left: 5px;
-		    top: 50px; 
-		    /*bottom: 20px;*/
-		    width: 67px;
-		    height: 25px;
-		    background: #000;
-		    opacity: 0.5;
-		    filter: alpha(opacity=50);
-		    color: white;
-		    z-index: 0;
-		    
-		}
-	    .index_dpm ul li{
-	    	margin-left:5%
-	    }
-	    .index_dpm ul li:first-child{
-	    	margin-left:0
-	    }
-	    .sort_list2 ul li{
-	    	width: 20%;
-	    }
-	    .business_nr2 {
-	    	color: black;
-	    }
-	    .business_nr2 .business_type span {
-        	display: inline-block;
-		    padding: 0px
-		    border: solid 1px #fff;
-		    border-radius: 2px;
-		    font-size: 10px;
-		    margin-right: 4px;
-		    color:lightgreen ;
-		    border: 1px solid lightgreen;
-		}
-		.area{
-			/*background-color:rgba(128,128,128,0.1);*/
-			background-color: transparent;
-			border: 0px;
-			border-radius: 13px;
-			height: 30px;
-		}
-	    .area option{
-	    	width: 100%;
-	    	box-shadow: 0 0 white;
-	    }
-    </style>
-	</head>
+</head>
+<body>
+    <div id="app">
+        <div class="grey_top">实地常春藤<i class="glyphicon glyphicon-triangle-bottom" style="margin-left:5px; font-size:12px;"></i></div>
+        <!--轮播图片-->
+        <div class="index_menu_main" style="margin-top:0; padding-bottom:0;" v-if="topAd && topAd.length>0">
+            <div id="myCarousel" class="carousel slide">
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" v-for="(image,index) in topAd" v-bind:data-slide-to="index" v-bind:class="{'active':index==0}"></li>
+                </ol>
+                <ul class="carousel-inner">
+                    <li class="item" v-for="(image,index) in topAd" v-bind:class="{'active':index==0}"><img v-bind:src="image.adImage" style="height: 90px;" /></li>
+                </ul>
+            </div>
+        </div>
+        <div class="index_menu_main" style="margin-top:0; padding-bottom:0;" v-else>
+            <img src="../images/top_bg1.png">
+        </div>
+        <!--轮播图片结束-->
+        <div class="index_menu_main">
+            <div class="index_menu_top"><span><a href="All_applications.html"><img src="../images/more.png" width="18" height="18"></a></span>常用应用</div>
+            <div class="index_menu">
+                <ul>
+                    <li v-for="item1 in module" v-bind:data-id="item1.moduleID">
+                        <a v-bind:href="item1.moduleUrl"><img v-bind:src="item1.moduleIcon"></a>
+                        <p>{{item1.moduleName}}</p>
+                    </li>
+                    <!--<li><img src="../images/yy_icon2.png" >
+                       <p>生活缴费</p>
+                     </li>
+                     <li><img src="../images/yy_icon3.png" >
+                       <p>物业缴费</p>
+                     </li>
+                     <li style="width:24%; padding-top:8px; height:100px;"><img src="../images/yy_icon1.png" style="width:60px; height:60px;"> <p>手机开门</p></li>
+                     <li><img src="../images/yy_icon4.png" >
+                       <p>社区商城</p>
+                     </li>
+                     <li><img src="../images/yy_icon5.png" >
+                       <p>社区新闻</p>
+                     </li>-->
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="cloud">
+            <div class="index_news2" v-bind:data-id="bulletin.bulletinID">
+                <span><img src="../images/go.png" width="9" height="16"></span>
+                <h4>{{bulletin.bulletinTitle}}</h4>
+                <p>{{bulletin.bulletinContent}}</p>
+            </div>
+        </div>
+        <div class="index_menu_main">
+            <div class="index_menu_top"><span>全部</span>邻里发言</div>
+        </div>
+        <div class="main_box">
+            <div class="fyxq_main">
+                <div class="fyxq_main_l">
+                    <div class="fyxq_main_l_img"><img src="../images/pic01.jpg" width="110" height="110"></div>
+                    <div class="fyxq_main_l_title">
+                        <p>蓝色理想</p>
+                        <p><span>昨天 18:30</span></p>
+                    </div>
+                </div>
+                <div class="fyxq_main_r">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td><div class="myfans_but2" style="margin-right:15px;">+关注</div></td>
+                            <td><img src="../images/close4.png"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="fyxq_main2">
+                <p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font></p>
+            </div>
+            <div class="fyxq_main3">
+                <ul>
+                    <li style="margin-left:3%;"><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="personal_main_bottom">
+                <ul>
+                    <li><a href="#" class="bottom_icon1">转发</a></li>
+                    <li><a href="#" class="bottom_icon2">评论</a></li>
+                    <li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main_box" style="margin-top:10px;">
+            <div class="fyxq_main">
+                <div class="fyxq_main_l">
+                    <div class="fyxq_main_l_img"><img src="../images/pic01.jpg" width="110" height="110"></div>
+                    <div class="fyxq_main_l_title">
+                        <p>蓝色理想</p>
+                        <p><span>昨天 18:30</span></p>
+                    </div>
+                </div>
+                <div class="fyxq_main_r">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td><div class="myfans_but" style="margin-right:15px;"><i class="glyphicon glyphicon-ok" style="margin-right:5px;"></i>已关注</div></td>
+                            <td><img src="../images/close4.png"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="fyxq_main2">
+                <p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font></p>
+            </div>
+            <div class="fyxq_main3">
+                <ul>
+                    <li style="margin-left:3%;"><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="personal_main_bottom">
+                <ul>
+                    <li><a href="#" class="bottom_icon1">转发</a></li>
+                    <li><a href="#" class="bottom_icon2">评论</a></li>
+                    <li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main_box" style="margin-top:10px;">
+            <div class="fyxq_main">
+                <div class="fyxq_main_l">
+                    <div class="fyxq_main_l_img"><img src="../images/pic01.jpg" width="110" height="110"></div>
+                    <div class="fyxq_main_l_title">
+                        <p>蓝色理想</p>
+                        <p><span>昨天 18:30</span></p>
+                    </div>
+                </div>
+                <div class="fyxq_main_r"><img src="../images/xl_icon.png" width="12" height="7"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="fyxq_main2">
+                <p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font></p>
+            </div>
+            <div class="fyxq_main3">
+                <ul>
+                    <li style="margin-left:3%;"><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <li><img src="../images/pic01.jpg" width="110" height="110"></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="personal_main_bottom">
+                <ul>
+                    <li><a href="#" class="bottom_icon1">转发</a></li>
+                    <li><a href="#" class="bottom_icon2">评论</a></li>
+                    <li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main_box" style="margin-top:10px;">
+            <div class="fyxq_main">
+                <div class="fyxq_main_l">
+                    <div class="fyxq_main_l_img"><img src="../images/pic01.jpg" width="110" height="110"></div>
+                    <div class="fyxq_main_l_title">
+                        <p>蓝色理想</p>
+                        <p><span>昨天 18:30</span></p>
+                    </div>
+                </div>
+                <div class="fyxq_main_r"><font class="ftcred">删除</font></div>
+                <div class="clear"></div>
+            </div>
+            <div class="fyxq_main2">
+                <p class="ftc5050"><font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~<font class="ftcred">@优米的米</font></p>
+            </div>
 
-	<body>
-		<div id="app" v-cloak>
-			<!--天气-->
-			<div class="details_top4" style="position:relative;">
-				<div class="container-fluid">
-					<div class="h20"></div>
-					<div class="topbtn_region">
-						<div class="index_top">
-							<div class="index_top">
-								<select class="form-control area">
-									<option class="wt">{{weather.buildingName}}</option>
-									<option class="wt">2</option>
-									<option class="wt">3</option>
-									<option class="wt">4</option>
-								</select>						
-							</div>
-						</div>
-					</div>
-					<div class="business_price_box2">
-						<div class="business_nr" style="float:left;">
-							<div class="business_name">{{weather.cityName}}&nbsp;<span>{{weather.pmStatus}}</span>&nbsp;{{weather.pmValue}}</div>
-							<div class="business_type"></div>
-							<div class="business_start"><span>{{weather.dayOfWeek}}&nbsp;{{weather.gregorianDate}}&nbsp;{{weather.lunarDate}} </span></div>
-							<div class="full_cut"></div>
-						</div>
-						<div class="business_nrr" style="float:left;">
-							<div class="business_name">
-								<div style="float:left;margin-right:10px;"><img :src="weather.weatherLogo"></div>
-								<div style="float:left; ">{{weather.weatherName}}<br>
-									<font style="font-size:14px;">{{weather.temperature}}C</font>
-								</div>
-							</div>
-							<div class="full_cut"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--公告-->
-			<div class="index_news">
-				<p><span class="newstyle" v-if="communityBulletin.isNew">NEW</span><span style="float:right; "><img src="../../images/list_inbtn.png"></span>{{communityBulletin.bulletinTitle}}</p>
-			</div>
-			<!--一级广告-->
-			<!--<div class="index_ad"><img :src="slot1.adImage" width="355" height="90"></div>-->
-			<div id="myCarousel" class="carousel slide">
-				<ol class="carousel-indicators">
-					<li data-target="#myCarousel" v-for="(image,index) in slot1" :data-slide-to="index" :class="{'active':index==0}"></li>
-				</ol>
-				<ul class="carousel-inner index_ad" >
-					<li class="item"  v-for="(image,index) in slot1" :class="{'active':index==0}"><img :src="image.adImage" style="height: 90px;"/></li>
-				</ul>
-			</div>
-			
-			
-			<!--模块推举-->
-			<div class="index_menu">
-				<ul>
-					<li v-for="(module,index) in recommendModule" :class="{'centre':index==2}">
-						<img :src="module.moduleIcon">
-						<p>{{module.moduleName}}</p>
-					</li>
-					
-				</ul>
-				<div class="clear"></div>
-			</div>
-			<!--专题推荐-->
-			<div class="teshkj" v-if="featuredTopics.topicContent&&featuredTopics.topicContent.length==6">
-				<div class="xq_jstitle">{{featuredTopics.topicName}}</div>
-				<div class="Boutique_buy_main_pic3">
-					<div v-for="(elect,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian3',isClass" ><img :src="elect.ContentImage">
-						<div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">{{elect.ContentTitle}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="teshkj"  v-else-if="featuredTopics.topicContent&&featuredTopics.topicContent.length==5">
-				<div class="xq_jstitle">{{featuredTopics.topicName}}</div>
-				<div class="Boutique_buy_main_pic3">
-					<div v-for="(elect,index) in featuredTopics.topicContent" :class="[index==0||index==1 ? 'Boutique_buy_main_tupian2' : 'Boutique_buy_main_tupian3']" ><img :src="elect.ContentImage">
-						<div :class="index == 0||index == 1?'Boutique_buy_main_biaoti':'Boutique_buy_main_biaoti1'"><a href="#" style="color: white;">{{elect.ContentTitle}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="teshkj" v-else-if="featuredTopics.topicContent&&featuredTopics.topicContent.length==4">
-				<div class="xq_jstitle">{{featuredTopics.topicName}}</div>
-				<div class="Boutique_buy_main_pic3">
-					<div v-for="(elect,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian2',isClass" ><img :src="elect.ContentImage">
-						<div class="Boutique_buy_main_biaoti"><a href="#" style="color: white;">{{elect.ContentTitle}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="teshkj" v-else-if="featuredTopics.topicContent&&featuredTopics.topicContent.length==3">
-				<div class="xq_jstitle">{{featuredTopics.topicName}}</div>
-				<div class="Boutique_buy_main_pic3">
-					<div v-for="(elect,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian3',isClass" ><img :src="elect.ContentImage">
-						<div class="Boutique_buy_main_biaoti1"><a href="#" style="color: white;">{{elect.ContentTitle}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="teshkj" v-else="featuredTopics.topicContent&&featuredTopics.topicContent.length==2">
-				<div class="xq_jstitle">{{featuredTopics.topicName}}</div>
-				<div class="Boutique_buy_main_pic3">
-					<div v-for="(elect,index) in featuredTopics.topicContent" :class="'Boutique_buy_main_tupian2',isClass" ><img :src="elect.ContentImage">
-						<div class="Boutique_buy_main_biaoti"><a href="#" style="color: white;">{{elect.ContentTitle}}</a></div>
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<!--精品团购-->
-			<div class="Boutique_buy" v-for="groupon in groupBuy">
-				<div class="xq_jstitle" style="padding-top:10px;">精品团购</div>
-				<div class="Boutique_buy_main">
-					<div class="Boutique_buy_main_tupian"><img :src="groupon.groupBuyImage"> </div>
-					<div class="details_title_box" style="border-bottom:none;">
-						<div class="plr10">
-							<div class="details_title">{{groupon.groupBuyName}}</div>
-							<div class="mt4 clearfix">
-								<div class="fl">
-									<div class="font_orange font18 fl">￥{{groupon.groupBuyPrice}}</div>
-									<div class="font14 fl ml10 mt4"><del>{{groupon.marketPrice}}</del></div>
-								</div>
-								<div class="goods_num fr font14">已售{{groupon.soldNum}}</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--二级广告-->
-			<!--<div class="index_ad"><img :src="slot2.adImage"></div>-->
-			<div id="myCarousel1" class="carousel slide">
-				<ol class="carousel-indicators">
-					<li data-target="#myCarousel1" v-for="(image,index) in slot2" :data-slide-to="index" :class="{'active':index==0}"></li>
-				</ol>
-				<ul class="carousel-inner index_ad" >
-					<li class="item"  v-for="(image,index) in slot2" :class="{'active':index==0}"><img :src="image.adImage" style="height: 90px;"/></li>
-				</ul>
-			</div>
-			<!--商家推举-->
-			<div class="index_dpm">
-				<ul>
-					<li v-for=" business in recommendBusiness">
-						<p>{{business.businessName}}</p>
-						<img :src="business.businessImage"> 
-					</li>
-					
-				</ul>
-				<div class="clear"></div>
-			</div>
-			<!--更多商家-->
-			<div class="sort_list2 clearfix" v-for="business in moreBusiness">
-				<div class="sortlist_top2">
-					<div class="business_price_box">
-						<div class="business_pic75 fl"><img :src="business.businessImage"></div>
-						<div class="business_nr2 font_black">
-							<div style="height:26px;">
-								<div class="business_name fl">{{business.businessName}}</div>
-								<div class="fr"><a href="#" style="color:#666;">进入店铺</a></div>
-							</div>
-							<div class="business_type"><span v-for="label in business.businessLabel ">{{label.labelName}}</span></div>
-							<div class="business_start"></div>
-							<div class="full_cut clearfix"><span class="fl">{{business.businessFare}}</span></div>
-						</div>
-					</div>
-				</div>
-				<div class="goods_hd2">
-					<ul class="clearfix">
-						<li v-for="item in business.commodities">
-							<div class="goodspic120"><img :src="item.url"></div>
-							<div class="fl">
-								<div class="font_orange">￥{{item.price}}</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-			
-			
-			
-			<div class="he100"></div>
-			<div class="foot">
-				<div class="foot_bg">
-					<ul>
-						<li> <a href="#"><i class="con1_2"></i><span class=" ftcol4" style="display:block;">首页</span></a></li>
-						<li><a href="#"><i class="con2"></i><span style="display:block;">社区</span></a></li>
-						<li><a href="#"><i class="con3_2"></i><span style="display:block;">生活</span></a></li>
-						<li><a href="#"><i class="con4_2"></i><span style="display:block;">我的</span></a></li>
-					</ul>
-				</div>
-			</div>
-
-		</div>
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="../js/static/jquery.js"></script>
-		<script src="../js/static/bootstrap.js"></script>
-		<script src="../js/static/vue.js"></script>
-		<script src="../js/static/vue-resource.js"></script>
-	    <!--<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>-->
-	    <script src="../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../js/cursom/index.js" type="text/javascript" charset="utf-8"></script>
-		<script>
-//        $(function(){
-//        	//一级广告
-//        	$('#myCarousel').carousel({
-//				//自动4秒播放
-//				interval: 3000,
-//			});
-//          var myElement= document.getElementById('myCarousel')
-//          var hm=new Hammer(myElement);
-//          hm.on("swipeleft",function(){
-//              $('#myCarousel').carousel('next')
-//          })
-//          hm.on("swiperight",function(){
-//              $('#myCarousel').carousel('prev')
-//          });
-//          //二级广告
-//          $('#myCarousel1').carousel({
-//				//自动4秒播放
-//				interval: 3000,
-//			});
-//          var myElement= document.getElementById('myCarousel1')
-//          var hm=new Hammer(myElement);
-//          hm.on("swipeleft",function(){
-//              $('#myCarousel1').carousel('next')
-//          })
-//          hm.on("swiperight",function(){
-//              $('#myCarousel1').carousel('prev')
-//          })
-//      })
-    	</script>
-    	
-	</body>
-
+            <div class="personal_main_bottom">
+                <ul>
+                    <li><a href="#" class="bottom_icon1">转发</a></li>
+                    <li><a href="#" class="bottom_icon2">评论</a></li>
+                    <li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--<div class="he100"></div>
+        <div class="foot2">
+            <div class="foot2_bg">
+                <ul>
+                    <li> <a href="#"><i class="i2_con1_2"></i><span class="index_redft" style="display:block;">首页</span></a></li>
+                    <li><a href="#"><i class="i2_con2"></i><span style="display:block;">消息</span></a></li>
+                    <li style="width:24%; z-index:1000; margin-top:-0;"><a href="#"><img src="../images/index2_icon6.png"></a></li>
+                    <li><a href="#"><i class="i2_con3_2"></i><span style="display:block;">优家</span></a></li>
+                    <li><a href="#"><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
+                </ul>
+            </div>
+        </div>-->
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../js/static/bootstrap.js"></script>
+    <script src="../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cursom/index.js" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>

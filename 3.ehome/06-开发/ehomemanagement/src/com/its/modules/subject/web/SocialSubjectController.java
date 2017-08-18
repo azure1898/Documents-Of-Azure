@@ -27,7 +27,6 @@ import com.its.common.web.BaseController;
 import com.its.common.utils.StringUtils;
 import com.its.modules.subject.entity.SocialSubject;
 import com.its.modules.subject.service.SocialSubjectService;
-import com.its.modules.sys.entity.Area;
 import com.its.modules.sys.utils.UserUtils;
 
 /**

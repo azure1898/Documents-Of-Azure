@@ -144,6 +144,10 @@
                         <input id="btuElemAccept" type="button" class="commonsmallbtn" value="受理" style="width:40px;" onclick="top.$.jBox.tip.mess = null;window.location.href='${ctx}/order/orderGoods/accept?id=${orderGoods.id}&updateDate=${orderGoods.updateDateString}'">
                         <div style="margin:0 auto;height:3px;"></div>
                     </c:if>
+                    <c:if test="${orderGoods.payState == '1' && orderGoods.orderState ==  '1'}">
+                        <input id="btnElemDispatching" class="commonsmallbtn" style="width:60px;" type="button" value="去配送" onclick="top.$.jBox.tip.mess = null;window.location.href='${ctx}/order/orderGoods/dispatching?id=${orderGoods.id}&updateDate=${orderGoods.updateDateString}'"/>
+                        <div style="margin:0 auto;height:3px;"></div>
+                    </c:if>
                     <c:if test="${orderGoods.payState == '1' && orderGoods.orderState ==  '2'}">
                         <input id="btuElemComplete" type="button" class="commonsmallbtn" value="完成" style="width:40px;" onclick="top.$.jBox.tip.mess = null;window.location.href='${ctx}/order/orderGoods/complete?id=${orderGoods.id}&updateDate=${orderGoods.updateDateString}'">
                         <div style="margin:0 auto;height:3px;"></div>
@@ -355,7 +359,8 @@
                     ${orderTrack.createName}
                 </td>
                 <td style="width:25%">
-                    ${orderTrack.remarks}
+                    <c:if test="${not empty orderTrack.remarks}">${orderTrack.remarks}</c:if>
+                    <c:if test="${orderTrack.stateMsg == '提交订单'}">${orderGoods.accountMsg}</c:if>
                 </td>
         </c:forEach>
         </tbody>

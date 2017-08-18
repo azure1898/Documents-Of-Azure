@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 	<head>
@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
 		<title>确认订单</title>
-
 		<!-- Bootstrap -->
 		<link href="../../css/bootstrap.min.css" rel="stylesheet">
 		<link href="../../css/main.css" rel="stylesheet">
@@ -19,37 +18,39 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+		<style type="text/css">
+			.message {
+				float: left;
+				width: 70px;
+			}
+			
+			.message span {
+				float: left;
+			}
+			
+			.input {
+				border-radius: 2px;
+				border: none;
+				width: 93%;
+			}
+			
+			input:focus {
+				outline: none;
+				border-color: none;
+				box-shadow: none;
+				border-radius: 1px;
+			}
+			
+			.order_tip {
+				display: none;
+			}
+		</style>
 	</head>
-	<style type="text/css">		
-		.message {
-	float: left;
-	width: 100px;
-}
-
-.message span {
-	float: left;
-}
-
-.input {
-
-	border-radius: 2px;
-	border: none;
-}
-input:focus {  
-    outline: none;  
-    border-color:none;  
-    box-shadow: none;  
-    border-radius: 1px;  
- }  
- .order_tip{
- 	display:none;
- }
-	</style>
 
 	<body>
 		<div id="app" v-cloak>
 			<div class="grey_top">
-				<a href="#" class="green_back" onClick="javascript :history.go(-1)"></a>
+				<a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
 				确认订单
 			</div>
 			<div style="height:44px; line-height:44px; padding-left:10px;">预留电话</div>
@@ -57,7 +58,7 @@ input:focus {
 				<div class="plr10">
 					<div class="goods_receipt clearfix">
 						<div class="fl"></div>
-						<div class="message"><span>联系电话：</span></div><input type="text"  class="phone input" v-model="items.contactPhone">
+						<div class="message"><span>联系电话：</span></div><input type="text" class="phone input" v-model="items.contactPhone">
 					</div>
 				</div>
 			</div>
@@ -77,7 +78,6 @@ input:focus {
 					</div>
 				</div>
 			</div>
-
 			<div class="order_whitebox">
 				<div class="plr10">
 					<div class="goods_receipt clearfix">
@@ -86,11 +86,11 @@ input:focus {
 					</div>
 				</div>
 			</div>
-
 			<div class="order_whitebox">
 				<div class="plr10">
 					<div class="goods_receipt clearfix">
-						<div class="fl">购买数量 <span v-if="items.limitPurchase>=1">(限购{{items.limitPurchase}}件 <span v-if="items.purchasedNumber>0">已购{{items.purchasedNumber}}件</span>)</span></div>
+						<div class="fl">购买数量 <span v-if="items.limitPurchase>=1">(限购{{items.limitPurchase}}件 <span v-if="items.purchasedNumber>0">已购{{items.purchasedNumber}}件</span>)</span>
+						</div>
 						<div class="goods_num fr" style="margin-top:0;">
 							<a href="#" class="num_jian" @click="reduceNumber(items)"></a><span class="goods_shuzi">{{items.groupBuyNumber}}</span>
 							<a href="#" class="num_zeng" @click="addNumber(items)"></a>
@@ -98,26 +98,19 @@ input:focus {
 					</div>
 				</div>
 			</div>
-
 			<div class="order_whitebox">
 				<div class="plr10">
 					<div class="goods_receipt clearfix">
-						<!--<div class="fl">您的留言：</div>-->
-						<div class="message"><span>您的留言:</span></div><input type="text"  class="input" v-model="leaveWords" >
+						<div class="message"><span>您的留言:</span></div><input type="text" class="input" v-model="leaveWords">
 						<div class="fr font_orange"></div>
 					</div>
 				</div>
 			</div>
-				
 			<div class="business_bottom">
 				<span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{items.totalMoney|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
-				<!--<span class="ft12">优惠：<font class="font_orange">{{money|formatDecimal}}</font></span>-->
-				<div class="business_zbtn"><a href="#"  @click="affirm()">提交订单</a></div>
-
+				<div class="business_zbtn"><a href="#" @click="affirm()">提交订单</a></div>
 			</div>
-
 		</div>
-       
 		<script src="../../js/static/jquery.js"></script>
 		<script src="../../js/static/bootstrap.min.js"></script>
 		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
@@ -126,6 +119,5 @@ input:focus {
 		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/cursom/groupbuy/groupbuyorder.js" type="text/javascript" charset="utf-8"></script>
 	</body>
- 		
-        
+
 </html>

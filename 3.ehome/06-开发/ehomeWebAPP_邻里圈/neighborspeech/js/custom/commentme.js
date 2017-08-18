@@ -2,7 +2,7 @@ var vm = new Vue({
 	el:"#app",
 	data:{
 		commentmes:[],
-		type:0,
+		type:0,//用于显示回复还是删除
 		urlList: {
 			speechdetail: "../main/speechdetails.html?id=",
 			commentdetail: "../main/commentdetails.html?id=",
@@ -21,25 +21,44 @@ var vm = new Vue({
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
-			this.$http.get("../../data/commentme.json").then(function(res){
+			
+//			this.$http.get("../../data/commentme.json").then(function(res){
+//				_this.commentmes = res.data.data;
+//			});
+			this.$http.post(interfaceUrl + "/message/commentMe",{
+				userId:1,
+			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
 			});
+			
+			
 		},
 		switchs:function(index){
 			var _this = this;
 			if(index==1){//请求评论我的
 			 	$(event.target).addClass("active");
 			 	$(event.target).parent().siblings().children("a").removeClass("active");
-				this.$http.get("../../data/commentme.json").then(function(res){
+//				this.$http.get("../../data/commentme.json").then(function(res){
+//				_this.commentmes = res.data.data;
+//				});
+			this.$http.post(interfaceUrl + "/message/commentMe",{
+				userId:1,
+			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
-				});
+			});
 				_this.type=0
 			}else{//请求我的评论
 				$(event.target).addClass("active");
 			 	 $(event.target).parent().siblings().children("a").removeClass("active");
-				this.$http.get("../../data/mecomment.json").then(function(res){
+//				this.$http.get("../../data/mecomment.json").then(function(res){
+//				_this.commentmes = res.data.data;
+//				});
+			this.$http.post(interfaceUrl + "/message/myComment",{
+				userId:1,
+			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
-				});
+			});
+				
 				_this.type=1
 			}
 		},
@@ -49,6 +68,12 @@ var vm = new Vue({
 		    content: '确定删除评论吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(indext){
+		    	
+		    _this.$http.post(interfaceUrl + "/message/commentDel",{
+				commentId: "plid0001"  //_this.commentmes[index].commontList[0].id
+			},{emulateJSON: true}).then(function(res){
+				_this.commentmes = res.data.data;
+			});
 		    	_this.commentmes.splice(index, 1)
 		     	 layer.close(indext);
 		    },
@@ -57,7 +82,7 @@ var vm = new Vue({
 				}    
 		  });
 		},
-		reply:function(obj){
+		reply:function(obj){//点击回复吧回复人的id和名字带过去
 			var _this=this;
 			window.location.href=_this.urlList.comments+obj.commontList[0].userId+"&name="+escape( obj.commontList[0].userName);
 		}

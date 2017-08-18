@@ -72,7 +72,7 @@
 						<div class="fyxq_main_l_img"><img :src="personalpage.headPicSrc" width="110" height="110"></div>
 						<div class="fyxq_main_l_title">
 							<p>{{personalpage.userName}}</p>
-							<p><span>{{releaseDetail.createTime}}</span></p>
+							<p><span>{{releaseDetail.speak.createTime}}</span></p>
 						</div>
 					</div>
 					<!--<div class="fyxq_main_r" @click="screen"><img src="../../images/xl_icon.png" width="12" height="7"></div>-->
@@ -83,29 +83,39 @@
 						<font class="ftcred" v-for="(subject,index) in releaseDetail.subjectList" :key="index">
 							{{subject.subjectName}}
 						</font>
-						<a :href="urlList.speechdetail + releaseDetail.speakId">{{releaseDetail.speakContent}}</a>
+						<a :href="urlList.speechdetail + releaseDetail.speakId">{{releaseDetail.speak.speakContent}}</a>
 						<!--<font class="ftcred">@优米的米</font>-->
 					</p>
 				</div>
 				
-				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="releaseDetail.isForword==1">
-					<div class="fyxq_main_l2_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
-					<div class="fyxq_main_l_title2">
-						<p>@蓝色理想</p>
-						<p><span>
-							<font class="ftcred">#装修作业#</font>
-							从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是...</span>
-						</p>
-					</div>
-				</div>
-						<div class="clear"></div>
-				
-				<div class="fyxq_main3" v-if="releaseDetail.imgList.length>0">
+			
+
+				<!--发言的图片-->
+				<div class="fyxq_main3" v-if="releaseDetail.speak.imgList&&releaseDetail.speak.imgList.length>0">
 					<ul>
-						<li v-for="image in releaseDetail.imgList"><img :src="image.imgUrl" width="110" height="110"></li>
+						<li v-for="image in releaseDetail.speak.imgList"><img :src="image.imgUrl" width="110" height="110"></li>
 						<div class="clear"></div>
 					</ul>
 				</div>
+
+				<!--转发别人的发言-->
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="releaseDetail.speak.isSpeak==1">
+					<div v-if="releaseDetail.rootSpeak.delFlag==0">
+						<div class="fyxq_main_l2_img"><img :src="releaseDetail.rootSpeak.imgUrl" width="110" height="110"></div>
+						<div class="fyxq_main_l_title2">
+						<p>@{{releaseDetail.rootSpeak.userName}}</p>
+						<p><span>
+							<!--<font class="ftcred">#装修作业#</font>-->
+							{{releaseDetail.rootSpeak.speakContent}}</span>
+						</p>
+						</div>
+					</div>
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+					原发言已被删除
+					</div>
+				</div>
+						<div class="clear"></div>
+				<!--底部的三个按钮-->
 				<div class="personal_main_bottom">
 					<ul>
 						<li>
@@ -128,6 +138,8 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/personalpage.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 

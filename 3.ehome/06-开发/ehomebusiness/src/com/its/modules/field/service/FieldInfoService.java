@@ -3,6 +3,7 @@
  */
 package com.its.modules.field.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -330,6 +331,33 @@ public class FieldInfoService extends CrudService<FieldInfoDao, FieldInfo> {
 		}else {
 			return this.dao.findAllListCount( fieldInfo_where);
 		}
+	}
+
+	/**
+	 * @param date
+	 * @return
+	 */
+	public int getCountFull(Date date) {
+		String ymd = new SimpleDateFormat("yyyyMMdd").format(date);
+		List<FieldPartitionPrice> list = fieldPartitionPriceDao.getAll(ymd);
+		if(list.size()<=0)return 0;
+		int count = 0;
+		String id=list.get(0).getFieldInfoId();
+		boolean _b =true;
+		for(FieldPartitionPrice f:list){
+			if(!f.getFieldInfoId().equals(id)){
+				id=f.getFieldInfoId();
+				if(_b){count++;}
+				_b=true;
+			}
+			if(_b){
+				if(f.getState().equals("0")){//可预约
+					_b=false;
+				}
+			}
+		}
+		if(_b){count++;}
+		return count;
 	}
 }
 

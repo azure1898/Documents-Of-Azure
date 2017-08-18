@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.its.common.config.Global;
-import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.bean.MyOrderViewBean;
 import com.its.modules.app.bean.OrderFieldBean;
@@ -39,7 +38,6 @@ import com.its.modules.app.entity.OrderServiceList;
 import com.its.modules.app.entity.OrderTrack;
 import com.its.modules.app.service.AccountService;
 import com.its.modules.app.service.BusinessInfoService;
-import com.its.modules.app.service.GroupPurchaseService;
 import com.its.modules.app.service.ModuleManageService;
 import com.its.modules.app.service.OrderFieldService;
 import com.its.modules.app.service.OrderGoodsService;
@@ -85,9 +83,6 @@ public class MyOrderController extends BaseController {
 
 	@Autowired
 	private ModuleManageService moduleManageService;
-	
-	@Autowired
-	private GroupPurchaseService groupPurchaseService;
 
 	/**
 	 * 我的订单
@@ -96,16 +91,16 @@ public class MyOrderController extends BaseController {
 	 *            用户ID（不可空）
 	 * @param buildingID
 	 *            楼盘ID（不可空）
-	 * @param moudleID
+	 * @param moduleID
 	 *            模块ID（不可空）
 	 * @return Map<String, Object>
 	 */
 	@RequestMapping(value = "getOrderList")
 	@ResponseBody
-	public Map<String, Object> getOrderList(String userID, String buildingID, String moudleID, HttpServletRequest request) {
+	public Map<String, Object> getOrderList(String userID, String buildingID, String moduleID, HttpServletRequest request) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
-		if (ValidateUtil.validateParams(toJson, userID, buildingID, moudleID)) {
+		if (ValidateUtil.validateParams(toJson, userID, buildingID, moduleID)) {
 			return toJson;
 		}
 		Account account = accountService.get(userID);
@@ -114,7 +109,7 @@ public class MyOrderController extends BaseController {
 			toJson.put("message", "用户不存在");
 			return toJson;
 		}
-		List<MyOrderViewBean> myOrderViewBeans = orderTrackService.getMyOrderViewList(buildingID, userID, moudleID);
+		List<MyOrderViewBean> myOrderViewBeans = orderTrackService.getMyOrderViewList(buildingID, userID, moduleID);
 		if (myOrderViewBeans == null || myOrderViewBeans.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无数据");
@@ -496,12 +491,7 @@ public class MyOrderController extends BaseController {
 		data.put("groupBuyEndTime", DateFormatUtils.format(orderGroupPurcList.getEndTime(), "yyyy-MM-dd"));
 		data.put("groupBuyImage", ValidateUtil.getImageUrl(orderGroupPurcList.getImgs(), ValidateUtil.ZERO, request));
 		data.put("groupBuyNumber", orderGroupPurcLists.size());
-		String isAnyTimeCancel= orderGroupPurcBean.getSupportType();
-		if(StringUtils.isBlank(isAnyTimeCancel)){
-			data.put("isAnyTimeCancel", null);
-		}else {
-			data.put("isAnyTimeCancel", orderServiceService.getSupportType("isAnyTimeCancel")[0]);
-		}
+		data.put("isAnyTimeCancel", orderServiceService.getSupportType(orderGroupPurcBean.getSupportType())[0]);
 		data.put("orderMoney", orderGroupPurcBean.getPayMoney());
 
 		/* 团购券号开始 */
@@ -581,6 +571,38 @@ public class MyOrderController extends BaseController {
 
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("message", "订单取消成功");
+		return toJson;
+	}
+
+	/**
+	 * 团购券申请退款
+	 * 
+	 * @param userID
+	 *            用户ID（不可空）
+	 * @param orderID
+	 *            订单ID（不可空）
+	 * @param groupVouchers
+	 *            团购券ID集合（不可空）
+	 * @param refundReason
+	 *            退款原因（不可空）
+	 * @param refundMessage
+	 *            退款吐槽（可空）
+	 * @return Map<String, Object>
+	 */
+	@RequestMapping(value = "getUserProfile")
+	@ResponseBody
+	public Map<String, Object> getUserProfile(String userID, String orderID, String groupVouchers, String refundReason, String refundMessage) {
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, userID, orderID, groupVouchers, refundReason)) {
+			return toJson;
+		}
+		/* Data数据开始 */
+		Map<String, Object> data = new HashMap<String, Object>();
+		/* Data数据结束 */
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", data);
+		toJson.put("message", "信息已获取");
 		return toJson;
 	}
 

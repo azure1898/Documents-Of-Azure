@@ -117,7 +117,8 @@
                                         quotaNum : {
                                             number : "请填写数字",
                                             maxlength: "限购数量长度不能超过9",
-                                            min: "限购数量必须大于0"
+                                            min: "限购数量必须大于0",
+                                            required : "请输入限购数量"
                                         }
                                     },
                                     submitHandler : function(form) {
@@ -161,6 +162,12 @@
                            });
                        } 
                    });
+                
+                // 初始化限购单位（1为限购）
+                var quotaUnit = '${serviceInfo.baseUnit}';
+                if (quotaUnit != null && quotaUnit != "") {
+                    chooseUnit(document.getElementById("baseUnit"));
+                }
             });
     window.onload = function() {
         // 如果浏览器不支持HTML5则提示无法上传图片
@@ -186,11 +193,9 @@
         // 1为限购，限购数量为活性
         if ("1" == obj.value) {
             $("#quotaNum")[0].disabled = false;
-            $("#quotaNum").attr("class","input-small");
         } else {
             $("#quotaNum")[0].value = "";
             $("#quotaNum")[0].disabled = true;
-            $("#quotaNum").attr("class","input-small");
             // 手动清除限购数量的提示信息
             var $labelError = $("#quotaNum").parent().children("label.error");
             if ($labelError.size() != 0) {
@@ -299,6 +304,10 @@
 		</c:if>
 		<div class="control-group">
 			<label class="control-label">轮播图片：</label> <span id="warnning"></span>
+			<div class="controls">
+			    <span>第1张图片将会用做列表页面显示，最多可以上传5张</span><br/>
+			    <span>（建议图片尺寸640*400像素，图片小于1M的jpg、png格式图片）</span>
+			</div>
 		</div>
 <div class="img-box full" id="imgArea">
 			<form:hidden path="delImageName" />
@@ -391,7 +400,7 @@
 				</form:select>
 				<span>&nbsp;</span>
 				<form:input path="quotaNum" htmlEscape="false" maxlength="9" 
-					class="input-small " disabled="true" />
+					class="input-small required" disabled="true" />
 				<span id="Quota_unit">件</span>
 			</div>
 		</div>

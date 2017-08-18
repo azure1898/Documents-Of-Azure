@@ -6,24 +6,7 @@
 <title>角色管理</title>
 <meta name="decorator" content="default" />
 <script type="text/javascript">
-    function roleEdit() {
-        if (elemEdit()) {
-            var roleSysData = $(selectedElem).children().find("#roleSysData").val();
-            var yesDictValue = $("#yesDictValue").val();
-            var isAdmin = $("#isAdminUser").val();
-            if ((roleSysData == yesDictValue && "true" == isAdmin) || roleSysData != yesDictValue) {
-                return true;
-            } else {
-                alertx("越权操作，只有超级管理员才能修改此数据！");
-                var editHref = $("#btuElemEdit").attr("href");
-                // 撤销方法elemEdit()中对href进行的操作
-                $("#btuElemEdit").attr("href", editHref.substring(0, editHref.lastIndexOf("=") + 1));
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+   
     function page(n, s) {
         $("#searchForm").attr("action", "${ctx}/sys/role/list");
         $("#searchForm").submit();
@@ -64,7 +47,7 @@
                 <a href="${ctx}/sys/role/form?id=" class="btn btn-primary"><i class="icon-plus icon-custom"></i> 添加</a>
             </shiro:hasPermission>
             <shiro:hasPermission name="sys:role:edit">
-                <a id="btuElemEdit" href="${ctx}/sys/role/form?id=" class="btn btn-primary" onclick="return roleEdit(角色)"><i class="icon-edit icon-custom"></i>编辑</a>
+                <a id="btuElemEdit" href="${ctx}/sys/role/form?id=" class="btn btn-primary" onclick="return elemEdit()"><i class="icon-edit icon-custom"></i>编辑</a>
             </shiro:hasPermission>
             <shiro:hasPermission name="sys:role:delete">
                 <a id="btuElemDelete" href="${ctx}/sys/role/delete?id=" class="btn btn-primary" onclick="return elemDelete('角色')"><i class="icon-trash icon-custom"></i>删除</a>
@@ -104,5 +87,29 @@
             </tr>
         </c:forEach>
     </table>
+    <script type="text/javascript">
+    function elemEdit() {
+    	if (!$("#selectElemId").val()) {
+			alertx("请选择要编辑的角色");
+			return false;
+		} else {
+       
+            var roleSysData = $(selectedElem).children().find("#roleSysData").val();
+            var yesDictValue = $("#yesDictValue").val();
+            var isAdmin = $("#isAdminUser").val();
+            if ((roleSysData == yesDictValue && "true" == isAdmin) || roleSysData != yesDictValue) {
+            	var elemId = $("#selectElemId").val();
+                $("#btuElemEdit").attr("href", $("#btuElemEdit").attr("href") + elemId);
+                return true;
+            } else {
+                alertx("越权操作，只有超级管理员才能修改此数据！");
+                var editHref = $("#btuElemEdit").attr("href");
+                // 撤销方法elemEdit()中对href进行的操作
+                $("#btuElemEdit").attr("href", editHref.substring(0, editHref.lastIndexOf("=") + 1));
+                return false;
+            }
+        }
+    }
+    </script>
 </body>
 </html>

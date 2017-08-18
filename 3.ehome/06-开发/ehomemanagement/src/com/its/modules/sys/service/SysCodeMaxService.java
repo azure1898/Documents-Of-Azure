@@ -80,4 +80,18 @@ public class SysCodeMaxService extends CrudService<SysCodeMaxDao, SysCodeMax> {
 		return year.substring(2,4)+month+day+no;
 	}
 	
+	/**
+	 * 获取优惠券号
+	 * 
+	 * @return 优惠券号
+	 */
+	@Transactional(readOnly = false)
+	public String getDiscountNum() {
+		String year = DateUtils.getYear();
+		String month = DateUtils.getMonth();
+		String day = DateUtils.getDay();
+		String no = String.format("%06d", this.getCodeNo("007", 1, "true"));
+		return year.substring(2, 4) + month + day + no;
+	}
+	
 }

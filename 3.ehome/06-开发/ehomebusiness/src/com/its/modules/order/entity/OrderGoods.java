@@ -37,8 +37,10 @@ public class OrderGoods extends DataEntity<OrderGoods> {
     private String accountId; // 买家ID
     private String accountName; // 买家名称
     private String accountPhoneNumber; // 买家联系方式
+    private String accountMsg; // 买家联系方式
     private String payType; // 支付方式(0在线支付)
     private String payOrg; // 支付机构(0微信1支付宝2平台钱包)
+    private String villageInfoId; // 楼盘ID
     private Date payTime; // 支付时间
     private String payUserName; // 支付账号
     private String payState; // 支付状态:0未支付1已支付2退款中3已退款
@@ -58,8 +60,8 @@ public class OrderGoods extends DataEntity<OrderGoods> {
     private String timeForExcel; // 时间（EXCEL导出用）
     private String searchFlg; // 检索按钮按下标示
 
-    private int pending;//是否查询待处理标记
-    
+    private int pending;// 是否查询待处理标记
+
     public OrderGoods() {
         super();
     }
@@ -268,7 +270,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
         this.addressType = addressType;
     }
 
-    @ExcelField(title = "地址", type = 1, align = 2, sort = 3, width= 6000)
+    @ExcelField(title = "地址", type = 1, align = 2, sort = 3, width = 6000)
     @Length(min = 0, max = 255, message = "配送地址长度必须介于 0 和 255 之间")
     public String getAddress() {
         return address;
@@ -360,7 +362,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
         this.updateDateString = updateDateString;
     }
 
-    @ExcelField(title = "时间", type = 1, align = 2, sort = 9, width= 5500)
+    @ExcelField(title = "时间", type = 1, align = 2, sort = 9, width = 5500)
     public String getTimeForExcel() {
         return timeForExcel;
     }
@@ -377,13 +379,13 @@ public class OrderGoods extends DataEntity<OrderGoods> {
         this.searchFlg = searchFlg;
     }
 
-	public int getPending() {
-		return pending;
-	}
+    public int getPending() {
+        return pending;
+    }
 
-	public void setPending(int pending) {
-		this.pending = pending;
-	}
+    public void setPending(int pending) {
+        this.pending = pending;
+    }
 
     public String getTransactionID() {
         return transactionID;
@@ -392,4 +394,21 @@ public class OrderGoods extends DataEntity<OrderGoods> {
     public void setTransactionID(String transactionID) {
         this.transactionID = transactionID;
     }
+
+    public String getVillageInfoId() {
+        return villageInfoId;
+    }
+
+    public void setVillageInfoId(String villageInfoId) {
+        this.villageInfoId = villageInfoId;
+    }
+
+    public String getAccountMsg() {
+        return accountMsg;
+    }
+
+    public void setAccountMsg(String accountMsg) {
+        this.accountMsg = accountMsg;
+    }
+
 }

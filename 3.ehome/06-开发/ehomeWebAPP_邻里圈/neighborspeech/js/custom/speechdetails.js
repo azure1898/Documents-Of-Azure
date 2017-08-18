@@ -26,11 +26,19 @@ var vm = new Vue({
 		cartView:function(){
 			var _this = this;
 			//interfaceUrl + "/speak/speakDetail" 
-			this.$http.get("../../data/customer.json").then(function(res){
+			this.$http.post(interfaceUrl + "/speak/speakDetail",{
+				userID:1,
+				speakId:1,
+			},{emulateJSON: true}).then(function(res){
 				_this.customer = res.data;
 			});
 			//interfaceUrl + "/comment/commentList" 
-			this.$http.get("../../data/comment.json").then(function(res){
+			this.$http.post(interfaceUrl + "/comment/commentList",{
+				userID:userInfo.userID,
+				speakId:userInfo.speakId,
+				pageIndex:0
+				
+			},{emulateJSON: true}).then(function(res){
 				_this.comments = res.data.data;		
 			});
 			 $("#discuss").show();
@@ -47,7 +55,11 @@ var vm = new Vue({
 			 $("#praise").hide();
 			 $("#forwarding").show();
 			//interfaceUrl + "/speak/forwardList" 
-   	         this.$http.get("../../data/forwardings.json").then(function(res){
+   	         this.$http.post(interfaceUrl + "/speak/forwardList",{
+				speakId:userInfo.speakId,
+				pageIndex:0
+				
+   	         },{emulateJSON: true}).then(function(res){
 				_this.forwardings = res.data.data;		
 			});
 		},
@@ -60,7 +72,12 @@ var vm = new Vue({
 			 $("#praise").hide();
 			 $("#forwarding").hide();
 			//interfaceUrl + "/comment/commentList" 
-			this.$http.get("../../data/comment.json").then(function(res){
+			this.$http.post(interfaceUrl + "/comment/commentList",{
+				userID:'25fd4706224a4b5a987544f7e1c03c02',
+				speakId:userInfo.speakId,
+				pageIndex:0
+				
+			},{emulateJSON: true}).then(function(res){
 				_this.comments = res.data.data;		
 			});
 		},
@@ -73,7 +90,11 @@ var vm = new Vue({
 			 $("#praise").show();
 			 $("#forwarding").hide();
 			//interfaceUrl + "/praise/praiseList" 
-			 this.$http.get("../../data/praises.json").then(function(res){
+			 this.$http.post(interfaceUrl + "/praise/praiseList",{
+				speakId:userInfo.speakId,
+				pageIndex:0
+				
+			 },{emulateJSON: true}).then(function(res){
 				_this.praises = res.data.data;		
 			});
 			 
@@ -85,42 +106,55 @@ var vm = new Vue({
 				if(comment.isPraise==1){//取消点赞
 					comment.isPraise=0;
 					comment.spCountPraise-=1;
-	//				 this.$http.post("/speak/praise"{
-	//				 	id:comment.id,
-	//				 	type:type
-	//				 }).then(function(res){
-	//						_this.praiseInformation = res.data.data;		
-	//					});
+					
+					 this.$http.post( interfaceUrl + "/praise/savePraise",{
+					 	pid:comment.id,
+					 	type:type,
+					 	userId:userInfo.userID,
+					 	toUserId:123,//这个接口那缺少
+					 	state:0
+					 },{emulateJSON: true}).then(function(res){
+							_this.praiseInformation = res.data.data;		
+						});
+						
 				}else{//点赞
 					comment.isPraise=1;
 					comment.spCountPraise+=1;
-	//				this.$http.post("/speak/praise"{
-	//				 	id:comment.id,
-	//				 	type:type
-	//				 }).then(function(res){
-	//						_this.praiseInformation = res.data.data;		
-	//					});
+				 this.$http.post( interfaceUrl + "/praise/savePraise",{
+					 	pid:comment.id,
+					 	type:type,
+					 	userId:userInfo.userID,
+					 	toUserId:123,
+					 	state:1
+					 },{emulateJSON: true}).then(function(res){
+							_this.praiseInformation = res.data.data;		
+						});
 				}
-			}else if(type==2){
-				//评论点赞
+		}else if(type==2){//评论点赞
 				if(comment.isPraise==1){//取消点赞
 					comment.isPraise=0;
 					comment.countPraise-=1;
-	//				 this.$http.post("/speak/praise"{
-	//				 	id:comment.id,
-	//				 	type:type
-	//				 }).then(function(res){
-	//						_this.praiseInformation = res.data.data;		
-	//					});
+					 this.$http.post( interfaceUrl + "/praise/savePraise",{
+					 	pid:comment.cmtId,
+					 	type:type,
+					 	userId:userInfo.userID,
+					 	toUserId:123,//这个接口那缺少
+					 	state:0
+					 },{emulateJSON: true}).then(function(res){
+							_this.praiseInformation = res.data.data;		
+						});
 				}else{//点赞
 					comment.isPraise=1;
 					comment.countPraise+=1;
-	//				this.$http.post("/speak/praise"{
-	//				 	id:comment.id,
-	//				 	type:type
-	//				 }).then(function(res){
-	//						_this.praiseInformation = res.data.data;		
-	//					});
+					 this.$http.post( interfaceUrl + "/praise/savePraise",{
+					 	pid:comment.cmtId,
+					 	type:type,
+					 	userId:userInfo.userID,
+					 	toUserId:123,//这个接口那缺少
+					 	state:1
+					 },{emulateJSON: true}).then(function(res){
+							_this.praiseInformation = res.data.data;		
+						});
 				}
 			}
 			
@@ -129,21 +163,16 @@ var vm = new Vue({
 	//从底部弹出选择框
 	  selective:function(){
 	  	$("#bg").fadeIn(0.1);
-	  	$("#type").slideDown()
-//	  	layer.open({
-//		    type: 1
-//		    ,content: '<div class="sort_xiala"><ul><li v-on:click="cancelAttention()">取消关注</li><li v-if="true">屏蔽他的发言</li><li><font class="index_redft">删除</font></li><li style="height:10px; background:#dddddd">&nbsp;</li><li>取消</li></ul></div>'
-//		    ,anim: 'up'
-//		    ,style: 'position:fixed; bottom:-18px; left:0; width: 100%; height: 200px; padding:10px 0; border:none;'
-//		  });
+	  	$("#type").slideDown();
 	  },
        //关闭弹窗
        closePopups:function(){
 	       	$("#bg").fadeOut(0.1);
-		  	$("#type").slideUp(0.1)
+		  	$("#type").slideUp(0.1);
        },
+       //关注
        attention:function(customer){
-       		customer.isFocus=1
+       		customer.isFocus=1;
        },
        //取消关注
 	  cancelAttention:function(customer){
@@ -168,6 +197,13 @@ var vm = new Vue({
 		    content: '您确定要屏蔽TA发言吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(index){
+//		    	this.$http.post(interfaceUrl + "/speak/speakDetail",{
+//					userID:1,
+//					speakId:1,
+//				},{emulateJSON: true}).then(function(res){
+//					_this.customer = res.data;
+//				});
+//		    	
 		      layer.close(index);
 		      vm.closePopups();
 		    },
@@ -177,7 +213,7 @@ var vm = new Vue({
 				}    
 		  });
 	  },
-	  reply:function(obj){//对评论评论
+	  reply:function(obj){//对评论 评论
 			var _this=this;
 			window.location.href=_this.urlList.comments+obj.cmtId+"&name="+escape( obj.userName);
 		}

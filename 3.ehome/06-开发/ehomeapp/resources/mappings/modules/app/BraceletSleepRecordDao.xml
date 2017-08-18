@@ -128,7 +128,7 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- ============================================ -->
+		<!-- ============================================ -->
 	<select id="getAccountDayRecord" resultType="BraceletSleepRecord">
 		SELECT 
 			<include refid="braceletSleepRecordColumns"/>
@@ -141,6 +141,41 @@
 			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') = DATE_FORMAT(#{recordDate},'%Y-%m-%d')
 		</where>
 	</select>
+	<!-- 根据手环ID获取某段时间的睡眠数据 -->
+	<select id="getPeriodSleepRecordByBraceletId" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = #{braceletId}
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+	</select>
+	<!--根据mac获取某段时间的睡眠数据 -->
+	<select id="getPeriodSleepRecordByMac" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = '0' 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = (
+			select b.id
+			from Bracelet_Info b
+			where b.Mac=#{braceletMac}
+			AND b.del_flag = '0' 
+			)
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+		ORDER BY a.record_date ASC
+	</select>
+	
 	<!-- 获取周运动数据 -->
 	<select id="getWeekSleepRecord" resultType="BraceletSleepRecord">
 		SELECT 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 	<head>
@@ -7,12 +7,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
 		<title>课程列表</title>
-
 		<!-- Bootstrap -->
 		<link href="../../css/bootstrap.min.css" rel="stylesheet">
 		<link href="../../css/main.css" rel="stylesheet">
 		<link href="../../css/common.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="../../css/cursom/course.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/course.css" />
 		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,34 +24,37 @@
 	<body>
 		<div id="app" v-cloak>
 			<div class="business_top5">
-
 				<div class="container-fluid top">
 					<div class="h20"></div>
 					<div class="topbtn_region">
 						<div class="fl">
-							<span class="back_btn cursor" onClick="javascript :history.go(-1)"></span>
+							<span class="back_btn cursor" onclick="javascript :history.go(-1)"></span>
 						</div>
 						<div class="fr">
-  						<span v-bind:class="items.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(items)"></span>
-							
+							<span v-bind:class="course.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(course)"></span>
 						</div>
 					</div>
 					<div class="business_price_box">
-						<div class="business_pic75 fl"><a :href="urlList.index+items.businessID"><img v-bind:src="items.businessImage"></a></div>
+						<div class="business_pic75 fl">
+							<a v-bind:href="urlList.index+course.businessID"><img v-bind:src="course.businessImage"><div class="bussinessbreak2" v-if="course.isNormal==0">商家休息中</div></a>
+						
+						</div>
 						<div class="business_nr">
-							<div class="business_name">{{items.businessName}}</div>
-							<div class="business_type"><a :href="urlList.index+items.businessID"><span style="float:right; border:none;"><img src="../../images/white_go.png" width="9" height="16"></span></a><span v-for="item1 in items.businessLabels">{{item1.labelName}}</span></div>
-							<div class="business_start"><span>营业时间：{{items.businessHours}}</span></div>
+							<div class="business_name">{{course.businessName}}</div>
+							<div class="business_type"><a v-bind:href="urlList.index+course.businessID"><span style="float:right; border:none;"><img src="../../images/white_go.png" width="9" height="16"></span></a><span v-for="item1 in course.businessLabels">{{item1.labelName}}</span></div>
+							<div class="business_start"><span>营业时间：{{course.businessHours}}</span></div>
 							<div class="full_cut"></div>
 						</div>
 					</div>
 				</div>
-				<span><img v-bind:src="urlList.bg" width="100%" height="148px"/></span>
+				<span><img v-bind:src="urlList.bg" width="100%" height="148px" /></span>
 			</div>
-			<div class="plr10 sort_list" v-for="item2 in items.courseItems">
-			
+			<div class="plr10 sort_list" v-for="item2 in course.courseItems">
 				<div class="goods_list" v-bind:data-id="item2.courseID">
-					<div class="goods_pic"> 	<a :href="urlList.detail+item2.courseID"><img v-bind:src="item2.courseImage"></a></div>
+					<div class="goods_pic">
+						<a v-bind:href="urlList.detail+item2.courseID"><img v-bind:src="item2.courseImage"></a>
+					
+					</div>
 					<div class="goods_right">
 						<div class="goods_name twoLine" v-html="item2.courseName"></div>
 						<div class="">
@@ -64,23 +66,21 @@
 								<div class="font_orange fl">{{item2.originalPrice|formatDecimal}}</div>
 							</div>
 							<div class="details_spgm_right">
-								<a :href="urlList.detail+item2.courseID"><img src="../../images/grey_go.png" width="9" height="16"></a>
+								<a v-bind:href="urlList.detail+item2.courseID"><img src="../../images/grey_go.png" width="9" height="16"></a>
 							</div>
 						</div>
 					</div>
 				</div>
-			     
+
 			</div>
 		</div>
-
+		<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/bootstrap.min.js"></script>
+		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/course/courselist.js" type="text/javascript" charset="utf-8"></script>
 	</body>
-	<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/bootstrap.min.js"></script>
-	<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/cursom/course/courselist.js" type="text/javascript" charset="utf-8"></script>
-
 
 </html>

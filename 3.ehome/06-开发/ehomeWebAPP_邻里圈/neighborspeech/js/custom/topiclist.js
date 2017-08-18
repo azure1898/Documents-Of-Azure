@@ -1,7 +1,8 @@
 var vm = new Vue({
 	el:"#app",
 	data:{
-		releaseDetails:[]
+		releaseDetails:[],
+	    searchValue:""
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
 		this.$nextTick(function(){//在2.0版本中，加mounted的$nextTick方法，才能使用vm
@@ -12,9 +13,13 @@ var vm = new Vue({
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
-			this.$http.get("../../data/topiclist.json").then(function(res){
+			_this.$http.post(interfaceUrl+"/subject/listSubject",{
+				addressId:1,
+				subjectName:"小学上学",//这个话题来自前一个页面
+				userId:1,
+				pageIndex:0,
+			},{emulateJSON: true}).then(function(res){
 				_this.releaseDetails = res.data.data;
-//				console.log(_this.releaseDetails)
 			});
 		},
 		//赞一个

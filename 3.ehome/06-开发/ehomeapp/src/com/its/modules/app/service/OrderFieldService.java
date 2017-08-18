@@ -16,6 +16,7 @@ import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.FieldPartitionBean;
 import com.its.modules.app.bean.OrderFieldBean;
 import com.its.modules.app.common.AppGlobal;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.dao.OrderFieldDao;
 import com.its.modules.app.entity.BusinessInfo;
@@ -111,7 +112,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
 		if (couponManage != null) {
 			couponBenefit = couponManageService.calCouponMoney(couponManage, sumMoney);
 			// 更改优惠券使用状态
-			couponManageService.updateUserState(couponManage.getMemberDiscountId(), AppGlobal.DISCOUNT_USER_STATE_USED);
+			couponManageService.updateUserState(CommonGlobal.DISCOUNT_USE_STATE_USED, order.getId(), couponManage.getMemberDiscountId());
 		}
 
 		order.setSumMoney(sumMoney);// 订单金额

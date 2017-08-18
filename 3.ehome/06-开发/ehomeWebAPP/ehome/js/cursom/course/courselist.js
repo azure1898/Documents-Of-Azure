@@ -1,61 +1,37 @@
 var vm = new Vue({
 	el: "#app",
 	data: {
-         n:0,
-		items:{},
+		course: {},
 		urlList: {
 			list: "courselist.html?id=",
-			detail: "coursedetails.html?id=",
+			detail: "coursedetail.html?id=",
 			index: "courseindex.html?id=",
 			order: "courseorder.html?id=",
 			bg: "../../images/top_bg5.jpg"
 		},
-		item:{},
-		x:1
-
+		item: {}
 	},
 	mounted: function() { //页面加载之后自动调用，常用于页面渲染
-		this.$nextTick(function(){ //在2.0版本中，加mounted的$nextTick方法，才能使用vm
+		this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
 			var _this = this;
-			this.$http.get(interfaceUrl+'/live/getCourseItems',
-			{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:getQueryString("id")
-			,pageIndex:0}).then(function(res){
-                  _this.items = res.data.data;
-                    console.log(res.status);},
-                    function(res){alert(res.status)})
+			var data = {
+				userID: userInfo.userID,
+				buildingID: userInfo.buildingID,
+				businessID: getQueryString("id"),
+				pageIndex: 0
+			};
+			this.getData(_this, '/live/getCourseItems', data, function(resData) {
+				_this.course = resData;
+				if(_this.course.isNormal==0){
+					toast2("商家休息中，暂时不接受订单")
+				}
+			})
 		})
-			},
-	methods:{
-			 collection:function(business){
-				
-					 if(business.isCollection==0){
-					   this.add_collections(business);	               
-					}
-					  else if(business.isCollection==1){	
-					   this.cancel_collections(business);
-					}        
-		},
-		add_collections:function(business){
+	},
+	methods: {
+		collection: function(item) {
 			var _this = this;
-			this.$http.post(path_add,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;  
-                 business.isCollection = 1;
-					  toast('收藏成功');
-                      })    
-		},
-		cancel_collections:function(business){
-			var _this = this;
-			this.$http.post(path_cancle,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;
-                  business.isCollection = 0;
-                 toast('取消收藏');
-                  })
-			
-		}	
-}
-	
+			_this.myCollection(_this, item);
+		}
+	}
 })

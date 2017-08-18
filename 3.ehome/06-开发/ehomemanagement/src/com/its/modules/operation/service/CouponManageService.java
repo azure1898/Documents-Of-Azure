@@ -67,14 +67,15 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	@Transactional(readOnly = false)
 	public void close(CouponManage couponManage) {
 		//先冻结该优惠活动下的优惠券
-		MemberDiscount memberDiscount = new MemberDiscount();
+		// modified by LiuQi,2017-08-16,关闭优惠券活动不再对会员的优惠券状态进行修改
+		/*MemberDiscount memberDiscount = new MemberDiscount();
 		memberDiscount.setDiscountId(couponManage.getId());
 		memberDiscount.setUseState(MemberDiscount.USE_STATE_FROZEN);
 		int i = memberDiscountDao.updateUseStateByDiscountId(memberDiscount);
 		logger.warn("memberDiscount对象为："+memberDiscount.toString());
-		logger.warn("Close Record is:"+i);
+		logger.warn("Close Record is:"+i);*/
 		
-		//再关闭优惠券活动
+		//关闭优惠券活动
 		couponManage.setActiveState(CouponManage.ACTIVE_STATE_CLOSED);
 		dao.close(couponManage);
 	}

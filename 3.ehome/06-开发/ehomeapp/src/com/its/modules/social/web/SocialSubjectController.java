@@ -58,16 +58,11 @@ public class SocialSubjectController extends BaseController {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@RequestMapping(value="listSubject",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
-	public Map listSubject(String addressId, String subjectName, String userId, int pageIndex) throws Exception {
+	public Map listSubject(String addressId, String subjectName, String subjectId, String userId, int pageIndex) throws Exception {
 		Map toJson = new HashMap();
 		if(StringUtils.isEmpty(addressId)) {
 			toJson.put("code", Global.CODE_ERROR);
 			toJson.put("message", "楼盘id为空");
-			return toJson;
-		}
-		if(StringUtils.isEmpty(subjectName)) {
-			toJson.put("code", Global.CODE_ERROR);
-			toJson.put("message", "话题名称为空");
 			return toJson;
 		}
 		if(StringUtils.isEmpty(userId)) {
@@ -77,8 +72,8 @@ public class SocialSubjectController extends BaseController {
 		}
 		List dataList = new ArrayList();
 		//根据楼盘id和话题名称查询发言
-		int pageSize = SocialGlobal.COMMENT_PAGE_SIZE;
-		List<SocialSpeakBean> ssBeanList = socialSpeakService.findByAddIdAndSubName(addressId, subjectName, userId, pageIndex, pageSize);
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		List<SocialSpeakBean> ssBeanList = socialSpeakService.findByAddIdAndSubName(addressId, subjectName, subjectId, userId, pageIndex, pageSize);
 		if(!StringUtils.isEmpty(ssBeanList)) {
 			for(SocialSpeakBean socialSpeakBean : ssBeanList) {
 				Map dataListMap = new HashMap();
@@ -96,6 +91,8 @@ public class SocialSubjectController extends BaseController {
 					String[] images = image.split(",");
 					List imgList = Arrays.asList(images);
 					dataListMap.put("imgList", imgList);
+				} else {
+					dataListMap.put("imgList", "");
 				}
 				List<SocialSubject> ssList = socialSubjectService.findAllByfkId(socialSpeakBean.getId(), SocialGlobal.SUB_RELATION_SPK);
 				List subjectList = new ArrayList();
@@ -134,14 +131,16 @@ public class SocialSubjectController extends BaseController {
 			toJson.put("message", "话题名称为空");
 			return toJson;
 		}
-		int countSub = socialSubjectService.findSocialSubjectBySubName(subjectName);
-		if(countSub > 0) {
-			toJson.put("isNewSub", SocialGlobal.SUBJECT_IS_NEW_NO);
-		} else {
-			toJson.put("isNewSub", SocialGlobal.SUBJECT_IS_NEW_YES);
-		}
 		List dataList = new ArrayList<>();
-		int pageSize = SocialGlobal.COMMENT_PAGE_SIZE;
+		int countSub = socialSubjectService.findSocialSubjectBySubName(subjectName);
+		if(countSub <= 0) {
+			Map dataListMap = new HashMap();
+			dataListMap.put("id", "");
+			dataListMap.put("subName", subjectName);
+			dataList.add(dataListMap);
+		}
+		
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
 		List<SocialSubject> ssList = socialSubjectService.findBySubName(subjectName, pageIndex, pageSize);
 		for(SocialSubject socialSubject : ssList) {
 			Map dataListMap = new HashMap();
@@ -185,20 +184,53 @@ public class SocialSubjectController extends BaseController {
 			toJson.put("message", "当前用户id为空");
 			return toJson;
 		}
-		SocialSubject socialSubject = new SocialSubject();
-		socialSubject.setSubname(subName);
-		socialSubject.setVillageInfoId(villageInfoId);
-		socialSubject.setCreaterid(createrId);
-		socialSubject.setCreatetime(new Date());
-		socialSubject.setIsrecommend(SocialGlobal.SUBJECT_IS_RECOMMEND_NO);
-		Account account = accountService.get(createrId);
-		socialSubject.setCreatername(account.getNickname());
-		
-		socialSubjectService.save(socialSubject);
+		//查看当前输入的话题是否已经存在 //如果存在，不用保存 //如果不存在，保存
+		int countSub = socialSubjectService.findSocialSubjectBySubName(subName);
+		if(countSub == 0) {
+			SocialSubject socialSubject = new SocialSubject();
+			socialSubject.setSubname(subName);
+			socialSubject.setVillageInfoId(villageInfoId);
+			socialSubject.setCreaterid(createrId);
+			socialSubject.setCreatetime(new Date());
+			socialSubject.setIsrecommend(SocialGlobal.SUBJECT_IS_RECOMMEND_NO);
+			Account account = accountService.get(createrId);
+			socialSubject.setCreatername(account.getNickname());
+			
+			socialSubjectService.save(socialSubject);
+			toJson.put("id", socialSubject.getId());
+		}
 		
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("message", "保存话题成功");
 		
+		return toJson;
+	}
+	
+	/**
+	 * @Description：查询出所有热门话题
+	 * @Author：王萌萌
+	 * @Date：2017年8月15日
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@RequestMapping(value="hotSubjectList",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map hotSubjectList() throws Exception {
+		Map toJson = new HashMap();
+		List<SocialSubject> socialSubjectList = socialSubjectService.findHotSubjectList(SocialGlobal.SUBJECT_IS_RECOMMEND_YES);
+		List dataList = new ArrayList();
+		if(socialSubjectList.size()>0 && !StringUtils.isEmpty(socialSubjectList)) {
+			for(SocialSubject socialSubject : socialSubjectList) {
+				Map dataListMap = new HashMap();
+				dataListMap.put("id", socialSubject.getId());
+				dataListMap.put("subtName", socialSubject.getSubname());
+				dataList.add(dataListMap);
+			}
+		}
+		toJson.put("data", dataList);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("message", "查询所有热门话题成功");
 		return toJson;
 	}
 

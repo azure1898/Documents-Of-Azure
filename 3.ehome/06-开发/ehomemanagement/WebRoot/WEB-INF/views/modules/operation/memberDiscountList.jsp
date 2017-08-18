@@ -37,6 +37,7 @@
 	<form:form id="searchForm" modelAttribute="memberDiscount"
 		action="${ctx}/operation/memberDiscount/" method="post"
 		class="breadcrumb form-search">
+		<input id="discountId" name="discountId" type="hidden" value="${memberDiscount.discountId}" />
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}" />
 		<input id="pageSize" name="pageSize" type="hidden"
 			value="${page.pageSize}" />
@@ -49,9 +50,9 @@
 						itemLabel="label" itemValue="value" htmlEscape="false" />
 				</form:select></li>
 			<li><form:input path="discountNum"
-					htmlEscape="false" maxlength="32" class="input-medium" placeholder="请输入优惠券号、领取手机号"  /></li>
+					htmlEscape="false" maxlength="32" class="input-large" placeholder="请输入优惠券号、领取手机号"  /></li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary"
-				type="submit" value="查询" /></li>
+				type="submit" value="查找" /></li>
 			<shiro:hasPermission name="operation:couponManage:edit">
 				<li style="float: right"><a class="btn btn-primary" id="btnExport"
 					href="#"><i

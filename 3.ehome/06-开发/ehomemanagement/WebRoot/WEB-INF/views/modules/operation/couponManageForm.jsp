@@ -28,6 +28,16 @@
             if ("${couponManage.useScope}" != "" || "${couponManage.useScope}" != "0") {
                 $("#useObject").show();
             }
+            // 有效期
+            if("${couponManage.validityType}"=="0"){
+            	$("#validityDays").prop("disabled", true);
+            	$("#validityStartTime").prop("disabled", "");
+            	$("#validityEndTime").prop("disabled", "");
+            } else {
+                $("#validityDays").prop("disabled", "");
+                $("#validityStartTime").prop("disabled", true);
+                $("#validityEndTime").prop("disabled", true);
+            }
             // 领取方式
             if ("${couponManage.receiveType}" == "0") {
                 $("#receiveType10").show();
@@ -65,9 +75,13 @@
         jQuery.validator.addMethod("compareDate", function(value, element, params) {
             var startDate = jQuery(params).val();
             if(startDate!=null&&startDate!="") {
+            	endDate = value;
+	            /*
+	                                     火狐不支持日期转换，转换后会出现invalid date错误，因此去掉日期转换代码
 	            startDate = new Date(Date.parse(startDate.replace("-", "/")));  
 	            endDate = new Date(Date.parse(value.replace("-", "/")));  
-	            
+	            alert("转换后的开始时间"+startDate);
+	            alert("转换后的结束时间"+endDate); */
 	            return startDate < endDate;
             } else {
             	return true;
@@ -80,8 +94,9 @@
         });
         // 选择必填
         jQuery.validator.addMethod("requiredCase",function(value, element, params){
-        	var caseElement = jQuery(params[0]).val();
-            if(caseElement==params[1]){
+        	// var caseElement = jQuery(params[0]).val();
+        	var eleVal = $("input[name="+params[0]+"]:checked").val();
+            if(eleVal==params[1]){
             	if(value.length>1) {
             		return true
             	} else {
@@ -109,8 +124,9 @@
         });
         // 百分数校验
         jQuery.validator.addMethod("percent",function(value, element, params){
-        	var ele = jQuery(params[0]).val();
-        	if(ele == params[1]){
+        	//var ele = jQuery(params[0]).val();
+        	var eleVal = $("input[name="+params[0]+"]:checked").val();
+        	if(eleVal == params[1]){
         		if(value > 99 || value < 1) {
         			return false;
         		} else {
@@ -118,6 +134,15 @@
         		}
         	} else {
         		   return true;	
+        	}
+        });
+        // 根据隐藏域lastId，判断excel文件是否完成检测
+        jQuery.validator.addMethod("checkLastId",function(value, element,param){
+        	var eleVal = jQuery(param).val();
+        	if(eleVal == null|| eleVal==""){
+        		return false;
+        	} else {
+        		return true;
         	}
         });
         $("#inputForm").validate({
@@ -135,34 +160,33 @@
                 },
                 couponMoney:{// 优惠金额
                     required: true,
-                    percent: ['#couponType2','1'],
+                    percent: ['couponType','1'],
                     number: true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 0.01
                 },
                 upperLimitMoney:{// 优惠上限
-                    required: true,
                 	number: true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 0.01
                 },
                 useRule:{ // 使用条件 0 无限制 1 满多少可用
                 	required:true
                 },
                 fullUseMoney:{ // 满**可用
-                    requiredCase:['#useRule1','0'],
+                    requiredCase:['useRule','1'],
                     number: true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 0.01
                 },
                 grantType:{ // 发行总量 0 不限量  1 限量张
                 	required:true
                 },
                 limitedNum:{ // 限量 张
-                    requiredCase:['#grantType','1'],
+                    requiredCase:['grantType','1'],
                     number: true,
                     digits:true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 1
                 },
                 useScope:{ // 使用范围
@@ -178,34 +202,33 @@
                 	required:true
                 },
                 validityStartTime:{ // 开始有效期
-                    requiredCase:['#validityType1','0']
+                    requiredCase:['validityType','0']
                 },
                 validityEndTime:{ // 结束有效期
-                	requiredCase:['#validityType1','0'],
+                	requiredCase:['validityType','0'],
                     compareDate:'#validityStartTime'
                 },
                 validityDays:{ // 有效天数
-                	requiredCase:['#validityType2','1'],
+                	requiredCase:['validityType','1'],
                     number: true,
                     digits: true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 1
                 },
                 receiveType:{ // 领取方式
                 	required:true
                 },
                 receiveRule:{ // 领取规则
-                	requiredCase: ['#receiveType','0']
+                	required: true
                 },
                 giveRule:{ // 赠送规则
                 	//requiredCase: ['#receiveType','1']
                     required:true
                 },
                 fullGiveRule:{ // 满**元，赠送1张
-                    requiredCase: ['#giveRule2','1'],
+                    requiredCase: ['giveRule','1'],
                     number: true,
-                    digits: true,
-                    maxlength: 10,
+                    maxlength: 9,
                     min: 1
                 },
                 pushObjType:{ // 推送对象
@@ -215,22 +238,24 @@
                 	required: true
                 },
                 timeScopeStartTime:{ // 开始时间
-                    requiredCase: ['#timeScope4','3']
+                    requiredCase: ['timeScope','3']
                 },
                 timeScopeEndTime:{ // 结束时间
-                    requiredCase: ['#timeScope4','3'],
+                    requiredCase: ['timeScope','3'],
                     compareDate: "#timeScopeStartTime"
                 },
                 orderType:{ // 订单类型
                 	required:true
                 },
                 userDescribes:{ // 用户描述
-                    maxlength: 500,
+                    required: true,
+                	maxlength: 500,
                     goodName: true
                 },
                 excelFile:{
                 	required: true,
-                	checkFormat: ['#excelFile','xls|xlsx']
+                	checkFormat: ['#excelFile','xls|xlsx'],
+                	checkLastId: "#lastId"
                 },
                 activeStartTime:{ // 活动起始时间
                 	required:true
@@ -256,13 +281,12 @@
                     required: '请输入优惠券内容',
                     percent: '请输入1-99的数字',
                     number: '请填写数字',
-                    maxlength: '长度不能超过10个字符',
-                    min: '必须大于0.01元'
+                    maxlength: '长度不能超过9个字符',
+                    min: '必须大于0.01'
                 },
                 upperLimitMoney:{// 优惠上限
-                	required: '请输入优惠上限',
                 	number: '请填写数字',
-                    maxlength: '长度不能超过10个字符',
+                    maxlength: '长度不能超过9个字符',
                     min: '必须大于0.01元'
                 },
                 useRule:{ // 使用条件 0 无限制 1 满多少可用
@@ -271,7 +295,7 @@
                 fullUseMoney:{ // 满**可用
                     requiredCase:'满额可用金额必须填写',
                     number: '请填写数字',
-                    maxlength: '长度不能超过10个字符',
+                    maxlength: '长度不能超过9个字符',
                     min: '必须大于0.01元'
                 },
                 grantType:{ // 发行总量 0 不限量  1 限量张
@@ -281,7 +305,7 @@
                     requiredCase: '限量张数必须填写',
                     number: '请填写数字',
                     digits: '只能填写整数',
-                    maxlength: '长度不能超过10个字符',
+                    maxlength: '长度不能超过9个字符',
                     min: '必须大于1张'
                 },
                 useScope:{ // 使用范围
@@ -307,14 +331,14 @@
                     requiredCase: '请输入有效期天数',
                     number: '请填写数字',
                     digits: '只能填写整数',
-                    maxlength: '长度不能超过10个字符',
+                    maxlength: '长度不能超过9个字符',
                     min: '有效期天数需大于1'
                 },
                 receiveType:{ // 领取方式
                     required: '请选择领取方式'
                 },
                 receiveRule:{ // 领取规则
-                    requiredCase: '请选择领取规则'
+                    required: '请选择领取规则'
                 },
                 giveRule:{ //赠送规则
                     //requiredCase: '请选择赠送规则'
@@ -324,7 +348,7 @@
                     requiredCase: '请填写满额赠送张数',
                     number: '请填写数字',
                     digits: '只能填写整数',
-                    maxlength: '长度不能超过10个字符',
+                    maxlength: '长度不能超过9个字符',
                     min: '必须大于1元'
                 },
                 pushObjType:{ // 推送对象
@@ -344,12 +368,14 @@
                     required: '请填写订单类型'
                 },
                 userDescribes:{ // 用户描述
-                    maxlength: '长度不能超过500个字符',
+                    required: "请填写用户描述",
+                	maxlength: '长度不能超过500个字符',
                     goodName: '必须是汉字英文数字'
                 },
                 excelFile:{
                 	required: '请上传excel文件，内容含有两列：手机号，注册时间',
-                	checkFormat: '只能上传xls，xlsx格式文件，内容含有两列：手机号，注册时间'
+                	checkFormat: '只能上传xls，xlsx格式文件，内容含有两列：手机号，注册时间',
+                	checkLastId: '请先点击【导入用户数据】上传用户列表，再进行保存操作'
                 },
                 activeStartTime:{ // 活动起始时间
                     required: '请选择活动起始时间'
@@ -408,7 +434,7 @@ input[type="file"]{ width: 285px;} */
         <form:hidden path="lastId" />
         <sys:message content="${message}" />
         <div class="control-group">
-            <label class="control-label">*选择楼盘：</label>
+            <label class="control-label">选择楼盘：</label>
             <div class="controls">
                 <select id="addrpro" name="addrPro" style="width: 120px" onchange="changeCity()">
                     <option value="">全部省份</option>
@@ -422,20 +448,22 @@ input[type="file"]{ width: 285px;} */
                 <select id="addrVillage" name="villageInfoId" style="width: 120px">
                     <option value="">全部楼盘</option>
                 </select>
-                <input type="text" class="hide" id="hidProId" value="">
-                <input type="text" class="hide" id="hidCityId" value="">
+                <input type="text" class="hide" id="hidProId" value="${couponManage.addrPro}">
+                <input type="text" class="hide" id="hidCityId" value="${couponManage.addrCity}">
                 <input type="text" class="hide" id="hidAreaId" value="">
                 <input type="text" class="hide" id="hidVillageId" value="${couponManage.villageInfoId}">
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*优惠券名称：</label>
+            <label class="control-label">优惠券名称：</label>
             <div class="controls">
                 <form:input path="couponName" htmlEscape="false" maxlength="64" class="input-xlarge " />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*优惠券内容：</label>
+            <label class="control-label">优惠券内容：</label>
             <div class="controls">
                 <span><input id="couponType1" name="couponType" onclick="showCouponMoneyUnit()" type="radio" value="0" /> <label for="couponType1">固定金额券</label></span>
                 <input id="couponMoney1" name="couponMoney" class="input-small" type="text" min="0" />
@@ -443,12 +471,12 @@ input[type="file"]{ width: 285px;} */
                 <input id="couponMoney2" name="couponMoney" class="input-small " min="0" type="text" />
                 <label>%</label> ，优惠上限：
                 <form:input path="upperLimitMoney" htmlEscape="false" class="input-small" />
-                <label>元</label><span class="help-inline"> 当优惠内容为“固定金额券”时，请输入优惠券减免的金额；当优惠内容为“折扣券”时，请输入折扣（1~99），如：打9折，就输入90；<br /> “折扣券”可设定“优惠上限”，请输入上限金额，不填写，表示无上限。 <font color="red">*</font>
+                <label>元</label><span class="help-inline">当优惠内容为“固定金额券”时，请输入优惠券减免的金额；当优惠内容为“折扣券”时，请输入折扣（1~99），如：打9折，就输入90；<br /> “折扣券”可设定“优惠上限”，请输入上限金额，不填写，表示无上限。 <font color="red">*</font>
                 </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*使用条件：</label>
+            <label class="control-label">使用条件：</label>
             <div class="controls">
                 <form:radiobuttons path="useRule" items="${fns:getDictList('use_rule')}" itemLabel="label" itemValue="value" htmlEscape="false" onclick="showFullUseMoney()" />
                 ， 满
@@ -461,51 +489,62 @@ input[type="file"]{ width: 285px;} */
                     </c:otherwise>
                 </c:choose>
                 元，可用
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*发放总量：</label>
+            <label class="control-label">发放总量：</label>
             <div class="controls">
                 <form:radiobuttons path="grantType" items="${fns:getDictList('grant_type')}" itemLabel="label" itemValue="value" htmlEscape="false" onclick="showLimitedNum()" />
                 ，限量
-                <form:input path="limitedNum" htmlEscape="false" class="input-small" min="0" disabled="true" />
+                <c:choose>
+                    <c:when test="${couponManage.grantType==1}">
+                        <form:input path="limitedNum" htmlEscape="false" class="input-small" min="0" />
+                    </c:when>
+                    <c:otherwise>
+                        <form:input path="limitedNum" htmlEscape="false" class="input-small" min="0" disabled="true" />
+                    </c:otherwise>
+                </c:choose>
                 张
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*使用范围：</label>
+            <label class="control-label">使用范围：</label>
             <div class="controls">
                 <form:radiobuttons path="useScope" items="${fns:getDictList('use_scope')}" itemLabel="label" itemValue="value" htmlEscape="false" onclick="showUserObject()" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
-        <%-- <c:if test="${couponManage.userScope==0}"> --%>
         <div class="control-group" id="useObject1" <c:if test="${couponManage.useScope!=1 }">style="display:none"</c:if>>
-            <label class="control-label">*选择服务品类：</label>
+            <label class="control-label">选择服务品类：</label>
             <div class="controls">
                 <form:select path="useObject" class="input-xlarge " id="userObject11">
                     <form:option value="" label="" />
                     <form:options items="${allLifeModule}" itemLabel="moduleName" itemValue="id" htmlEscape="false" />
                 </form:select>
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
-        <%-- </c:if> --%>
         <div class="control-group" id="useObject2" <c:if test="${couponManage.useScope!=2 }">style="display:none"</c:if>>
-            <label class="control-label">*选择服务商家：</label>
+            <label class="control-label">选择服务商家：</label>
             <div class="controls">
                 <form:select path="useObject" class="input-xlarge " id="userObject21">
                     <form:option value="" label="" />
                     <form:options items="${allBusinessInfo}" itemLabel="BusinessName" itemValue="id" htmlEscape="false" />
                 </form:select>
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*优惠同享：</label>
+            <label class="control-label">优惠同享：</label>
             <div class="controls">
                 <form:radiobuttons path="shareFlag" items="${fns:getDictList('share_flag')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*有效期：</label>
+            <label class="control-label">有效期：</label>
             <div class="controls">
                 <c:choose>
                     <c:when test="${couponManage.validityType==0}">
@@ -531,31 +570,35 @@ input[type="file"]{ width: 285px;} */
                 自领取之日起
                 <form:input path="validityDays" htmlEscape="false" maxlength="11" class="input-medium" min="0" />
                 天内有效
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*领取方式：</label>
+            <label class="control-label">领取方式：</label>
             <div class="controls">
                 <form:radiobuttons path="receiveType" items="${fns:getDictList('receive_type')}" itemLabel="label" itemValue="value" htmlEscape="false" onclick="showReceiveType()" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group" id="receiveType10" <c:if test="${couponManage.receiveType!=0}">style="display: none" </c:if>>
-            <label class="control-label">*领取规则：</label>
+            <label class="control-label">领取规则：</label>
             <div class="controls">
                 <form:radiobuttons path="receiveRule" items="${fns:getDictList('receive_rule')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group" id="receiveType20" <c:if test="${couponManage.receiveType!=1}">style="display: none"</c:if>>
-            <label class="control-label">*赠送规则：</label>
+            <label class="control-label">赠送规则：</label>
             <div class="controls">
                 <form:radiobuttons path="giveRule" items="${fns:getDictList('give_rule')}" itemLabel="label" itemValue="value" htmlEscape="false" onclick="showGiveRule()" />
                 ， 满
                 <form:input path="fullGiveRule" htmlEscape="false" class="input-small" min="0" />
                 元，赠送1张
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group" id="receiveType30" <c:if test="${couponManage.receiveType!=2}">style="display: none"</c:if>>
-            <label class="control-label">*推送对象：</label>
+            <label class="control-label">推送对象：</label>
             <div class="controls">
                 <form:select path="pushObjType" class="input-medium" onChange="showPushObj()">
                     <form:option value="" label="" />
@@ -572,24 +615,27 @@ input[type="file"]{ width: 285px;} */
                 <input id="timeScopeStartTime" name="timeScopeStartTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate " value="<fmt:formatDate value='${couponManage.timeScopeStartTime}' pattern='yyyy-MM-dd'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
                 至
                 <input id="timeScopeEndTime" name="timeScopeEndTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate " value="<fmt:formatDate value='${couponManage.timeScopeEndTime}' pattern='yyyy-MM-dd'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group" id="receiveType32" style="display: none">
             <label class="control-label">订单类型：</label>
             <div class="controls">
                 <form:checkboxes path="orderType" items="${allLifeModule}" itemLabel="moduleName" itemValue="id" htmlEscape="false" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group" id="receiveType33" style="display: none">
             <label class="control-label">用户描述：</label>
             <div class="controls">
                 <form:textarea path="userDescribes" htmlEscape="false" rows="4" cols="50" maxlength="2000" class="input-xlarge " placeholder="请描述导入用户特征" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
             <div id="importBox" class="hide"></div>
             <div class="controls">
                 <shiro:hasPermission name="operation:couponManage:edit">
                     <input id="excelFile" name="excelFile" type="file" class="inputstyle1" accept="" />
-                    <span class="help-inline">仅支持“xls”或“xlsx”格式文件！</span>
+                    <span class="help-inline">仅支持“xls”或“xlsx”格式文件！<font color="red">*</font></span>
                     <br />
                     <a id="importFile" class="btn btn-primary" href="#" onclick="importUser()"><i class="icon-plus icon-custom"></i> 导入用户数据 </a>
                 </shiro:hasPermission>
@@ -599,15 +645,17 @@ input[type="file"]{ width: 285px;} */
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">*活动起始时间：</label>
+            <label class="control-label">活动起始时间：</label>
             <div class="controls">
                 <input id="activeStartTime" name="activeStartTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate" value="<fmt:formatDate value='${couponManage.activeStartTime}' pattern='yyyy-MM-dd HH:mm:ss'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">*活动结束时间：</label>
             <div class="controls">
                 <input id="activeEndTime" name="activeEndTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate compareActiveTime" value="<fmt:formatDate value='${couponManage.activeEndTime}' pattern='yyyy-MM-dd HH:mm:ss'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});" />
+                <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="form-actions">
@@ -617,169 +665,169 @@ input[type="file"]{ width: 285px;} */
         </div>
     </form:form>
     <script type="text/javascript">
-                    /* 优惠券内容 */
-                    function showCouponMoneyUnit() {
-                        if ($("#couponType1").is(":checked")) {
-                            $("#couponMoney1").prop("disabled", "");
-                            $("#couponMoney2").prop("disabled", true);
-                            $("#upperLimitMoney").prop("disabled", true);
-                        } else {
-                            $("#couponMoney1").prop("disabled", "true");
-                            $("#couponMoney2").prop("disabled", "");
-                            $("#upperLimitMoney").prop("disabled", "");
-                        }
-                    }
+    /* 优惠券内容 */
+    function showCouponMoneyUnit() {
+        if ($("#couponType1").is(":checked")) {
+            $("#couponMoney1").prop("disabled", "");
+            $("#couponMoney2").prop("disabled", true);
+            $("#upperLimitMoney").prop("disabled", true);
+        } else {
+            $("#couponMoney1").prop("disabled", "true");
+            $("#couponMoney2").prop("disabled", "");
+            $("#upperLimitMoney").prop("disabled", "");
+        }
+    }
 
-                    /* 使用条件 */
-                    function showFullUseMoney() {
-                        if ($("#useRule2").is(":checked")) {
-                            $("#fullUseMoney").prop("disabled", "");
-                        } else {
-                            $("#fullUseMoney").prop("disabled", true);
-                        }
-                    }
-                    /* 发放总量 */
-                    function showLimitedNum() {
-                        if ($("#grantType1").is(":checked")) {
-                            $("#limitedNum").prop("disabled", true);
-                        } else {
-                            $("#limitedNum").prop("disabled", "");
-                        }
-                    }
-                    /* 使用范围 */
-                    function showUserObject() {
-                        if ($("#useScope1").is(":checked")) {
-                            $("#useObject1").hide();
-                            $("#useObject2").hide();
-                        } else if ($("#useScope2").is(":checked")) {
-                            $("#useObject1").show();
-                            $("#useObject2").hide();
-                        } else {
-                            $("#useObject1").hide();
-                            $("#useObject2").show();
-                        }
-                    }
+    /* 使用条件 */
+    function showFullUseMoney() {
+        if ($("#useRule2").is(":checked")) {
+            $("#fullUseMoney").prop("disabled", "");
+        } else {
+            $("#fullUseMoney").prop("disabled", true);
+        }
+    }
+    /* 发放总量 */
+    function showLimitedNum() {
+        if ($("#grantType1").is(":checked")) {
+            $("#limitedNum").prop("disabled", true);
+        } else {
+            $("#limitedNum").prop("disabled", "");
+        }
+    }
+    /* 使用范围 */
+    function showUserObject() {
+        if ($("#useScope1").is(":checked")) {
+            $("#useObject1").hide();
+            $("#useObject2").hide();
+        } else if ($("#useScope2").is(":checked")) {
+            $("#useObject1").show();
+            $("#useObject2").hide();
+        } else {
+            $("#useObject1").hide();
+            $("#useObject2").show();
+        }
+    }
 
-                    /* 有效期 */
-                    function showValidityType() {
-                        if ($("#validityType1").is(":checked")) {
-                            $("#validityStartTime").prop("disabled", "");
-                            $("#validityEndTime").prop("disabled", "");
-                            $("#validityDays").prop("disabled", true);
+    /* 有效期 */
+    function showValidityType() {
+        if ($("#validityType1").is(":checked")) {
+            $("#validityStartTime").prop("disabled", "");
+            $("#validityEndTime").prop("disabled", "");
+            $("#validityDays").prop("disabled", true);
+        } else {
+            $("#validityStartTime").prop("disabled", true);
+            $("#validityEndTime").prop("disabled", true);
+            $("#validityDays").prop("disabled", "");
+        }
+    }
+
+    /* 领取方式 */
+    function showReceiveType() {
+        if ($("#receiveType1").is(":checked")) {
+            $("#receiveType10").show();
+            $("#receiveType20").hide();
+            $("#receiveType30").hide();
+            $("#receiveType31").hide();
+            $("#receiveType32").hide();
+            $("#receiveType33").hide();
+        } else if ($("#receiveType2").is(":checked")) {
+            $("#receiveType10").hide();
+            $("#receiveType20").show();
+            $("#receiveType30").hide();
+            $("#receiveType31").hide();
+            $("#receiveType32").hide();
+            $("#receiveType33").hide();
+        } else {
+            $("#receiveType10").hide();
+            $("#receiveType20").hide();
+            $("#receiveType30").show();
+            $("#receiveType31").hide();
+            $("#receiveType32").hide();
+            $("#receiveType33").hide();
+        }
+    }
+
+    /* 推送对象 */
+    function showPushObj() {
+        if ($("#pushObjType").find("option:selected").text() == '未下单用户' || $("#pushObjType").find("option:selected").text() == '下单用户') {
+            $("#receiveType31").show();
+            $("#receiveType32").show();
+            $("#receiveType33").hide();
+        } else if ($("#pushObjType").find("option:selected").text() == '自定义用户') {
+            $("#receiveType31").hide();
+            $("#receiveType32").hide();
+            $("#receiveType33").show();
+        } else {
+            $("#receiveType31").show();
+            $("#receiveType32").hide();
+            $("#receiveType33").hide();
+        }
+    }
+
+    /* 增送规则 */
+    function showGiveRule() {
+        if ($("#giveRule1").is(":checked")) {
+            $("#fullGiveRule").prop("disabled", true);
+        } else {
+            $("#fullGiveRule").prop("disabled", "");
+        }
+    }
+
+    /* 时间范围 */
+    function showTimeScope() {
+        if ($("#timeScope4").is(":checked")) {
+            $("#timeScopeStartTime").prop("disabled", "");
+            $("#timeScopeEndTime").prop("disabled", "");
+        } else {
+            $("#timeScopeStartTime").prop("disabled", true);
+            $("#timeScopeEndTime").prop("disabled", true);
+        }
+    }
+
+    /* 导入用户数据 */
+    function importUser() {
+        var fileName = $("#excelFile").val();
+        var ext = fileName.substring(fileName.lastIndexOf("."));
+        if (fileName == "" || fileName == undefined) {
+            alertx("请先上传excel文件，格式支持.xls和.xlsx", closed);
+        } else {
+            ext = ext.toLowerCase();
+            if (ext != ".xls" && ext != ".xlsx") {
+                alertx("导入文件类型错误。只支持导入.xls或者.xlsx文件", closed);
+            } else {
+                /* $("#inputForm").prop("action","${ctx}/operation/couponManage/import");
+                $("#inputForm").submit(); */
+                $("#inputForm").ajaxSubmit({
+                    type : 'post',
+                    url : "${ctx}/operation/couponManage/import",
+                    success : function(data) {
+                        if (data.success) {
+                            $("#lastId").val(data.lastId);
+                            alertx("文件上传成功", closed);
                         } else {
-                            $("#validityStartTime").prop("disabled", true);
-                            $("#validityEndTime").prop("disabled", true);
-                            $("#validityDays").prop("disabled", "");
+                            alertx("文件上传出错:"+data.msg, closed)
                         }
                     }
+                });
+            }
+        }
 
-                    /* 领取方式 */
-                    function showReceiveType() {
-                        if ($("#receiveType1").is(":checked")) {
-                            $("#receiveType10").show();
-                            $("#receiveType20").hide();
-                            $("#receiveType30").hide();
-                            $("#receiveType31").hide();
-                            $("#receiveType32").hide();
-                            $("#receiveType33").hide();
-                        } else if ($("#receiveType2").is(":checked")) {
-                            $("#receiveType10").hide();
-                            $("#receiveType20").show();
-                            $("#receiveType30").hide();
-                            $("#receiveType31").hide();
-                            $("#receiveType32").hide();
-                            $("#receiveType33").hide();
-                        } else {
-                            $("#receiveType10").hide();
-                            $("#receiveType20").hide();
-                            $("#receiveType30").show();
-                            $("#receiveType31").hide();
-                            $("#receiveType32").hide();
-                            $("#receiveType33").hide();
-                        }
-                    }
+    }
 
-                    /* 推送对象 */
-                    function showPushObj() {
-                        if ($("#pushObjType").find("option:selected").text() == '未下单用户' || $("#pushObjType").find("option:selected").text() == '下单用户') {
-                            $("#receiveType31").show();
-                            $("#receiveType32").show();
-                            $("#receiveType33").hide();
-                        } else if ($("#pushObjType").find("option:selected").text() == '自定义用户') {
-                            $("#receiveType31").hide();
-                            $("#receiveType32").hide();
-                            $("#receiveType33").show();
-                        } else {
-                            $("#receiveType31").show();
-                            $("#receiveType32").hide();
-                            $("#receiveType33").hide();
-                        }
-                    }
-
-                    /* 增送规则 */
-                    function showGiveRule() {
-                        if ($("#giveRule1").is(":checked")) {
-                            $("#fullGiveRule").prop("disabled", true);
-                        } else {
-                            $("#fullGiveRule").prop("disabled", "");
-                        }
-                    }
-
-                    /* 时间范围 */
-                    function showTimeScope() {
-                        if ($("#timeScope4").is(":checked")) {
-                            $("#timeScopeStartTime").prop("disabled", "");
-                            $("#timeScopeEndTime").prop("disabled", "");
-                        } else {
-                            $("#timeScopeStartTime").prop("disabled", true);
-                            $("#timeScopeEndTime").prop("disabled", true);
-                        }
-                    }
-
-                    /* 导入用户数据 */
-                    function importUser() {
-                        var fileName = $("#excelFile").val();
-                        var ext = fileName.substring(fileName.lastIndexOf("."));
-                        if (fileName == "" || fileName == undefined) {
-                            alertx("请先上传excel文件，格式支持.xls和.xlsx", closed);
-                        } else {
-                            ext = ext.toLowerCase();
-                            if (ext != ".xls" && ext != ".xlsx") {
-                                alertx("导入文件类型错误。只支持导入.xls或者.xlsx文件", closed);
-                            } else {
-                                /* $("#inputForm").prop("action","${ctx}/operation/couponManage/import");
-                                $("#inputForm").submit(); */
-                                $("#inputForm").ajaxSubmit({
-                                    type : 'post',
-                                    url : "${ctx}/operation/couponManage/import",
-                                    success : function(data) {
-                                        if (data.success) {
-                                            $("#lastId").val(data.lastId);
-                                            alertx("文件上传成功", closed);
-                                        } else {
-                                            alertx("文件上传出错", closed)
-                                        }
-                                    }
-                                });
-                            }
-                        }
-
-                    }
-
-                    /* 查看已导入用户 */
-                    function viewImportUser() {
-                        var lastId = $("#lastId").val();
-                        if (lastId = null || lastId == "" || lastId == undefined) {
-                            alertx("请先导入用户数据，然后查看已导入用户", closed);
-                            return false
-                        } else {
-                            $.jBox.open("iframe:${ctx}/operation/couponManageUsers/list?couponManageId=" + $("#lastId").val(), "优惠券导入的用户", 800, 350, {
-                                buttons : {
-                                    "关闭" : true
-                                }
-                            });
-                        }
-                    }
-                </script>
+    /* 查看已导入用户 */
+    function viewImportUser() {
+        var lastId = $("#lastId").val();
+        if (lastId = null || lastId == "" || lastId == undefined) {
+            alertx("请先导入用户数据，然后查看已导入用户", closed);
+            return false
+        } else {
+            $.jBox.open("iframe:${ctx}/operation/couponManageUsers/list?couponManageId=" + $("#lastId").val(), "优惠券导入的用户", 800, 350, {
+                buttons : {
+                    "关闭" : true
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>

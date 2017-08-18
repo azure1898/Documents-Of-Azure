@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,91 +17,90 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+</head>
 <body>
-	<div id="app" v-cloak>
-		<div class="details_top">
-			<div class="container-fluid top">
-				<div class="h20"></div>
-				<div class="topbtn_region">
-					<div class="fl">
-						<span class="back_btn" onclick="javascript:history.go(-1)"></span>
-					</div>
-					<div class="fr">
-  						<span v-bind:class="site.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(site)"></span>
-					
-					</div>
-				</div>
-			</div>
-				<span><img v-bind:src="site.businessImage"></span>
-		
-		</div>
-		<div class="mt20 clearfix">
-			<div class="details_add_main">
-				<div class="details_add_tel">
-					<a href="#"><img v-bind:src="urlList.phoneicon" width="25" height="25"></a>
-				</div>
-				<div class="details_add_left">
-					<div class="details_add_left_title">
-						<a href="#">{{site.businessName}}</a>
-					</div>
-					<div class="details_add_left_text">
-						<a href="#">{{site.businessAddress}}</a>
-					</div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="mt10"></div>
-			<div class="details_spgm">
-				<div class="details_spgm_right">
-					<a v-bind:href="urlList.list + site.businessID">
-						<img v-bind:src="urlList.goicon" width="9" height="16">
-					</a>
-				</div>
-				<div class="details_spgm_left2">场地预约</div>
-				<div class="clear"></div>
-			</div>
-				<div v-if="site.groupBuy&&site.groupBuy.length>0">
-			<div class="xq_jstitle">商家团购</div>
-			<div>
-				<div class="line_ec"></div>
-				<div class="plr10 sort_list" v-for="item in site.groupBuy">
-					
-						<div class="goods_list" v-bind:data-id = "item.groupBuyID">
-							<div class="goods_pic"><a v-bind:href="urlList.groupbuy + item.groupBuyID" style="color:black;"><img v-bind:src="item.groupBuyImage"></a></div>
-							<div class="goods_right">
-								<div class="goods_name">{{item.groupBuyName}}</div>
-								<div class="">
-									<div class="fl mt10">
-										<div class="font_orange fl">{{item.groupBuyPrice|formatDecimal}}</div>
-										<div class="font14 fl ml10"><del>{{item.marketPrice|formatDecimal}}</del></div>
-									</div>
-									<div class="goods_num fr">已售{{item.soldNum}}件</div>
-								</div>
-							</div>
-						</div>
-					
-				</div>
-				<div class="order_whitebox pointer" style="text-align:center;"v-if="site.groupBuy&&site.groupBuy.length>=2"  @Click="openMore()">查看更多团购</div>
-			</div>
-			</div>
-			
-			
-			<div class="xq_jstitle">商家信息</div>
-			<div class="details_sjxx">
-				<p>.营业时间：{{site.businessHours}}</p>
-				<p>.商家标签：<span v-for="label in site.businessLabels">{{label.labelName}}</span></p>
-			</div>
-			<div class="details_sjxx">
-				<p>.详细介绍：<span v-html="site.businessDesc"></span></p>
-			</div>
-		</div>
-	</div>
-	<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../js/cursom/site/siteindex.js" type="text/javascript" charset="utf-8"></script>
+    <div id="app" v-cloak>
+        <div class="details_top">
+            <div class="container-fluid top">
+                <div class="h20"></div>
+                <div class="topbtn_region">
+                    <div class="fl">
+                        <span class="back_btn" onclick="javascript:history.go(-1)"></span>
+                    </div>
+                    <div class="fr">
+                        <span v-bind:class="site.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(site)"></span>
+                    </div>
+                </div>
+            </div>
+            <span><img v-bind:src="site.businessImage"></span>
+            <div class="bussinessbreak2" v-if="site.isNormal==0">商家休息中</div>
+        </div>
+        <div class="mt20 clearfix">
+            <div class="details_add_main">
+                <div class="details_add_tel">
+                    <a href="#" v-on:click="callPhone(site.businessPhone)">
+                        <img v-bind:src="urlList.phoneicon" width="25" height="25">
+                    </a>
+                </div>
+                <div class="details_add_left">
+                    <div class="details_add_left_title">
+                        <a href="#">{{site.businessName}}</a>
+                    </div>
+                    <div class="details_add_left_text">
+                        <a href="#">{{site.businessAddress}}</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="mt10"></div>
+            <div class="details_spgm">
+                <div class="details_spgm_right">
+                    <a v-bind:href="urlList.list + site.businessID">
+                        <img v-bind:src="urlList.goicon" width="9" height="16">
+                    </a>
+                </div>
+                <div class="details_spgm_left2">场地预约</div>
+                <div class="clear"></div>
+            </div>
+            <div v-if="site.groupBuy&&site.groupBuy.length>0">
+                <div class="xq_jstitle">商家团购</div>
+                <div>
+                    <div class="line_ec"></div>
+                    <div class="plr10 sort_list" v-for="item in site.groupBuy">
+                        <div class="goods_list" v-bind:data-id="item.groupBuyID">
+                            <div class="goods_pic">
+                                <a v-bind:href="urlList.groupbuy + item.groupBuyID" style="color:black;"><img v-bind:src="item.groupBuyImage"></a>
+                            </div>
+                            <div class="goods_right">
+                                <div class="goods_name">{{item.groupBuyName}}</div>
+                                <div class="">
+                                    <div class="fl mt10">
+                                        <div class="font_orange fl">{{item.groupBuyPrice|formatDecimal}}</div>
+                                        <div class="font14 fl ml10"><del>{{item.marketPrice|formatDecimal}}</del></div>
+                                    </div>
+                                    <div class="goods_num fr">已售{{item.soldNum}}件</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order_whitebox pointer" style="text-align:center;" v-if="site.groupBuy&&site.groupBuy.length>=2" v-on:click="openMore()">查看更多团购</div>
+                </div>
+            </div>
+            <div class="xq_jstitle">商家信息</div>
+            <div class="details_sjxx">
+                <p>.营业时间：{{site.businessHours}}</p>
+                <p>.商家标签：<span v-for="label in site.businessLabels">{{label.labelName}}</span></p>
+            </div>
+            <div class="details_sjxx">
+                <p>.详细介绍：<span v-html="site.businessDesc"></span></p>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/site/siteindex.js" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

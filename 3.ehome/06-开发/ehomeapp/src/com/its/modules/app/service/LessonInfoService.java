@@ -76,8 +76,8 @@ public class LessonInfoService extends CrudService<LessonInfoDao, LessonInfo> {
 	 *            商户信息ID
 	 * @return List<LessonInfo>
 	 */
-	public List<LessonInfo> getNoLimitList(String businessInfoId,int pageIndex,int numPerPage) {
-		return dao.getNoLimitList(businessInfoId,pageIndex*numPerPage,numPerPage);
+	public List<LessonInfo> getNoLimitList(String businessInfoId, int pageIndex, int numPerPage) {
+		return dao.getNoLimitList(businessInfoId, pageIndex * numPerPage, numPerPage);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class LessonInfoService extends CrudService<LessonInfoDao, LessonInfo> {
 	}
 
 	/**
-	 * 更新课程已售数量
+	 * 更新课程库存、已购数量
 	 * 
 	 * @param lessonInfoId
 	 *            课程ID

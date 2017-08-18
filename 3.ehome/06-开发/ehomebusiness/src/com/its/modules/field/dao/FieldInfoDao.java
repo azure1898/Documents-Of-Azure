@@ -43,4 +43,6 @@ public interface FieldInfoDao extends CrudDao<FieldInfo> {
      * @return
      */
     Integer findAllListCountFull(FieldInfo fieldInfo_where);
+    
+    
 }

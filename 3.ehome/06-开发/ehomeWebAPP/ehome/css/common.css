@@ -49,7 +49,6 @@ background-size: 100%;}
 .topbtn_region span{ margin-top:12px; width:20px; height:20px; display:block;}
 .topbtn_region span.back_btn{ background-image:url(../images/back_btn.png);}
 .topbtn_region span.collection_btn{ background-image:url(../images/collection_btn.png);}
-
 .business_pic75{ width:75px; background-color:#fff; height:57px; text-align:center; overflow:hidden;}
 .business_pic75 img{height:57px;}
 .business_nr{ margin-left:83px; color:#fff;}

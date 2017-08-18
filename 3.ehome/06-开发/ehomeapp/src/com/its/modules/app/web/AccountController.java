@@ -30,10 +30,17 @@ import com.its.common.utils.Encodes;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
+import com.its.modules.app.bean.GoodsInfoBean;
 import com.its.modules.app.common.AppGlobal;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
+import com.its.modules.app.entity.BusinessInfo;
+import com.its.modules.app.entity.BusinessSales;
 import com.its.modules.app.service.AccountService;
+import com.its.modules.app.service.BusinessInfoService;
+import com.its.modules.app.service.GoodsInfoService;
+import com.its.modules.app.service.ShoppingCartService;
 import com.its.modules.app.service.VerifyCodeRecordService;
 
 import net.sf.json.JSONObject;
@@ -48,19 +55,21 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value = { "${appPath}/account", "${appPath}/my" })
 public class AccountController extends BaseController {
+
 	@Autowired
 	private AccountService accountService;
 
 	@Autowired
 	private VerifyCodeRecordService verifyCodeRecordService;
 
-	@RequestMapping(value = "test")
-	@ResponseBody
-	public String test() {
-		Account account = accountService.getByPhoneNum("13392790301");
-		accountService.certifyCustomer(account);
-		return "";
-	}
+	@Autowired
+	private ShoppingCartService shoppingCartService;
+
+	@Autowired
+	private GoodsInfoService goodsInfoService;
+
+	@Autowired
+	private BusinessInfoService businessInfoService;
 
 	/**
 	 * 获取个人资料
@@ -494,5 +503,90 @@ public class AccountController extends BaseController {
 		byte[] salt = Encodes.decodeHex(password.substring(0, 16));
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, HASH_INTERATIONS);
 		return password.equals(Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword));
+	}
+
+	/**
+	 * 我的购物车
+	 * 
+	 * @param userID
+	 *            用户ID（不可空）
+	 * @param buildingID
+	 *            楼盘ID（不可空）
+	 * @return Map<String, Object>
+	 */
+	@RequestMapping(value = "/getShoppingCart")
+	@ResponseBody
+	public Map<String, Object> getShoppingCart(String userID, String buildingID, HttpServletRequest request) {
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, userID, buildingID)) {
+			return toJson;
+		}
+		List<String> businessInfoIds = shoppingCartService.getBusinessInfoIds(userID, buildingID);
+		if (businessInfoIds == null || businessInfoIds.size() == 0) {
+			toJson.put("code", Global.CODE_SUCCESS);
+			toJson.put("message", "暂无数据");
+			return toJson;
+		}
+
+		/* Data数据开始 */
+		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
+		for (String businessID : businessInfoIds) {
+			BusinessInfo businessInfo = businessInfoService.get(businessID);
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("businessID", businessInfo.getId());
+			data.put("businessName", businessInfo.getBusinessName());
+
+			/* 商家活动开始 */
+			List<Map<String, Object>> activities = new ArrayList<Map<String, Object>>();
+			List<BusinessSales> businessSalesList = businessInfoService.getBusinessSales(businessID);
+			for (BusinessSales businessSales : businessSalesList) {
+				Map<String, Object> activity = new HashMap<String, Object>();
+				activity.put("label", "满减");
+				activity.put("desc", "满" + ValidateUtil.validateDouble(businessSales.getMoney()) + "减" + ValidateUtil.validateDouble(businessSales.getBenefitMoney()));
+
+				activities.add(activity);
+			}
+			if (CommonGlobal.YES.equals(businessInfo.getFreeDistributeFlag())) {
+				Map<String, Object> activity = new HashMap<String, Object>();
+				activity.put("label", "满额包邮");
+				activity.put("desc", "满" + ValidateUtil.validateDouble(businessInfo.getFreeDistributeMoney()) + "免配送费");
+
+				activities.add(activity);
+			}
+			data.put("activities", activities);
+			/* 商家活动结束 */
+
+			/* 商品集合开始 */
+			List<GoodsInfoBean> goodsInfoBeans = shoppingCartService.getShoppingCartList(userID, buildingID, businessID);
+			List<Map<String, Object>> commodities = new ArrayList<Map<String, Object>>();
+			for (GoodsInfoBean goodsInfoBean : goodsInfoBeans) {
+				Map<String, Object> commodity = new HashMap<String, Object>();
+				commodity.put("commodityID", goodsInfoBean.getId());
+				commodity.put("commodityName", goodsInfoBean.getName());
+				commodity.put("commodityImage", goodsInfoService.getGoodsPicUrl(goodsInfoBean, request));
+				commodity.put("specificationID", StringUtils.isNotBlank(goodsInfoBean.getGoodsSkuPriceID()) ? goodsInfoBean.getGoodsSkuPriceID() : "");
+				if (StringUtils.isNotBlank(goodsInfoBean.getGoodsSkuPriceID())) {
+					commodity.put("originalPrice", ValidateUtil.validateDouble(goodsInfoBean.getSkuBasePrice()));
+					commodity.put("discountedPrice", ValidateUtil.validateDouble(goodsInfoBean.getSkuBenefitPrice()));
+				} else {
+					commodity.put("originalPrice", ValidateUtil.validateDouble(goodsInfoBean.getBasePrice()));
+					commodity.put("discountedPrice", ValidateUtil.validateDouble(goodsInfoBean.getBenefitPrice()));
+				}
+				commodity.put("commodityNumber", goodsInfoBean.getCartNumber());
+
+				commodities.add(commodity);
+			}
+			data.put("commodities", commodities);
+			/* 商品集合结束 */
+
+			datas.add(data);
+		}
+		/* Data数据结束 */
+
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", datas);
+		toJson.put("message", "成功");
+		return toJson;
 	}
 }

@@ -29,6 +29,7 @@
 		a.pay_type AS "payType",
 		a.pay_org AS "payOrg",
 		str_to_date(a.pay_time,'%Y-%m-%d %H:%i') AS "payTime",
+		a.transaction_id AS "transactionId",
 		a.pay_user_name AS "payUserName",
 		a.pay_state AS "payState",
 		a.create_by AS "createBy.id",
@@ -100,6 +101,9 @@
             </if>
             <if test="businessInfoId != null and businessInfoId != ''">
                 AND a.business_info_id = #{businessInfoId}
+            </if>
+             <if test="pending == 1">
+                AND a.order_state != 1 AND a.order_state != 2
             </if>
 		</where>
 		<choose>

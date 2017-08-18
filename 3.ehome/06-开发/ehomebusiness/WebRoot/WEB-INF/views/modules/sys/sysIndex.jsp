@@ -1,93 +1,244 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 
 <html>
 <head>
-	<title>${fns:getConfig('productName')}</title>
-	<meta name="decorator" content="blank"/><c:set var="tabmode" value="${empty cookie.tabmode.value ? '1' : cookie.tabmode.value}"/>
-    <c:if test="${tabmode eq '1'}"><link rel="Stylesheet" href="${ctxStatic}/jerichotab/css/jquery.jerichotab.css" />
-    <script type="text/javascript" src="${ctxStatic}/jerichotab/js/jquery.jerichotab.js"></script></c:if>
-	<style type="text/css">
-		#main {padding:0;margin:0;} #main .container-fluid{padding:0 4px 0 0px;}
-		#header {margin:0px;position:static;} 
-		#header li {font-size:14px;_font-size:12px;}
-		#header .brand {font-family:Helvetica, Georgia, Arial, sans-serif, 宋体;font-size:26px;padding:0px; padding-left:33px; padding-right:20px; }
-		#header .brand>img{height:40px; padding-top:10px;}
-		#footer {margin:8px 0 0 0;padding:3px 0 0 0;font-size:11px;text-align:center;border-top:2px solid #4A90E2;}
-		#footer, #footer a {color:#999;} #left{overflow-x:hidden;overflow-y:auto;background: #fbfbfb;} #left .collapse{position:static;}
-		#userControl>li>a{/*color:#fff;*/text-shadow:none;} #userControl>li>a:hover, #user #userControl>li.open>a{background:transparent;}
-	#openClose, #openClose.close{background-color:#fbfbfb;}
-	.navbar-inner {
-    height: 69px;
-    padding-right: 20px;
-    padding-left: 20px;
-    background-color: #4A90E2;
-    background-image: linear-gradient(to bottom, #4A90E2, #4A90E2);
-    border: 0px; 
-    }
-    .navbar .brand {
+<title>${fns:getConfig('productName')}</title>
+<meta name="decorator" content="blank" />
+<c:set var="tabmode"
+	value="${empty cookie.tabmode.value ? '1' : cookie.tabmode.value}" />
+<c:if test="${tabmode eq '1'}">
+	<link rel="Stylesheet"
+		href="${ctxStatic}/jerichotab/css/jquery.jerichotab.css" />
+	<script type="text/javascript"
+		src="${ctxStatic}/jerichotab/js/jquery.jerichotab.js"></script>
+</c:if>
+<style type="text/css">
+#main {
+	padding: 0;
+	margin: 0;
+}
+
+#main .container-fluid {
+	padding: 0 4px 0 0px;
+}
+
+#header {
+	margin: 0px;
+	position: static;
+}
+
+#header li {
+	font-size: 14px;
+	_font-size: 12px;
+}
+
+#header .brand {
+	font-family: Helvetica, Georgia, Arial, sans-serif, 宋体;
+	font-size: 26px;
+	padding: 0px;
+	padding-left: 33px;
+	padding-right: 20px;
+}
+
+#header .brand>img {
+	height: 40px;
+	padding-top: 10px;
+}
+
+#footer {
+	margin: 8px 0 0 0;
+	padding: 3px 0 0 0;
+	font-size: 11px;
+	text-align: center;
+	border-top: 2px solid #4A90E2;
+}
+
+#footer, #footer a {
+	color: #999;
+}
+
+#left {
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: #fbfbfb;
+}
+
+#left .collapse {
+	position: static;
+}
+
+#userControl>li>a { /*color:#fff;*/
+	text-shadow: none;
+}
+
+#userControl>li>a:hover, #user #userControl>li.open>a {
+	background: transparent;
+}
+
+#openClose, #openClose.close {
+	background-color: #fbfbfb;
+}
+
+.navbar-inner {
+	height: 69px;
+	padding-right: 20px;
+	padding-left: 20px;
+	background-color: #4A90E2;
+	background-image: linear-gradient(to bottom, #4A90E2, #4A90E2);
+	border: 0px;
+}
+
+.navbar .brand {
 	padding: 18px 20px;
 	font-family: 'Telex', sans-serif;
 	text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2)
 }
-#productName{
-color: #2dc78a;
 
+#productName {
+	color: #2dc78a;
 }
-.accordion-inner{padding:0px;}
-.accordion-group{-webkit-border-radius:0px;border-radius:0px;border:none; border-bottom:1px solid #ddd;  margin-bottom:0px;}
-.accordion-inner .nav-list li a{ padding:0px 0px 0px 20px;}
-.accordion-inner ul li a i{display:none}
-.accordion-inner ul li.active a i{display:inline; float:right; line-height:24px; margin-right:5px}
-.accordion-heading{ border-radius:0px; height:40px;}
-.accordion-heading .accordion-toggle{ padding:0px 15px; line-height:40px;}
-.accordion-heading .accordion-toggle>i.fa{ float:right; margin-right:-8px; line-height:30px;}
-#jerichotab .tab_pages>div.tabs{ border-bottom:2px solid #4a90e2; height:30px;}
-#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a{background:none;}
-#jerichotab .tab_pages>div.tabs>ul>li.tab_unselect>div.tab_left>div.tab_close>a{margin-top:8px;}
-#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a>i{float:left;}
-#jerichotab .tab_pages>div.tabs>ul>li>div{ background:none;border:1px solid #ccc; height:30px; line-height:30px;}
-#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left{ border-right-width:0px; margin:0px;}
-#jerichotab .tab_pages>div.tabs>ul>li>div.tab_right{border-left-width:0px; margin:0px;}
-#jerichotab .tab_pages>div.tabs>ul>li>div>div{height:30px; line-height:30px;}
-#jerichotab .tab_pages>div.tabs>ul>li.tab_selected>div{ background-color:#4a90e2; border-color:#4a90e2; color:#fff;}
-#jerichotab .tab_pages>div.tabs>ul>li.tab_selected>div.tab_left>div.tab_close>a{color:#fff}
-.jericho_tab .tab_pages{padding-top:10px;}
-.nav{
-color:#ced0d7;
-font-size: 12px;
+
+.accordion-inner {
+	padding: 0px;
 }
-#time1{
-color:#ced0d7;
-    line-height: 24px;
-    text-indent: 20px;
-    border-left: 2px solid #535a6c;}
-.nav_left{
-color:#ced0d7;
-line-height: 14px;
-   text-indent: 15px;
-   font-size:12px;
-   border-left: 1px solid #bdbfc6;}
+
+.accordion-group {
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+	border: none;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 0px;
+}
+
+.accordion-inner .nav-list li a {
+	padding: 0px 0px 0px 20px;
+}
+
+.accordion-inner ul li a i {
+	display: none
+}
+
+.accordion-inner ul li.active a i {
+	display: inline;
+	float: right;
+	line-height: 24px;
+	margin-right: 5px
+}
+
+.accordion-heading {
+	border-radius: 0px;
+	height: 40px;
+}
+
+.accordion-heading .accordion-toggle {
+	padding: 0px 15px;
+	line-height: 40px;
+}
+
+.accordion-heading .accordion-toggle>i.fa {
+	float: right;
+	margin-right: -8px;
+	line-height: 30px;
+}
+
+#jerichotab .tab_pages>div.tabs {
+	border-bottom: 2px solid #4a90e2;
+	height: 30px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a {
+	background: none;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li.tab_unselect>div.tab_left>div.tab_close>a
+	{
+	margin-top: 8px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a>i {
+	float: left;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div {
+	background: none;
+	border: 1px solid #ccc;
+	height: 30px;
+	line-height: 30px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left {
+	border-right-width: 0px;
+	margin: 0px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div.tab_right {
+	border-left-width: 0px;
+	margin: 0px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li>div>div {
+	height: 30px;
+	line-height: 30px;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li.tab_selected>div {
+	background-color: #4a90e2;
+	border-color: #4a90e2;
+	color: #fff;
+}
+
+#jerichotab .tab_pages>div.tabs>ul>li.tab_selected>div.tab_left>div.tab_close>a
+	{
+	color: #fff
+}
+
+.jericho_tab .tab_pages {
+	padding-top: 10px;
+}
+
+.nav {
+	color: #ced0d7;
+	font-size: 12px;
+}
+
+#time1 {
+	color: #ced0d7;
+	line-height: 24px;
+	text-indent: 20px;
+	border-left: 2px solid #535a6c;
+}
+
+.nav_left {
+	color: #ced0d7;
+	line-height: 14px;
+	text-indent: 15px;
+	font-size: 12px;
+	border-left: 1px solid #bdbfc6;
+}
+
 .navbar .nav.pull-right {
-  color:#ced0d7;
-   font-size:12px;
-    margin-top: 8px;
+	color: #ced0d7;
+	font-size: 12px;
+	margin-top: 8px;
 }
-.nav_right{
-color:#ced0d7;
-line-height: 14px;
-   text-indent: 15px;
-   font-size:12px;
-   border-left: 0px solid #bdbfc6;
+
+.nav_right {
+	color: #ced0d7;
+	line-height: 14px;
+	text-indent: 15px;
+	font-size: 12px;
+	border-left: 0px solid #bdbfc6;
 }
-.accordion-group>.accordion-heading.active{
-    color:blue;
+
+.accordion-group>.accordion-heading.active {
+	color: blue;
 }
 /*.accordion-group>.accordion-heading.active>a{
 	color:#60C1F7;
 }*/
-	</style>
-	<script type="text/javascript">
+</style>
+<script type="text/javascript">
 		$(document).ready(function() {
 
 		    //初始化声音
@@ -238,200 +389,86 @@ line-height: 14px;
 			return false;
 		}// </c:if>
 	</script>
-	<%
-		String path = request.getContextPath();
-		String basePath = request.getServerName()+":"+request.getServerPort()+path+"/";
-	%>
-	<script type="text/javascript">
-        var websocket = null;
-
-        //判断当前浏览器是否支持WebSocket
-        if('WebSocket' in window){
-            websocket = new WebSocket("ws://<%=basePath %>websocket");
-        }
-        else{
-            console.log('Not support websocket')
-        }
-
-        //连接发生错误的回调方法
-        websocket.onerror = function(){
-            setMessageInnerHTML("error");
-        };
-
-        //连接成功建立的回调方法
-        websocket.onopen = function(event){
-            sendMsg("username=${fns:getUser().businessinfoId}");
-        }
-
-        //接收到消息的回调方法
-        websocket.onmessage = function(event){
-
-			//是否库存预警
-           if("${fns:getUserBySql().stockWarn}"!="1"){
-				return;
-			}
-
-            var jsonObj=jQuery.parseJSON(event.data);
-
-            //方式1
-            if(jsonObj.type=="1"){//新订单提醒
-            	jBox.messager2(jsonObj.content,"您有新订单了：", 0, { id: null,width: 250, showType: 'slide',buttons: { '进入订单列表': 1, '取消': 0 },submit: function (v, h, f) {
-                    if(v==1){
-                        addTabByMy(jsonObj.title, "${ctx}"+jsonObj.href);
-                    }
-                    return true;
-                }
-                });
-			}else if(jsonObj.type=="2"){//库存提醒
-            	jBox.messager2(jsonObj.content, "您有商品即将售空：", 0, { id: null,width: 250, showType: 'slide',buttons: { '进入商品列表': 1, '取消': 0 },submit: function (v, h, f) {
-                    if(v==1){
-                        addTabByMy(jsonObj.title, "${ctx}"+jsonObj.href);
-                    }
-                    return true;
-                }
-                });
-			}
-
-            /*  //sendMsgAuto方式推送实现 方式2
-            var msg_buttonName=jsonObj.buttonName;
-            var msg_buttonUrl=jsonObj.buttonUrl;
-            var msg_content=jsonObj.content;
-            var msg_msgTitle=jsonObj.msgTitle;
-            var msg_tabTitle=jsonObj.buttonTabTitle;
-            jBox.messager2(msg_content,msg_msgTitle, 0, { id: null,width: 250, showType: 'slide',buttons: { msg_buttonName: 1, '取消': 0 },submit: function (v, h, f) {
-                if(v==1){
-                    addTabByMy(msg_tabTitle, "${ctx}"+msg_buttonUrl);
-                }
-                return true;
-            }
-            });
-            */
-
-
-            //是否声音提示
-             if("${fns:getUserBySql().soundWarn}"=="1"){
-            	playAudio();//播放声音
-            }
-        }
-
-        /**
-		 *自定义添加标签页
-         * @param title 标题
-         * @param href 链接
-         */
-        function addTabByMy(title, href) {
-            jBox.closeMessager();
-            $(".jericho_tab").show();
-            $("#mainFrame").hide();
-            $.fn.jerichoTab.addTab({
-                title: title,
-                closeable: true,
-                data: {
-                    dataType: 'iframe',
-                    dataLink: "${ctx}"+href
-                }
-            }).loadData();
-            $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a').html('<i class="fa fa-remove"></i>');
-            $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left').css('width','100px');
-            $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_text').css('width','87px');
-        }
-        //连接关闭的回调方法
-        websocket.onclose = function(){
-            setMessageInnerHTML("close");
-        }
-
-        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
-        window.onbeforeunload = function(){
-            websocket.close();
-        }
-
-        //将消息显示在网页上
-        function setMessageInnerHTML(innerHTML){
-            //document.getElementById('message').innerHTML += innerHTML + '<br/>';
-        }
-
-        //关闭连接
-        function closeWebSocket(){
-            websocket.close();
-        }
-
-        //发送消息
-        function sendMsg(message){
-            //var message = document.getElementById('text').value;
-            websocket.send(message);
-        }
-
-        /**
-		 * 播放声音
-         */
-		function playAudio() {
-            $('#chatAudio')[0].play();
-            document.getElementById("chatAudio").play();
-			//pause()方法也可以暂停，具体可查html5的audio标签
-		}
-	</script>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getServerName() + ":"
+			+ request.getServerPort() + path + "/";
+%>
 </head>
 <body>
-<%--<audio id="chatAudio" src="audio/msg.wav" display="none"></audio>--%>
+	<%--<audio id="chatAudio" src="audio/msg.wav" display="none"></audio>--%>
 	<div id="main">
 		<div id="header" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<!--平台名称 -->
 				<!--<div class="brand"><img src="${ctxStatic}/images/LOGO.png"  /></div> -->
-				<ul id="userControl" class="nav pull-right" >
-					<li><a href="${pageContext.request.contextPath}${fns:getFrontPath()}/index-${fnc:getCurrentSiteId()}.html" target="mainFrame" title="访问网站主页"><div class="nav_right">首页</div></a></li>
+				<ul id="userControl" class="nav pull-right">
+					<li><a
+						href="${pageContext.request.contextPath}${fns:getFrontPath()}/index-${fnc:getCurrentSiteId()}.html"
+						target="mainFrame" title="访问网站主页"><div class="nav_right">首页</div></a></li>
 					<li><a title="个人信息"><div class="nav_left">您好，${fns:getUser().name}</div></a></li>
-					<li><a href="${ctx}/logout" title="退出登录"><div class="nav_left">退出</div></a></li>
-					<li id="userInfo"><a href="${ctx}/sys/user/modifyPwd" target="mainFrame"><div class="nav_left">修改密码</div></a></li>
+					<li><a href="${ctx}/out" title="退出登录"><div
+								class="nav_left">退出</div></a></li>
+					<li id="userInfo"><a href="${ctx}/sys/user/modifyPwd"
+						target="mainFrame"><div class="nav_left">修改密码</div></a></li>
 					<li>&nbsp;</li>
 				</ul>
 				<!-- 分割线 -->
-			
+
 				<!-- 动态显示时间  格式YYYY-MM-DD HH:mm:ss 星期 XX -->
-				<div class="nav" >
+				<div class="nav">
 					<span style="white-space: pre"> </span>
 					<td width="18%"><font color="#FFFFFF">
-					<div id="time1">
-					</div>
+							<div id="time1"></div>
 					</font></td>
 				</div>
-				
+
 				<div class="nav-collapse" style="display: none;">
-					<ul id="menu" class="nav" style="*white-space:nowrap;float:none;">
-						<c:set var="firstMenu" value="true"/>
-						<c:forEach items="${fns:getMenuList()}" var="menu" varStatus="idxStatus">
+					<ul id="menu" class="nav"
+						style="*white-space: nowrap; float: none;">
+						<c:set var="firstMenu" value="true" />
+						<c:forEach items="${fns:getMenuList()}" var="menu"
+							varStatus="idxStatus">
 							<c:if test="${menu.parent.id eq '1'&&menu.isShow eq '1'}">
-								<li class="menu ${not empty firstMenu && firstMenu ? ' active' : ''}">
+								<li
+									class="menu ${not empty firstMenu && firstMenu ? ' active' : ''}">
 									<c:if test="${empty menu.href}">
-										<a class="menu" href="javascript:" data-href="${ctx}/sys/menu/tree?parentId=${menu.id}" data-id="${menu.id}"><span>${menu.name}</span></a>
-									</c:if>
-									<c:if test="${not empty menu.href}">
-										<a class="menu" href="${fn:indexOf(menu.href, '://') eq -1 ? ctx : ''}${menu.href}" data-id="${menu.id}" target="mainFrame"><span>${menu.name}</span></a>
+										<a class="menu" href="javascript:"
+											data-href="${ctx}/sys/menu/tree?parentId=${menu.id}"
+											data-id="${menu.id}"><span>${menu.name}</span></a>
+									</c:if> <c:if test="${not empty menu.href}">
+										<a class="menu"
+											href="${fn:indexOf(menu.href, '://') eq -1 ? ctx : ''}${menu.href}"
+											data-id="${menu.id}" target="mainFrame"><span>${menu.name}</span></a>
 									</c:if>
 								</li>
 								<c:if test="${firstMenu}">
-									<c:set var="firstMenuId" value="${menu.id}"/>
+									<c:set var="firstMenuId" value="${menu.id}" />
 								</c:if>
-								<c:set var="firstMenu" value="false"/>
+								<c:set var="firstMenu" value="false" />
 							</c:if>
 						</c:forEach>
 					</ul>
-				</div><!--/.nav-collapse -->
+				</div>
+				<!--/.nav-collapse -->
 			</div>
-	    </div>
-	    <div class="container-fluid">
+		</div>
+		<div class="container-fluid">
 			<div id="content" class="row-fluid">
-				<div id="left"><%-- 
+				<div id="left">
+					<%-- 
 					<iframe id="menuFrame" name="menuFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe> --%>
 				</div>
 				<div id="openClose" class="close">&nbsp;</div>
 				<div id="right">
-					<iframe id="mainFrame" name="mainFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe>
+					<iframe id="mainFrame" name="mainFrame" src=""
+						style="overflow: visible;" scrolling="yes" frameborder="no"
+						width="100%" height="650"></iframe>
 				</div>
 			</div>
 		    <div id="footer" class="row-fluid">
 	            <%-- Copyright &copy; 2012-${fns:getConfig('copyrightYear')} ${fns:getConfig('productName')} - Powered By <a href="http://its111.com" target="_blank">Its111</a> ${fns:getConfig('version')}--%>
-	            ${fns:getConfig('productName')} - Powered By <a href="#">广州普及网络科技有限公司北京分公司</a>
+	            ${fns:getConfig('productName')} - Powered By <a href="#">广州普及网络科技有限公司北京分公司  豫ICP备17009424号-1</a>
 			</div>
 		</div>
 	</div>
@@ -468,5 +505,83 @@ line-height: 14px;
 		} // </c:if>
 	</script>
 	<script src="${ctxStatic}/common/wsize.min.js" type="text/javascript"></script>
+
+
+	<script type="text/javascript">
+	 /**
+	 *自定义添加标签页
+     * @param title 标题
+     * @param href 链接
+     */
+    function addTabByMy(title, href) {
+        jBox.closeMessager();
+        $(".jericho_tab").show();
+        $("#mainFrame").hide();
+        $.fn.jerichoTab.addTab({
+            title: title,
+            closeable: true,
+            data: {
+                dataType: 'iframe',
+                dataLink: "${ctx}"+href
+            }
+        }).loadData();
+        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a').html('<i class="fa fa-remove"></i>');
+        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left').css('width','100px');
+        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_text').css('width','87px');
+    }
+	 
+	$(function(){
+		if ("WebSocket" in window)
+		{
+		   // 打开一个 web socket
+		   var ws = new WebSocket("ws://<%=basePath%>/websocket/remind");
+		   ws.onopen = function()
+		   {
+			  //以用户ID作为唯一标识
+		      ws.send("${fns:getUser().id},${fns:getUser().businessinfoId}");
+		   };
+		   ws.onmessage = function (evt) 
+	  	 	{ 
+				var received_msg = eval("("+evt.data+")");
+				console.log(received_msg);
+				if(received_msg.show=="true"){
+					$.jBox.messager("<a class='blue' href='javascript:void(0)' onclick='openPage(\""+received_msg.ptitle+"\",\""+received_msg.url+"\")'>"+received_msg.content+"</a>", received_msg.title, 50000, {
+					    width: 300,
+					    showType: 'show',
+					    buttons: received_msg.buttons,
+					    submit: function (v, h, f) {
+					    	if (v == true){
+					    		var url = received_msg.url;
+					    		openPage(received_msg.ptitle,url.substr(0,url.indexOf("\?")))
+					    	}
+					        return true;
+					    }
+					});
+					playAudio();
+				}
+		   };
+		   ws.onclose = function()
+		   { 
+		      // 关闭 websocket
+		      console.log("连接关闭...");
+		   };
+		}
+		else
+		{
+		   console.log("您的浏览器不支持 WebSocket!");
+		}
+	});
+	 /**
+	 * 播放声音
+     */
+	function playAudio() {
+        $('#chatAudio')[0].play();
+        document.getElementById("chatAudio").play();
+		//pause()方法也可以暂停，具体可查html5的audio标签
+	}
+	 function openPage(title,url){
+		addTabByMy(title,url);
+	 }
+</script>
 </body>
 </html>

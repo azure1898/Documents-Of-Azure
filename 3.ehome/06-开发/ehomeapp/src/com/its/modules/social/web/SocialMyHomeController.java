@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.its.common.config.Global;
+import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.social.bean.SocialPraiseBean;
 import com.its.modules.social.bean.SocialRelationBean;
@@ -29,8 +33,6 @@ import com.its.modules.social.service.SocialPraiseService;
 import com.its.modules.social.service.SocialRelationService;
 import com.its.modules.social.service.SocialSpeakService;
 import com.its.modules.social.service.SocialSubjectService;
-
-import net.sf.json.JSONObject;
 
 /**
  * @Description：我家手机端相关接口
@@ -51,8 +53,34 @@ public class SocialMyHomeController extends BaseController {
 	private SocialRelationService socialRelationService;
 	
 	@Autowired
-	private SocialPraiseService socialPraisetService;
+	private SocialPraiseService socialPraiseService;
 
+	@RequestMapping(value="index",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> index(String villageInfoId, String userId) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		//粉丝数量
+		int countFans = socialRelationService.countFansByUserId(userId);
+		resultMap.put("countFans", countFans);
+		//关注数量
+		int countFocus = socialRelationService.countFocusByUserId(userId);
+		resultMap.put("countFocus", countFocus);
+		//点赞数量
+		int countPraise = socialPraiseService.countPraiseByUserId(userId);
+		resultMap.put("countPraise", countPraise);
+		//发言数量
+		SocialSpeak socialSpeak = new SocialSpeak();
+		socialSpeak.setUserid(userId);
+		socialSpeak.setVillageinfoid(villageInfoId);
+		int countSpeak = socialSpeakService.countSpeak(socialSpeak);
+		resultMap.put("countSpeak", countSpeak);
+		
+		resultMap.put("code", Global.CODE_SUCCESS);
+		resultMap.put("message", "查询我家首页数量统计成功");
+		
+		return resultMap;
+	}
+	
 	/**
 	 * @Description：我的发言 ，包括发言、转发
 	 * @Author：刘浩浩
@@ -66,13 +94,14 @@ public class SocialMyHomeController extends BaseController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="mySpeak",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
-	public Map<String, Object> getMySpeakList(String villageInfoId, String userId, int pageIndex) throws Exception{
+	public Map<String, Object> getMySpeakList(String villageInfoId, String userId, int pageIndex, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		//结果封装
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		
 		villageInfoId = "1";
-		int pageSize = SocialGlobal.MYHOME_MYSPEAK_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		
 		List<SocialSpeakBean> speakBeanList = new ArrayList();
 		SocialSpeak socialSpeak = new SocialSpeak();
@@ -80,7 +109,7 @@ public class SocialMyHomeController extends BaseController {
 		socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
 		socialSpeak.setUserid(userId);
 		
-		speakBeanList = socialSpeakService.findSpeakList(socialSpeak, pageSize * pageIndex, pageSize);
+		speakBeanList = socialSpeakService.findSpeakList(socialSpeak, pageIndex, pageSize);
 		
 		List<Map> resultList = new ArrayList(); 
 		if(speakBeanList!=null && speakBeanList.size()>0){
@@ -92,10 +121,11 @@ public class SocialMyHomeController extends BaseController {
 				
 				String createTime = DateUtil.getDaysBeforeNow(sb.getCreatetime());
 				data.put("createTime", createTime);//发言时间
+				data.put("isSpeak", sb.getIsspeak());//是否发言
 				
 				Map<String, Object> frdSubMap = new HashMap<String, Object>();
 				if(!StringUtils.isEmpty(sb.getFid())){//说明是转发
-					data.put("forwardId", sb.getId());
+					data.put("speakId", sb.getId());
 					data.put("reason", sb.getReason());
 					data.put("userId", sb.getUserid());
 					//查询该转发的话题集合
@@ -108,13 +138,22 @@ public class SocialMyHomeController extends BaseController {
 						
 					}
 					SocialSpeak root = socialSpeakService.get(sb.getRootid());
-					data.put("speakId", root.getId());//发言id
-					data.put("content", root.getContent());//发言内容
-					data.put("imgsList", root.getImages());//发言图片
+					Map<String, Object> rootMap = new HashMap<String, Object>();
+					rootMap.put("id", root.getId());//发言id
+					rootMap.put("noticeId", root.getNoticeid());//公告id
+					rootMap.put("title", root.getTitle());//公告标题
+					rootMap.put("summary", root.getSummary());//公告摘要
+					rootMap.put("content", root.getContent());//发言内容
+					if(StringUtils.isEmpty(root.getImages())){
+						rootMap.put("image", "");//发言图片
+					}else{
+						rootMap.put("image", MyFDFSClientUtils.get_fdfs_file_url(request, root.getImages().split(",")[0]));//发言图片
+					}
 					
+					data.put("rootSpeak", rootMap);
+					data.put("imgUrls", "");
 					
 				}else{//发言
-					data.put("forwardId", "");
 					data.put("reason", "");
 					
 					data.put("speakId", sb.getId());//发言id
@@ -133,7 +172,18 @@ public class SocialMyHomeController extends BaseController {
 					data.put("spkSubList", spkSubMap);
 					
 					//获取发言图片集合
-					data.put("imgUrls", sb.getImages());
+					String images = sb.getImages();
+					if(!StringUtils.isEmpty(images)){
+						String[] imgs = images.split(",");
+						Map<String, Object> imgMap = new HashMap<>();
+						for(String img : imgs){
+							imgMap.put("imgUrl", MyFDFSClientUtils.get_fdfs_file_url(request, img));
+						}
+						data.put("imgUrls", imgMap);
+					}else{
+						data.put("imgUrls", "");
+					}
+					
 				}
 				
 				data.put("spkSubList", frdSubMap);
@@ -170,11 +220,12 @@ public class SocialMyHomeController extends BaseController {
 	public Map<String, Object> getMyFocusList(String userId, int pageIndex) throws Exception{
 		//结果封装
 		Map<String, Object> toJson = new HashMap<String, Object>();
-		int pageSize = SocialGlobal.MYHOME_MYFOCUS_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		
 		SocialRelationBean socialRelationBean = new SocialRelationBean();
 		socialRelationBean.setUserid(userId);
-		List<SocialRelationBean> relationBeanList = socialRelationService.findFocusListByUserId(socialRelationBean, pageSize * pageIndex, pageSize);
+		List<SocialRelationBean> relationBeanList = socialRelationService.findFocusListByUserId(socialRelationBean, pageIndex, pageSize);
 		List<Map> resultList = new ArrayList(); 
 		if(relationBeanList!=null && relationBeanList.size()>0){
 			for(SocialRelationBean rb : relationBeanList){
@@ -222,11 +273,12 @@ public class SocialMyHomeController extends BaseController {
 	public Map<String, Object> getMyFansList(String userId, int pageIndex) throws Exception{
 		//结果封装
 		Map<String, Object> toJson = new HashMap<String, Object>();
-		int pageSize = SocialGlobal.MYHOME_MYFOCUS_PAGE_SIZE;
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		
 		SocialRelationBean socialRelationBean = new SocialRelationBean();
 		socialRelationBean.setSubuserid(userId);
-		List<SocialRelationBean> relationBeanList = socialRelationService.findFansListByUserId(socialRelationBean, pageSize * pageIndex, pageSize);
+		List<SocialRelationBean> relationBeanList = socialRelationService.findFansListByUserId(socialRelationBean, pageIndex, pageSize);
 		List<Map> resultList = new ArrayList(); 
 		if(relationBeanList!=null && relationBeanList.size()>0){
 			for(SocialRelationBean rb : relationBeanList){
@@ -276,11 +328,11 @@ public class SocialMyHomeController extends BaseController {
 	public Map<String, Object> getMyPraiseList(String userId, int pageIndex) throws Exception{
 		//结果封装
 		Map<String, Object> toJson = new HashMap<String, Object>();
-		int pageSize = SocialGlobal.MYHOME_MYPRAISE_PAGE_SIZE;
-		
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
 		SocialPraise socialPraise = new SocialPraise();
 		socialPraise.setUserid(userId);
-		List<SocialPraiseBean> praiseBeanList = socialPraisetService.getMyPraiseList(socialPraise, pageSize * pageIndex, pageSize);
+		List<SocialPraiseBean> praiseBeanList = socialPraiseService.getMyPraiseList(socialPraise, pageIndex, pageSize);
 		List<Map> resultList = new ArrayList(); 
 		if(praiseBeanList!=null && praiseBeanList.size()>0){
 			for(SocialPraiseBean pb : praiseBeanList){
@@ -322,6 +374,9 @@ public class SocialMyHomeController extends BaseController {
 						spkMap.put("userId", socialSpeakBean.getUserid());//发言人id
 						spkMap.put("content", socialSpeakBean.getContent());//发言内容
 						spkMap.put("id", socialSpeakBean.getId());//发言人姓名 昵称
+						spkMap.put("noticeId", socialSpeakBean.getNoticeid());//公告id
+						spkMap.put("title", socialSpeakBean.getTitle());//公告标题
+						spkMap.put("summary", socialSpeakBean.getSummary());//公告摘要
 						//根据ID 获取话题集合
 						List<SocialSubject> spkSubList = socialSubjectService.findAllByfkId(pb.getSpeakId(), SocialGlobal.SUB_RELATION_SPK);;
 						Map<String, Object> subMap1 = new HashMap<String, Object>();
@@ -341,6 +396,9 @@ public class SocialMyHomeController extends BaseController {
 					spkMap.put("content", pb.getContent());
 					spkMap.put("userName", pb.getSpkUserName());
 					spkMap.put("userId", pb.getSpkUserId());
+					spkMap.put("noticeId", pb.getNoticeId());//公告id
+					spkMap.put("title", pb.getTitle());//公告标题
+					spkMap.put("summary", pb.getSummary());//公告摘要
 				}
 				data.put("comment", cmtMap);
 				data.put("speak", spkMap);

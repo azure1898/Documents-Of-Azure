@@ -21,30 +21,30 @@ var vm=new Vue({
 			});	
 		},
 		commentPraise:function(){
-			if(this.commentDetail.isPraise=='1'){
-				alert("取消赞成功");
-				this.commentDetail.isPraise='0';
+			if(this.commentDetail.isPraise==1){
+
+				this.commentDetail.isPraise=0;
 				if(this.commentDetail.countPraise>0){
 					this.commentDetail.countPraise-=1;
 				}
 			}
 			else{
-				alert("赞成功");
-				this.commentDetail.isPraise='1';
+
+				this.commentDetail.isPraise=1;
 				this.commentDetail.countPraise+=1;
 			}
 		},
 		listPraise:function(index){
-			if(this.commentList[index].isPraise=='1'){
-				alert("取消赞成功");
-				this.commentList[index].isPraise='0';
+			if(this.commentList[index].isPraise==1){
+
+				this.commentList[index].isPraise=0;
 				if(this.commentList[index].countPraise>0){
 					this.commentList[index].countPraise-=1;
 				}
 			}
 			else{
-				alert("赞成功")
-				this.commentList[index].isPraise='1';
+
+				this.commentList[index].isPraise=1;
 				this.commentList[index].countPraise+=1;
 			}
 		}

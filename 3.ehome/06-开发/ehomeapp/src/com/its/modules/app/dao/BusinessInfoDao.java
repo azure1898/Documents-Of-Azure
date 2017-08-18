@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
-
+import com.its.modules.app.bean.BusinessInfoBean;
 import com.its.modules.app.entity.BusinessInfo;
 import com.its.modules.app.entity.BusinessSales;
 
@@ -37,7 +37,7 @@ public interface BusinessInfoDao extends CrudDao<BusinessInfo> {
 	 *            楼盘ID
 	 * @return
 	 */
-	public List<BusinessInfo> getBusinessList(@Param("prodType") int prodType, @Param("villageInfoID") String villageInfoID,@Param("moduleManageID")String moduleManageID, @Param("sort") int sort);
+	public List<BusinessInfo> getBusinessList(@Param("prodType") int prodType, @Param("villageInfoID") String villageInfoID, @Param("moduleManageID") String moduleManageID, @Param("sort") int sort);
 
 	/**
 	 * 获取商家某自定义单位
@@ -64,11 +64,23 @@ public interface BusinessInfoDao extends CrudDao<BusinessInfo> {
 	 *            楼盘ID
 	 * @return List<BusinessInfo>
 	 */
-	public List<BusinessInfo> getNormalBusinessList(String villageInfoId);
+	public List<BusinessInfoBean> getNormalBusinessList(String villageInfoId);
+
 	/**
 	 * 根据商家分类字典表，获取商家的商品模式
-	 * @param id	商家分类字典表ID
-	 * @return
+	 * 
+	 * @param id
+	 *            商家分类字典表ID
+	 * @return String
 	 */
 	public String getProdTypeByCategoryDictId(String id);
+
+	/**
+	 * 获取某商家的产品模式集合
+	 * 
+	 * @param businessInfoId
+	 *            商家ID
+	 * @return List<String>
+	 */
+	public List<String> getBusinessProdTypeList(String businessInfoId);
 }

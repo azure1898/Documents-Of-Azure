@@ -79,8 +79,8 @@ public class VillageLinerecombusitypedetailService extends CrudService<VillageLi
             for (int i = 0; i < recomBusType.getRecomBusTypeDetailList().size(); i++) {
                 VillageLinerecombusitypedetail recomBusTypeDetail = new VillageLinerecombusitypedetail();
                 recomBusTypeDetail = recomBusType.getRecomBusTypeDetailList().get(i);
-                String busTypeId=recomBusTypeDetail.getProdType();
-                if (!"1".equals(recomBusTypeDetail.getDelFlag())&&busTypeId!=null&&!"".equals(busTypeId)) {
+                //String busTypeId=recomBusTypeDetail.getProdType();
+                if (!"1".equals(recomBusTypeDetail.getDelFlag())) {
                     recomBusTypeDetail.preInsert();
                     recomBusTypeDetail.setSortNum(i + "");
                     recomBusTypeDetail.setDefaultFlag("0");

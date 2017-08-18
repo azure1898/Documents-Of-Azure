@@ -18,11 +18,25 @@
     				phoneNum : {
        					required : true,
         				isPhoneNumber : true
-    				}
+    				},
+    				villageName : {
+				        required : true,
+				        remote : {
+					        type:"POST",
+					        url:"${ctx}/village/villageInfo/checkVillageName",
+					        data:{
+					            addrCity : function(){return $("#addrcity").val();},
+						        oldAddrCity : '${villageInfo.addrCity}',
+						        villageName : function(){return $("#villageName").val();},
+						        oldVillageName : '${villageInfo.villageName}'
+					        } 
+				        } 
+        			}
 				},
 				messages : {
 					villageName : {
-				        required : "请输入楼盘名称"
+				        required : "请输入楼盘名称",
+				        remote : "当前城市中已存在相同的楼盘名"
 				    },
 				    addrCity : {
 					    required : "请选择所属城市"
@@ -59,6 +73,19 @@
 			       		}
 			        });
 			    }
+			    
+			    // 手动清除楼盘名称重复提示
+			    var msgVillageInfo = "当前城市中已存在相同的楼盘名";
+			    var $labelError = $("#villageName").parent().children("label.error");
+			    if ($labelError.size() != 0) {
+			        $.each($labelError,function(index,value,array){
+			       		if ($(value).text() == msgVillageInfo) {
+			            	$(value).remove();
+			       		}
+			        });
+			    }
+				// 清除楼盘名称重复校验缓存
+	        	$("#villageName").removeData("previousValue");
 			});
 			
 			$("#companyInfoId").change(function(){

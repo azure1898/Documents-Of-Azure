@@ -181,9 +181,10 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 
 		// 修改会员的优惠券使用状态
 		if (couponManageBean != null) {
-			couponManageService.updateUserState(couponManageBean.getMemberDiscountId(), CommonGlobal.DISCOUNT_USE_STATE_USED);
+			couponManageService.updateUserState(CommonGlobal.DISCOUNT_USE_STATE_USED, orderLesson.getId(), couponManageBean.getMemberDiscountId());
 		}
-		// 更新课程购买已购数量
+		// 更新课程库存、已购数量
+		lessonInfo.setPeopleLimit(ValidateUtil.validateInteger(lessonInfo.getPeopleLimit()) - 1);
 		lessonInfo.setSellCount(ValidateUtil.validateInteger(lessonInfo.getSellCount()) + 1);
 		lessonInfoService.update(lessonInfo);
 		// 插入订单追踪
@@ -245,7 +246,6 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
 		}
-
 		// 更新订单主表
 		this.update(orderLesson);
 		// 插入订单追踪

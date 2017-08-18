@@ -1,90 +1,59 @@
-	var vm = new Vue({
-		el: "#app",
-		data: {
-			item1: {},
-			length:0,
-			urlList: {
-				list: "courselist.html?id=",
-				detail: "coursedetails.html?id=",
-				index: "courseindex.html?id=",
-				order: "courseorder.html?id=",
-				groupdetail:"../groupbuy/groupbuydetail.html?id="
-			},
-			n:0
+var vm = new Vue({
+	el: "#app",
+	data: {
+		course: {},
+		length: 0,
+		urlList: {
+			list: "courselist.html?id=",
+			detail: "coursedetails.html?id=",
+			index: "courseindex.html?id=",
+			order: "courseorder.html?id=",
+			groupdetail: "../groupbuy/groupbuydetail.html?id="
 		},
-		mounted: function() { 
-			this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
-				var _this = this;
-			this.$http.get(interfaceUrl+'/live/getCourseIndex',{userID:userInfo.userID,businessID:getQueryString("id"),buildingID:userInfo.buildingID}).then(function(res){
-                  _this.item1 = res.data.data; 
-                    
-			},function(res){
-			alert(res.status)});
+		n: 0
+	},
+	mounted: function() {
+		this.$nextTick(function() { //在2.0版本中，加mounted的$nextTick方法，才能使用vm
+			var _this = this;
+			var data = {
+				userID: userInfo.userID,
+				businessID: getQueryString("id"),
+				buildingID: userInfo.buildingID
+			};
+			this.getData(_this, '/live/getCourseIndex', data, function(resData) {
+				_this.course = resData;
 			})
-	    
-		},
-		methods:{
-			openMore:function(){
-				 var _this = this;
+		})
+	},
+	methods: {
+		openMore: function() {
+			var _this = this;
 			_this.n++;
-			if (_this.n%2==1) {
-					this.$http.get(interfaceUrl+"/live/getMoreGroupBuy",{
-						userID:userInfo.userID,
-						buildingID: userInfo.buildingID,
-						businessID:getQueryString("id")
-					}).then(function(res) {
-						if(res.data.code == 1000){
-							_this.item1.groupBuy=res.data.data
-						}
-					});
-					$(event.target).html("收起");
+			if (_this.n % 2 == 1) {
+				var data = {
+					userID: userInfo.userID,
+					buildingID: userInfo.buildingID,
+					businessID: getQueryString("id")
+				};
+				this.getData(_this, "/live/getMoreGroupBuy", data, function(resData) {
+					_this.course.groupBuy = resData
+				})
+				$(event.target).html("收起");
+			} else if (_this.n % 2 == 0) {
+				var data = {
+					userID: userInfo.userID,
+					businessID: getQueryString("id"),
+					buildingID: userInfo.buildingID
+				};
+				this.getData(_this, "/live/getCourseIndex", data, function(resData) {
+					_this.course = resData;
+				})
+				$(event.target).html("查看更多团购");
 			}
-			else if(_this.n%2==0){
-				this.$http.get(interfaceUrl+"/live/getCourseIndex",{
-					userID:userInfo.userID,businessID:getQueryString("id"),buildingID:userInfo.buildingID
-					}).then(function(res) {
-						if(res.data.code == 1000){
-							_this.item1 = res.data.data;
-							
-						}
-					});
-					$(event.target).html("查看更多团购");
-			}
-				
-			}
-		,	collection:function(business){
-				
-					 if(business.isCollection==0){
-					   this.add_collections(business);	               
-					}
-					  else if(business.isCollection==1){	
-					   this.cancel_collections(business);
-					}        
 		},
-		add_collections:function(business){
+		collection: function(item) {
 			var _this = this;
-			this.$http.post(path_add,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;  
-                 business.isCollection = 1;
-					  toast('收藏成功');
-                      })    
-		},
-		cancel_collections:function(business){
-			var _this = this;
-			this.$http.post(path_cancle,
-				{userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:business.businessID},
-				{emulateJSON: true}).then(function(res){
-                  _this.item = res.data.data;
-                  business.isCollection = 0;
-                 toast('取消收藏');
-                  })
-			
-		}	
-		
+			_this.myCollection(_this, item);
 		}
-			
-			
-	})
-	
+	}
+})

@@ -36,6 +36,7 @@
 <link rel="shortcut icon" href="${ctxStatic}/images/favicon.ico" type="image/x-icon" />
 <!--可以在收藏夹中显示出图标-->
 <link rel="bookmark" href="${ctxStatic}/images/favicon.ico" type="image/x-icon" />
+<script src="${ctxStatic}/common/commonUtils.js" type="text/javascript"></script>
 <script>
 jQuery.validator.addMethod("isMobile", function(value, element) {
     var length = value.length;

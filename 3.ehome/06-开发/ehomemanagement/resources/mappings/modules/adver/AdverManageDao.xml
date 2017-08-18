@@ -100,7 +100,7 @@
                 AND a.position_id= #{positionId}
             </if> 
         </where>
-        GROUP BY a.Advert_Title
+        GROUP BY a.id
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
                 ORDER BY ${page.orderBy}

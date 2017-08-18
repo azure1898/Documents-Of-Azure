@@ -167,8 +167,7 @@
 	<!-- 团购管理中，依据模块的商户分类字典表ID，获取商家ID -->
     <select id="getBusinessId" resultType="GroupPurchase">
         SELECT DISTINCT
-            BusinessInfo_ID AS "businessinfoId",
-            Business_Category_Dict_ID AS "businessCategoryDictId"         
+            BusinessInfo_ID AS "businessinfoId"      
         FROM business_categoryinfo a
         <where> 
         	a.del_flag =  #{DEL_FLAG_NORMAL}
@@ -188,7 +187,7 @@
         	a.del_flag =  #{DEL_FLAG_NORMAL}
         	<if test="businessinfoId != null and businessinfoId != ''">
              AND a.id =  #{businessinfoId}
-            </if>      
+            </if>
         </where>
     </select>
     
