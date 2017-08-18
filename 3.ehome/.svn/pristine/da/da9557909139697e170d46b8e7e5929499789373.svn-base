@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.ShoppingCartDao">
+    
+	<sql id="shoppingCartColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.business_info_id AS "businessInfoId",
+		a.goods_info_id AS "goodsInfoId",
+		a.goods_sku_price_id AS "goodsSkuPriceId",
+		a.number AS "number",
+		a.add_date AS "addDate",
+		a.price AS "price",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.order_status AS "orderStatus",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="shoppingCartJoins">
+	</sql>
+    
+	<select id="get" resultType="ShoppingCart">
+		SELECT 
+			<include refid="shoppingCartColumns"/>
+		FROM shopping_cart a
+		<include refid="shoppingCartJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShoppingCart">
+		SELECT 
+			<include refid="shoppingCartColumns"/>
+		FROM shopping_cart a
+		<include refid="shoppingCartJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShoppingCart">
+		SELECT 
+			<include refid="shoppingCartColumns"/>
+		FROM shopping_cart a
+		<include refid="shoppingCartJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shopping_cart(
+			id,
+			account_id,
+			village_info_id,
+			business_info_id,
+			goods_info_id,
+			goods_sku_price_id,
+			number,
+			add_date,
+			price,
+			create_by,
+			create_date,
+			order_status,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{businessInfoId},
+			#{goodsInfoId},
+			#{goodsSkuPriceId},
+			#{number},
+			#{addDate},
+			#{price},
+			#{createBy.id},
+			#{createDate},
+			#{orderStatus},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shopping_cart SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			business_info_id = #{businessInfoId},
+			goods_info_id = #{goodsInfoId},
+			goods_sku_price_id = #{goodsSkuPriceId},
+			number = #{number},
+			add_date = #{addDate},
+			price = #{price},
+			order_status = #{orderStatus},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE shopping_cart SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<sql id="goodsInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.sort_info_id AS "sortInfoId",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.base_unit_id AS "baseUnitId",
+		a.sell_count AS "sellCount",
+		a.is_base AS "isBase",
+		a.content AS "content",
+		a.quota AS "quota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.create_by AS "createBy.id",
+		a.state AS "state",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<!-- 获取购物车总金额和数量 -->
+	<select id="getShoppingCartTotal" resultType="ShoppingCartBean">
+		SELECT SUM(a.price*a.number) AS totalMoney,SUM(a.number) AS sumNumber from shopping_cart a
+		<where>
+		a.del_flag=0 AND a.order_status=0 and a.number>0 AND a.account_id=#{0} AND a.village_info_id=#{1} AND a.business_info_id=#{2} 
+		</where>
+	</select>
+	
+	<!-- 查询购物车中已存在的，没有返回空 -->
+	<select id="getGoodsOfShoopingCart" resultType="ShoppingCart" parameterType="java.lang.String">
+		SELECT 
+			<include refid="shoppingCartColumns"/>
+		FROM shopping_cart a
+		 <where>
+			a.del_flag=0 AND a.order_status=0 AND a.account_id=#{0} AND a.village_info_id=#{1} AND a.business_info_id=#{2} 
+			 	AND a.goods_info_id=#{3}
+			 	<if test="goodsSkuPriceId != null">
+			 		AND a.goods_sku_price_id=#{goodsSkuPriceId}
+			 	</if>
+			 	<if test="goodsSkuPriceId == null">
+			 		AND ISNULL(a.goods_sku_price_id)
+			 	</if>
+		 </where>
+	</select>
+	
+	<!-- 购物车中商品数量+1 -->
+	<update id="addShoppingCartNumber">
+		UPDATE shopping_cart a SET number=number+1
+		WHERE a.del_flag=0 AND a.order_status=0 AND  a.account_id=#{0} AND a.village_info_id=#{1} AND a.business_info_id=#{2} 
+			 	AND a.goods_info_id=#{3}
+			 	<if test="goodsSkuPriceId != null">
+			 		AND a.goods_sku_price_id=#{goodsSkuPriceId}
+			 	</if>
+			 	<if test="goodsSkuPriceId == null">
+			 		AND ISNULL(a.goods_sku_price_id)
+			 	</if>
+	</update>
+	
+	<!-- 购物车中商品数量-1 -->
+	<update id="reduceShoppingCart">
+		UPDATE shopping_cart a SET number=number-1
+		WHERE a.del_flag=0 AND a.order_status=0 AND a.account_id=#{0} AND a.village_info_id=#{1} AND a.business_info_id=#{2} 
+			 	AND a.goods_info_id=#{3}
+			 	<if test="goodsSkuPriceId != null">
+			 		AND a.goods_sku_price_id=#{goodsSkuPriceId}
+			 	</if>
+			 	<if test="goodsSkuPriceId == null">
+			 		AND ISNULL(a.goods_sku_price_id)
+			 	</if>
+	</update>
+	
+	<!-- 清空购物车 -->
+	<update id="emptyShoppingCart">
+		UPDATE shopping_cart a SET del_flag=1
+		WHERE a.order_status=0 AND a.account_id=#{0} AND a.village_info_id=#{1} AND a.business_info_id=#{2} 
+	</update>
+	
+	<!-- 获取购物车商品信息 -->
+	<select id="getShoppingCartList" resultType="GoodsInfoBean">
+		SELECT <include refid="goodsInfoColumns"/>,b.number AS cartNumber,b.price AS cartPrice,b.goods_sku_price_id AS goodsSkuPriceID,
+			c.base_price AS skuBasePrice,c.benefit_price AS skuBenefitPrice,c.sku_key_id AS skuKeyID,c.sku_value_id AS skuValueID
+ 		from goods_info a,shopping_cart b LEFT JOIN goods_sku_price c ON b.goods_sku_price_id=c.ID
+ 		<where>
+ 		a.ID=b.Goods_Info_ID AND a.Del_Flag=0 AND b.Del_Flag=0 AND b.Order_status=0 AND b.Number>0
+ 		AND b.account_id=#{0} AND b.village_info_id=#{1} AND b.business_info_id=#{2} 
+ 		</where>
+	</select>
+	
+	<!-- 查询会员当前楼盘某商家，加入购物车的商品 -->
+	<select id="getShoppingCartInfoList" resultType="ShoppingCart">
+		SELECT <include refid="shoppingCartColumns"/>
+		FROM shopping_cart a
+		 <where>
+			a.del_flag=0 AND a.order_status=0 AND a.account_id=#{accountId} 
+			AND a.village_info_id=#{villageInfoId} AND a.business_info_id=#{businessInfoId} 
+		 </where>
+	</select>
+	
+	<select id="updateOrderState">
+		UPDATE shopping_cart a SET order_status=1
+		WHERE a.del_flag=0 AND a.order_status=0 
+		AND a.account_id=#{accountId} AND a.village_info_id=#{villageInfoId} AND a.business_info_id=#{businessInfoId} 
+	</select>
+	
+	<!-- 获取某用户在某楼盘下的购物车中的商家列表 -->
+	<select id="getBusinessInfoIds" resultType="java.lang.String">
+		SELECT DISTINCT
+			a.Business_Info_ID
+		FROM
+			shopping_cart a
+		WHERE
+			a.del_flag = 0
+		AND a.order_status = 0
+		AND a.Account_ID = #{accountId}
+		AND a.Village_Info_ID = #{villageInfoId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,133 @@
+package com.its.modules.task;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.its.common.utils.DateUtils;
+import com.its.common.utils.WXUtils;
+import com.its.common.web.BaseController;
+import com.its.modules.balance.entity.DownloadBill;
+import com.its.modules.balance.service.DownloadBillService;
+
+@Component("downloadBillTask")
+public class DownloadBillTask extends BaseController {
+
+	@Autowired
+	private DownloadBillService downloadBillService;
+
+	/**
+	 * cron表达式：* * * * * *（共6位，使用空格隔开，具体如下） cron表达式：*(秒0-59) *(分钟0-59) *(小时0-23)
+	 * *(日期1-31) *(月份1-12或是JAN-DEC) *(星期1-7或是SUN-SAT)
+	 */
+
+	/**
+	 * 定时卡点计算。每天上午 10:00 执行一次
+	 */
+	@Scheduled(cron = "0 0 10 * * *")
+	public void createDownloadBillTask() {
+
+		// 每天下载前一天的微信对账单
+		Calendar c = Calendar.getInstance();
+		Date date = c.getTime();
+		date = DateUtils.addDays(date, -1);
+		String billType = "SUCCESS";
+		String billDate = DateUtils.formatDate(date, "yyyyMMdd");
+		// logger.warn(billDate);
+		String billStr = new String();
+		Map<String, String> downloadBillMap = WXUtils.doDownloadBill(billDate, billType);
+		if (downloadBillMap.get("return_code").equals("200")) {
+			// 下载微信对账单成功
+			billStr = downloadBillMap.get("return_msg");
+			List<DownloadBill> downloadBillList = this.getDownloadBillList(billStr, billDate);
+			downloadBillService.saveDownloadBillList(downloadBillList);
+
+		} else {
+			// 下载微信对账单失败
+			logger.error(downloadBillMap.get("return_msg"));
+		}
+	}
+
+	/**
+	 * 将微信接口返回的对账单转换成可入库的对账单集合
+	 * 
+	 * @return
+	 */
+	private List<DownloadBill> getDownloadBillList(String billStr, String billDate) {
+		List<DownloadBill> downloadBillList = new ArrayList<DownloadBill>();
+
+		// 将字符串转成流
+		ByteArrayInputStream bis = new ByteArrayInputStream(billStr.getBytes());
+		InputStreamReader isr = new InputStreamReader(bis);
+		BufferedReader br = new BufferedReader(isr);
+		try {
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				if (line.contains("交易时间,公众账号ID")) {
+
+					// 跳过第一行标题行
+					continue;
+				} else if (line.contains("总交易单数,总交易额")) {
+
+					// 跳过最后两行汇总金额
+					break;
+				} else {
+					System.out.println("3");
+					// 对对账单中间部分的可转化为DownloadBill对象部分进行处理
+					System.out.println(line);
+					String[] downloadBillArr = line.split(",`");
+					DownloadBill downloadBill = new DownloadBill();
+					String tradeTime = downloadBillArr[0].substring(1);
+					String deviceInfo = downloadBillArr[4];
+					String transactionId = downloadBillArr[5];
+					String outTradeNo = downloadBillArr[6];
+					String openid = downloadBillArr[7];
+					String tradeType = downloadBillArr[8];
+					String tradeState = downloadBillArr[9];
+					String bankType = downloadBillArr[10];
+					String totalFee = downloadBillArr[12];
+					String productName = downloadBillArr[14];
+					String productData = downloadBillArr[15];
+					String costFee = downloadBillArr[16];
+					String costRate = downloadBillArr[17];
+
+					downloadBill.setTradeTime(DateUtils.parseDate(tradeTime));
+					downloadBill.setDeviceInfo(deviceInfo);
+					downloadBill.setTransactionId(transactionId);
+					downloadBill.setOutTradeNo(outTradeNo);
+					downloadBill.setOpenid(openid);
+					downloadBill.setTradeType(tradeType);
+					downloadBill.setTradeState(tradeState);
+					downloadBill.setBankType(bankType);
+					downloadBill.setTotalFee(Double.parseDouble(totalFee));
+					downloadBill.setProductName(productName);
+					downloadBill.setProductData(productData);
+					downloadBill.setCostFee(Double.parseDouble(costFee));
+					downloadBill.setCostRate(Double.parseDouble(costRate.split("%")[0])/100);
+
+					// 额外增加两个字段
+					downloadBill.setBillType("0"); // 微信对账单类型
+					downloadBill.setBillDate(billDate);
+
+					// 将对账单对象加入list里
+					downloadBillList.add(downloadBill);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return downloadBillList;
+	}
+
+}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.comment.dao.SocialCommentDao">
+    
+    <sql id="socialCommentColumns">
+        a.id AS "id",
+        a.userid AS "userid",
+        a.createtime AS "createtime",
+        a.content AS "content",
+        a.iscomment AS "iscomment",
+        a.fid AS "fid",
+        a.speakid AS "speakid",
+        a.delflag AS "delflag"
+    </sql>
+    
+    <sql id="socialCommentJoins">
+    </sql>
+    
+    <select id="get" resultType="SocialComment">
+        SELECT 
+            <include refid="socialCommentColumns"/>
+        FROM social_comment a 
+        <include refid="socialCommentJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="SocialComment">
+        SELECT 
+            <include refid="socialCommentColumns"/>
+        FROM social_comment a
+        <include refid="socialCommentJoins"/>
+        <where>
+            
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="userid != null and userid != ''">
+                AND a.userid = #{userid}
+            </if>
+            <if test="createtime != null and createtime != ''">
+                AND a.createtime = #{createtime}
+            </if>
+            <if test="content != null and content != ''">
+                AND a.content = #{content}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="fid != null and fid != ''">
+                AND a.fid = #{fid}
+            </if>
+            <if test="speakid != null and speakid != ''">
+                AND a.speakid = #{speakid}
+            </if>
+            <if test="delflag != null and delflag != ''">
+                AND a.delflag = #{delflag}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findBySpeakId" resultType="SocialComment">
+        SELECT 
+            <include refid="socialCommentColumns"/>, ac.nickname AS username 
+        FROM social_comment a, account ac
+        <where>
+            a.speakid = #{speakid} AND a.delflag = '1' AND a.userid = ac.id AND (a.fid IS NULL or a.fid = '')
+        </where>
+        ORDER BY a.createtime DESC
+    </select>
+    
+    <select id="findChildComment" resultType="SocialComment">
+        SELECT 
+            <include refid="socialCommentColumns"/>,
+            (select su1.`name` from sys_user su1 where su1.id=a.userid) as username,
+            (select su2.`name` from sys_user su2, social_comment sc1 where su2.id = sc1.userid and a.fid = sc1.id ) as replyname
+        FROM social_comment a
+        WHERE FIND_IN_SET(a.id,queryChildrenCommentInfo(#{id})) and a.id <![CDATA[ <> ]]> #{id} and a.delflag='1'
+        ORDER BY a.createtime 
+    </select>
+    
+    <select id="countComment" resultType="Integer">
+        SELECT count(*) from social_comment a
+        WHERE a.speakid = #{speakid} AND a.delflag='1'
+    </select>
+    
+    <select id="findAllList" resultType="SocialComment">
+        SELECT 
+            <include refid="socialCommentColumns"/>
+        FROM social_comment a
+        <include refid="socialCommentJoins"/>
+        <where>
+            
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY #{page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO social_comment(
+            id,
+            userid,
+            createtime,
+            content,
+            iscomment,
+            fid,
+            speakid,
+            delflag
+        ) VALUES (
+            #{id},
+            #{userid},
+            #{createtime},
+            #{content},
+            #{iscomment},
+            #{fid},
+            #{speakid},
+            #{delflag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE social_comment SET   
+            userid = #{userid},
+            createtime = #{createtime},
+            content = #{content},
+            iscomment = #{iscomment},
+            fid = #{fid},
+            speakid = #{speakid},
+            delflag = #{delflag}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="delete">
+        DELETE FROM social_comment
+        WHERE id = #{id}
+    </update>
+    
+    <update id="changeDelFlag">
+        UPDATE social_comment SET
+            delflag = #{delflag}
+        WHERE id = #{id}
+    </update>
+    
+</mapper>

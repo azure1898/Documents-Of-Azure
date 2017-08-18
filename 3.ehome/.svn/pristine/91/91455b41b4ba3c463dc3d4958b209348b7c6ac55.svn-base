@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.setup.dao.BusinessInfoDao">
+    <resultMap id="businessInfoResult" type="BusinessInfo">
+        <id property="id" column="id" />
+        <result property="businessName" column="businessName" />
+        <result property="businessPic" column="businessPic" />
+        <result property="contactPerson" column="contactPerson" />
+        <result property="phoneNum" column="phoneNum" />
+        <result property="addrPro" column="addrPro" />
+        <result property="addrCity" column="addrCity" />
+        <result property="addrCityCode" column="addrCityCode" />
+        <result property="addrArea" column="addrArea" />
+        <result property="addrDetail" column="addrDetail" />
+        <result property="longitude" column="longitude" />
+        <result property="latitude" column="latitude" />
+        <result property="businessLabel" column="businessLabel" />
+        <result property="businessHours" column="businessHours" />
+        <result property="recomFlag" column="recomFlag" />
+        <result property="onlineFlag" column="onlineFlag" />
+        <result property="groupPurchaseFlag" column="groupPurchaseFlag" />
+        <result property="balanceModel" column="balanceModel" />
+        <result property="collectFees" column="collectFees" />
+        <result property="balanceCycle" column="balanceCycle" />
+        <result property="businessIntroduce" column="businessIntroduce" />
+        <result property="businessState" column="businessState" />
+        <result property="stopBusinessBeginTime" column="stopBusinessBeginTime" />
+        <result property="stopBusinessEndTime" column="stopBusinessEndTime" />
+        <result property="serviceModel" column="serviceModel" />
+        <result property="serviceTimeInterval" column="serviceTimeInterval" />
+        <result property="serviceCharge" column="serviceCharge" />
+        <result property="shortestTime" column="shortestTime" />
+        <result property="distributeModel" column="distributeModel" />
+        <result property="distributeTimeInterval" column="distributeTimeInterval" />
+        <result property="shortestArriveTime" column="shortestArriveTime" />
+        <result property="depositBank" column="depositBank" />
+        <result property="accountName" column="accountName" />
+        <result property="bankAccount" column="bankAccount" />
+        <result property="distributeCharge" column="distributeCharge" />
+        <result property="fullDistributeFlag" column="fullDistributeFlag" />
+        <result property="fullDistributeMoney" column="fullDistributeMoney" />
+        <result property="freeDistributeFlag" column="freeDistributeFlag" />
+        <result property="freeDistributeMoney" column="freeDistributeMoney" />
+        <result property="customUnitFlag" column="customUnitFlag" />
+        <result property="soundWarn" column="soundWarn" />
+        <result property="stockWarn" column="stockWarn" />
+        <result property="stockWarnNum" column="stockWarnNum" />
+        <result property="promotionFlag" column="promotionFlag" />
+        <result property="remarks" column="remarks" />
+        <collection property="villageList" ofType="villageInfo">
+            <id property="id" column="villageList.id" />
+        </collection>
+    </resultMap>
+    <sql id="businessInfoColumns">
+        a.id AS "id",
+        a.business_name AS "businessName",
+        a.business_pic AS "businessPic",
+        a.contact_person AS "contactPerson",
+        a.phone_num AS "phoneNum",
+        a.addr_pro AS "addrPro",
+        a.addr_city AS "addrCity",
+        a.addr_area AS "addrArea",
+        a.addr_detail AS "addrDetail",
+        a.longitude AS "longitude",
+        a.latitude AS "latitude",
+        a.business_label AS "businessLabel",
+        a.business_hours AS "businessHours",
+        a.recom_flag AS "recomFlag",
+        a.online_flag AS "onlineFlag",
+        a.group_purchase_flag AS "groupPurchaseFlag",
+        a.balance_model AS "balanceModel",
+        a.collect_fees AS "collectFees",
+        a.balance_cycle AS "balanceCycle",
+        a.business_introduce AS "businessIntroduce",
+        a.business_state AS "businessState",
+        a.stop_business_begin_time AS "stopBusinessBeginTime",
+        a.stop_business_end_time AS "stopBusinessEndTime",
+        a.service_model AS "serviceModel",
+        a.service_time_interval AS "serviceTimeInterval",
+        a.service_charge AS "serviceCharge",
+        a.shortest_time AS "shortestTime",
+        a.distribute_model AS "distributeModel",
+        a.distribute_time_interval AS "distributeTimeInterval",
+        a.shortest_arrive_time AS "shortestArriveTime",
+        a.distribute_charge AS "distributeCharge",
+        a.full_distribute_flag AS "fullDistributeFlag",
+        a.full_distribute_money AS "fullDistributeMoney",
+        a.free_distribute_flag AS "freeDistributeFlag",
+        a.free_distribute_money AS "freeDistributeMoney",
+        a.deposit_bank AS "depositBank",
+        a.account_name AS "accountName",
+        a.bank_account AS "bankAccount",
+        a.promotion_flag AS "promotionFlag",
+        a.custom_unit_flag AS "customUnitFlag",
+        a.sound_warn AS "soundWarn",
+        a.stock_warn AS "stockWarn",
+        a.stock_warn_num AS "stockWarnNum",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        CONCAT(d.name,e.name,f.name,a.addr_detail) AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+    
+
+    <sql id="businessInfoColumnsJoin">
+        a.id AS "id",
+        a.business_name AS "businessName",
+        a.business_pic AS "businessPic",
+        a.contact_person AS "contactPerson",
+        a.phone_num AS "phoneNum",
+        a.addr_pro AS "addrPro",
+        a.addr_city AS "addrCity",
+        e.code AS "addrCityCode",
+        a.addr_area AS "addrArea",
+        a.addr_detail AS "addrDetail",
+        a.longitude AS "longitude",
+        a.latitude AS "latitude",
+        a.business_label AS "businessLabel",
+        a.business_hours AS "businessHours",
+        a.recom_flag AS "recomFlag",
+        a.online_flag AS "onlineFlag",
+        a.group_purchase_flag AS "groupPurchaseFlag",
+        a.balance_model AS "balanceModel",
+        a.collect_fees AS "collectFees",
+        a.balance_cycle AS "balanceCycle",
+        a.business_introduce AS "businessIntroduce",
+        a.business_state AS "businessState",
+        a.stop_business_begin_time AS "stopBusinessBeginTime",
+        a.stop_business_end_time AS "stopBusinessEndTime",
+        a.service_model AS "serviceModel",
+        a.service_time_interval AS "serviceTimeInterval",
+        a.service_charge AS "serviceCharge",
+        a.shortest_time AS "shortestTime",
+        a.distribute_model AS "distributeModel",
+        a.distribute_time_interval AS "distributeTimeInterval",
+        a.shortest_arrive_time AS "shortestArriveTime",
+        a.distribute_charge AS "distributeCharge",
+        a.full_distribute_flag AS "fullDistributeFlag",
+        a.full_distribute_money AS "fullDistributeMoney",
+        a.free_distribute_flag AS "freeDistributeFlag",
+        a.free_distribute_money AS "freeDistributeMoney",
+        a.deposit_bank AS "depositBank",
+        a.account_name AS "accountName",
+        a.bank_account AS "bankAccount",
+        a.promotion_flag AS "promotionFlag",
+         a.sound_warn AS "soundWarn",
+        a.stock_warn AS "stockWarn",
+        a.stock_warn_num AS "stockWarnNum",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        CONCAT(d.name,e.name,f.name,a.addr_detail) AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+
+
+    
+    <sql id="listColumns">
+        a.id AS "id",
+        a.business_name AS "businessName",
+        a.business_pic AS "businessPic",
+        a.contact_person AS "contactPerson",
+        a.phone_num AS "phoneNum",
+        d.name AS "addrPro",
+        e.name AS "addrCity",
+        f.name AS "addrArea",
+        GROUP_CONCAT(c.category_name) AS "businessCategorydict.categoryName",
+        a.use_state AS "useState",
+        a.create_date AS "createDate"
+        
+    </sql>
+    
+    <sql id="businessInfoJoins">
+        
+    </sql>
+    
+    <select id="get" resultMap="businessInfoResult">
+        SELECT 
+            <include refid="businessInfoColumns"/>,
+        b.Village_Info_ID AS "villageList.id"
+        FROM business_info a
+        LEFT JOIN business_servicescope b on a.ID=b.BusinessInfo_ID
+        LEFT JOIN sys_area d on a.Addr_Pro=d.id
+        LEFT JOIN sys_area e on a.Addr_City=e.id
+        LEFT JOIN sys_area f on a.Addr_Area=f.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getJoinArea" resultMap="businessInfoResult">
+        SELECT
+            <include refid="businessInfoColumnsJoin"/>,
+        b.Village_Info_ID AS "villageList.id"
+        FROM business_info a
+        LEFT JOIN business_servicescope b on a.ID=b.BusinessInfo_ID
+        LEFT JOIN sys_area d on a.Addr_Pro=d.id
+        LEFT JOIN sys_area e on a.Addr_City=e.id
+        LEFT JOIN sys_area f on a.Addr_Area=f.id
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="BusinessInfo">
+        SELECT 
+            <include refid="listColumns"/>
+        FROM business_info a
+        LEFT JOIN business_categoryinfo b ON a.ID = b.BusinessInfo_ID
+        LEFT JOIN business_categorydict c ON b.Business_Category_Dict_ID = c.ID
+        LEFT JOIN sys_area d on a.Addr_Pro=d.id
+        LEFT JOIN sys_area e on a.Addr_City=e.id
+        LEFT JOIN sys_area f on a.Addr_Area=f.id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessName != null and businessName != ''">
+                AND a.business_name LIKE 
+                    <if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+            </if>
+            <if test="addrPro != null and addrPro != ''">
+                AND a.addr_pro = #{addrPro}
+            </if>
+            <if test="addrCity != null and addrCity != ''">
+                AND a.addr_city = #{addrCity}
+            </if>
+            <if test="addrArea != null and addrArea != ''">
+                AND a.addr_area = #{addrArea}
+            </if>
+            <if test="useState != null and useState != ''">
+                AND a.use_state = #{useState}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="businessCategorydict != null and businessCategorydict.id != null and businessCategorydict.id != ''">
+                AND c.ID =#{businessCategorydict.id}
+            </if>
+        </where>
+        GROUP BY a.business_name
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="BusinessInfo">
+        SELECT 
+            <include refid="businessInfoColumns"/>
+        FROM business_info a
+        <include refid="businessInfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO business_info(
+            id,
+            business_name,
+            business_pic,
+            contact_person,
+            phone_num,
+            addr_pro,
+            addr_city,
+            addr_area,
+            addr_detail,
+            longitude,
+            latitude,
+            business_label,
+            business_hours,
+            recom_flag,
+            online_flag,
+            group_purchase_flag,
+            balance_model,
+            collect_fees,
+            balance_cycle,
+            business_introduce,
+            business_state,
+            stop_business_begin_time,
+            stop_business_end_time,
+            service_model,
+            service_time_interval,
+            service_charge,
+            shortest_time,
+            distribute_model,
+            distribute_time_interval,
+            shortest_arrive_time,
+            distribute_charge,
+            full_distribute_flag,
+            full_distribute_money,
+            free_distribute_flag,
+            free_distribute_money,
+            deposit_bank,
+            account_name,
+            bank_account,
+            promotion_flag,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag,use_state
+        ) VALUES (
+            #{id},
+            #{businessName},
+            #{businessPic},
+            #{contactPerson},
+            #{phoneNum},
+            #{addrPro},
+            #{addrCity},
+            #{addrArea},
+            #{addrDetail},
+            #{longitude},
+            #{latitude},
+            #{businessLabel},
+            #{businessHours},
+            #{recomFlag},
+            #{onlineFlag},
+            #{groupPurchaseFlag},
+            #{balanceModel},
+            #{collectFees},
+            #{balanceCycle},
+            #{businessIntroduce},
+            #{businessState},
+            #{stopBusinessBeginTime},
+            #{stopBusinessEndTime},
+            #{serviceModel},
+            #{serviceTimeInterval},
+            #{serviceCharge},
+            #{shortestTime},
+            #{distributeModel},
+            #{distributeTimeInterval},
+            #{shortestArriveTime},
+            #{distributeCharge},
+            #{fullDistributeFlag},
+            #{fullDistributeMoney},
+            #{freeDistributeFlag},
+            #{freeDistributeMoney},
+            #{depositBank},
+            #{accountName},
+            #{bankAccount},
+            #{promotionFlag},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag},#{useState}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE business_info SET     
+            business_name = #{businessName},
+            business_pic = #{businessPic},
+            contact_person = #{contactPerson},
+            phone_num = #{phoneNum},
+            addr_pro = #{addrPro},
+            addr_city = #{addrCity},
+            addr_area = #{addrArea},
+            addr_detail = #{addrDetail},
+            longitude = #{longitude},
+            latitude = #{latitude},
+            business_label = #{businessLabel},
+            business_hours = #{businessHours},
+            recom_flag = #{recomFlag},
+            online_flag = #{onlineFlag},
+            group_purchase_flag = #{groupPurchaseFlag},
+            balance_model = #{balanceModel},
+            collect_fees = #{collectFees},
+            balance_cycle = #{balanceCycle},
+            business_introduce = #{businessIntroduce},
+            business_state = #{businessState},
+            stop_business_begin_time = #{stopBusinessBeginTime},
+            stop_business_end_time = #{stopBusinessEndTime},
+            service_model = #{serviceModel},
+            service_time_interval = #{serviceTimeInterval},
+            service_charge = #{serviceCharge},
+            shortest_time = #{shortestTime},
+            distribute_model = #{distributeModel},
+            distribute_time_interval = #{distributeTimeInterval},
+            shortest_arrive_time = #{shortestArriveTime},
+            distribute_charge = #{distributeCharge},
+            full_distribute_flag = #{fullDistributeFlag},
+            full_distribute_money = #{fullDistributeMoney},
+            free_distribute_flag = #{freeDistributeFlag},
+            free_distribute_money = #{freeDistributeMoney},
+            deposit_bank = #{depositBank},
+            account_name = #{accountName},
+            bank_account = #{bankAccount},
+            promotion_flag = #{promotionFlag},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks},
+            use_state = #{useState}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="delete">
+        UPDATE business_info SET 
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+    <!--add by zhujiao  验证商家名称是否有效 -->
+    <select id="getModelByName" resultType="BusinessInfo">
+        SELECT
+            <include refid="businessInfoColumns"/>
+        FROM business_info a
+        WHERE a.business_name = #{businessName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+    <!-- 插入商家信息分类关联表数据 -->
+    <insert id="insertInfoCategory">
+        INSERT INTO business_categoryinfo(BusinessInfo_ID, Business_Category_Dict_ID)
+        <foreach collection="categoryList" item="category" separator=" union all ">
+            SELECT #{id}, #{category.id} FROM dual
+        </foreach>
+    </insert>
+    <update id="editBank">
+        UPDATE business_info SET     
+            deposit_bank = #{depositBank},
+            account_name = #{accountName},
+            bank_account = #{bankAccount},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+    <update id="updateState">
+        UPDATE business_info SET     
+            business_state = #{businessState},            
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+    <!-- 插入商家楼盘(服务范围)关联表数据 -->
+    <insert id="insertInfoServiceScope">
+        INSERT INTO business_servicescope(BusinessInfo_ID, Village_Info_ID)
+        <foreach collection="villageList" item="villageInfo" separator=" union all ">
+            SELECT #{id}, #{villageInfo.id} FROM dual
+        </foreach>
+    </insert>
+    <!-- 删除商家楼盘(服务范围)关联表数据 -->
+    <delete id="deleteInfoServiceScope">
+        DELETE FROM business_servicescope WHERE BusinessInfo_ID = #{id}
+    </delete>
+    <!-- 修改商家信息 -->
+    <update id="updateBaseInfo">
+        UPDATE business_info SET     
+            business_pic = #{businessPic},
+            contact_person = #{contactPerson},
+            phone_num = #{phoneNum},
+            business_label = #{businessLabel},
+            business_hours = #{businessHours},
+            business_introduce = #{businessIntroduce}
+        WHERE id = #{id}
+    </update>
+    <!-- 修改商家营业设置 -->
+    <update id="updateBusiness">
+        UPDATE business_info SET     
+            business_state = #{businessState},
+            stop_business_begin_time = #{stopBusinessBeginTime},
+            stop_business_end_time = #{stopBusinessEndTime},
+            service_model = #{serviceModel},
+            service_time_interval = #{serviceTimeInterval},
+            service_charge = #{serviceCharge},
+            shortest_time = #{shortestTime},
+            distribute_model = #{distributeModel},
+            distribute_time_interval = #{distributeTimeInterval},
+            shortest_arrive_time = #{shortestArriveTime},
+            distribute_charge = #{distributeCharge},
+            full_distribute_flag = #{fullDistributeFlag},
+            full_distribute_money = #{fullDistributeMoney},
+            free_distribute_flag = #{freeDistributeFlag},
+            free_distribute_money = #{freeDistributeMoney},
+            promotion_flag = #{promotionFlag},
+            custom_unit_flag = #{customUnitFlag},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+    <update id="updateSetting">
+        UPDATE business_info SET     
+            sound_warn = #{soundWarn},
+            stock_warn = #{stockWarn},
+            stock_warn_num = #{stockWarnNum}
+        WHERE id = #{id}
+    </update>
+
+
+<select id="getPtlistById" parameterType="String" resultType="String">
+	select DISTINCT prod_type from business_categorydict where id in (select Business_Category_Dict_ID from business_categoryinfo where BusinessInfo_ID=#{id})
+</select>
+</mapper>

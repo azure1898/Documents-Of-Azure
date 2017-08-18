@@ -1,0 +1,101 @@
+<div id="partialTopic">
+	<div class="grey_top">
+		<input class="topic_list_top" placeholder="" @input="txtchanged" v-model="searchValue">
+		<div class="topic_list_top_close">
+			<img src="../../images/close.png" width="15" height="15" @click="searchValue=''">
+		</div>
+		<span @click="cancel">取消</span>
+	</div>
+	<div class="choose_title" v-if="searchValue.length==0">热门话题</div>
+	<div class="choose_title" v-else>搜索结果</div>
+	<div class="main_box mt10" style="border-top:solid 1px #ececec;" v-if="searchValue.length==0">
+		<div class="choose_main1">
+			<ul>
+				<li v-for="(topic,index) in Htopics"><a href="#" @click="choice(topic)">{{topic.subName}}</a><span v-if="topic.id == '' ">(新话题)</span></li>
+				<div class="clear"></div>
+			</ul>
+		</div>
+	</div>
+	<div class="choose_main2" v-else>
+		<ul>
+			<li v-for="topic in topics"><a href="#" @click="choice(topic)">{{topic.subName}}</a><span v-if="topic.id == '' ">(新话题)</span></li>
+			<div class="clear"></div>
+		</ul>
+	</div>
+</div>
+<script>
+	$('#partialTopic').ready(function() {
+		var topicvue = new Vue({
+			el: "#partialTopic",
+			data: {
+				searchValue: "#",
+				Htopics: [],
+				topics: []
+			},
+			mounted: function() { 
+				this.$nextTick(function() { 
+					debugger
+					this.getHottopic();
+					
+				});
+			},
+			methods: {
+				getHottopic: function() {
+					var _this = this;
+					this.$http.post(interfaceUrl + "/subject/hotSubjectList",{emulateJSON: true}).then(function(res){
+							_this.Htopics = res.data.data;
+						});
+				},
+				txtchanged: function() {
+					var _this = this;
+					if(_this.searchValue == ""||_this.searchValue == "#") {
+						_this.getHottopic();
+					} else {
+						this.$http.post(interfaceUrl + "/subject/subSearch",{
+							subjectName:_this.searchValue,
+							pageIndex:0
+						},{emulateJSON: true}).then(function(res){
+							_this.topics = res.data.data;
+						});
+					}
+				},
+				choice:function(topic){
+					var _this = this;
+					if(topic.id==""){
+						this.$http.post(interfaceUrl + "/speak/speakDetail",{
+							subName:_this.searchValue,
+							villageInfoId:1,
+							createrId:1,
+						},{emulateJSON: true}).then(function(res){
+							topic.id=res.data.id
+						});
+						if(topic.subName.substr(-1,1)=="#"&&topic.subName.substr(1,1)=="#"){ //判断最后一个是否带# 和第一是否带#
+							vm.topic.id=topic.id
+							vm.topic.name=topic.subName
+							vm.appendTopic()
+							this.cancel()
+						}else{//少两中情况
+							vm.topic.id=topic.id
+							vm.topic.name= "#"+topic.subName+"#"
+							vm.appendTopic()
+							this.cancel()
+						}
+						
+						
+					}else{
+			
+						vm.topic.id=topic.id
+						vm.topic.name=topic.subName
+						vm.appendTopic()
+						this.cancel()
+					}
+					
+				},
+				cancel: function() {
+					vm.showPopup = false
+				}
+			}
+
+		})
+	})
+</script>

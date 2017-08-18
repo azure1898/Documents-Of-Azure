@@ -1,0 +1,439 @@
+/**
+ * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
+ */
+package com.its.modules.social.web;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.druid.util.StringUtils;
+import com.its.common.config.Global;
+import com.its.common.utils.MyFDFSClientUtils;
+import com.its.common.web.BaseController;
+import com.its.modules.social.bean.SocialPraiseBean;
+import com.its.modules.social.bean.SocialRelationBean;
+import com.its.modules.social.bean.SocialSpeakBean;
+import com.its.modules.social.common.DateUtil;
+import com.its.modules.social.common.SocialGlobal;
+import com.its.modules.social.entity.SocialPraise;
+import com.its.modules.social.entity.SocialSpeak;
+import com.its.modules.social.entity.SocialSubject;
+import com.its.modules.social.service.SocialPraiseService;
+import com.its.modules.social.service.SocialRelationService;
+import com.its.modules.social.service.SocialSpeakService;
+import com.its.modules.social.service.SocialSubjectService;
+
+/**
+ * @Description：我家手机端相关接口
+ * @Author：刘浩浩
+ * @Date：2017年8月4日
+ */
+@Controller
+@RequestMapping(value = "${appPath}/myHome")
+public class SocialMyHomeController extends BaseController {
+
+	@Autowired
+	private SocialSpeakService socialSpeakService;
+	
+	@Autowired
+	private SocialSubjectService socialSubjectService;
+
+	@Autowired
+	private SocialRelationService socialRelationService;
+	
+	@Autowired
+	private SocialPraiseService socialPraiseService;
+
+	@RequestMapping(value="index",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> index(String villageInfoId, String userId) throws Exception{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		//粉丝数量
+		int countFans = socialRelationService.countFansByUserId(userId);
+		resultMap.put("countFans", countFans);
+		//关注数量
+		int countFocus = socialRelationService.countFocusByUserId(userId);
+		resultMap.put("countFocus", countFocus);
+		//点赞数量
+		int countPraise = socialPraiseService.countPraiseByUserId(userId);
+		resultMap.put("countPraise", countPraise);
+		//发言数量
+		SocialSpeak socialSpeak = new SocialSpeak();
+		socialSpeak.setUserid(userId);
+		socialSpeak.setVillageinfoid(villageInfoId);
+		int countSpeak = socialSpeakService.countSpeak(socialSpeak);
+		resultMap.put("countSpeak", countSpeak);
+		
+		resultMap.put("code", Global.CODE_SUCCESS);
+		resultMap.put("message", "查询我家首页数量统计成功");
+		
+		return resultMap;
+	}
+	
+	/**
+	 * @Description：我的发言 ，包括发言、转发
+	 * @Author：刘浩浩
+	 * @Date：2017年8月7日
+	 * @param villageInfoId 楼盘id
+	 * @param userId 当前用户id
+	 * @param pageIndex 分页信息 第一页为0
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value="mySpeak",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> getMySpeakList(String villageInfoId, String userId, int pageIndex, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		//结果封装
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		
+		villageInfoId = "1";
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
+		
+		List<SocialSpeakBean> speakBeanList = new ArrayList();
+		SocialSpeak socialSpeak = new SocialSpeak();
+		socialSpeak.setVillageinfoid(villageInfoId);
+		socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
+		socialSpeak.setUserid(userId);
+		
+		speakBeanList = socialSpeakService.findSpeakList(socialSpeak, pageIndex, pageSize);
+		
+		List<Map> resultList = new ArrayList(); 
+		if(speakBeanList!=null && speakBeanList.size()>0){
+			for(SocialSpeakBean sb : speakBeanList){
+				Map<String, Object> data = new HashMap<String, Object>();
+				//人员属性
+				data.put("userName", sb.getNickName());//发言人姓名 昵称
+				data.put("headPicSrc", sb.getPhoto());//发言人头像
+				
+				String createTime = DateUtil.getDaysBeforeNow(sb.getCreatetime());
+				data.put("createTime", createTime);//发言时间
+				data.put("isSpeak", sb.getIsspeak());//是否发言
+				
+				Map<String, Object> frdSubMap = new HashMap<String, Object>();
+				if(!StringUtils.isEmpty(sb.getFid())){//说明是转发
+					data.put("speakId", sb.getId());
+					data.put("reason", sb.getReason());
+					data.put("userId", sb.getUserid());
+					//查询该转发的话题集合
+					List<SocialSubject> frdSubList = socialSubjectService.findAllByfkId(sb.getFid(), SocialGlobal.SUB_RELATION_SPK);
+					if(frdSubList!=null && frdSubList.size()>0){
+						for(SocialSubject sub : frdSubList){
+							frdSubMap.put("subjectId", sub.getId());
+							frdSubMap.put("subName", sub.getSubname());
+						}
+						
+					}
+					SocialSpeak root = socialSpeakService.get(sb.getRootid());
+					Map<String, Object> rootMap = new HashMap<String, Object>();
+					rootMap.put("id", root.getId());//发言id
+					rootMap.put("noticeId", root.getNoticeid());//公告id
+					rootMap.put("title", root.getTitle());//公告标题
+					rootMap.put("summary", root.getSummary());//公告摘要
+					rootMap.put("content", root.getContent());//发言内容
+					if(StringUtils.isEmpty(root.getImages())){
+						rootMap.put("image", "");//发言图片
+					}else{
+						rootMap.put("image", MyFDFSClientUtils.get_fdfs_file_url(request, root.getImages().split(",")[0]));//发言图片
+					}
+					
+					data.put("rootSpeak", rootMap);
+					data.put("imgUrls", "");
+					
+				}else{//发言
+					data.put("reason", "");
+					
+					data.put("speakId", sb.getId());//发言id
+					data.put("userId", sb.getUserid());//发言人id
+					data.put("content", sb.getContent());//发言内容
+					//根据发言ID 获取发言话题集合
+					List<SocialSubject> subjectList = socialSubjectService.findAllByfkId(sb.getId(), SocialGlobal.SUB_RELATION_SPK);
+					Map<String, Object> spkSubMap = new HashMap<String, Object>();
+					if(subjectList!=null && subjectList.size()>0){
+						for(SocialSubject sub : subjectList){
+							spkSubMap.put("subjectId", sub.getId());
+							spkSubMap.put("subName", sub.getSubname());
+						}
+						
+					}
+					data.put("spkSubList", spkSubMap);
+					
+					//获取发言图片集合
+					String images = sb.getImages();
+					if(!StringUtils.isEmpty(images)){
+						String[] imgs = images.split(",");
+						Map<String, Object> imgMap = new HashMap<>();
+						for(String img : imgs){
+							imgMap.put("imgUrl", MyFDFSClientUtils.get_fdfs_file_url(request, img));
+						}
+						data.put("imgUrls", imgMap);
+					}else{
+						data.put("imgUrls", "");
+					}
+					
+				}
+				
+				data.put("spkSubList", frdSubMap);
+				
+				//发言相关属性
+				data.put("countForward", sb.getCountForward());//转发数量
+				data.put("countComment", sb.getCountComment());//评论数量
+				data.put("countPraise", sb.getCountPraise());//点赞数量
+				resultList.add(data);
+			}
+			
+		}
+		
+		toJson.put("userId", userId);
+		toJson.put("pageIndex", pageIndex);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", resultList);
+		toJson.put("message", "查询首页发言列表成功");
+		
+		return toJson;
+	}
+	
+	/**
+	 * @Description：我关注的列表集合
+	 * @Author：刘浩浩
+	 * @Date：2017年8月7日
+	 * @param userId 当前用户id
+	 * @param pageIndex 分页索引 从0开始
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="myFocusList",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> getMyFocusList(String userId, int pageIndex) throws Exception{
+		//结果封装
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
+		
+		SocialRelationBean socialRelationBean = new SocialRelationBean();
+		socialRelationBean.setUserid(userId);
+		List<SocialRelationBean> relationBeanList = socialRelationService.findFocusListByUserId(socialRelationBean, pageIndex, pageSize);
+		List<Map> resultList = new ArrayList(); 
+		if(relationBeanList!=null && relationBeanList.size()>0){
+			for(SocialRelationBean rb : relationBeanList){
+				Map<String, Object> data = new HashMap<String, Object>();
+				//人员属性
+				data.put("userId", rb.getSubuserid());// 用户id
+				data.put("userName", rb.getNickName());//姓名 昵称
+				data.put("headPicSrc", rb.getPhoto());//头像
+				data.put("relation", rb.getRelation());//关系 1：关注 2：相互关注
+				//根据用户id 获取该用户的最近发言
+				SocialSpeak socialSpeak = new SocialSpeakBean();
+				socialSpeak.setUserid(rb.getSubuserid());
+				socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
+				
+				List<SocialSpeakBean> socialSpeakBeanList = socialSpeakService.findSpeakList(socialSpeak, 0, 1);
+				if(socialSpeakBeanList!=null && socialSpeakBeanList.size()>0){
+					SocialSpeakBean speakBean = socialSpeakBeanList.get(0);
+					data.put("speakId", speakBean.getId());
+					data.put("content", speakBean.getContent());
+				}else{
+					data.put("speakId", "");
+					data.put("content", "");
+				}
+				resultList.add(data);
+			}
+		}
+		toJson.put("pageIndex", pageIndex);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", resultList);
+		toJson.put("message", "查询我的关注列表成功");
+		return toJson;
+	}
+	
+	/**
+	 * @Description：我的粉丝集合
+	 * @Author：刘浩浩
+	 * @Date：2017年8月7日
+	 * @param userId 当前用户id
+	 * @param pageIndex
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="myFansList",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> getMyFansList(String userId, int pageIndex) throws Exception{
+		//结果封装
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
+		
+		SocialRelationBean socialRelationBean = new SocialRelationBean();
+		socialRelationBean.setSubuserid(userId);
+		List<SocialRelationBean> relationBeanList = socialRelationService.findFansListByUserId(socialRelationBean, pageIndex, pageSize);
+		List<Map> resultList = new ArrayList(); 
+		if(relationBeanList!=null && relationBeanList.size()>0){
+			for(SocialRelationBean rb : relationBeanList){
+				Map<String, Object> data = new HashMap<String, Object>();
+				//人员属性
+				data.put("userId", rb.getUserid());// 用户id
+				data.put("userName", rb.getNickName());//姓名 昵称
+				data.put("headPicSrc", rb.getPhoto());//头像
+				data.put("relation", rb.getRelation());//关系 1：关注 2：相互关注
+				//根据用户id 获取该用户的最近发言
+				SocialSpeak socialSpeak = new SocialSpeakBean();
+				socialSpeak.setUserid(rb.getUserid());
+				socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
+				List<SocialSpeakBean> socialSpeakBeanList = socialSpeakService.findSpeakList(socialSpeak, 0, 1);
+				if(socialSpeakBeanList!=null && socialSpeakBeanList.size()>0){
+					SocialSpeakBean speakBean = socialSpeakBeanList.get(0);
+					data.put("speakId", speakBean.getId());
+					data.put("content", speakBean.getContent());
+				}else{
+					data.put("speakId", "");
+					data.put("content", "");
+				}
+				resultList.add(data);
+			}
+		}
+		
+		toJson.put("pageIndex", pageIndex);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", resultList);
+		toJson.put("message", "查询我的粉丝列表成功");
+		
+		return toJson;
+	}
+	
+	/**
+	 * @Description：我的赞列表，包括赞评论、赞发言
+	 * @Author：刘浩浩
+	 * @Date：2017年8月9日
+	 * @param userId 用户id
+	 * @param pageIndex 分页索引，从0开始
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value="myPraiseList",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> getMyPraiseList(String userId, int pageIndex) throws Exception{
+		//结果封装
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
+		pageIndex = pageIndex == 0 ? pageSize * pageIndex : pageSize * pageIndex -SocialGlobal.PAGE_SIZE_INDEX;
+		SocialPraise socialPraise = new SocialPraise();
+		socialPraise.setUserid(userId);
+		List<SocialPraiseBean> praiseBeanList = socialPraiseService.getMyPraiseList(socialPraise, pageIndex, pageSize);
+		List<Map> resultList = new ArrayList(); 
+		if(praiseBeanList!=null && praiseBeanList.size()>0){
+			for(SocialPraiseBean pb : praiseBeanList){
+				Map<String, Object> data = new HashMap<String, Object>();
+				//点赞的人员属性
+				data.put("userId", userId);// 用户id
+				data.put("userName", pb.getNickName());//姓名 昵称
+				data.put("headPicSrc", pb.getPhoto());//头像
+				
+				String createTime = DateUtil.getDaysBeforeNow(pb.getPraisetime());
+				data.put("creatTime", createTime);//点赞时间
+				data.put("isComment", pb.getIsComment());//是否是评论点赞
+				
+				Map cmtMap = new HashMap();//封装评论信息
+				Map spkMap = new HashMap();//封装发言信息
+				//是否赞的是评论
+				if(pb.getIsComment()==SocialGlobal.MYHOME_MYPRAISE_COMMENT_YES){//赞的是评论
+					//设置评论信息
+					cmtMap.put("id", pb.getCommentId());
+					cmtMap.put("content", pb.getContent());
+					cmtMap.put("userName", pb.getCmtUserName());
+					cmtMap.put("userId", pb.getCmtUserId());
+					//查询评论的话题
+					//根据ID查询评论话题集合
+					List<SocialSubject> subjectList = socialSubjectService.findAllByfkId(pb.getCommentId(), SocialGlobal.SUB_RELATION_CMT);
+					Map<String, Object> subMap = new HashMap<String, Object>();
+					if(subjectList!=null && subjectList.size()>0){
+						for(SocialSubject sub : subjectList){
+							subMap.put("subjectId", sub.getId());
+							subMap.put("subName", sub.getSubname());
+						}
+					}
+					cmtMap.put("subjectList", subMap);
+					//根据发言id 查询发言对象
+					SocialSpeakBean socialSpeakBean = socialSpeakService.getSocialSpeakBeanById(pb.getSpeakId());
+					if(socialSpeakBean!=null){
+						//人员属性
+						spkMap.put("userName", socialSpeakBean.getNickName());//发言人姓名 昵称
+						spkMap.put("userId", socialSpeakBean.getUserid());//发言人id
+						spkMap.put("content", socialSpeakBean.getContent());//发言内容
+						spkMap.put("id", socialSpeakBean.getId());//发言人姓名 昵称
+						spkMap.put("noticeId", socialSpeakBean.getNoticeid());//公告id
+						spkMap.put("title", socialSpeakBean.getTitle());//公告标题
+						spkMap.put("summary", socialSpeakBean.getSummary());//公告摘要
+						//根据ID 获取话题集合
+						List<SocialSubject> spkSubList = socialSubjectService.findAllByfkId(pb.getSpeakId(), SocialGlobal.SUB_RELATION_SPK);;
+						Map<String, Object> subMap1 = new HashMap<String, Object>();
+						if(spkSubList!=null && spkSubList.size()>0){
+							for(SocialSubject sub : spkSubList){
+								subMap1.put("id", sub.getId());
+								subMap1.put("subName", sub.getSubname());
+							}
+							
+						}
+						spkMap.put("subjectList", subMap1);
+					}
+					
+				}else{
+					//封装发言
+					spkMap.put("id", pb.getSpeakId());
+					spkMap.put("content", pb.getContent());
+					spkMap.put("userName", pb.getSpkUserName());
+					spkMap.put("userId", pb.getSpkUserId());
+					spkMap.put("noticeId", pb.getNoticeId());//公告id
+					spkMap.put("title", pb.getTitle());//公告标题
+					spkMap.put("summary", pb.getSummary());//公告摘要
+				}
+				data.put("comment", cmtMap);
+				data.put("speak", spkMap);
+				
+				resultList.add(data);
+			}
+		}
+		
+		toJson.put("pageIndex", pageIndex);
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", resultList);
+		toJson.put("message", "查询我的赞列表成功");
+		return toJson;
+	}
+	
+	/**
+	 * @Description：删除我的发言/转发
+	 * @Author：刘浩浩
+	 * @Date：2017年8月9日
+	 * @param speakId 发言id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="speakDel",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Map<String, Object> delSpeak(String speakId) throws Exception{
+		//结果封装
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		SocialSpeak socialSpeak = socialSpeakService.get(speakId);
+		socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_YES);
+		socialSpeakService.save(socialSpeak);
+		
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("message", "删除发言成功");
+		
+		return toJson;
+	}
+}

@@ -1,0 +1,120 @@
+.modal-dialog_c{
+				width: auto;
+				margin: 0px auto;
+				top:0px;
+			}
+			
+			.modal-content_c{
+				border-radius: 0;
+				border: none;
+				box-shadow: none;
+			}
+			
+			.modal-body_c {
+				padding: 0px;
+				margin: 0px;
+			}
+			.modal-header_coupon{
+				border:none;
+			}
+			.modal_c ,.bg_de{
+				background: #F3F3F3;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			
+			.clear {
+				clear: both;
+			}
+			
+			.fl {
+				float: left;
+			}			
+			.fr {
+				float: right;
+			}
+			.line_c {
+				display: block;
+				float: left;
+			}
+			
+			.center_c {
+				text-align: center;
+			}
+			/*地址-媒体查询*/		
+			@media (min-width:768px) {
+				.font_c{
+				
+					color: #3A3A3A;
+				}
+				#place1_ad {
+					width: 100%;
+					border-bottom: 1px solid gainsboro;
+					font-size: 18px;
+				}
+				.count_1_ad {
+					margin: 20px;
+				}
+				.margin_ad{
+				margin-left:12px;
+			}
+			}
+			@media (min-width: 427px )and (max-width:768px) {
+				.font_c {
+					
+					color: #3A3A3A;
+				}
+				#place1_ad {
+					width: 100%;
+					border-bottom: 1px solid gainsboro;
+					font-size: 16px;
+				}
+				.count_1_ad {
+					margin: 15px 10px;
+				}
+				.margin_ad{
+				margin-left:10px;
+			}
+			}
+			@media (max-width: 427px) {
+				.font_c {
+					
+					color: #3A3A3A;
+				}
+				#place1_ad {
+					width: 100%;
+					border-bottom: 1px solid gainsboro;
+					font-size: 14px;
+				}
+				.count_1_ad {
+					margin: 15px 10px;
+				}
+				.margin_ad{
+				margin-left:6px;
+			}
+			}
+			/*优惠券-媒体查询*/
+			.font18{
+				font-size:18px;}
+			@media (max-width: 380px) {
+			.font14{font-size:12px;}
+			.choose_coup_main_m{margin-right:5px;}
+		
+			.choose_coup_main{margin:4px;}
+				.font18{font-size:16px;}
+				.choose_coup_main_left{
+					width:77px;
+					font-size:12px;
+				}
+				.font_orange{font-size:16px;}
+				.choose_coup_main_right{
+					    margin-left:88px;
+					
+				}
+				.choose_coup_main_m{
+					width:auto;
+				}
+				
+				
+}

@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>课程模块列表</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/common.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div id="bg" style="background-color:#000;display: none; opacity: 0.5;filter:alpha(opacity=50); width:100%; height:100%; position:absolute; z-index:888; padding-top:45px;"></div>
+			<div style="position:fixed; top:0; left:0; z-index:999; width:100%;">
+				<div class="sort_xiala" style="display: none;">
+					<ul>
+						<li @click="changeSort(1)" class="selected pointer">默认排序<span class="green_dh"></span></li>
+						<li @click="changeSort(2)" class="pointer">按销量从高到低</li>
+						<li @click="changeSort(3)" class="pointer">按商家最近发布时间</li>
+					</ul>
+				</div>
+			</div>
+			<div class="grey_top">
+				<a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
+				课程培训
+				<a href="#" class="green_sort" v-on:click="sort"></a>
+			</div>
+			<div class="sort_list clearfix" v-for="item in course">
+				<div class="sortlist_top">
+					<div class="business_price_box">
+						<div class="business_pic75 fl">
+							<a v-bind:href="urlList.list+item.businessID"><img v-bind:src="item.businessImage"><div class="bussinessbreak2" v-if="item.isNormal==0">商家休息中</div></a>
+							<!--item.businessUrl-->
+						
+						</div>
+						<div class="business_nr font_black">
+							<div style="height:26px;">
+								<div class="business_name fl labelEllipsis">{{item.businessName}}</div>
+								<div class="fr"><a v-bind:href="urlList.list+item.businessID" style=" color:#666;">进入店铺</a></div>
+							</div>
+							<div class="business_type fl"><span v-for="title in item.businessLabels">{{title.labelName}}</span></div>
+							<div class="full_cut clearfix"></div>
+						</div>
+					</div>
+				</div>
+				<div class="goods_hd">
+					<ul class="clearfix">
+						<li v-for="item2 in item.courseItems">
+							<div class="goodspic120" v-bind:data-id="item2.courseID">
+								<a v-bind:href="urlList.list+item.businessID"><img v-bind:src="item2.courseImage"></a>
+							</div>
+							<div class="txt_h30 labelEllipsis">{{item2.courseName}}</div>
+							<div class="font_orange">{{item2.coursePrice|formatDecimal}}{{item2.courseUnit}}</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mt10 clearfix">
+			</div>
+		</div>
+		<script src="../../js/static/jquery.js"></script>
+		<script src="../../js/static/bootstrap.js"></script>
+		<script src="../../js/static/vue.js"></script>
+		<script src="../../js/static/vue-resource.js"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/course/modulelist.js"></script>
+	</body>
+
+</html>

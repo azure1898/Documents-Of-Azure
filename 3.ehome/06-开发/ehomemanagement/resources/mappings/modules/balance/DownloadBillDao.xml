@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.balance.dao.DownloadBillDao">
+    
+	<sql id="downloadBillColumns">
+		a.id AS "id",
+		a.trade_time AS "tradeTime",
+		a.device_info AS "deviceInfo",
+		a.transaction_id AS "transactionId",
+		a.out_trade_no AS "outTradeNo",
+		a.openid AS "openid",
+		a.trade_type AS "tradeType",
+		a.trade_state AS "tradeState",
+		a.bank_type AS "bankType",
+		a.total_fee AS "totalFee",
+		a.product_name AS "productName",
+		a.product_data AS "productData",
+		a.cost_fee AS "costFee",
+		a.cost_rate AS "costRate",
+		a.bill_type AS "billType",
+		a.bill_date AS "billDate"
+	</sql>
+	
+	<sql id="downloadBillJoins">
+	</sql>
+    
+	<select id="get" resultType="DownloadBill">
+		SELECT 
+			<include refid="downloadBillColumns"/>
+		FROM download_bill a
+		<include refid="downloadBillJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DownloadBill">
+		SELECT 
+			<include refid="downloadBillColumns"/>
+		FROM download_bill a
+		<include refid="downloadBillJoins"/>
+		<where>
+			
+			<if test="outTradeNo != null and outTradeNo != ''">
+				AND a.out_trade_no = #{outTradeNo}
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				AND a.trade_type = #{tradeType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DownloadBill">
+		SELECT 
+			<include refid="downloadBillColumns"/>
+		FROM download_bill a
+		<include refid="downloadBillJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO download_bill(
+			id,
+			trade_time,
+			device_info,
+			transaction_id,
+			out_trade_no,
+			openid,
+			trade_type,
+			trade_state,
+			bank_type,
+			total_fee,
+			product_name,
+			product_data,
+			cost_fee,
+			cost_rate,
+			bill_type,
+            bill_date
+		) VALUES (
+			#{id},
+			#{tradeTime},
+			#{deviceInfo},
+			#{transactionId},
+			#{outTradeNo},
+			#{openid},
+			#{tradeType},
+			#{tradeState},
+			#{bankType},
+			#{totalFee},
+			#{productName},
+			#{productData},
+			#{costFee},
+			#{costRate},
+			#{billType},
+            #{billDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE download_bill SET 	
+			trade_time = #{tradeTime},
+			device_info = #{deviceInfo},
+			transaction_id = #{transactionId},
+			out_trade_no = #{outTradeNo},
+			openid = #{openid},
+			trade_type = #{tradeType},
+			trade_state = #{tradeState},
+			bank_type = #{bankType},
+			total_fee = #{totalFee},
+			product_name = #{productName},
+			product_data = #{productData},
+			cost_fee = #{costFee},
+			cost_rate = #{costRate},
+			bill_type = #{billType},
+            bill_date = #{billDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM download_bill
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,429 @@
+package com.its.modules.app.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.its.common.persistence.Page;
+import com.its.common.service.CrudService;
+import com.its.common.utils.MyFDFSClientUtils;
+import com.its.common.utils.StringUtils;
+import com.its.modules.app.bean.BusinessInfoBean;
+import com.its.modules.app.common.AppUtils;
+import com.its.modules.app.common.CommonGlobal;
+import com.its.modules.app.common.ValidateUtil;
+import com.its.modules.app.dao.BusinessInfoDao;
+import com.its.modules.app.entity.BusinessInfo;
+import com.its.modules.app.entity.BusinessSales;
+import com.its.modules.app.entity.BusinessServicetime;
+import com.its.modules.sys.service.AreaService;
+
+/**
+ * 商家信息管理Service
+ * 
+ * @author like
+ * 
+ * @version 2017-07-04
+ */
+@Service
+@Transactional(readOnly = true)
+public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessInfo> {
+
+	@Autowired
+	private AreaService areaService;
+
+	@Autowired
+	private BusinessServicetimeService businessServicetimeService;
+
+	public BusinessInfo get(String id) {
+		return super.get(id);
+	}
+
+	public List<BusinessInfo> findList(BusinessInfo businessInfo) {
+		return super.findList(businessInfo);
+	}
+
+	public Page<BusinessInfo> findPage(Page<BusinessInfo> page, BusinessInfo businessInfo) {
+		return super.findPage(page, businessInfo);
+	}
+
+	@Transactional(readOnly = false)
+	public void save(BusinessInfo businessInfo) {
+		super.save(businessInfo);
+	}
+
+	@Transactional(readOnly = false)
+	public void delete(BusinessInfo businessInfo) {
+		super.delete(businessInfo);
+	}
+
+	/**
+	 * 获取商家满减优惠列表(按达标金额正序)
+	 * 
+	 * @param businessInfoID
+	 *            商家ID
+	 * @return List<BusinessSales>
+	 */
+	public List<BusinessSales> getBusinessSales(String businessInfoID) {
+		return dao.getBusinessSales(businessInfoID);
+	}
+
+	/**
+	 * 获取满减优惠的金额
+	 * 
+	 * @param businessInfoID
+	 *            商家ID
+	 * @param orderMoney
+	 *            订单金额
+	 * @return 满减优惠的金额
+	 */
+	public double getCutDownMoney(String businessInfoID, double orderMoney) {
+		List<BusinessSales> list = this.getBusinessSales(businessInfoID);
+		double cutDown = 0;
+		for (BusinessSales s : list) {
+			if (orderMoney >= s.getMoney()) {
+				cutDown = s.getBenefitMoney();
+			} else {
+				break;
+			}
+		}
+		return cutDown;
+	}
+
+	public double getCutDownMoney(BusinessInfo info, double orderMoney) {
+		return this.getCutDownMoney(info.getId(), orderMoney);
+	}
+
+	/**
+	 * 获取一楼盘下一种模式的商家集合
+	 * 
+	 * @param prodType
+	 *            产品模式：0商品购买 1服务预约 2课程购买 3场地预约
+	 * @param villageInfoID
+	 *            楼盘ID
+	 * @param sort
+	 *            1->默认排序;2->商家销量排序;3->商家发布时间排序
+	 * @return List<BusinessInfo>
+	 */
+	public List<BusinessInfo> getBusinessList(int prodType, String villageInfoID, String moduleManageID, int sort) {
+		return dao.getBusinessList(prodType, villageInfoID, moduleManageID, sort);
+	}
+
+	/**
+	 * 返回商家当前是否正常营业
+	 * 
+	 * @param businessInfoID
+	 *            商家ID
+	 */
+	public int isBusinessNormal(String businessInfoID) {
+		return this.isBusinessNormal(this.get(businessInfoID));
+	}
+
+	/**
+	 * 返回商家当前是否正常营业
+	 * 
+	 * @param info
+	 *            商家信息BusinessInfo
+	 * @return 0-停业；1-正常营业
+	 */
+	@Transactional(readOnly = false)
+	public int isBusinessNormal(BusinessInfo info) {
+		int flag = 0;
+		if ("1".equals(info.getBusinessState())) {
+			if (info.getStopBusinessBeginTime() != null && info.getStopBusinessEndTime() != null && new Date().getTime() > info.getStopBusinessBeginTime().getTime() && info.getStopBusinessEndTime().getTime() > new Date().getTime()) {
+				info.setBusinessState("0");
+				this.save(info);
+				flag = 0;
+			} else {
+				flag = 1;
+			}
+		} else {
+			if (info.getStopBusinessBeginTime() != null && info.getStopBusinessEndTime() != null && (info.getStopBusinessBeginTime().getTime() > new Date().getTime() || new Date().getTime() > info.getStopBusinessEndTime().getTime())) {
+				info.setBusinessState("1");
+				this.save(info);
+				flag = 1;
+			} else {
+				flag = 0;
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * 获取拆分后的商家标签名称列表
+	 * 
+	 * @param businessInfo
+	 *            商家信息
+	 * @return 拆分后的商家标签名称列表
+	 */
+	public List<Map<String, Object>> getBusinessLabelList(BusinessInfo businessInfo) {
+		return this.getBusinessLabelList(businessInfo.getBusinessLabel());
+	}
+
+	public List<Map<String, Object>> getBusinessLabelList(String businessLabel) {
+		List<Map<String, Object>> businessLabels = new ArrayList<Map<String, Object>>();
+		if (StringUtils.isNoneBlank(businessLabel)) {
+			String[] businessLabelArray = businessLabel.replaceAll("，", ",").split(",");
+			if (businessLabelArray != null) {
+				for (int i = 0; i < businessLabelArray.length; i++) {
+					Map<String, Object> LabelMap = new HashMap<String, Object>();
+					LabelMap.put("labelName", businessLabelArray[i]);
+
+					businessLabels.add(LabelMap);
+				}
+			}
+		}
+		return businessLabels;
+	}
+
+	/**
+	 * 格式化商家图片
+	 * 
+	 * @param businessPic
+	 *            商家图片
+	 */
+	public String formatBusinessPic(String businessPic, HttpServletRequest request) {
+		if (StringUtils.isBlank(businessPic)) {
+			return "";
+		}
+		String first = businessPic.replace("，", ",").split(",")[0];
+		return MyFDFSClientUtils.get_fdfs_file_url(request, first);
+	}
+
+	/**
+	 * 获取单位名称
+	 * 
+	 * @param unitIdOrValue
+	 *            单位ID或值
+	 * @return 单位名称
+	 */
+	public String getUnit(String unitIdOrValue) {
+		if (StringUtils.isBlank(unitIdOrValue)) {
+			return "";
+		}
+		String unit = dao.getCustomUnit(unitIdOrValue);
+		if (StringUtils.isBlank(unit)) {
+			unit = dao.getDictUnit(unitIdOrValue);
+		}
+		return unit;
+	}
+
+	/**
+	 * 获取某楼盘下所有正常的商家
+	 * 
+	 * @param villageInfoId
+	 *            楼盘ID
+	 * @return List<BusinessInfo>
+	 */
+	public List<BusinessInfoBean> getNormalBusinessList(String villageInfoId) {
+		return dao.getNormalBusinessList(villageInfoId);
+	}
+
+	/**
+	 * 获取商家地址
+	 * 
+	 * @param businessInfo
+	 *            商家信息
+	 * @return 商家地址
+	 */
+	public String getAddress(BusinessInfo businessInfo) {
+		String proCityArea = areaService.getProvinceCityAndRegion(businessInfo.getAddrPro(), businessInfo.getAddrCity(), businessInfo.getAddrArea());
+		return proCityArea + businessInfo.getAddrDetail();
+	}
+
+	/**
+	 * 获取分割后的商户服务时段
+	 * 
+	 * @param businessInfo
+	 *            商家信息
+	 * @param timeType
+	 *            时段类型：0上门服务时段 1到店服务时段 2上门配送时段
+	 * @return 分割后的商户服务时段
+	 */
+	public List<Map<String, Object>> getDeliveryDate(BusinessInfo businessInfo, String timeType) {
+		List<Map<String, Object>> deliveryDates = new ArrayList<Map<String, Object>>();
+		List<BusinessServicetime> businessServicetimes = businessServicetimeService.getByBusinessInfoID(businessInfo.getId(), timeType);
+		// 根据时段类型获取对应的时间间隔
+		Integer timeInterval = 0;
+		if (CommonGlobal.BUSINESS_TIME_TYPE_DELIVERY.equals(timeType)) {
+			// 上门配送时段
+			timeInterval = ValidateUtil.validateInteger(businessInfo.getDistributeTimeInterval());
+		} else {
+			// 上门服务时段、到店服务时段
+			timeInterval = ValidateUtil.validateInteger(businessInfo.getServiceTimeInterval());
+		}
+		// 获取完整的商户服务时段
+		List<Map<String, Object>> fullDeliveryDates = this.getFullDeliveryDate(timeInterval, businessServicetimes);
+
+		// 定义今天的商户服务时段
+		List<Map<String, Object>> noFullDeliveryDates = new ArrayList<Map<String, Object>>();
+
+		// 上门服务时段、上门配送时段需另外显示
+		String arriveTime = null;
+		if (CommonGlobal.BUSINESS_TIME_TYPE_VISIT.equals(timeType)) {
+			// 上门服务时段
+			arriveTime = getMinuteInterval(new Date(), ValidateUtil.validateInteger(businessInfo.getShortestTime()));
+		} else if (CommonGlobal.BUSINESS_TIME_TYPE_DELIVERY.equals(timeType)) {
+			// 上门配送时段
+			arriveTime = getMinuteInterval(new Date(), ValidateUtil.validateInteger(businessInfo.getShortestArriveTime()));
+		}
+
+		// 到店服务时段不添加firstMap
+		Map<String, Object> firstMap = new HashMap<String, Object>();
+		firstMap.put("isImmediate", 1);
+		firstMap.put("end", arriveTime);
+
+		for (Map<String, Object> fullMap : fullDeliveryDates) {
+			long time = 0;
+			if (CommonGlobal.BUSINESS_TIME_TYPE_ARRIVAL.equals(timeType)) {
+				// 到店服务时段判断条件是现在
+				time = toDate((String) fullMap.get("start")).getTime() - toDate(DateFormatUtils.format(new Date(), "HH:mm")).getTime();
+			} else {
+				// 上门服务时段、上门配送时段判断条件是预计到达时间
+				time = toDate((String) fullMap.get("start")).getTime() - toDate(arriveTime).getTime();
+			}
+			if (time > 0) {
+				noFullDeliveryDates.add(fullMap);
+			}
+		}
+
+		// 若列表不为空且不是到店服务时段，添加firstMap
+		if (noFullDeliveryDates.size() != 0 && !CommonGlobal.BUSINESS_TIME_TYPE_ARRIVAL.equals(timeType)) {
+			noFullDeliveryDates.add(0, firstMap);
+		}
+
+		// 今天，明天两组数据
+		int count = 2;
+		for (int i = 0; i < count; i++) {
+			Map<String, Object> deliveryDate = new HashMap<String, Object>();
+			String date = DateFormatUtils.format(this.add(i), "yyyy-MM-dd");
+			String desc = AppUtils.formatDateWeek(date);
+			List<Map<String, Object>> timePeriod = i == 0 ? noFullDeliveryDates : fullDeliveryDates;
+			deliveryDate.put("date", date);
+			deliveryDate.put("desc", desc);
+			deliveryDate.put("timePeriod", timePeriod);
+
+			deliveryDates.add(deliveryDate);
+		}
+		return deliveryDates;
+	}
+
+	public List<Map<String, Object>> getFullDeliveryDate(Integer timeInterval, List<BusinessServicetime> businessServicetimes) {
+		List<Map<String, Object>> fullDeliveryDates = new ArrayList<Map<String, Object>>();
+		if (businessServicetimes != null && businessServicetimes.size() != 0) {
+			for (BusinessServicetime businessServicetime : businessServicetimes) {
+				// 开始时间（HH:mm）
+				String before = businessServicetime.getBeginHour() + ":" + businessServicetime.getBeginMinute();
+				// 结束时间（HH:mm）
+				String after = businessServicetime.getEndHour() + ":" + businessServicetime.getEndMinute();
+				for (long i = toDate(before).getTime(); i < toDate(after).getTime(); i = toDate(before).getTime()) {
+					// 获取下一个时间节点
+					String timeNode = getMinuteInterval(toDate(before), timeInterval);
+
+					Map<String, Object> fullDeliveryDate = new HashMap<String, Object>();
+					// 是否立即配送、立即上门默认为0：否
+					fullDeliveryDate.put("isImmediate", 0);
+					fullDeliveryDate.put("start", before);
+					if (toDate(timeNode).getTime() < toDate(after).getTime()) {
+						fullDeliveryDate.put("end", timeNode);
+					} else {
+						fullDeliveryDate.put("end", after);
+					}
+					fullDeliveryDates.add(fullDeliveryDate);
+
+					// 开始时间节点重新赋值
+					before = timeNode;
+				}
+			}
+		}
+		return fullDeliveryDates;
+	}
+
+	/**
+	 * 获取指定时间指定分钟后的时间字符串
+	 * 
+	 * @param source
+	 *            指定时间
+	 * @param timeInterval
+	 *            指定分钟
+	 */
+	public String getMinuteInterval(Date source, Integer timeInterval) {
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			Date date = new Date(source.getTime() + timeInterval * 60 * 1000);
+			return format.format(date);
+		} catch (Exception e) {
+			return "00:00";
+		}
+	}
+
+	/**
+	 * 将HH:mm格式的字符串转换成时间对象
+	 * 
+	 * @param source
+	 *            HH:mm格式的字符串
+	 */
+	public Date toDate(String source) {
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			return format.parse(source);
+		} catch (Exception e) {
+			return new Date();
+		}
+	}
+
+	/**
+	 * 当前时间添加或减去指定天数
+	 * 
+	 * @param amount
+	 *            指定天数
+	 */
+	public Calendar add(int amount) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, amount);
+		return calendar;
+	}
+
+	/**
+	 * 根据商家分类字典表，获取商家的商品模式
+	 * 
+	 * @param id
+	 *            商家分类字典表ID
+	 * @return String
+	 */
+	public String getProdTypeByCategoryDictId(String id) {
+		return dao.getProdTypeByCategoryDictId(id);
+	}
+
+	/**
+	 * 获取某商家的产品模式集合
+	 * 
+	 * @param businessInfoId
+	 *            商家ID
+	 * @return List<Map<String, Object>>
+	 */
+	public List<Map<String, Object>> getBusinessProdTypeList(String businessInfoId) {
+		List<Map<String, Object>> prodModes = new ArrayList<Map<String, Object>>();
+		List<String> prodTypes = dao.getBusinessProdTypeList(businessInfoId);
+		if (prodTypes != null && prodTypes.size() != 0) {
+			for (String string : prodTypes) {
+				Map<String, Object> prodMode = new HashMap<String, Object>();
+				prodMode.put("modeID", string);
+
+				prodModes.add(prodMode);
+			}
+		}
+		return prodModes;
+	}
+}

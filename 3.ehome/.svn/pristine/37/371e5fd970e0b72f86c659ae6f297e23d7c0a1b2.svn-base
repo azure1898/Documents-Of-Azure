@@ -1,0 +1,121 @@
+    var vm=new Vue({
+    		el:"#app",
+    		data:{
+    			totalMoney:0,
+    			coupMoney:0,
+    		items:{},
+    		totalMoney:0,
+    		leaveWords:"",
+		   courseOrder:{},  
+		  coupons:{
+		   	name:"不使用优惠券",
+		   	money:0,
+             },
+             items3:[]
+             
+    		},
+			
+  	mounted: function() { //页面加载之后自动调用，常用于页面渲染	
+				this.$nextTick(function(){ //在2.0版本中，加mounted的$nextTick方法，才能使用vm
+						var _this = this;
+						var data={userID:userInfo.userID,buildingID:userInfo.buildingID,businessID:getQueryString("businessID"),courseID:getQueryString("id")};
+			this.getData(_this,'/live/confirmCourseOrder',data,function(resData){
+				_this.items = resData; 
+                _this.items3=resData.coupons;
+				_this.totalMoney=resData.totalMoney; 
+				  if(resData.coupons&&resData.coupons.length>=0){
+                $(".details_spgm_right_2 > img").attr("src","../../images/01.png");;
+               }
+				  })
+				})
+				
+  	},
+		methods:{	
+changeStatusCoupons1:function(){
+             $(".choose_coup_main_right > span > img").attr("src","../../images/02.png");				     	
+			$(event.target).attr("src","../../images/01.png");	
+			this.coupons.name="不使用优惠券";
+			this.coupons.money=0;
+			this.totalMoney=this.items.totalMoney;
+			$("#couponModal").modal('toggle');
+	     }
+	,changeStatusCoupons2:function(item){
+		 $(".details_spgm_right_2 > img").attr("src","../../images/02.png");			
+			$(event.target).attr("src","../../images/01.png").parents(".choose_coup_main").siblings().find(".choose_coup_main_right > span > img").attr("src","../../images/02.png");		
+			this.coupons.name=item.couponMoney;
+			this.coupons.money=item.couponMoney;
+			this.calcMonery();
+			$("#couponModal").modal('toggle');		
+	},
+	calcMonery:function(){
+		var m=this.items.totalMoney;
+		this.totalMoney=m-this.coupons.money;
+		
+		
+	},
+		affirm:function(){
+		var name=$(".names").val();	
+	     var phone = $(".phone").val();
+         var xx = /\S/;
+         var reg = /^[\w\u4e00-\u9fa5\-_][\s\w\u4e00-\u9fa5\-_]*[\w\u4e00-\u9fa5\-_]$/;
+          if(!xx.test(name)){
+         	layer.open({
+						   content: '请输入联系人',
+						  btn: '确定',
+						  shadeClose: false,
+						  });
+         	 
+         }
+          else if(!xx.test(phone)){
+         	layer.open({
+						
+						  content: '请输入手机号',
+						  btn: '确定',
+						  shadeClose: false,
+						  });
+         	
+           
+         }
+          else if(xx.test(name)&&!reg.test(name)){
+                  layer.open({
+						
+						   content: '请输入正确联系人',
+						  btn: '确定',
+						  shadeClose: false,
+						  });     		
+        	
+        	  
+        }
+          else if(xx.test(phone)&&!(/^1[34578]\d{9}$/.test(phone))){
+          	
+						layer.open({
+						    content: '请输入正确的手机号',
+						  btn: '确定',
+						  shadeClose: false,
+						 });  
+          }
+          else{
+        			var _this = this;
+						var path = interfaceUrl+"/live/submitCourseOrder";
+						var data={userID:userInfo.userID,
+			      			buildingID:userInfo.buildingID,
+			      			coursePrice:_this.items.coursePrice,
+			      			businessID:_this.items.businessID,
+							courseID:_this.items.courseID,
+							contactPerson:_this.items.contactPerson,//联系人名称
+							contactPhone:_this.items.contactPhone,//联系人电话
+							leaveMessage:_this.leaveWords,
+							emulateJSON: true
+						}
+						this.postData(_this,'/live/submitCourseOrder',data,function(resData){
+							_this.courseOrder =resData;
+						})
+        	}
+			}
+
+	     	}	
+    	})
+   
+   
+  
+    	

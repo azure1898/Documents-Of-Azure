@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.RechargeManageDao">
+    
+	<sql id="rechargeManageColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.recharge_money AS "rechargeMoney",
+		a.give_money AS "giveMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="rechargeManageJoins">
+	</sql>
+    
+	<select id="get" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<include refid="rechargeManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<include refid="rechargeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND a.village_info_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{villageInfoId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{villageInfoId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{villageInfoId},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<include refid="rechargeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO recharge_manage(
+			id,
+			village_info_id,
+			recharge_money,
+			give_money,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{rechargeMoney},
+			#{giveMoney},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE recharge_manage SET 	
+			village_info_id = #{villageInfoId},
+			recharge_money = #{rechargeMoney},
+			give_money = #{giveMoney},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE recharge_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取楼盘下的充值计划集合 -->
+	<select id="getVillageRechargeList" resultType="RechargeManage">
+		SELECT 
+			<include refid="rechargeManageColumns"/>
+		FROM recharge_manage a
+		<where>
+			a.del_flag = 0 AND a.village_info_id=#{villageInfoId}
+		</where>
+		ORDER BY a.recharge_money
+	</select>
+	
+</mapper>

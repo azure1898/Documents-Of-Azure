@@ -1,0 +1,126 @@
+{
+"code" : 1000,
+"userId":"789",
+"data" : [{
+ "speakId":"",
+ "speakUserId":"123",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"isFocus":0,
+"createTime":"昨天18:00",
+"subjectList":[{
+  "subjectId":"",
+  "subName":""
+}],
+"imgsList":[{
+  "imgUrl":"../../images/pic01.jpg"
+}],
+"content":"装修房子是个苦差事啊，晒个图~",
+"isSpeak":0,
+"reasion":"",
+"rootSpeak": {
+	"speakId": "",
+	"userName": "蓝色",
+	"delFlag": 0,
+	"isSpeak": 1,
+	"subjectList": [
+		{
+			"id": "",
+			"subName": ""
+		}
+	],
+	"speakContent": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+	"createTime": "昨天18:60",
+	"imgUrl": "../../images/pic01.jpg"
+},
+
+"countForward":11,
+"countComment":123,
+"countPraise":123,
+  "isPraise":1
+},{
+ "speakId":"",
+ "speakUserId":"456",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"isFocus":1,
+"createTime":"昨天18:00",
+"subjectList":[{
+  "subjectId":"",
+  "subName":""
+}],
+"imgsList":[{
+  "imgUrl":"../../images/pic01.jpg"
+},{
+  "imgUrl":"../../images/pic01.jpg"
+},{
+  "imgUrl":"../../images/pic01.jpg"
+}],
+"content":"装修房子是个苦差事啊，晒个图~",
+"isSpeak":1,
+"reasion":"",
+"rootSpeak": {
+	"speakId": "",
+	"userName": "蓝色",
+	"delFlag": 0,
+	"isSpeak": 0,
+	"subjectList": [
+		{
+			"id": "",
+			"subName": ""
+		}
+	],
+	"speakContent": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+	"createTime": "昨天18:60",
+	"imgUrl": "../../images/pic01.jpg"
+},
+
+"countForward":11,
+"countComment":123,
+"countPraise":123,
+  "isPraise":1
+},{
+
+ "speakId":"",
+ "speakUserId":"789",
+"userName":"蓝色理想",
+"headPicSrc":"../../images/pic01.jpg",
+"isFocus":1,
+"createTime":"昨天18:00",
+"subjectList":[{
+  "subjectId":"",
+  "subName":""
+}],
+"imgsList":[{
+  "imgUrl":"../../images/pic01.jpg"
+},{
+  "imgUrl":"../../images/pic01.jpg"
+},{
+  "imgUrl":"../../images/pic01.jpg"
+}],
+"content":"装修房子是个苦差事啊，晒个图~",
+"isSpeak":1,
+"reasion":"",
+"rootSpeak": {
+	"speakId": "",
+	"userName": "蓝色",
+	"delFlag": 0,
+	"isSpeak": 0,
+	"subjectList": [
+		{
+			"id": "",
+			"subName": ""
+		}
+	],
+	"speakContent": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+	"createTime": "昨天18:60",
+	"imgUrl": "../../images/pic01.jpg"
+},
+
+"countForward":11,
+"countComment":123,
+"countPraise":123,
+  "isPraise":1
+}],
+"message" : ""
+}

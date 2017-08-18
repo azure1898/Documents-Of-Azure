@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.field.dao.FieldPartitionPriceDao">
+    
+	<sql id="fieldPartitionPriceColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.field_info_id AS "fieldInfoId",
+		a.appointment_time AS "appointmentTime",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.base_price AS "basePrice",
+		a.sum_money AS "sumMoney",
+		a.state AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="fieldPartitionPriceJoins">
+		LEFT JOIN field_info b ON b.id = a.field_info_id
+	</sql>
+    
+	<select id="get" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+    <select id="getForUpdate" resultType="FieldPartitionPrice">
+        SELECT 
+            <include refid="fieldPartitionPriceColumns"/>
+        FROM field_partition_price a
+        <include refid="fieldPartitionPriceJoins"/>
+        WHERE a.id = #{id}
+        FOR UPDATE
+    </select>
+	
+	<select id="findList" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="businessInfoId != null and businessInfoId != ''">
+				AND a.business_info_id = #{businessInfoId}
+			</if>
+			<if test="fieldInfoId != null and fieldInfoId != ''">
+				AND a.field_info_id = #{fieldInfoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListByAppointmentTime" resultType="FieldPartitionPrice">
+		SELECT
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="businessInfoId != null and businessInfoId != ''">
+				AND a.business_info_id = #{businessInfoId}
+			</if>
+			<if test="fieldInfoId != null and fieldInfoId != ''">
+				AND a.field_info_id = #{fieldInfoId}
+			</if>
+			<if test="appointmentTime != null and appointmentTime != ''">
+				AND TO_DAYS(a.appointment_time) = TO_DAYS(#{appointmentTime})
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FieldPartitionPrice">
+		SELECT 
+			<include refid="fieldPartitionPriceColumns"/>
+		FROM field_partition_price a
+		<include refid="fieldPartitionPriceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO field_partition_price(
+			id,
+			business_info_id,
+			field_info_id,
+			appointment_time,
+			start_time,
+			end_time,
+			base_price,
+			sum_money,
+			state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{fieldInfoId},
+			#{appointmentTime},
+			#{startTime},
+			#{endTime},
+			#{basePrice},
+			#{sumMoney},
+			#{state},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE field_partition_price SET 	
+			business_info_id = #{businessInfoId},
+			field_info_id = #{fieldInfoId},
+			appointment_time = #{appointmentTime},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			base_price = #{basePrice},
+			sum_money = #{sumMoney},
+			state = #{state},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateState">
+		UPDATE field_partition_price SET
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	<update id="cancelOrderFieldList">
+		UPDATE field_partition_price SET
+			state = '0'
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE field_partition_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getAll" parameterType="String" resultType="FieldPartitionPrice">
+		select * from field_partition_price where DATE_FORMAT(start_time ,'%Y%m%d')= #{ymd}
+		AND business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		 order by field_info_id
+	</select>
+</mapper>

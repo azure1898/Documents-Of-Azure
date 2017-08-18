@@ -1,0 +1,105 @@
+package com.its.modules.social.common;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * @Description：日期转换工具类
+ * @Author：刘浩浩 @Date：2017年8月4日
+ */
+public class DateUtil {
+
+	/**
+	 * @Description：获取与当前时间的距离
+	 * @Author：刘浩浩
+	 * @Date：2017年8月4日
+	 * @param date
+	 * @return
+	 */
+	public static String getDaysBeforeNow(Date date) {
+
+		String strHour = "小时前";
+		String strMinute = "分钟前";
+		
+	 	Date sysDate = new Date();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sysDate);
+		int sysYear = cal.get(Calendar.YEAR);//获取年份
+		int sysMonth = cal.get(Calendar.MONTH) + 1;//获取月份
+		int sysDay = cal.get(Calendar.DATE);//获取日
+		
+		cal.setTime(date);
+		int createYear = cal.get(Calendar.YEAR);//获取年份
+		int createMonth = cal.get(Calendar.MONTH) + 1;//获取月份
+		int createDay =  cal.get(Calendar.DATE);//获取日
+		
+		String result = "";
+		SimpleDateFormat sdf = null;
+		if(sysYear!=createYear){
+			sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss"); 
+			result = sdf.format(date); 
+			return result;
+		}
+		if(sysMonth!=createMonth){
+			sdf = new SimpleDateFormat("MM-dd HH:mm:ss"); 
+			result = sdf.format(date); 
+			return result;
+		}
+		
+		if(sysDay - createDay >= 2){
+			sdf = new SimpleDateFormat("MM-dd HH:mm:ss"); 
+			result = sdf.format(date); 
+			return result;
+		}else if(sysDay - createDay == 1){
+			sdf = new SimpleDateFormat("HH:mm:ss"); 
+			result = sdf.format(date); 
+			return "昨天 " + result;
+		}else{
+			long sysTime = Long.parseLong(new SimpleDateFormat("yyyyMMddHHmmss").format(sysDate));
+			long ymdhms = Long.parseLong(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+			
+			long between = (sysTime / 10000000000L) - (ymdhms / 10000000000L);
+			between = (sysTime / 10000) - (ymdhms / 10000);
+			if (between > 0) {
+				return between + strHour;
+			}
+			between = (sysTime / 100) - (ymdhms / 100);
+			if (between > 0) {
+				return between + strMinute;
+			}
+			return "刚刚";
+		}
+	}
+	
+	 public static void main(String[] args) throws ParseException {  
+	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	        Date date5 = df.parse("2017-08-16 09:59:00"); 
+	       Date date0 = df.parse("2017-08-16 09:56:00"); 
+	       Date date = df.parse("2017-08-15 14:43:00"); 
+	        Date date1 = df.parse("2017-08-14 14:43:00");   
+	        Date date2 = df.parse("2017-08-13 14:43:00"); 
+	        Date date3 = df.parse("2017-07-15 14:43:00");  
+	        Date date4 = df.parse("2016-07-15 14:43:00");  
+	      
+	        System.out.println(getDaysBeforeNow(date5));
+	       System.out.println(getDaysBeforeNow(date0));
+	       System.out.println(getDaysBeforeNow(date));
+	        System.out.println(getDaysBeforeNow(date1));
+	        System.out.println(getDaysBeforeNow(date2));
+	        System.out.println(getDaysBeforeNow(date3));
+	        System.out.println(getDaysBeforeNow(date4));
+	        
+	     /*   Calendar cal = Calendar.getInstance();
+	        //cal.setTime(date4);
+	        int year = cal.get(Calendar.YEAR);//获取年份
+	        int month=cal.get(Calendar.MONTH) + 1;//获取月份
+	        int day=cal.get(Calendar.DATE);//获取日
+	        System.out.println(year);
+	        System.out.println(month);
+	        System.out.println(day);*/
+	    }  
+	 
+}

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.balance.dao.BusinessBalanceDetailDao">
+    
+	<sql id="businessBalanceDetailColumns">
+		a.id AS "id",
+		a.business_balance_id AS "businessBalanceId",
+		a.business_info_id AS "businessInfoId",
+		a.module_id AS "moduleId",
+        a.order_id AS "orderId",
+		a.order_no AS "orderNo",
+		a.prod_type AS "prodType",
+		a.order_group_no AS "orderGroupNo",
+		a.order_money AS "orderMoney",
+		a.coupon_money AS "couponMoney",
+		a.deduction_money AS "deductionMoney",
+		a.pay_money AS "payMoney",
+		a.pay_type AS "payType",
+		a.pay_org AS "payOrg",
+		a.trade_complete_time AS "tradeCompleteTime",
+		a.pay_check_state AS "payCheckState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessBalanceDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessBalanceDetail">
+		SELECT 
+			<include refid="businessBalanceDetailColumns"/>
+		FROM business_balance_detail a
+		<include refid="businessBalanceDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessBalanceDetail">
+		SELECT 
+			<include refid="businessBalanceDetailColumns"/>
+		FROM business_balance_detail a
+		<include refid="businessBalanceDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessBalanceId != null and businessBalanceId != ''">
+                AND a.business_balance_Id = #{businessBalanceId}
+            </if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+				AND a.trade_complete_time between #{balanceStartTime} and date_add(#{balanceEndTime}, interval 1 DAY)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessBalanceDetail">
+		SELECT 
+			<include refid="businessBalanceDetailColumns"/>
+		FROM business_balance_detail a
+		<include refid="businessBalanceDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessBalanceId != null and businessBalanceId != ''">
+                AND a.business_balance_Id = #{businessBalanceId}
+            </if>
+            <if test="payType != null and payType != ''">
+                AND a.pay_type = #{payType}
+            </if>
+            <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+                AND a.trade_complete_time between #{balanceStartTime} and date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_balance_detail(
+			id,
+			business_balance_id,
+			business_info_id,
+			module_id,
+			order_id,
+			order_no,
+			prod_type,
+			order_group_no,
+			order_money,
+			coupon_money,
+			deduction_money,
+			pay_money,
+			pay_type,
+			pay_org,
+			trade_complete_time,
+			pay_check_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessBalanceId},
+			#{businessInfoId},
+			#{moduleId},
+			#{orderId},
+			#{orderNo},
+			#{prodType},
+			#{orderGroupNo},
+			#{orderMoney},
+			#{couponMoney},
+			#{deductionMoney},
+			#{payMoney},
+			#{payType},
+			#{payOrg},
+			#{tradeCompleteTime},
+			#{payCheckState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_balance_detail SET 	
+			business_balance_id = #{businessBalanceId},
+			business_info_id = #{businessInfoId},
+			module_id = #{moduleId},
+			order_id = #{orderId},
+			order_no = #{orderNo},
+			prod_type = #{prodType},
+			order_group_no = #{orderGroupNo},
+			order_money = #{orderMoney},
+			coupon_money = #{couponMoney},
+			deduction_money = #{deductionMoney},
+			pay_money = #{payMoney},
+			pay_type = #{payType},
+			pay_org = #{payOrg},
+			trade_complete_time = #{tradeCompleteTime},
+			pay_check_state = #{payCheckState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_balance_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 1 -->
+    <select id="findListByOrderGoods" resultType="BusinessBalanceDetail">
+	   SELECT
+	        bi.id AS businessInfoId,
+            o.module_manage_id AS moduleId,
+            o.id AS orderId, 
+            o.order_no AS orderNo,
+            o.Prod_Type AS prodType,
+            o.order_no AS orderGroupNo,
+            o.pay_money AS orderMoney,
+            o.coupon_money AS couponMoney,
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS deductionMoney,
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS payMoney,
+            o.Pay_Type AS payType,
+            o.Pay_Org AS payOrg,
+            o.Over_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
+        FROM
+            order_goods o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
+        WHERE
+            o.check_state = '0'
+        AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
+        AND o.order_state = '3'
+        AND o.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+        AND o.over_time BETWEEN #{balanceStartTime} AND #{balanceEndTime}
+      </if>
+    </select>
+    
+    <!-- 2  -->
+    <select id="findListByOrderService" resultType="BusinessBalanceDetail">
+       SELECT
+            bi.id AS businessInfoId,
+            o.module_manage_id AS moduleId,
+            o.id AS orderId,
+            o.order_no AS orderNo,
+            o.Prod_Type AS prodType,
+            o.order_no AS orderGroupNo,
+            o.pay_money AS orderMoney,
+            o.coupon_money AS couponMoney,
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS deductionMoney,
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS payMoney,
+            o.Pay_Type AS payType,
+            o.Pay_Org AS payOrg,
+            o.Over_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
+        FROM
+            order_service o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
+        WHERE
+            o.check_state = '0'
+        AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
+        AND o.order_state = '2'
+        AND o.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+        AND o.over_time BETWEEN #{balanceStartTime} AND #{balanceEndTime}
+      </if>
+    </select>
+    
+    <!-- 3  -->
+    <select id="findListByOrderLesson" resultType="BusinessBalanceDetail">
+       SELECT
+            bi.id AS businessInfoId,
+            o.module_manage_id AS moduleId,
+            o.id AS orderId,
+            o.order_no AS orderNo,
+            o.Prod_Type AS prodType,
+            o.order_no AS orderGroupNo,
+            o.pay_money AS orderMoney,
+            o.coupon_money AS couponMoney,
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS deductionMoney,
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS payMoney,
+            o.Pay_Type AS payType,
+            o.Pay_Org AS payOrg,
+            o.Pay_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
+        FROM
+            order_lesson o         
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
+        WHERE
+            o.check_state = '0'
+        AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
+        AND o.order_state = '1'
+        AND o.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+        AND o.Pay_Time BETWEEN #{balanceStartTime} AND #{balanceEndTime}
+      </if>
+    </select>
+    
+    <!-- 4  -->
+    <select id="findListByOrderField" resultType="BusinessBalanceDetail">
+       SELECT
+            bi.id AS businessInfoId,
+            o.module_manage_id AS moduleId,
+            o.id AS orderId,
+            o.order_no AS orderNo,
+            o.Prod_Type AS prodType,
+            o.order_no AS orderGroupNo,
+            o.pay_money AS orderMoney,
+            o.coupon_money AS couponMoney,
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS deductionMoney,
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END AS payMoney,
+            o.Pay_Type AS payType,
+            o.Pay_Org AS payOrg,
+            o.Pay_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
+        FROM
+            order_field o
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
+        WHERE
+            o.check_state = '0'
+        AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
+        AND o.order_state = '1'
+        AND o.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+        AND o.Pay_Time BETWEEN #{balanceStartTime} AND #{balanceEndTime}
+      </if>
+    </select>
+    
+    <!-- 5  -->
+    <select id="findListByOrderGroupPurc" resultType="BusinessBalanceDetail">
+       SELECT
+            bi.id AS businessInfoId,
+            o.module_manage_id AS moduleId,
+            o.id AS orderId,
+            o.order_no AS orderNo,
+            o.Prod_Type AS prodType,
+            ol.Group_Purc_Number AS orderGroupNo,
+            ol.Pay_Sum_Money AS orderMoney,
+            o.coupon_money AS couponMoney,
+            CASE 
+                WHEN bi.balance_model='0' THEN  ol.Pay_Sum_Money*bi.Collect_fees/100 
+                ELSE bi.Collect_Fees 
+            END AS deductionMoney,
+            ol.Pay_Sum_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  ol.Pay_Sum_Money*bi.Collect_fees/100 
+                ELSE bi.Collect_Fees 
+            END AS payMoney,
+            o.Pay_Type AS payType,
+            o.Pay_Org AS payOrg,
+            ol.Consume_Time AS tradeCompleteTime,
+            CASE
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee = o.Pay_Money THEN '1'
+                WHEN o.Pay_Type = '0' AND d.Trade_Time is not null AND d.Total_Fee != o.Pay_Money THEN '2'
+                ELSE '0'
+            END AS Pay_Check_State
+        FROM
+            order_group_purc o
+         LEFT JOIN order_group_purc_list ol ON o.id = ol.Group_Purchase_ID
+         LEFT JOIN download_bill d ON d.Out_Trade_No = o.ID
+         LEFT JOIN business_info bi ON o.business_info_id = bi.id
+        WHERE
+            o.check_state = '0'
+        AND o.Pay_State = '1'
+        AND o.Pay_Type = '0'
+        AND o.order_state = '1'
+        AND ol.Group_Purc_State = '1'
+        AND o.del_flag = #{DEL_FLAG_NORMAL}
+        AND ol.del_flag = #{DEL_FLAG_NORMAL}
+      <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+        AND ol.Consume_Time BETWEEN #{balanceStartTime} AND #{balanceEndTime}
+      </if> 
+    </select>
+
+    <update id="updateOrderGoods">
+        UPDATE 
+            order_goods
+        SET
+            <!-- 结算时间为当前时间 -->
+            check_time = now(),
+            <!-- 已结算 -->
+            check_state = '1'
+        WHERE order_no = #{orderNo}
+    </update>
+
+    <update id="updateOrderService">
+        UPDATE 
+            order_service
+        SET
+            <!-- 结算时间为当前时间 -->
+            check_time = now(),
+            <!-- 已结算 -->
+            check_state = '1'
+        WHERE order_no = #{orderNo}
+    </update>
+
+    <update id="updateOrderLesson">
+        UPDATE 
+            order_lesson
+        SET
+            <!-- 结算时间为当前时间 -->
+            check_time = now(),
+            <!-- 已结算 -->
+            check_state = '1'
+        WHERE order_no = #{orderNo}
+    </update>
+
+    <update id="updateOrderField">
+        UPDATE 
+            order_field
+        SET
+            <!-- 结算时间为当前时间 -->
+            check_time = now(),
+            <!-- 已结算 -->
+            check_state = '1'
+        WHERE order_no = #{orderNo}
+    </update>
+
+    <update id="updateOrderGroupPurc">
+        UPDATE 
+            order_group_purc
+        SET
+            <!-- 结算时间为当前时间 -->
+            check_time = now(),
+            <!-- 已结算 -->
+            check_state = '1'
+        WHERE order_no = #{orderNo}
+    </update>
+    
+    <select id="findExportList" resultType="BusinessBalanceDetail">
+        SELECT
+            @rownum := @rownum + 1 AS serialNum,
+            b.business_name AS businessName,
+            c.module_name AS moduleName,
+            a.order_group_no AS orderGroupNo,
+            a.order_money AS orderMoney,
+            a.coupon_money AS couponMoney,
+            a.deduction_money AS deductionMoney,
+            a.pay_money AS payMoney,
+            a.pay_type AS payType,
+            a.pay_org AS payOrg,
+            a.trade_complete_time AS tradeCompleteTime,
+            a.pay_check_state AS payCheckState
+        FROM
+            (SELECT @rownum := 0) r,
+            business_balance_detail a
+        LEFT JOIN module_manage c ON a.module_id = c.id,
+            business_info b
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            AND a.business_info_id = b.id
+            <if test="businessBalanceId != null and businessBalanceId != ''">
+                AND a.business_balance_Id = #{businessBalanceId}
+            </if>
+            <if test="payType != null and payType != ''">
+                AND a.pay_type = #{payType}
+            </if>
+            <if test="balanceStartTime != null and balanceEndTime != null and balanceStartTime != '' and balanceEndTime != ''">
+                AND a.trade_complete_time between #{balanceStartTime} and date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+        </where>
+    </select>
+	
+</mapper>

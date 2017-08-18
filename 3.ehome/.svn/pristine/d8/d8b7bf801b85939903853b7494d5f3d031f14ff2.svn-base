@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.BraceletSleepRecordDao">
+    
+	<sql id="braceletSleepRecordColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.villageinfo_id AS "villageinfoId",
+		a.bracelet_id AS "braceletId",
+		a.record_date AS "recordDate",
+		a.sleep_time AS "sleepTime",
+		a.deep_sleep_time AS "deepSleepTime",
+		a.light_sleep_time AS "lightSleepTime",
+		a.sleep_start AS "sleepStart",
+		a.sleep_end AS "sleepEnd",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="braceletSleepRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<include refid="braceletSleepRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<include refid="braceletSleepRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<include refid="braceletSleepRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bracelet_sleep_record(
+			id,
+			account_id,
+			villageinfo_id,
+			bracelet_id,
+			record_date,
+			sleep_time,
+			deep_sleep_time,
+			light_sleep_time,
+			sleep_start,
+			sleep_end,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageinfoId},
+			#{braceletId},
+			#{recordDate},
+			#{sleepTime},
+			#{deepSleepTime},
+			#{lightSleepTime},
+			#{sleepStart},
+			#{sleepEnd},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bracelet_sleep_record SET 	
+			account_id = #{accountId},
+			villageinfo_id = #{villageinfoId},
+			bracelet_id = #{braceletId},
+			record_date = #{recordDate},
+			sleep_time = #{sleepTime},
+			deep_sleep_time = #{deepSleepTime},
+			light_sleep_time = #{lightSleepTime},
+			sleep_start = #{sleepStart},
+			sleep_end = #{sleepEnd},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bracelet_sleep_record SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+		<!-- ============================================ -->
+	<select id="getAccountDayRecord" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = #{braceletId}
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') = DATE_FORMAT(#{recordDate},'%Y-%m-%d')
+		</where>
+	</select>
+	<!-- 根据手环ID获取某段时间的睡眠数据 -->
+	<select id="getPeriodSleepRecordByBraceletId" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = #{braceletId}
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+	</select>
+	<!--根据mac获取某段时间的睡眠数据 -->
+	<select id="getPeriodSleepRecordByMac" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = '0' 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = (
+			select b.id
+			from Bracelet_Info b
+			where b.Mac=#{braceletMac}
+			AND b.del_flag = '0' 
+			)
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+		ORDER BY a.record_date ASC
+	</select>
+	
+	<!-- 获取周运动数据 -->
+	<select id="getWeekSleepRecord" resultType="BraceletSleepRecord">
+		SELECT 
+			<include refid="braceletSleepRecordColumns"/>
+		FROM bracelet_sleep_record a
+		<where>
+			a.del_flag = 0 
+			AND a.account_id = #{accountId} 
+			AND a.villageinfo_id = #{villageinfoId} 
+			AND a.bracelet_id = #{braceletId}
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{startDate},'%Y-%m-%d')
+			AND DATE_FORMAT(a.record_date,'%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{endDate},'%Y-%m-%d')
+		</where>
+		ORDER BY a.record_date ASC
+	</select>
+</mapper>

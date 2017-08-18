@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.BraceletInfoDao">
+    
+	<sql id="braceletInfoColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.villageinfo_id AS "villageinfoId",
+		a.model AS "model",
+		a.model_name AS "modelName",
+		a.serial_number AS "serialNumber",
+		a.pair_type AS "pairType",
+		a.name AS "name",
+		a.version AS "version",
+		a.target_step AS "targetStep",
+		a.mac AS "mac",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="braceletInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="BraceletInfo">
+		SELECT 
+			<include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<include refid="braceletInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BraceletInfo">
+		SELECT 
+			<include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<include refid="braceletInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BraceletInfo">
+		SELECT 
+			<include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<include refid="braceletInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bracelet_info(
+			id,
+			account_id,
+			villageinfo_id,
+			model,
+			model_name,
+			serial_number,
+			pair_type,
+			name,
+			version,
+			target_step,
+			mac,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageinfoId},
+			#{model},
+			#{modelName},
+			#{serialNumber},
+			#{pairType},
+			#{name},
+			#{version},
+			#{targetStep},
+			#{mac},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bracelet_info SET 	
+			account_id = #{accountId},
+			villageinfo_id = #{villageinfoId},
+			model = #{model},
+			model_name = #{modelName},
+			serial_number = #{serialNumber},
+			pair_type = #{pairType},
+			name = #{name},
+			version = #{version},
+			target_step = #{targetStep},
+			mac = #{mac},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bracelet_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- =========================================== -->
+	<!-- 获取用户绑定的某个手环信息 -->
+	<select id="getAccountBraceletSpe" resultType="BraceletInfo">
+		SELECT <include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<where>
+			a.del_flag = 0 AND a.account_id = #{accountId} AND a.villageinfo_id = #{villageInfoId} AND a.mac=#{bandMac}
+		</where>
+	</select>
+	
+	<!-- 获取用户绑定的所有手环 -->
+	<select id="getAccountBracelets" resultType="BraceletInfo">
+		SELECT <include refid="braceletInfoColumns"/>
+		FROM bracelet_info a
+		<where>
+			a.del_flag = 0 AND a.account_id = #{accountId} AND a.villageinfo_id = #{villageInfoId}
+		</where>
+	</select>
+	
+	<!-- 修改手环名称 -->
+	<update id="updateName">
+		UPDATE bracelet_info SET name = #{name} WHERE id = #{id}
+	</update>
+	<update id="updateTarget">
+		UPDATE bracelet_info SET target_step = #{targetStep}
+		 WHERE account_id = #{accountId} AND villageinfo_id = #{villageInfoId}
+	</update>
+	
+</mapper>

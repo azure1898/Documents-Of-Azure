@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.OrderGoodsDao">
+    
+	<sql id="orderGoodsColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.order_no AS "orderNo",
+		a.type AS "type",
+		a.module_manage_id AS "moduleManageId",
+		a.prod_type AS "prodType",
+		a.village_info_id AS "villageInfoId",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.sum_money AS "sumMoney",
+		a.benefit_money AS "benefitMoney",
+		a.coupon_money AS "couponMoney",
+		a.pay_money AS "payMoney",
+		a.order_state AS "orderState",
+		a.check_order_state AS "checkOrderState",
+		a.check_time AS "checkTime",
+		a.check_state AS "checkState",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.account_phone_number AS "accountPhoneNumber",
+		a.account_msg AS "accountMsg",
+		a.pay_type AS "payType",
+		a.pay_org AS "payOrg",
+		a.pay_time AS "payTime",
+		a.pay_user_name AS "payUserName",
+		a.pay_state AS "payState",
+		a.address_type AS "addressType",
+		a.address AS "address",
+		a.address_state AS "addressState",
+		a.address_money AS "addressMoney",
+		a.address_benefit AS "addressBenefit",
+		a.over_time AS "overTime",
+		a.is_start AS "isStart",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.transaction_id AS "transactionId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGoodsJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_goods(
+			id,
+			business_info_id,
+			order_no,
+			type,
+			module_manage_id,
+			prod_type,
+			village_info_id,
+			province_id,
+			city_id,
+			sum_money,
+			benefit_money,
+			coupon_money,
+			pay_money,
+			order_state,
+			check_order_state,
+			check_time,
+			check_state,
+			account_id,
+			account_name,
+			account_phone_number,
+			account_msg,
+			pay_type,
+			pay_org,
+			pay_time,
+			pay_user_name,
+			pay_state,
+			address_type,
+			address,
+			address_state,
+			address_money,
+			address_benefit,
+			over_time,
+			is_start,
+			start_time,
+			end_time,
+			transaction_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{orderNo},
+			#{type},
+			#{moduleManageId},
+			#{prodType},
+			#{villageInfoId},
+			#{provinceId},
+			#{cityId},
+			#{sumMoney},
+			#{benefitMoney},
+			#{couponMoney},
+			#{payMoney},
+			#{orderState},
+			#{checkOrderState},
+			#{checkTime},
+			#{checkState},
+			#{accountId},
+			#{accountName},
+			#{accountPhoneNumber},
+			#{accountMsg},
+			#{payType},
+			#{payOrg},
+			#{payTime},
+			#{payUserName},
+			#{payState},
+			#{addressType},
+			#{address},
+			#{addressState},
+			#{addressMoney},
+			#{addressBenefit},
+			#{overTime},
+			#{isStart},
+			#{startTime},
+			#{endTime},
+			#{transactionId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods SET 	
+			business_info_id = #{businessInfoId},
+			order_no = #{orderNo},
+			type = #{type},
+			module_manage_id = #{moduleManageId},
+			prod_type = #{prodType},
+			village_info_id = #{villageInfoId},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			sum_money = #{sumMoney},
+			benefit_money = #{benefitMoney},
+			coupon_money = #{couponMoney},
+			pay_money = #{payMoney},
+			order_state = #{orderState},
+			check_order_state = #{checkOrderState},
+			check_time = #{checkTime},
+			check_state = #{checkState},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			account_phone_number = #{accountPhoneNumber},
+			account_msg = #{accountMsg},
+			pay_type = #{payType},
+			pay_org = #{payOrg},
+			pay_time = #{payTime},
+			pay_user_name = #{payUserName},
+			pay_state = #{payState},
+			address_type = #{addressType},
+			address = #{address},
+			address_state = #{addressState},
+			address_money = #{addressMoney},
+			address_benefit = #{addressBenefit},
+			over_time = #{overTime},
+			is_start = #{isStart},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			transaction_id = #{transactionId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================================= -->
+	
+	<!-- 根据订单号获取订单信息 -->
+	<select id="getByOrderNo" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.order_no = #{orderNo}
+	</select>
+	
+	<resultMap type="OrderGoodsBean" id="orderGoodsBeanMapTwo">
+		<id property="id" column="id" />
+		<result property="businessInfoId" column="businessInfoId" />
+		<result property="addressMoney" column="addressMoney" />
+		<result property="addressBenefit" column="addressBenefit" />
+		<result property="benefitMoney" column="benefitMoney" />
+		<result property="couponMoney" column="couponMoney" />
+		<result property="payMoney" column="payMoney" />
+		<result property="accountName" column="accountName" />
+		<result property="accountPhoneNumber" column="accountPhoneNumber" />
+		<result property="address" column="address" />
+		<result property="isStart" column="isStart" />
+		<result property="startTime" column="startTime" />
+		<result property="endTime" column="endTime" />
+		<result property="accountMsg" column="accountMsg" />
+		<result property="orderNo" column="orderNo" />
+		<result property="createDate" column="createDate" />
+		<result property="payType" column="payType" />
+		<result property="orderState" column="orderState" />
+		<result property="payState" column="payState" />
+		<association property="businessInfo" javaType="BusinessInfo">
+			<result property="businessName" column="Business_Name" />
+			<result property="phoneNum" column="Phone_Num" />
+		</association>
+		<collection property="orderGoodsLists" ofType="OrderGoodsList">
+			<result property="goodsInfoId" column="Goods_Info_ID" />
+			<result property="name" column="Goods_Name" />
+			<result property="imgs" column="Goods_Imgs" />
+			<result property="goodsSum" column="Goods_Sum" />
+			<result property="paySumMoney" column="Pay_Sum_Money" />
+		</collection>
+	</resultMap>
+	
+	<!-- 根据订单ID和用户ID获取订单信息 -->
+	<select id="getOrderGoodsByOrderIdAndAccountId" resultMap="orderGoodsBeanMapTwo">
+		SELECT DISTINCT
+			<include refid="orderGoodsColumns"/>,
+			b.Business_Name,
+			b.Phone_Num,
+			c.Goods_Info_ID,
+			c.Name AS Goods_Name,
+			c.Imgs AS Goods_Imgs,
+			c.Goods_Sum,
+			c.Pay_Sum_Money
+		FROM
+			Order_Goods a,
+			Business_Info b,
+			Order_Goods_List c
+		WHERE
+			a.Business_Info_ID = b.ID
+		AND c.Order_Goods_ID = a.ID
+		AND a.Del_Flag = 0
+		AND b.del_flag = 0
+		AND c.Del_Flag = 0
+		AND a.ID = #{orderId}
+		AND a.Account_ID = #{accountId}
+	</select>
+	
+	<!-- 判断某用户是否可以取消某订单 -->
+	<select id="judgeOrderGoodsCancelAble" resultType="OrderGoods">
+		SELECT
+			<include refid="orderGoodsColumns"/>
+		FROM
+			Order_Goods a
+		WHERE
+			a.Del_Flag = '0'
+		AND a.ID = #{orderId}
+		AND a.Account_ID = #{accountId}
+		AND (
+			a.Pay_State = '0'
+			OR (
+				a.Pay_State = '1'
+				AND a.Order_State = '0'
+			)
+		)
+	</select>
+	
+	<!-- 根据用户id，订单状态查询未配送订单 -->
+	<select id="findListByUserIdAndOrderState" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			<if test="orderGoods.accountId !=null and orderGoods.accountId != ''">
+				AND a.account_id = #{orderGoods.accountId}
+			</if>
+			<if test="orderGoods.orderState !=null and orderGoods.orderState != ''">
+				AND a.order_state = #{orderGoods.orderState}
+			</if>
+		</where>
+		limit #{pageIndex}, #{pageSize}
+	</select>
+</mapper>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>服务详情</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/need/layer.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/service.css"/>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style type="text/css">
+	.carousel-inner>.active{
+		top:0;
+		left:inherit;
+	}
+</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="details_top">
+				<div class="container-fluid top">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl" >
+							<span class="back_btn" onclick="javascript:history.go(-1)"></span>
+						</div>
+						<div class="fr">
+  						<span v-bind:class="detail.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(detail)"></span>
+							
+						</div>
+					</div>
+				</div>
+				<div id="myCarousel" class="carousel slide">
+					<ol class="carousel-indicators">
+						<li data-target="#myCarousel" v-for="(image,index) in detail.serviceImage" :data-slide-to="index" :class="{'active':index==0}"></li>
+					</ol>
+					<ul class="carousel-inner">
+						<li class="item"  v-for="(image,index) in detail.serviceImage" :class="{'active':index==0}"><img :src="image.url"/></li>
+					</ul>
+				</div>
+			</div>
+			<div class="bussinessbreak" v-if="detail.isNormal==0" >商家休息中</div>
+			<div class="details_title_box">
+				<div class="plr10">
+					<div class="details_title">{{detail.serviceName}}</div>
+					<div class="mt4 clearfix">
+						<div class="fl" v-if="detail.discountedPrice>0">
+							<div class="font_orange font18 fl">{{detail.discountedPrice|formatDecimal}}/{{detail.unit}}</div>
+							<div class="font14 fl ml10 mt4"><del>{{detail.originalPrice|formatDecimal}}</del></div>
+						</div>
+						<div class="fl" v-else>
+							<div class="font_orange font18 fl">{{detail.originalPrice|formatDecimal}}/{{detail.unit}}</div>
+						</div>
+						<div class="goods_num fr"></div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="details_title_box mt10">
+				<div class="plr10 clearfix">
+					<div class="shop_name one"><img src="../../images/dian.png">{{detail.businessName}}</div>
+					<div class="shop_call"><img src="../../images/phone.png"><a :href="'tel:'+detail.businessPhone">联系商家</a></div>
+				</div>
+				<div class="detail_twobtn">
+					<a href="###" class="sc_business" @click="collection(detail)">收藏商家</a>
+					<a :href="urlList.index+detail.businessID" class="in_business">进入商家</a>
+				</div>
+			</div>
+			<div class="xq_jstitle">服务详情</div>
+
+			<div class="details_sjxx" v-html="detail.serviceDesc">
+			</div>
+
+			<div class="height44"></div>
+			<div class="business_bottom">
+				<div class="ser_zbtn" v-if="detail.stockNumber>0&&detail.isNormal"><a :href="urlList.order+detail.serviceID+'&businessID='+detail.businessID">立即预约</a></div>
+				<div class="ser_zbtn2" v-else="detail.stockNumber<=0&&detail.isNormal"><a href="###">预约已满</a></div>
+			</div>
+
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+
+		<script src="../../js/static/jquery.js"></script>
+		<script src="../../js/static/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue.js"></script>
+		<script src="../../js/static/vue-resource.js"></script>
+	    <script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/service/servicedetail.js"></script>
+    	
+	</body>
+
+</html>

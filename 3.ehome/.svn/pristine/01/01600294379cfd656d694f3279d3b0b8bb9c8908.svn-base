@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.NoticeManageDao">
+    
+	<sql id="noticeManageColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.notice_title AS "noticeTitle",
+		a.notice_abstract AS "noticeAbstract",
+		a.notice_content AS "noticeContent",
+		a.sync_circle_flag AS "syncCircleFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="noticeManageJoins">
+	</sql>
+    
+	<select id="get" resultType="NoticeManage">
+		SELECT 
+			<include refid="noticeManageColumns"/>
+		FROM notice_manage a
+		<include refid="noticeManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="NoticeManage">
+		SELECT 
+			<include refid="noticeManageColumns"/>
+		FROM notice_manage a
+		<include refid="noticeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND a.village_info_id = #{villageInfoId}
+			</if>
+			<if test="noticeTitle != null and noticeTitle != ''">
+				AND a.notice_title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{noticeTitle}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{noticeTitle}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{noticeTitle},'%')</if>
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NoticeManage">
+		SELECT 
+			<include refid="noticeManageColumns"/>
+		FROM notice_manage a
+		<include refid="noticeManageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO notice_manage(
+			id,
+			village_info_id,
+			notice_title,
+			notice_abstract,
+			notice_content,
+			sync_circle_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{noticeTitle},
+			#{noticeAbstract},
+			#{noticeContent},
+			#{syncCircleFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE notice_manage SET 	
+			village_info_id = #{villageInfoId},
+			notice_title = #{noticeTitle},
+			notice_abstract = #{noticeAbstract},
+			notice_content = #{noticeContent},
+			sync_circle_flag = #{syncCircleFlag},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE notice_manage SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 最新一条公告 -->
+	<select id="getLatestNotice" resultType="NoticeManage">
+		SELECT <include refid="noticeManageColumns"/>
+		 FROM notice_manage a 
+		<where>
+			a.del_flag=0 AND a.village_info_id=#{villageInfoId}
+			ORDER BY a.create_date DESC LIMIT 1
+		</where>
+	</select>
+	
+	<select id="getNoticeList" resultType="NoticeManage">
+		SELECT 
+			<include refid="noticeManageColumns"/>
+		FROM notice_manage a
+		<where>
+			a.del_flag = 0 AND a.village_info_id=#{villageInfoId}
+		</where>		
+				ORDER BY a.create_date DESC
+		LIMIT #{pageIndex},#{numPerPage}
+	</select>
+	
+</mapper>

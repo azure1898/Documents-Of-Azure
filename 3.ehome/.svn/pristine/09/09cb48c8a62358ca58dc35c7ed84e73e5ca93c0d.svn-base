@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialRelationDao">
+    
+	<sql id="socialRelationColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.subuserid AS "subuserid",
+		a.createtime AS "createtime",
+		a.isblack AS "isblack"
+	</sql>
+	
+	<sql id="socialRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialRelation">
+		SELECT 
+			<include refid="socialRelationColumns"/>
+		FROM social_relation a
+		<include refid="socialRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialRelation">
+		SELECT 
+			<include refid="socialRelationColumns"/>
+		FROM social_relation a
+		<include refid="socialRelationJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialRelation">
+		SELECT 
+			<include refid="socialRelationColumns"/>
+		FROM social_relation a
+		<include refid="socialRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_relation(
+			id,
+			userid,
+			subuserid,
+			createtime,
+			isblack
+		) VALUES (
+			#{id},
+			#{userid},
+			#{subuserid},
+			#{createtime},
+			#{isblack}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_relation SET 	
+			userid = #{userid},
+			subuserid = #{subuserid},
+			createtime = #{createtime},
+			isblack = #{isblack}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_relation
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据用户id查询该用户关注的人集合 -->
+	<select id="findFocusListByUserId" resultType="SocialRelationBean">
+		SELECT 
+			<include refid="socialRelationColumns"/>,
+			ac.Nickname as nickName,
+			ac.photo as photo,
+			CASE WHEN (SELECT COUNT(*) FROM social_relation r WHERE r.userid = a.subUserId AND r.subuserid = a.userId) > 0 THEN 2 ELSE 1 END AS relation 
+		FROM social_relation a left join account ac on a.subuserid = ac.id 
+		where 1 = 1 
+			<if test="socialRelationBean !=null and socialRelationBean.userid != null and socialRelationBean.userid != ''">
+				AND a.userid = #{socialRelationBean.userid}
+			</if>
+		order by a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+
+	<!-- 根据用户id查询该用户粉丝集合 -->
+	<select id="findFansListByUserId" resultType="SocialRelationBean">
+		SELECT 
+			<include refid="socialRelationColumns"/>,
+			ac.Nickname as nickName,
+			ac.photo as photo,
+			CASE WHEN (SELECT COUNT(*) FROM social_relation r WHERE r.userid = a.subUserId AND r.subuserid = a.userId) > 0 THEN 2 ELSE 1 END AS relation 
+		FROM social_relation a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialRelationBean !=null and socialRelationBean.subuserid != null and socialRelationBean.subuserid != ''">
+				AND a.subuserid = #{socialRelationBean.subuserid}
+			</if>
+		order by a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 根据用户id查询用户详情 -->
+	<select id="findPersonalInfo" resultType="SocialRelationBean">
+        SELECT ac.id as subuserid,
+            ac.nickname as nickName,
+            ac.photo as photo,
+            CASE WHEN (SELECT COUNT(*) FROM social_relation r WHERE r.userid = #{userId} AND r.subuserid = #{subUserId}) > 0 THEN 1 ELSE 0 END AS relation, 
+            (SELECT count(*) FROM social_relation sr WHERE sr.userid = a.id) as countFollow, 
+            (SELECT count(*) FROM social_relation sr WHERE sr.subuserid = a.id) as countFans 
+        FROM social_relation a right join account ac on a.subuserid = ac.id 
+        where ac.id = #{subUserId}
+	</select>
+	
+	<!-- 根据用户id和从用户id删除记录 -->
+	<update id="deleteByUserIdAndSubUserId">
+	    DELETE FROM social_relation
+	    WHERE userid = #{userId} and subuserid = #{subUserId}
+	</update>
+	
+	<!-- 根据用户ID 查询粉丝数量 -->
+	<select id="countFansByUserId" resultType="int">
+		select count(*) from social_relation where subuserid = #{userId}
+	</select>
+
+	<!-- 根据用户ID 查询关注数量 -->
+	<select id="countFocusByUserId" resultType="int">
+		select count(*) from social_relation where userid = #{userId}
+	</select>
+	
+	<!-- 根据userId和subUserId查询所有数据 -->
+	<select id="findListByUserIdAndSubUserId" resultType="SocialRelation">
+		SELECT 
+			<include refid="socialRelationColumns"/>
+		FROM social_relation a
+		<include refid="socialRelationJoins"/>
+		<where>
+			<if test="userid != null and userid != ''">
+					AND a.userid = #{userid}
+			</if>
+			<if test="subuserid != null and subuserid != ''">
+					AND a.subuserid = #{subuserid}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据用户id查询出所有相互关注的朋友的信息 -->
+	<select id="findToUser" resultType="SocialRelationBean">
+	    SELECT 
+	        <include refid="socialRelationColumns"/>,
+	        ac.nickname as nickName,
+	        ac.photo as photo
+	    FROM social_relation a, social_relation r, account ac 
+	    WHERE a.userid = r.subuserid 
+	        and r.userid = a.subuserid 
+	        and ac.id = a.subuserid 
+	        and a.userid = #{userId} 
+	</select>
+
+	<!-- 根据用户ID， 从用户ID 查询用户关系对象 -->
+	<select id="getSocialRelation" resultType="SocialRelation">
+	    SELECT 
+	        <include refid="socialRelationColumns"/>
+	    FROM social_relation a 
+	    WHERE a.userid = #{userId}
+	        and a.subuserid = #{subUserId}
+	</select>
+	
+	<!-- 是否已关注该用户 -->
+	<select id="isFocus" resultType="int">
+	    SELECT count(*)
+	    FROM social_relation a 
+	    WHERE a.userid = #{userId} and subuserid = #{subUserId}
+	</select>
+</mapper>

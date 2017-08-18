@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.lesson.dao.LessonInfoDao">
+    
+	<sql id="lessonInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.people_limit AS "peopleLimit",
+		a.lesson_count AS "lessonCount",
+		a.sell_count AS "sellCount",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.address AS "address",
+		a.content AS "content",
+		a.lesson_quota AS "lessonQuota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.state AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="lessonInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="LessonInfo">
+		SELECT 
+			<include refid="lessonInfoColumns"/>
+		FROM lesson_info a
+		<include refid="lessonInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LessonInfo">
+		SELECT 
+			<include refid="lessonInfoColumns"/>
+		FROM lesson_info a
+		<include refid="lessonInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+			<if test="recommend != null and recommend != ''">
+				AND a.recommend = #{recommend}
+			</if>
+            <if test="state != null and state != ''">
+                AND a.state = #{state}
+            </if>
+            <choose>
+	            <when test="peopleLimit != null and peopleLimit != ''">
+					AND a.people_limit &lt;= #{peopleLimit}
+				</when>
+				<when test="isfull != null and isfull == '1'">
+					AND a.people_limit = 0
+				</when>
+				<otherwise>
+				</otherwise>
+            </choose>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LessonInfo">
+		SELECT 
+			<include refid="lessonInfoColumns"/>
+		FROM lesson_info a
+		<include refid="lessonInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 手动添加，非自动生成 Start -->
+	<select id="findAllListCount" resultType="Integer">
+		SELECT
+			count(0)
+		FROM lesson_info a
+		<include refid="lessonInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+			<if test="stock != null and stock != ''">
+				AND a.sell_count =a.people_limit
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="findLessonInfoListForUpdate" resultType="LessonInfo">
+        SELECT 
+            <include refid="lessonInfoColumns"/>
+        FROM lesson_info a
+        <where>
+            a.del_flag = "0"
+        AND a.id in
+        <foreach collection="list" item="lessonId" index="index"
+            open="(" close=")" separator=",">
+            #{lessonId}
+        </foreach>
+          FOR UPDATE
+        </where>
+    </select>
+    
+    <select id="selectZeroStockLesson" resultType="LessonInfo">
+        SELECT 
+            <include refid="lessonInfoColumns"/>
+        FROM lesson_info a
+        <include refid="lessonInfoJoins"/>
+        <where>
+                IFNULL(a.people_limit,0) = 0
+            AND a.id = #{lessonId}
+        </where>
+    </select>
+	<!-- 手动添加，非自动生成 End -->
+
+	<insert id="insert">
+		INSERT INTO lesson_info(
+			id,
+			business_info_id,
+			serial_numbers,
+			name,
+			imgs,
+			base_price,
+			<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price,
+			</if>
+			people_limit,
+			lesson_count,
+			sell_count,
+			start_time,
+			end_time,
+			address,
+			content,
+			lesson_quota,
+			<if test="quotaNum != null and quotaNum != ''">
+			quota_num,
+			</if>
+			recommend,
+			state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{serialNumbers},
+			#{name},
+			#{imgs},
+			#{basePrice},
+			<if test="benefitPrice != null and benefitPrice != ''">
+			#{benefitPrice},
+			</if>
+			#{peopleLimit},
+			#{lessonCount},
+			#{sellCount},
+			#{startTime},
+			#{endTime},
+			#{address},
+			#{content},
+			#{lessonQuota},
+			<if test="quotaNum != null and quotaNum != ''">
+			#{quotaNum},
+			</if>
+			#{recommend},
+			#{state},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE lesson_info SET 	
+			business_info_id = #{businessInfoId},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			imgs = #{imgs},
+			base_price = #{basePrice},
+			<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price = #{benefitPrice},
+			</if>
+			<if test="benefitPrice == null">
+            benefit_price = null,
+            </if>
+			people_limit = #{peopleLimit},
+			lesson_count = #{lessonCount},
+			sell_count = #{sellCount},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			address = #{address},
+			content = #{content},
+			lesson_quota = #{lessonQuota},
+			<if test="quotaNum != null and quotaNum != ''">
+			quota_num = #{quotaNum},
+			</if>
+            <if test="quotaNum == null">
+            quota_num = null,
+            </if>
+			recommend = #{recommend},
+			state = #{state},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE lesson_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 手动添加，非自动生成 Start -->
+	<update id="imgNameUpdate">
+        UPDATE lesson_info SET 
+            imgs = #{imgUrl}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="groundingByLessonId">
+        UPDATE lesson_info SET 
+            state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("上架",
+		"lesson_state", "1")}'
+        WHERE id = #{lessonId}
+    </update>
+    
+    <update id="undercarriageByLessonId">
+        UPDATE lesson_info SET 
+            state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("下架",
+		"lesson_state", "0")}'
+        WHERE id = #{lessonId}
+    </update>
+    <!-- 手动添加，非自动生成 End -->
+	
+</mapper>

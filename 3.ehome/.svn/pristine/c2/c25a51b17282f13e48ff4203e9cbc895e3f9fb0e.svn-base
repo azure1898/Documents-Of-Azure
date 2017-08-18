@@ -1,0 +1,11 @@
+# 微信开放平台审核通过的应用APPID
+APP_ID=wx33ad5ecc0aad47bb
+
+# 微信支付分配的商户号
+MCH_ID=1458553902
+
+# KEY设置路径：微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置
+KEY=E9E11D25B8405E48123AF5961D5E478B
+
+# 应用对应的凭证
+CERT_PATH=D://CERT/common/apiclient_cert.p12

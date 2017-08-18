@@ -1,0 +1,388 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<html>
+<head>
+	<title>课程培训管理</title>
+	<meta name="decorator" content="default"/>
+	<link rel="stylesheet" href="${ctxStatic}/common/multiplefileUpload.css" type="text/css" />
+	<script src="${ctxStatic}/common/multiplefileUpload.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//初始化KindEditor编辑器插件  
+			KindEditor.ready(function(K) {
+				var editor1 = K.create('textarea[name="content"]', {
+					cssPath : '${ctxStatic}/plugins/code/prettify.css',
+					uploadJson :  "${ctx}/UploadFile.do",
+					allowFileManager : false,
+					themeType : 'simple',
+					allowImageUpload:true,//允许上传图片
+					afterChange : function() {
+						var limitNum = 65000;
+						if(this.count() > limitNum) {
+						    $(".word_message").show();
+						} else {
+							$(".word_message").hide();
+						}
+					},
+					afterBlur: function(){this.sync();},
+					items : [
+					'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+					'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+					'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+				});
+				prettyPrint();
+			});
+			
+			//初始化限购数量的活性
+			quotaNumDisabledSet(document.getElementById("lessonQuota"));
+    
+			//上课时间必填校验
+			$.validator.addMethod("lessonTimeRequired", function(value, element,params) {
+				var startTime = $("#startTime").val();
+				var endTime = $("#endTime").val();
+// 				console.log("lessonTimeRequired：" + (startTime != null && startTime != "" && endTime != null && endTime != ""));
+			    return startTime != null && startTime != "" && endTime != null && endTime != "";
+			}, "请填写课程日期");
+			//上课时间合法性校验
+			$.validator.addMethod("lessonTimeLegality", function(value, element,params) {
+    			var startTime = $("#startTime").val();
+				var endTime = $("#endTime").val();
+			    return !(startTime != null && startTime != "" && endTime != null && endTime != "") 
+			    	|| startTime <= endTime;
+			}, "您填写的结束日期应晚于等于开始日期。");
+			$.validator.addMethod("checkSpecialChars", function(value, element,params) {
+        	            var patrn=/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
+        	            return this.optional(element) || (patrn.test(value));
+        	}, "请输入中文，英文或数字");
+			$("#inputForm").validate({
+			    rules: {
+			        name: {
+			            required: true,
+			            maxlength: 20,
+			            checkSpecialChars:true
+			        },
+			        basePrice: {
+			        	required: true,
+			        	number: true,
+			        	maxlength: 10,
+			            min:0.01
+			        },
+			        benefitPrice: {
+			            number: true,
+			            maxlength: 10,
+			            min:0.01
+			        },
+			        peopleLimit: {
+			        	required:true,
+			            number: true,
+			            maxlength: 9,
+			            min:0,
+			            digits:true 
+			        },
+			        lessonCount:{
+			        	required:true,
+			        	maxlength:2,
+			        	number: true,
+			            max:99,
+			            min:1,
+			            digits:true 
+			        },
+			        startTime:{
+			        	lessonTimeRequired: true,
+			        	lessonTimeLegality: true
+			        },
+			        endTime:{
+			    		lessonTimeRequired: true,
+			    		lessonTimeLegality: true
+			    	},
+			        address:{
+			        	required:true,
+			        	maxlength: 20
+			        },
+			        quotaNum: {
+			            number: true,
+			            maxlength: 9,
+			            min:1,
+			            digits:true 
+			        }
+			    },
+			    messages: {
+			        name: {
+			            required: "请输入课程/培训名称（建议在20个字以内）",
+			            maxlength: "课程/培训名称在20个字以内",
+			            checkSpecialChars: "课程/培训名称必须是汉字、英文或数字"
+			        },
+			        basePrice: {
+			        	required: "请填写课程/培训价格",
+			        	number: "请填写数字",
+			        	maxlength: "课程/培训价格长度不能超过10"
+			        },
+			        benefitPrice: {
+			            number: "请填写数字",
+			            maxlength: "优惠价长度不能超过10"
+			        },
+			        peopleLimit: {
+			        	required: "请填写课程/培训库存",
+			            number: "请填写数字",
+			            maxlength: "限制人数长度不能超过9",
+			            min: "限制人数不能低于0",
+			            digits: "请填写整数" 
+			        },
+			        lessonCount:{
+			        	required: "请填写课程次数",
+			        	number: "请填写数字",
+			        	maxlength: "课程次数应为1-99的正整数",
+			            max: "课程次数不能超过99",
+			            min: "课程次数不能低于1",
+			            digits: "请填写整数"
+			        },
+			        address:{
+			        	required: "请输入上课地点（20个汉字以内）",
+			        	maxlength: "上课地点在20个汉字以内"
+			        },
+			        quotaNum: {
+			            number: "请填写数字",
+			            maxlength: "限购数量长度不能超过9",
+			            min: "限购数量不能低于1",
+			            digits: "请填写整数"
+			        }
+			    },
+				submitHandler: function(form){
+	   				if ($(".up-section").size() == 0) {
+	        			alertx("未选择任何图片");
+	        			return;
+	        		}
+	        	    if (KindEditor.instances[0].html().length > 65000) {
+	        	        $(".word_message").show();
+	        	        return;
+	        	    }
+					loading('正在提交，请稍等...');
+					form.submit();
+				},
+				errorContainer: "#messageBox",
+				errorPlacement: function(error, element) {
+					$("#messageBox").text("输入有误，请先更正。");
+					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+						error.appendTo(element.parent().parent());
+					} else if (element.is("input[name='quotaNum']")) {
+    					error.appendTo(element.parent());
+					} else if (element.is("input[name='startTime']") || element.is("input[name='endTime']")) {
+			    		var $labelError = $("#startTime").parent().children("label.error");
+			    		if ($labelError.size() != 0) {
+			    		     $.each($labelError,function(index,value,array){
+			    			     $(value).remove();
+			    		 	});
+			    		}
+    					error.insertBefore(element.parent().children(":last-child"));
+					} else {
+						error.insertAfter(element);
+					}
+				}
+			});
+		});
+		
+		//手动清除上课日期校验提示	
+        function cleanLessonTimeValiMsg(){
+//     		console.log("cleanLessonTimeValiMsg");
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+//     		console.log("startTime=" + startTime + "；endTime=" + endTime);
+//     		console.log("startTime >= endTime : " + (startTime >= endTime));
+    		// 必填校验提示
+            var msgRequired = "请填写课程日期";
+         	// 合法性校验提示
+            var msgLegality = "您填写的结束日期应晚于等于开始日期。";
+            var $labelError = $("#startTime").parent().children("label.error");
+     		if ($labelError.size() != 0) {
+//          		console.log($labelError.size());
+     		     $.each($labelError,function(index,value,array){
+     			     if ($(value).text() == msgRequired 
+     			          && startTime != null && startTime != "" && endTime != null && endTime != "") {
+     			         $(value).remove();
+     			 	} else if ($(value).text() == msgLegality 
+     			         && startTime < endTime) {
+     			     	$(value).remove();
+     			 	}
+     		 	});
+     		}
+        }
+		
+		window.onload = function() {
+		    // 如果浏览器不支持HTML5则提示无法上传图片
+		    if (!window.applicationCache) {
+		        $("#imgArea").remove();
+		        $("#imgAside").remove();
+		        alertx("您当前的浏览器不支持图片上传");
+		    }
+		}
+		
+		//根据选择的限购设定来决定限购数量的活性
+		function quotaNumDisabledSet(obj) {
+		    // 1为限购，限购数量为活性
+		    if ("1" == obj.value) {
+		        $("#quotaNum")[0].disabled = false;
+		        $("#quotaNum").attr("class","input-small");
+		    } else {
+		        $("#quotaNum")[0].value = "";
+		        $("#quotaNum")[0].disabled = true;
+		        $("#quotaNum").attr("class","input-small");
+		    }
+		    // 手动清除限购数量的提示信息
+		    var $labelError = $("#quotaNum").parent().children("label.error");
+		    if ($labelError.size() != 0) {
+		        $.each($labelError,function(index,value,array){
+		           $(value).remove();
+		        });
+		    } 
+		}
+	</script>
+</head>
+<body>
+	<ul class="nav nav-tabs">
+		<li><span><a href="${ctx}/lesson/lessonInfo/">课程培训管理 </a> > <a href="${ctx}/lesson/lessonInfo/form?id=${lessonInfo.id}">${not empty lessonInfo.id?'编辑':'新增'}课程培训 </a></span></li>
+	</ul>
+	<br/>
+	<form:form id="inputForm" modelAttribute="lessonInfo" action="${ctx}/lesson/lessonInfo/save" method="post" class="form-horizontal" enctype="multipart/form-data">
+		<form:hidden path="id"/>
+		<form:hidden id="sortItem" path="sortItem" htmlEscape="false" />
+		<form:hidden id="sort" path="sort" htmlEscape="false" />
+		<c:choose>
+  			<c:when test="${msgType != null and msgType != ''}">
+      		<sys:message content="${message}" type="${msgType}"/>
+  		</c:when>
+ 		<c:otherwise>
+      		<sys:message content="${message}"/>
+  		</c:otherwise>
+ 		</c:choose>
+		<div class="control-group">
+			<label class="control-label">课程名称：</label>
+			<div class="controls">
+				<form:input path="name" htmlEscape="false" maxlength="20"
+					placeholder="请输入课程名称（建议在20个字以内）" class="input-xlarge" />
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">轮播图片：</label> <span id="warnning"></span>
+			<div class="controls">
+			    <span>第1张图片将会用做列表页面显示，最多可以上传5张</span><br/>
+			    <span>（建议图片尺寸640*400像素，图片小于1M的jpg、png格式图片）</span>
+			</div>
+		</div>
+		<div class="img-box full" id="imgArea">
+			<form:hidden path="delImageName" />
+			<section class=" img-section">
+				<div class="z_photo upimg-div clear">
+					<c:forEach items="${imgUrls}" var="imgTemp">
+						<section class="up-section fl">
+							<span class="up-span"></span> <img
+								src="${ctxStatic}/images/a7.png" class="close-upimg"> <img
+								src="${imgTemp.imgUrl}" class="up-img"> <input
+								type="hidden" class="filename" value="${imgTemp.myfileid}">
+						</section>
+					</c:forEach>
+					<section class="z_file fl"
+						<c:if test="${fn:length(imgUrls) gt 4}">style="display: none;"</c:if>>
+						<img src="${ctxStatic}/images/a10.png" class="add-img"> 
+						<input type="file" name="file" id="file" class="file" value=""
+							accept="image/jpg,image/jpeg,image/png,image/bmp"
+							multiple="multiple" />
+					</section>
+				</div>
+			</section>
+		</div>
+		<aside class="mask works-mask">
+			<div class="mask-content" id="imgAside">
+				<p class="del-p ">您确定要删除图片吗？</p>
+				<p class="check-p">
+					<span class="del-com wsdel-ok">确定</span><span class="wsdel-no">取消</span>
+				</p>
+			</div>
+		</aside>
+		
+		<div class="control-group"	>
+			<label class="control-label">课程价格：</label>
+			<div class="controls">
+				<form:input path="basePrice" placeholder="请填写课程原价" maxlength="10"
+					htmlEscape="false" class="input-medium required" value="${fns:doubleFormatForInput(lessonInfo.basePrice)}"/>
+				<span class="help-inline"><font color="red">*</font> </span> 
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span>优惠价：</span>
+				<form:input path="benefitPrice" htmlEscape="false" placeholder="请填写优惠价格" maxlength="10"
+					class="input-medium"  value="${fns:doubleFormatForInput(lessonInfo.benefitPrice)}"/>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span>限制人数：</span>
+				<form:input path="peopleLimit" htmlEscape="false" maxlength="9" placeholder="请填写限制人数"
+					class="input-medium required" />
+				<span class="help-inline"><font color="red">*</font></span> 
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">课次：</label>
+			<div class="controls">
+				<form:input path="lessonCount" htmlEscape="false" maxlength="2"
+					placeholder="请输入课次（1-99数字）" class="input-xlarge" />
+				<span class="help-inline"><font color="red">*</font></span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">上课日期：</label>
+			<div class="controls">
+				<input id="startTime" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-small Wdate "
+					value="<fmt:formatDate value="${lessonInfo.startTime}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" onchange="cleanLessonTimeValiMsg()"/>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<input id="endTime" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-small Wdate "
+					value="<fmt:formatDate value="${lessonInfo.endTime}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" onchange="cleanLessonTimeValiMsg()"/>
+				<span class="help-inline"><font color="red">*</font></span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">上课地点：</label>
+			<div class="controls">
+				<form:input path="address" htmlEscape="false" maxlength="20"
+					placeholder="请输入上课地点（20个汉字以内）" class="input-xlarge" />
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">课程介绍：</label>
+			<div class="controls">
+				<form:textarea id="content" path="content" rows="4" maxlength="200"
+					style="width:1000px;height:400px" class="input-xlarge" htmlEscape="false"/>
+				<label for="content" class="custom-error word_message" style="display: none;">超出最大长度，请适当缩减内容</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">限购：</label>
+			<div class="controls">
+				<form:select path="lessonQuota" class="input-xlarge "
+					onchange="quotaNumDisabledSet(this)">
+					<form:options items="${fns:getDictList('purchasing_limitations')}"
+						itemLabel="label" itemValue="value" htmlEscape="false" />
+				</form:select>
+				<span>&nbsp;</span>
+				<form:input path="quotaNum" htmlEscape="false" maxlength="9" 
+					class="input-small " disabled="true" />
+				<span>次</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">是否推荐：</label>
+			<div class="controls">
+				<form:select path="recommend" class="input-xlarge ">
+					<form:options items="${fns:getDictList('Quota')}" itemLabel="label"
+						itemValue="value" htmlEscape="false" />
+				</form:select>
+			</div>
+		</div>
+		<div class="form-actions">
+			<input id="btnSubmit" class="commonbtn" type="submit" value="保 存" style="width:60px"/>
+            &nbsp;
+            <input id="btnCancel" class="commonbtn" type="button" onclick="window.location.href='${ctx}/lesson/lessonInfo/list?sortItem=${lessonInfo.sortItem}&sort=${lessonInfo.sort}'" value="取消" style="width:60px"/>
+		</div>
+	</form:form>
+
+</body>
+</html>

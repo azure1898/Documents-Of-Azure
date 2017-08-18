@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>预订房间</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link href="../../css/style.css" rel="stylesheet">
+		<style type="text/css">
+			* {
+				box-sizing: border-box;
+			}
+			
+			a:link {
+				text-decoration: none;
+			}
+			
+			a:visited {
+				text-decoration: none;
+			}
+			
+			a:hover {
+				text-decoration: none;
+			}
+			
+			.ordertime ul li.active {
+				padding: 10px 23px;
+			}
+		</style>
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="business_top5">
+				<div class="container-fluid">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn" onclick="javascript :history.go(-1);"></span>
+						</div>
+						<div class="fr">
+							<span v-bind:class="place.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(place)"></span>
+						</div>
+					</div>
+					<div class="business_price_box">
+						<div class="business_pic75 fl">
+							<a v-bind:href="urlList.siteindex + place.businessID"><img v-bind:src="place.businessImage"><div class="bussinessbreak2" v-if="place.isNormal==0">商家休息中</div></a>
+						</div>
+						<div class="business_nr">
+							<div class="business_name">{{place.businessName}}</div>
+							<div class="business_type"><span style="float:right; border:none;"><a v-bind:href="urlList.siteindex + place.businessID"><img src="../../images/white_go.png" width="9" height="16"></a></span><span v-for="label in place.businessLabels" v-if="place.businessLabels.length>0">{{label.labelName}}</span></div>
+							<div class="business_start"><span>营业时间：{{place.businessHours}}</span></div>
+							<div class="full_cut"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="orderroom">
+				<ul id="specific">
+					<li v-for="(date,index) in place.reservationDate" v-on:click="changeDate(date,index)">
+						<a href="#" v-bind:class="{'active':index==0}">{{date.week}}<br><span>{{date.date|separate}}</span></a>
+					</li>
+				</ul>
+			</div>
+			<div class="clearfix">
+				<div class="business_mainmenu" style="border-top:none;">
+					<ul id="roomsize">
+						<li v-bind:class="{'selected':index==0}" v-for="(scale,index) in place.sites" v-on:click="changeCategory(scale,index)">
+							<a href="#">{{scale.siteName}}</a>
+						</li>
+					</ul>
+				</div>
+				<div class="business_goods_box">
+					<div class="businessmenu_choice2">选择可预约时段<span class="font14">（可预约13小时）</span></div>
+					<div class="plr10">
+						<div class="ordertime">
+							<ul>
+								<li v-for="(time,index) in siteReservation" v-bind:class="time.isactive == 1 ?'btn active':'btn'" v-on:click="subscribe(time,index)" v-bind:disabled="time.isBooked==1"><span class="font14">{{time.timePeriod}}</span><br><strong>￥{{time.price}}</strong></li>
+							</ul>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ts_txt">注：只能预约连续时段</div>
+			<div class="height44"></div>
+			<div class="business_bottom">
+				<div id="appointment" v-bind:class="place.isNormal? 'ser_zbtn':'ser_zbtn2'" v-if="place.isNormal==1"><a v-bind:href="submitUrl==''? '###':urlList.siteorder + submitUrl + '&businessID='+place.businessID" v-on:click="Submit(siteReservation)">立即预约</a></div>
+			<div class="ser_zbtn2" v-else><a href="#">立即预约</a></div>
+			</div>
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/static/jquery.js"></script>
+		<script src="../../js/static/bootstrap.js"></script>
+		<script src="../../js/static/vue.js"></script>
+		<script src="../../js/static/vue-resource.js"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/common/common.js"></script>
+		<script src="../../js/cursom/site/modulelist.js"></script>
+	</body>
+
+</html>

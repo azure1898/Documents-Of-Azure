@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialPraiseDao">
+    
+	<sql id="socialPraiseColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.praisetime AS "praisetime",
+		a.pid AS "pid",
+		a.type AS "type",
+		a.touserid AS "touserid",
+		a.state AS "state"
+	</sql>
+	
+	<sql id="socialPraiseJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="praisetime != null and praisetime != ''">
+				AND a.praisetime = #{praisetime}
+			</if>
+			<if test="pid != null and pid != ''">
+				AND a.pid = #{pid}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="touserid != null and touserid != ''">
+				AND a.touserid = #{touserid}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_praise(
+			id,
+			userid,
+			praisetime,
+			pid,
+			type,
+			touserid,
+			state
+		) VALUES (
+			#{id},
+			#{userid},
+			#{praisetime},
+			#{pid},
+			#{type},
+			#{touserid},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_praise SET 	
+			userid = #{userid},
+			praisetime = #{praisetime},
+			pid = #{pid},
+			type = #{type},
+			touserid = #{touserid},
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_praise
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据socialPraise查询条件 查询包含头像信息的praisebean 对象 -->
+	<select id="findPraiseBeanList" resultType="SocialPraiseBean">
+		SELECT 
+			<include refid="socialPraiseColumns"/>,
+			ac.Nickname as nickName,
+			ac.photo as photo
+		FROM social_praise a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialPraise!=null and socialPraise.type != null and socialPraise.type != ''">
+				AND a.type = #{socialPraise.type}
+			</if>
+			<if test="socialPraise!=null and socialPraise.pid != null and socialPraise.pid != ''">
+				AND a.pid = #{socialPraise.pid}
+			</if>
+		order by a.praisetime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 非首次点赞 及 取消点赞 -->
+	<update id="updateSocialPraise">
+		UPDATE social_praise SET 	
+			userid = #{socialPraise.userid},
+			praisetime = #{socialPraise.praisetime},
+			pid = #{socialPraise.pid},
+			type = #{socialPraise.type},
+			touserid = #{socialPraise.touserid},
+			state = #{socialPraise.state}
+		WHERE 1=1 
+			<if test="socialPraise!=null and socialPraise.userid != null and socialPraise.userid != ''">
+				AND userid = #{socialPraise.userid}
+			</if>
+			<if test="socialPraise!=null and socialPraise.pid != null and socialPraise.pid != ''">
+				AND pid = #{socialPraise.pid}
+			</if>
+			<if test="socialPraise!=null and socialPraise.touserid != null and socialPraise.touserid != ''">
+				AND touserid = #{socialPraise.touserid}
+			</if>
+	</update>
+	
+	<!-- 我的赞列表，包括赞的发言、评论 -->
+	<select id="getMyPraiseList" resultType="SocialPraiseBean">
+		SELECT * FROM
+			  (SELECT a.Nickname AS nickName, a.Photo AS photo, p.praiseTime AS praiseTime, s.id AS speakId,
+			    '' AS commentId, s.content AS content, s.images AS images, s.userId as spkUserId, s.noticeId as noticeId, s.title as title, s.summary as summary, '' as cmtUserId, 0 AS isComment,
+			    (SELECT Nickname FROM account ac WHERE ac.id = s.userId) AS spkUserName,
+			    '' AS cmtUserName
+			  FROM
+			    social_praise p,
+			    social_speak s,
+			    account a 
+			  WHERE p.userId = a.id 
+			    AND p.pid = s.id 
+			    AND p.userId = #{socialPraise.userid}
+			    AND p.type = 1 
+			    AND p.state = 1 
+			  UNION ALL 
+			  SELECT a.Nickname AS nickName, a.Photo AS photo, p.praiseTime AS praiseTime, c.speakId AS speakId,
+			    c.id AS commentId, c.content AS content, '' AS images, '' as spkUserId, '' as noticeId, '' as title, '' as summary, c.userId as cmtUserId, 1 AS isComment, 
+			    '' AS spkUserName,
+			    (SELECT Nickname FROM account ac WHERE ac.id = c.userId) AS cmtUserName
+			  FROM
+			    social_praise p,
+			    social_comment c,
+			    account a 
+			  WHERE p.userId = a.id 
+			    AND p.pid = c.id 
+			    AND p.userId = #{socialPraise.userid}
+			    AND p.type = 2 
+			    AND p.state = 1) t 
+			ORDER BY t.praiseTime DESC LIMIT #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 查询点赞数量 -->
+	<select id="countPraise" resultType="int">
+    	SELECT count(*)
+		FROM social_praise a
+		WHERE a.pid = #{pid}
+    </select>
+    
+    <!-- 查询点赞对象-->
+    <select id="getSocialPraise" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		WHERE 1 = 1
+		<if test="socialPraise != null and socialPraise.userid !=null and socialPraise.userid != '' ">
+			and a.userId = #{socialPraise.userid}
+		</if>
+		<if test="socialPraise != null and socialPraise.pid !=null and socialPraise.pid != '' ">
+			and a.pid = #{socialPraise.pid}
+		</if>
+	</select>
+    
+    <!-- 根据userId查找socialPraise中所有数据 -->
+    <select id="findListByToUserId" resultType="SocialPraise">
+		SELECT 
+			<include refid="socialPraiseColumns"/>
+		FROM social_praise a
+		<include refid="socialPraiseJoins"/>
+		where 1=1
+		<if test="touserid != null and touserid != ''">
+			AND a.touserid = #{touserid}
+		</if>
+	</select>
+	
+	<!-- 根据用户ID查询该用户的点赞数量 -->
+	<select id="countPraiseByUserId" resultType="int">
+		select count(*) from social_praise where userid = #{userId}
+	</select>
+	
+	<!-- 根据发言id和点赞人得到数据 -->
+	<select id="getIsPraise" resultType="int">
+		select count(*) from social_praise where pid = #{pid} and type = 1 and userId = #{userId}
+	</select>
+	
+</mapper>

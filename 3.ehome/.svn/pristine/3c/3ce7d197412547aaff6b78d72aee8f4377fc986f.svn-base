@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>赞过我的</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    	a:link{text-decoration: none;}
+			a:visited{text-decoration: none;}
+			a:hover{text-decoration: none;}
+			[v-cloak] {
+				  display: none;
+				}
+		 	.twoLine{
+		    	overflow: hidden;
+		 	    text-overflow: ellipsis;
+		 	    display: -webkit-box;
+		 	     -webkit-line-clamp: 2;
+		     	-webkit-box-orient: vertical;
+		    }
+	    .twoLine img{
+	    	display: none;
+	    }
+    </style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="black_back" onclick="javascript :history.go(-1)"></a>
+				我的赞
+			</div>
+			<div class="main_box mb10" v-for="item in praiseDetail.data">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img">
+							<img v-bind:src="item.userHeadUrl" width="110" height="110">
+						</div>
+						<div class="fyxq_main_l_title">
+							<p>{{item.userName}}</p>
+							<p><span>{{item.creatTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050" v-if="item.isComment===0">赞了这条发言</p>
+					<p class="ftc5050" v-else>赞了这条评论</p>
+				</div>
+				<div class="fyxq_main2" v-if="item.isComment===1">
+					<p class="ftc5050">
+						<font class="ftcred">@{{item.comment.userName}}</font>：
+						<font class="ftcred" v-for="(subject,index) in item.comment.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
+						{{item.comment.content}}
+					</p>
+						<a v-bind:src="item.comment.imgUrls[0].url" v-if="item.comment.imgUrls.length>0">查看原图</a>
+				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+					<!--<div class="fyxq_main_l_title2">
+						<p>公告摘要</p>
+					</div>-->
+					<div class="fyxq_main_l2_img">
+						<!--<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
+						<img v-bind:src="item.userHeadUrl" v-else width="110" height="110">-->
+						<img :src="item.imgUrls"/>
+					</div>
+					<div class="fyxq_main_l_title2">
+						<p v-if="item.speak.noticeId ==''">@{{item.speak.userName}}</p>
+						<p v-else>{{item.speak.title}}</p>
+						<!--<p><span>
+							<font class="ftcred" v-for="(subject,index) in item.speak.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
+							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>-->
+					    <p class="twoLine" v-html="item.speak.content"><img src="../../images/baoxiu.png"/></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/mypraisedetails.js"></script>
+	</body>
+
+</html>

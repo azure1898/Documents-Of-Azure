@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.subject.dao.SocialSubjectDao">
+    
+	<sql id="socialSubjectColumns">
+		a.id AS "id",
+		a.subname AS "subname",
+		a.isrecommend AS "isrecommend",
+		a.villageInfoId AS "villageInfoId",
+		a.createrid AS "createrid",
+		a.creatername AS "creatername",
+		a.createtime AS "createtime",
+		a.ordernum AS "ordernum"
+	</sql>
+	
+	<sql id="socialSubjectJoins">
+	</sql>
+    
+	<select id="get" resultType="socialSubject">
+		SELECT 
+			<include refid="socialSubjectColumns"/>, b.village_name AS "villageInfoName"
+		FROM social_subject a, village_info b
+		<include refid="socialSubjectJoins"/>
+		WHERE a.villageInfoId = b.id and a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="socialSubject">
+		SELECT 
+			<include refid="socialSubjectColumns"/>, b.village_name AS "villageInfoName" 
+		FROM social_subject a, village_info b 
+		<include refid="socialSubjectJoins"/>
+		<where>
+			a.villageInfoId = b.id 
+			<if test="subname != null and subname != ''">
+				AND a.subname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{subname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{subname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{subname},'%')</if> 
+			</if>
+			<if test="beginCreatetime != null and endCreatetime != null and beginCreatetime != '' and endCreatetime != ''">
+				AND a.createtime BETWEEN #{beginCreatetime} AND #{endCreatetime} 
+			</if>
+			<if test="addrpro != null and addrpro != ''">
+				AND a.villageInfoId IN(
+					SELECT c.id FROM village_info c WHERE c.addr_pro =  '${addrpro}'
+				) 
+			</if>
+			<if test="addrcity != null and addrcity != ''">
+				AND a.villageInfoId IN(
+					SELECT d.id FROM village_info d WHERE d.addr_city =  '${addrcity}'
+				) 
+			</if>
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND a.villageInfoId = ${villageInfoId} 
+			</if>
+			<if test="isrecommend != null and isrecommend != ''">
+				AND a.isrecommend = ${isrecommend} 
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.isrecommend, a.ordernum
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="socialSubject">
+		SELECT 
+			<include refid="socialSubjectColumns"/>
+		FROM social_subject a
+		<include refid="socialSubjectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.ordernum
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAll" resultType="socialSubject">
+		SELECT 
+			<include refid="socialSubjectColumns"/>
+		FROM social_subject a
+		<include refid="socialSubjectJoins"/>
+		<where>
+			
+		</where>
+		ORDER BY a.ordernum
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_subject(
+			id,
+			subname,
+			isrecommend,
+			villageInfoId,
+			createrid,
+			creatername,
+			createtime,
+			ordernum
+		) VALUES (
+			#{id},
+			#{subname},
+			#{isrecommend},
+			#{villageInfoId},
+			#{createrid},
+			#{creatername},
+			#{createtime},
+			#{ordernum}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_subject SET 	
+			subname = #{subname},
+			isrecommend = #{isrecommend},
+			villageInfoId = #{villageInfoId},
+			createrid = #{createrid},
+			creatername = #{creatername},
+			createtime = #{createtime},
+			ordernum = #{ordernum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_subject
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateSortNum">
+		UPDATE social_subject SET
+			ordernum = #{ordernum}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateRecommend">
+		UPDATE social_subject SET
+			isrecommend = #{isrecommend}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据发言id查询话题 -->
+	<select id="findSubListBySpeakId" resultType="SocialSubject">
+	    select ss.subname 
+	    from social_subject ss, social_sub_relation ssr, social_speak a 
+	    where ss.id = ssr.subjectid and ssr.speakid = a.id and a.id=#{speakId}
+	</select>
+	
+</mapper>

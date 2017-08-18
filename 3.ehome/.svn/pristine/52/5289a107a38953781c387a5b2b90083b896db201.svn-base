@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.operation.dao.GroupPurchaseDao">
+    
+	<sql id="groupPurchaseColumns">
+		a.id AS "id",
+		a.module_id AS "moduleId",
+		a.businessinfo_id AS "businessinfoId",
+		a.group_purc_name AS "groupPurcName",
+		a.group_purc_pic AS "groupPurcPic",
+		a.market_money AS "marketMoney",
+		a.group_purc_money AS "groupPurcMoney",
+		a.restriction_number AS "restrictionNumber",
+		a.support_type AS "supportType",
+		a.group_purc_detail AS "groupPurcDetail",
+		a.validity_start_time AS "validityStartTime",
+		a.validity_end_time AS "validityEndTime",
+		a.use_time AS "useTime",
+		a.use_rule AS "useRule",
+		a.sort_num AS "sortNum",
+		a.group_purc_state AS "groupPurcState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		business.business_name AS "businessName"
+	</sql>
+	
+	<sql id="groupPurchaseJoins">
+		LEFT JOIN business_info business ON business.id = a.businessinfo_id AND business.del_flag=0
+	</sql>
+    
+	<select id="get" resultType="GroupPurchase">
+		SELECT 
+			a.id AS "groupId",
+			a.module_id AS "moduleId",
+			a.businessinfo_id AS "businessinfoId",
+			a.group_purc_name AS "groupPurcName",
+			a.group_purc_pic AS "groupPurcPic",
+			a.market_money AS "marketMoney",
+			a.group_purc_money AS "groupPurcMoney",
+			a.restriction_number AS "restrictionNumber",
+			a.support_type AS "supportType",
+			a.group_purc_detail AS "groupPurcDetail",
+			a.validity_start_time AS "validityStartTime",
+			a.validity_end_time AS "validityEndTime",
+			a.use_time AS "useTime",
+			a.use_rule AS "useRule",
+			a.sort_num AS "sortNum",
+		    a.group_purc_state AS "groupPurcState",				
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag"
+		FROM group_purchase a
+		WHERE id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GroupPurchase">
+		SELECT DISTINCT
+			<include refid="groupPurchaseColumns"/>
+		FROM group_purchase a
+		JOIN business_info business ON business.id = a.businessinfo_id AND business.del_flag=0
+		<if test="(villageInfoId != null and villageInfoId != '') or (userVillageIds != null and userVillageIds.size() > 0)">
+		JOIN business_servicescope service ON service.BusinessInfo_ID = a.businessinfo_id AND service.del_flag=0
+		</if>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="userVillageIds != null and userVillageIds.size() > 0">
+		        AND service.Village_Info_ID IN
+		        <foreach item="item" collection="userVillageIds" separator="," open="(" close=")" index="index">
+		          #{item}
+		        </foreach>
+		    </if>
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND service.Village_Info_ID = #{villageInfoId}
+			</if>
+			<if test="businessinfoId != null and businessinfoId != ''">
+				AND a.businessinfo_id = #{businessinfoId}
+			</if>
+			<if test="groupPurcName != null and groupPurcName != ''">
+				AND (a.group_purc_name LIKE
+					 <if test="dbName == 'oracle'">'%'||#{groupPurcName}||'%'</if>
+					 <if test="dbName == 'mssql'">'%'+#{groupPurcName}+'%'</if>
+					 <if test="dbName == 'mysql'">concat('%',#{groupPurcName},'%')</if> 
+					 or business.business_name LIKE 
+					 <if test="dbName == 'oracle'">'%'||#{groupPurcName}||'%'</if>
+					 <if test="dbName == 'mssql'">'%'+#{groupPurcName}+'%'</if>
+					 <if test="dbName == 'mysql'">concat('%',#{groupPurcName},'%')</if>)
+			</if>
+			<choose>
+				<when test="groupPurcState != null and groupPurcState != '' and groupPurcState ==3">
+					AND a.group_purc_state = #{groupPurcState}
+				</when>
+				<otherwise>
+				    AND a.group_purc_state !=3
+				</otherwise>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GroupPurchase">
+		SELECT 
+			<include refid="groupPurchaseColumns"/>
+		FROM group_purchase a
+		<include refid="groupPurchaseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 团购管理中，查询详情页 -->
+	<select id="getDetail" resultType="GroupPurchase">
+		SELECT 
+			a.id AS "groupId",
+			a.module_id AS "moduleId",
+			a.businessinfo_id AS "businessinfoId",
+			a.group_purc_name AS "groupPurcName",
+			a.group_purc_pic AS "groupPurcPic",
+			a.market_money AS "marketMoney",
+			a.group_purc_money AS "groupPurcMoney",
+			a.restriction_number AS "restrictionNumber",
+			a.support_type AS "supportType",
+			a.group_purc_detail AS "groupPurcDetail",
+			a.validity_start_time AS "validityStartTime",
+			a.validity_end_time AS "validityEndTime",
+			a.use_time AS "useTime",
+			a.use_rule AS "useRule",
+			a.sort_num AS "sortNum",
+		    a.group_purc_state AS "groupPurcState",				
+			a.create_by AS "createBy.id",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			a.update_date AS "updateDate",
+			a.remarks AS "remarks",
+			a.del_flag AS "delFlag",
+			business.business_name AS "businessName"		
+		FROM group_purchase a
+		LEFT JOIN business_info business ON business.id = a.businessinfo_id AND business.del_flag=0
+		<where> 
+        	a.del_flag =  #{DEL_FLAG_NORMAL}
+        	<if test="id != null and id != ''">
+             AND a.id =  #{id}
+            </if>
+		</where>
+	</select>
+	
+	<!-- 团购管理中，依据模块的商户分类字典表ID，获取商家ID -->
+    <select id="getBusinessId" resultType="GroupPurchase">
+        SELECT DISTINCT
+            BusinessInfo_ID AS "businessinfoId"      
+        FROM business_categoryinfo a
+        <where> 
+        	a.del_flag =  #{DEL_FLAG_NORMAL}
+        	<if test="businessCategoryDictId != null and businessCategoryDictId != ''">
+             AND a.Business_Category_Dict_ID =  #{businessCategoryDictId}
+            </if>      
+        </where>
+    </select>
+    
+    <!-- 团购管理中，依据模块的商户ID，获取商家名称 -->
+    <select id="getBusinessNameList" resultType="GroupPurchase">
+        SELECT 
+            id AS "businessinfoId",
+            Business_Name AS "businessName"         
+        FROM business_info a
+        <where> 
+        	a.del_flag =  #{DEL_FLAG_NORMAL}
+        	<if test="businessinfoId != null and businessinfoId != ''">
+             AND a.id =  #{businessinfoId}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 团购管理中，取全部商家 -->
+    <select id="getAllBusinessList" resultType="GroupPurchase">
+        SELECT 
+            id AS "businessinfoId",
+            Business_Name AS "businessName"         
+        FROM business_info a
+        <where> 
+        	a.del_flag =  0   
+        </where>
+    </select>
+	 	  
+	<insert id="insert">
+		INSERT INTO group_purchase(
+			id,
+			module_id,
+			businessinfo_id,
+			group_purc_name,
+			group_purc_pic,
+			market_money,
+			group_purc_money,
+			restriction_number,
+			support_type,
+			group_purc_detail,
+			validity_start_time,
+			validity_end_time,
+			use_time,
+			use_rule,
+			sort_num,
+			group_purc_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{moduleId},
+			#{businessinfoId},
+			#{groupPurcName},
+			#{groupPurcPic},
+			#{marketMoney},
+			#{groupPurcMoney},
+			#{restrictionNumber},
+			#{supportType},
+			#{groupPurcDetail},
+			#{validityStartTime},
+			#{validityEndTime},
+			#{useTime},
+			#{useRule},
+			#{sortNum},
+			#{groupPurcState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE group_purchase SET 	
+			module_id = #{moduleId},
+			businessinfo_id = #{businessinfoId},
+			group_purc_name = #{groupPurcName},
+			group_purc_pic = #{groupPurcPic},
+			market_money = #{marketMoney},
+			group_purc_money = #{groupPurcMoney},
+			restriction_number = #{restrictionNumber},
+			support_type = #{supportType},
+			group_purc_detail = #{groupPurcDetail},
+			validity_start_time = #{validityStartTime},
+			validity_end_time = #{validityEndTime},
+			use_time = #{useTime},
+			use_rule = #{useRule},
+			sort_num = #{sortNum},
+			group_purc_state = #{groupPurcState},
+			create_date = #{createDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}	
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 团购强制下线 -->
+	<update id="updateState">
+		UPDATE group_purchase SET 	
+			group_purc_state = #{groupPurcState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}	
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 团购保存排序 -->
+	<update id="updateSortNum">
+		UPDATE group_purchase SET 	
+			sort_num = #{sortNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}	
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE group_purchase SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

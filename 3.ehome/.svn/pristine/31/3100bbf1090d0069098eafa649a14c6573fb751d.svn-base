@@ -1,0 +1,149 @@
+{
+	"code": 1000,
+	"id": "001",
+	"userName": "蓝色理想",
+	"headPicSrc": "../../images/pic01.jpg",
+	"countFollow": "223",
+	"countFans": "322",
+	"isFocus": "0",
+	"data": [
+		{
+			"speak": {
+				"id": "1111",
+				"isSpeak": 0,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"createTime": "昨天 18:30",
+				"speakContent": "装修房子是个苦差事啊，晒个图~ @优米的米",
+				"imgList": [
+					{
+						"imgUrl": "../../images/pic01.jpg"
+					}, {
+						"imgUrl": "../../images/pic01.jpg"
+					}, {
+						"imgUrl": "../../images/pic01.jpg"
+					}
+				]
+			},
+			"rootSpeak": {
+				"speakId": "",
+				"userName": "",
+				"delFlag": "",
+				"isSpeak": "",
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"speakContent": "",
+				"createTime": "",
+				"imgUrl": "../../images/pic01.jpg"
+			},
+			"countForword": 123,
+			"countComment": 45,
+			"countPraise": 78,
+			"isPraise": 0
+		}, {
+			"speak": {
+				"id": "1111",
+				"isSpeak": 0,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"createTime": "昨天 18:30",
+				"speakContent": "装修房子是个苦差事啊，晒个图~ @优米的米",
+				"imgList": []
+			},
+			"rootSpeak": {},
+			"countForword": 12,
+			"countComment": 45,
+			"countPraise": 78,
+			"isPraise": 1
+		}, {
+			"speak": {
+				"id": "1111",
+				"isSpeak": 1,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"createTime": "昨天 18:30",
+				"speakContent": "装修房子是个苦差事啊，晒个图~ @优米的米",
+				"imgList": [
+					{
+						"imgUrl": "../../images/pic01.jpg"
+					}, {
+						"imgUrl": "../../images/pic01.jpg"
+					}, {
+						"imgUrl": "../../images/pic01.jpg"
+					}
+				]
+			},
+			"rootSpeak": {
+				"speakId": "",
+				"userName": "蓝色",
+				"delFlag": 0,
+				"isSpeak": 1,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"speakContent": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+				"createTime": "昨天18:60",
+				"imgUrl": "../../images/pic01.jpg"
+			},
+			"countForword": 166,
+			"countComment": 123,
+			"countPraise": 123,
+			"isPraise": 1
+		}, {
+
+
+			"speak": {
+				"id": "1111",
+				"isSpeak": 1,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"createTime": "昨天 18:30",
+				"speakContent": "装修房子是个苦差事啊，晒个图~ @优米的米",
+				"imgList": []
+			},
+			"rootSpeak": {
+				"speakId": "",
+				"userName": "蓝色",
+				"delFlag": 1,
+				"isSpeak": 1,
+				"subjectList": [
+					{
+						"id": "",
+						"subName": ""
+					}
+				],
+				"speakContent": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+				"createTime": "昨天18:60",
+				"imgUrl": "../../images/pic01.jpg"
+			},
+			"countForword": 123,
+			"countComment": 456,
+			"countPraise": 789,
+			"isPraise": 1
+		}
+	],
+	"message": ""
+}

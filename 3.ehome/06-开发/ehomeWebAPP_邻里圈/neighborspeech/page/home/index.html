@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>首页</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			.mt {
+				margin-top: 10px;
+			}
+			.fyxq_main3 ul li:nth-child(3n+1){
+				margin-left: 3%;
+			}
+			.collection_btn{
+				display: inline-block;
+			    width: 50px;
+			    height: 24px;
+			    /*background: #C0C0C0;*/
+			   border: 1px solid #df2d1f;
+			    border-radius: 4px;
+			    text-align: center;
+			    line-height: 24px;
+			    color: #df2d1f;
+			}
+			a:link{text-decoration: none;}
+			a:visited{text-decoration: none;}
+			a:hover{text-decoration: none;}
+			[v-cloak] {
+			  display: none;
+			}
+			.bottom_icon6 {
+		    background: url(../../images/bot_icon3.png) left center no-repeat;
+		    padding-left: 25px;
+		    }
+		</style>
+	</head>
+
+	<body>
+		<div class="grey_top">实地常春藤<i class="glyphicon glyphicon-triangle-bottom" style="margin-left:5px; font-size:12px;"></i></div>
+		<div class="cloud">
+			<div class="cloud_top">
+				<div class="business_price_box2">
+					<div class="business_nr" style="float:left;">
+						<div class="business_name">无锡市&nbsp;<span>空气良</span>&nbsp;
+							<font style="color:#5e95f1;">71</font>
+						</div>
+						<div class="business_type"></div>
+						<div class="business_start"><span>星期六&nbsp;01月10日&nbsp;四月初二 </span></div>
+						<div class="full_cut"></div>
+					</div>
+					<div class="business_nrr" style="float:right;">
+						<div class="business_name">
+							<div style="float:left;margin-right:10px;"><img src="../../images/cloud.png"></div>
+							<div style="float:left; ">多云<br>
+								<font style="font-size:14px;">13°C~20°C</font>
+							</div>
+						</div>
+						<div class="full_cut"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="index_news">
+				<p><span class="newstyle"><img src="../../images/notice.png" ></span><span style="float:right; "><img src="../../images/go.png"></span>关于回南天应对事项的温</p>
+			</div>
+		</div>
+		<div class="index_menu_main">
+			<div class="index_menu_top"><span><img src="../../images/more.png" width="18" height="18"></span>常用应用</div>
+			<div class="index_menu">
+				<ul>
+					<li><img src="../../images/yy_icon2.png">
+						<p>智能家居</p>
+					</li>
+					<li><img src="../../images/yy_icon3.png">
+						<p>物业缴费</p>
+					</li>
+					<li style="width:24%; padding-top:8px; height:100px;"><img src="../../images/yy_icon1.png" style="width:60px; height:60px;">
+						<p>手机开门</p>
+					</li>
+					<li><img src="../../images/yy_icon4.png">
+						<p>社区商城</p>
+					</li>
+					<li><img src="../../images/yy_icon5.png">
+						<p>社区新闻</p>
+					</li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+
+		</div>
+
+		<div class="index_menu_main">
+			<div class="index_menu_top"><span><strong>3</strong>/5</span>热门推荐</div>
+			<div class="index_menu" style="padding:10px 0">
+				<img src="../../images/index_pic.png" width="351" height="150"> </div>
+
+		</div>
+		<div id="app">
+			<!--邻里圈-->
+			<!--弹窗层-->
+			<div id="bg" @click="closePopups()" style="background-color:#000;opacity: 0.5;filter:alpha(opacity=50); width:100%; height:100%; position:absolute; z-index:888; display:none;"></div>
+			<div id="type" style="position:fixed; bottom:0; left:0; z-index:999; width:100%; display:none;">
+				<div class="sort_xiala">
+					<ul>
+						<li @click="cancelAttention()">取消关注</li>
+						<li @click="shield()">屏蔽他的发言</li>
+						
+						<li style="height:10px; background:#dddddd">&nbsp;</li>
+						<li @click="closePopups()">取消</li>
+					</ul>
+				</div>
+			</div>
+			<div class="index_menu_main">
+				<div class="index_menu_top"><span>全部</span>邻里发言</div>
+
+			</div>
+
+			<div class="main_box" v-for="(ietm,index) in indexdata" :class="{'mt':index!=0}">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img :src="ietm.headPicSrc" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>{{ietm.userName}}</p>
+							<p><span>{{ietm.createTime}}</span></p>
+						</div>
+					</div>
+					<!--<div class="fyxq_main_r">
+						<table width="100%" border="0">
+							<tr>
+								<td>
+									<div class="myfans_but2" style="margin-right:15px;">+关注</div>
+								</td>
+								<td><img src="../../images/close4.png"></td>
+							</tr>
+						</table>
+					</div>-->
+					
+					
+					<div class="fyxq_main_r" v-if="userid==ietm.speakUserId"><a href="#" class="topic_list_btn2" @click="deleteComments(index,ietm)">删除</a></div>
+					<div class="fyxq_main_r" v-else-if="ietm.isFocus==1"><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(index)"></div>
+					<div class="fyxq_main_r" v-else><span class="collection_btn" @click="attention(ietm)">+关注</span>&nbsp;&nbsp;<span @click="shield()">X</span></div>
+					
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">#装修作业#</font>{{ietm.content}}
+						<!--<font class="ftcred">@优米的米</font>-->
+					</p>
+				</div>
+				<div class="fyxq_main3" v-if="ietm.imgsList&&ietm.imgsList.length>0">
+					<ul>
+						<li v-for="img in ietm.imgsList"><img :src="img.imgUrl" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<!--原发言-->
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="ietm.isSpeak==1">
+					<div class="fyxq_main_l2_img">
+						<img :src="ietm.rootSpeak.imgUrl" width="110" height="110">
+					</div>
+					<div class="fyxq_main_l_title2">
+						<p>@{{ietm.rootSpeak.userName}}</p>
+						<!--<font class="ftcred" v-for="lable in commentme.speak.subjectList">{{lable.subName}}</font>-->
+						<p><span>{{ietm.rootSpeak.speakContent}}</span></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<!--<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+					原发言已被删除
+				</div>-->
+				
+				<div class="personal_main_bottom">
+					<ul>
+						<li><a href="##" class="bottom_icon1">转发</a></li>
+						<li><a href="##" class="bottom_icon2">评论</a></li>
+						<li style="border-right:none;">
+							<a href="###" :class="ietm.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(ietm,1)">{{ietm.countPraise}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<!--<div class="main_box" style="margin-top:10px;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">
+						<table width="100%" border="0">
+							<tr>
+								<td>
+									<div class="myfans_but" style="margin-right:15px;"><i class="glyphicon glyphicon-ok" style="margin-right:5px;"></i>已关注</div>
+								</td>
+								<td><img src="../../images/close4.png"></td>
+							</tr>
+						</table>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~
+						<font class="ftcred">@优米的米</font>
+					</p>
+				</div>
+				<div class="fyxq_main3">
+					<ul>
+						<li style="margin-left:3%;"><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<li><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<li><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li><a href="#" class="bottom_icon1">转发</a></li>
+						<li><a href="#" class="bottom_icon2">评论</a></li>
+						<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="main_box" style="margin-top:10px;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><img src="../../images/xl_icon.png" width="12" height="7"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~
+						<font class="ftcred">@优米的米</font>
+					</p>
+				</div>
+				<div class="fyxq_main3">
+					<ul>
+						<li style="margin-left:3%;"><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<li><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<li><img src="../../images/pic01.jpg" width="110" height="110"></li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li><a href="#" class="bottom_icon1">转发</a></li>
+						<li><a href="#" class="bottom_icon2">评论</a></li>
+						<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="main_box" style="margin-top:10px;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">
+						<font class="ftcred">删除</font>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">#装修作业#</font>装修房子是个苦差事啊，晒个图~
+						<font class="ftcred">@优米的米</font>
+					</p>
+				</div>
+
+				<div class="personal_main_bottom">
+					<ul>
+						<li><a href="#" class="bottom_icon1">转发</a></li>
+						<li><a href="#" class="bottom_icon2">评论</a></li>
+						<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
+					</ul>
+				</div>
+			</div>
+			-->
+			<div class="he100"></div>
+		</div>
+
+		<div class="foot2">
+			<div class="foot2_bg">
+				<ul>
+					<li> <a href="#"><i class="i2_con1_2"></i><span class="index_redft" style="display:block;">首页</span></a></li>
+					<li><a href="#"><i class="i2_con2"></i><span  style="display:block;">消息</span></a></li>
+					<li style="width:24%; z-index:1000; margin-top:-0;">
+						<a href="#"><img src="../../images/index2_icon6.png"></a>
+					</li>
+					<li><a href="#"><i class="i2_con3_2"></i><span  style="display:block;">优家</span></a></li>
+					<li><a href="#"><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/index.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

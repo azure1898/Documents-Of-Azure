@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>商家列表</title>
+
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- page -->
+    <link href="../../css/cursom/business.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div id="bg" class="bg"></div>
+        <div style="position:fixed; top:0; left:0; z-index:999; width:100%;">
+            <div class="grey_top">
+                <a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
+                社区商城
+                <a id="paixu" href="#" class="green_sort" v-on:click="sort"></a>
+            </div>
+            <div class="sort_xiala" style="display: none;">
+                <ul>
+                    <li v-on:click="changeSort(1)" class="selected pointer">默认排序<span class="green_dh"></span></li>
+                    <li v-on:click="changeSort(2)" class="pointer">按销量从高到低</li>
+                    <li v-on:click="changeSort(3)" class="pointer">按商家最近发布时间</li>
+                </ul>
+            </div>
+        </div>
+        <div class="grey_top" onclick="javascript :history.go(-1)">
+            <a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
+            <a href="#" class="green_sort"></a>
+        </div>
+        <div class="sort_list clearfix" v-for="business in businessList">
+            <div class="sortlist_top">
+                <div class="business_price_box">
+                    <div class="business_pic75 fl">
+                        <a v-bind:href="urlList.list + business.businessID">
+                            <img v-bind:src="business.businessImage" />
+                        </a>
+                    </div>
+                    <div class="business_nr font_black">
+                        <div style="height:26px;">
+                            <div class="business_name fl labelEllipsis">{{business.businessName}}</div>
+                            <div class="fr">
+                                <a style=" color:#666;" v-bind:href="urlList.list + business.businessID">进入店铺</a>
+                            </div>
+                        </div>
+                        <div class="business_type fl">
+                            <span v-for="label in business.businessLabels">{{label.labelName}}</span>
+                        </div>
+                        <div class="business_start">
+                            <span v-if="business.sendMoney > 0">起送价 {{business.sendMoney | formatDecimal}}</span>
+                            <span v-if="business.sendMoney > 0">|</span>
+                            <span v-if="business.isFeeActivity == 0 & business.deliveryFee > 0">配送费 {{business.deliveryFee | formatDecimal}}</span>
+                            <span v-if="business.isFeeActivity == 1">{{business.deliveryFeeActivity}}</span>
+                            <span v-if="business.isFeeActivity == 0 & business.deliveryFee == 0">免运费</span>
+                        </div>
+                        <div class="full_cut clearfix" style="clear: both;" v-for="activity in business.activities">
+                            <span class="orange_bg20 fl">满减</span>
+                            <span class="fl ml10">{{activity.desc}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="goods_hd">
+                <ul class="clearfix">
+                    <li v-for="commodity in business.commodities">
+                        <div class="goodspic120">
+                            <a v-bind:href="urlList.list + business.businessID">
+                                <img v-bind:src="commodity.commodityImage">
+                            </a>
+                        </div>
+                        <div class="txt_h30 labelEllipsis">
+                            {{commodity.commodityName}}
+                        </div>
+                        <div class="fl">
+                            <div class="font_orange">{{commodity.commodityPrice | formatDecimal}}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt10 clearfix">
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../../js/static/jquery.js"></script>
+    <script src="../../js/static/bootstrap.js"></script>
+    <script src="../../js/static/vue.js"></script>
+    <script src="../../js/static/vue-resource.js"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/common/common.js"></script>
+    <script src="../../js/cursom/business/modulelist.js"></script>
+</body>
+</html>

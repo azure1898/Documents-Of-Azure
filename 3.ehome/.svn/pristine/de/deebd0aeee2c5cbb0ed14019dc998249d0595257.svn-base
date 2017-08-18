@@ -1,0 +1,82 @@
+	var vm = new Vue({
+		el: "#app",
+		data: {
+
+			items: {},
+			urlList: {
+				list: "courselist.html?id=",
+				detail: "coursedetails.html?id=",
+				index: "courseindex.html?id=",
+				order: "courseorder.html?id="
+			},
+			Change: true
+		},
+		mounted: function() { //页面加载之后自动调用，常用于页面渲染
+				
+				this.$nextTick(function(){
+					var _this = this;
+					var data={userID:userInfo.userID,buildingID:userInfo.buildingID,courseID:getQueryString("id")};
+					this.getData(_this,'/live/getCourseItemDetail',data,function(resData){
+						 _this.items =resData;
+						 _this.init(_this.items.stockNumber,_this.items.isNormal);
+					}); 
+//轮播图
+					$('#myCarousel').carousel({
+				//自动4秒播放
+				interval: 3000,
+			});
+            var myElement= document.getElementById('myCarousel')
+            var hm=new Hammer(myElement);
+            hm.on("swipeleft",function(){
+                $('#myCarousel').carousel('next')
+            })
+            hm.on("swiperight",function(){
+                $('#myCarousel').carousel('prev')
+            })
+					
+				})
+			
+			
+		},
+		methods: {
+			init:function(number,status){
+				if(status==1){
+
+				if(number>0){
+					$("#change_coursedetail > a").text("立即预约");
+				this.Change=true;
+				}
+				else{
+					this.Change=false;
+					$(".business_bottom>div").removeClass().addClass("ser_zbtn2");
+					$("#change_coursedetail > a").text("报名已满");
+				}
+				
+				}
+				else if(status==0){
+					
+					if(number>0){
+					$(".business_bottom>div").removeClass().addClass("ser_zbtn2");
+					$("#change_coursedetail > a").text("立即预约");
+				this.Change=false;
+				}
+				else{
+					this.Change=false;
+					$(".business_bottom>div").removeClass().addClass("ser_zbtn2");
+					$("#change_coursedetail > a").text("报名已满");
+				}
+					
+					
+					
+				}
+				
+			},
+		//收藏
+		  collection: function (item) {
+            var _this = this;
+            _this.myCollection(_this, item);
+        }
+		}
+
+});
+
