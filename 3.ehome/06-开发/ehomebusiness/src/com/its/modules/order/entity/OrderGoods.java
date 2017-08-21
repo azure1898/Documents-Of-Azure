@@ -250,7 +250,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
         this.payUserName = payUserName;
     }
 
-    @ExcelField(title = "配送方式", type = 1, align = 2, sort = 6, dictType = "pay_goods_state")
+    @ExcelField(title = "支付状态", type = 1, align = 2, sort = 6, dictType = "pay_goods_state")
     @Length(min = 0, max = 1, message = "支付状态长度必须介于 0 和 1 之间")
     public String getPayState() {
         return payState;

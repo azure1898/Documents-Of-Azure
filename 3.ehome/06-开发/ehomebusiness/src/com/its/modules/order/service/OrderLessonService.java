@@ -65,7 +65,7 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
     }
 
     public Page<OrderLesson> findPage(Page<OrderLesson> page, OrderLesson orderLesson) {
-        page.setOrderBy("a.order_no desc");
+        page.setOrderBy("a.create_date desc,a.order_no desc");
         return super.findPage(page, orderLesson);
     }
 

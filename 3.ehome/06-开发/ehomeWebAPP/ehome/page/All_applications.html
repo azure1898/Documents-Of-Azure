@@ -1,87 +1,99 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>全部应用</title>
-
-		<!-- Bootstrap -->
-		<link href="../css/bootstrap.css" rel="stylesheet">
-		<!--<link href="../css/main.css" rel="stylesheet">-->
-		<link rel="stylesheet" type="text/css" href="../css/index.css" />
-		<link href="../css/common.css" rel="stylesheet">
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>全部应用</title>
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <!--<link href="../css/main.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+    <link href="../css/common.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-	<style type="text/css">
-		.display_n{
-			display: none;
-		}
-		
-	</style>
-	</head>
-	
-
-	<body>
-		<div id="app">
- <div class="grey_top">
+    <style type="text/css">
+        .display_n {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="grey_top">
             <a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
-           全部应用
+            全部应用
         </div>
-			
-			  <div v-for="all in allApp">
-				<div class="choose_title2" v-if="all.appType == 0"><span id="click" v-on:click="changeS()">编辑</span>常用应用
-					<font class="font12">（点击编辑可自动选择应用）</font>
-				</div>
-				<div class="choose_title2" v-if="all.appType == 1">优家</div>
-				<div class="choose_title2" v-if="all.appType == 2">社区应用</div>
-				<div class="main_box" style="border-bottom:none;">
-					<div class="choose_cont">
-						<ul v-if="all.appType == 0" id="common_app">
-							<li v-for="(item1,index) in all.apps" v-bind:data-id="item1.moduleID">
-								<div class="tupian"><img v-bind:src="item1.moduleIcon" ></div>
-								<p>{{item1.moduleName}}</p>
-								<div v-bind:class="['choose_cont_tj' , status ? 'display_n' : '']"><img src="../images/jian.png" width="28" height="28"  @click="deleApps(item1,index,app)"></div>
-							</li>
-							<div class="clear"></div>
-						</ul>
-						<ul v-if="all.appType == 1" id="yj_app">
-							<li v-for="(item1,index) in all.apps" v-bind:data-id="item1.moduleID">
-								<div class="tupian"><img v-bind:src="item1.moduleIcon" ></div>
-								<p>{{item1.moduleName}}</p>
-								<div v-bind:class="['choose_cont_tj' , status ? 'display_n' : '']"><img src="../images/jia.png" width="28" height="28" @click="addApps(item1,index,all.appType)"></div>
-							</li>
-							<div class="clear"></div>
-						</ul>
-						<ul v-if="all.appType == 2" id="community_app">
-							<li v-for="(item1,index) in all.apps" v-bind:data-id="item1.moduleID">
-								<div class="tupian"><img v-bind:src="item1.moduleIcon" ></div>
-								<p>{{item1.moduleName}}</p>
-								<div v-bind:class="['choose_cont_tj' , status ? 'display_n' : '']"><img src="../images/jia.png" width="28" height="28"  @click="addApps(item1,index,app)"></div>
-							
-							</li>
-							<div class="clear"></div>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="../js/static/bootstrap.js"></script>
-		<script src="../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../js/cursom/All_applications.js" type="text/javascript" charset="utf-8"></script>
-		
-	</body>
-
+        <div class="choose_title2">
+            <span v-if="status" v-on:click="changeStatus()">完成</span>
+            <span v-else v-on:click="changeStatus()">编辑</span>
+            常用应用
+            <font class="font12">（点击编辑可自动选择应用）</font>
+        </div>
+        <div class="main_box" style="border-bottom:none;">
+            <div class="choose_cont">
+                <ul>
+                    <li v-for="(userApp,index) in userApps">
+                        <div class="tupian">
+                            <img v-bind:src="userApp.moduleIcon">
+                        </div>
+                        <p>{{userApp.moduleName}}</p>
+                        <div v-bind:class="{choose_cont_tj:true,display_n:!status}">
+                            <img v-bind:src="urlList.dele" width="28" height="28" v-on:click="deleApp(index,userApp)">
+                        </div>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="choose_title2" v-if="commApps.length > 0">优家应用</div>
+        <div class="main_box" style="border-bottom:none;" v-if="homeApps.length > 0">
+            <div class="choose_cont">
+                <ul>
+                    <li v-for="(homeApp,index) in homeApps">
+                        <div class="tupian">
+                            <img v-bind:src="homeApp.moduleIcon">
+                        </div>
+                        <p>{{homeApp.moduleName}}</p>
+                        <div v-bind:class="{choose_cont_tj:true,display_n:!status}">
+                            <img v-bind:src="urlList.add" width="28" height="28" v-on:click="addApp(index,homeApp)">
+                        </div>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="choose_title2" v-if="commApps.length > 0">社区应用</div>
+        <div class="main_box" v-if="commApps.length > 0">
+            <div class="choose_cont">
+                <ul>
+                    <li v-for="(commApp,index) in commApps">
+                        <div class="tupian">
+                            <img v-bind:src="commApp.moduleIcon">
+                        </div>
+                        <p>{{commApp.moduleName}}</p>
+                        <div v-bind:class="{choose_cont_tj:true,display_n:!status}">
+                            <img v-bind:src="urlList.add" width="28" height="28" v-on:click="addApp(index,commApp)">
+                        </div>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../js/static/bootstrap.js"></script>
+    <script src="../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/cursom/All_applications.js" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>

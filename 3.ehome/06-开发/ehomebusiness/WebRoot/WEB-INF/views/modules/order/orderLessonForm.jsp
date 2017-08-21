@@ -118,7 +118,13 @@
                 <td <c:if test="${orderLesson.orderState == 0}">style="color:red"</c:if>>
                         ${fns:getDictLabel(orderLesson.orderState, 'order_lesson_state', "")}
                 </td>
-            </tr>
+                <td><c:if test="${orderLesson.createDate !=null && orderLesson.createDate !=''}">
+                        <span>下单：<fmt:formatDate value="${orderLesson.createDate}" pattern="yyyy-MM-dd HH:mm" /></span>
+                        <br />
+                    </c:if> <c:if test="${orderLesson.payTime !=null && orderLesson.payTime !=''}">
+                        <span>支付：<fmt:formatDate value="${orderLesson.payTime}" pattern="yyyy-MM-dd HH:mm" /></span>
+                    </c:if></td>
+               </tr>
         </tbody>
     </table>
     <p style="font-weight:bold;">支付信息</p>

@@ -83,6 +83,9 @@ public class HttpUtils {
                 ex.printStackTrace();
             }
         }
+        if (StringUtils.isBlank(result)) {
+            return new JSONObject();
+        }
         JSONObject jsonObj = new JSONObject(result);
         return jsonObj;
     }

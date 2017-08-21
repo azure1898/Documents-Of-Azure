@@ -26,20 +26,20 @@ public interface AccountApplicationDao extends CrudDao<AccountApplication> {
 	 *            用户ID
 	 * @param villageInfoId
 	 *            楼盘ID
-	 * @return List<String>
+	 * @return List<AccountApplication>
 	 */
-	public List<String> getAccountApplicationList(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId);
+	public List<AccountApplication> getAccountApplicationList(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId);
 
 	/**
-	 * 获取某用户在某楼盘下的某常用应用
+	 * 批量删除用户常用应用
 	 * 
+	 * @param list
+	 *            模块ID集合
 	 * @param accountId
 	 *            用户ID
 	 * @param villageInfoId
 	 *            楼盘ID
-	 * @param moduleManageId
-	 *            模块管理ID
-	 * @return AccountApplication
+	 * @return 操作的行数
 	 */
-	public AccountApplication getAccountApplication(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId, @Param("moduleManageId") String moduleManageId);
+	public int deleteList(@Param("list") List<String> list, @Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId);
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.mail.search.DateTerm;
 
 import org.apache.poi.xslf.model.geom.Guide;
+import org.apache.taglibs.standard.tag.common.xml.ForEachTag;
 import org.apache.tomcat.util.log.SystemLogHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.druid.support.logging.Log;
 import com.its.modules.app.bean.OrderGroupPurcRCBean;
 import com.its.modules.app.entity.Account;
+import com.its.modules.app.entity.RoomCertify;
 import com.its.modules.app.service.AccountService;
 import com.its.modules.app.service.OrderGroupPurcService;
+import com.its.modules.app.service.RoomCertifyService;
 import com.its.modules.rong.common.RongGlobal;
 import com.its.modules.rong.entity.SocialMsg;
 import com.its.modules.rong.service.SocialMsgService;
@@ -27,6 +30,7 @@ import com.its.modules.sys.service.LogService;
 
 import io.rong.RongCloud;
 import io.rong.messages.TxtMessage;
+import io.rong.models.CodeSuccessResult;
 
 /**
  * @Description：融云相关消息推送接口
@@ -39,9 +43,13 @@ public class RongCloudMsgController {
 
 	@Autowired
 	private SocialMsgService socialMsgService;
-	
+	@Autowired
+	AccountService accountService = new AccountService();
 	@Autowired
 	private  LogService logService;
+	
+	@Autowired
+	private RoomCertifyService roomCertifyService;
 	
 	/**
 	 * 商品配送消息（仅商品购买模式）
@@ -68,7 +76,7 @@ public class RongCloudMsgController {
 					+ "\"msgContent\":\""+msgContent+"\""
 					+"}";
 			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
-			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+			CodeSuccessResult csr = rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
 			
 			SocialMsg socialMsg = new SocialMsg();
 			socialMsg.setIsNewRecord(true);
@@ -76,7 +84,7 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent(msgExtra);
+			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -126,7 +134,7 @@ public class RongCloudMsgController {
 					+ "\"msgContent\":\""+msgContent+"\""
 					+"}";
 			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
-			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+			CodeSuccessResult csr = rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
 			
 			SocialMsg socialMsg = new SocialMsg();
 			socialMsg.setIsNewRecord(true);
@@ -134,7 +142,7 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent(msgExtra);
+			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -184,7 +192,7 @@ public class RongCloudMsgController {
 					+ "\"msgContent\":\""+msgContent+"\""
 					+"}";
 			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
-			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+			CodeSuccessResult csr = rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
 			
 			SocialMsg socialMsg = new SocialMsg();
 			socialMsg.setIsNewRecord(true);
@@ -192,7 +200,7 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent(msgExtra);
+			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -242,13 +250,13 @@ public class RongCloudMsgController {
 					+ "\"msgContent\":\""+msgContent+"\""
 					+"}";
 			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
-			rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+			CodeSuccessResult csr = rongCloud.message.PublishSystem(businessId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
 			
 			SocialMsg socialMsg = new SocialMsg();
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent(msgExtra);
+			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -275,51 +283,143 @@ public class RongCloudMsgController {
 	
 	
 	
+	/**
+	 * 公告通知
+	 * @param fromId 		发送用户Id
+	 * @param noticeId 		公告Id
+	 * @param noticeTitle	公告Title
+	 * @param noticeSummary	公告Summary
+	 * @param villageId		楼盘Id	
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="noticeMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String noticeMsg(String fromId,String noticeId,String noticeTitle,String noticeSummary,String villageId,String sendType) throws Exception{
+		try{
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			
+			String msgContent = noticeTitle+"<br>"+noticeSummary+">>详细";
+			String[] messagePublishSystemToUserId = new String[1];
+						
+			List<Account> list_account = accountService.findListByVillage(villageId);
+			if(list_account!=null && !list_account.isEmpty()){
+				for (int i = 0 ; i<list_account.size();i++) {
+					Account account = list_account.get(i);
+					messagePublishSystemToUserId[0] = account.getId();
+					String msgExtra = "{\"sendType\":\""+sendType+"\",\"noticeId\":\""+noticeId+"\","
+							+ "\"fromUserId\":\""+fromId+"\","
+							+ "\"toUserId\":\""+account.getId()+"\","
+							+ "\"msgContent\":\""+msgContent+"\""
+							+"}";
+					TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
+					CodeSuccessResult csr = rongCloud.message.PublishSystem(fromId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+					
+					SocialMsg socialMsg = new SocialMsg();
+					socialMsg.setUserid(fromId);
+					socialMsg.setUsername("");
+					socialMsg.setTouserid(account.getId());
+					socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+					socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
+					socialMsg.setNoticetime(new Date());
+					socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ADMIN);
+					socialMsg.setSectype(RongGlobal.MSG_SECTYPE_GGTZ);
+					socialMsg.setIsread(RongGlobal.MSG_IS_READ_NO);
+					socialMsgService.save(socialMsg);
+					
+					if(i%99==0)
+						Thread.sleep(1000);
+				}
+			}
+			return "{code:1000,message:\"\"}";
+		}catch (Exception ex) {
+			
+			com.its.modules.sys.entity.Log log = new com.its.modules.sys.entity.Log();
+			
+			log.setIsNewRecord(true);
+			log.setId(UUID.randomUUID().toString());
+			log.setType(com.its.modules.sys.entity.Log.TYPE_Exception);
+			log.setTitle("ticketBackMsg");
+			log.setException("message:"+ex.getMessage()+",StackTrace:"+ex.getStackTrace().toString());
+			log.setCreateDate(new Date());
+			logService.save(log);
+			
+			ex.printStackTrace();
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
 	
-//	/**
-//	 * 公告通知
-//	 * @param fromId 		发送用户Id
-//	 * @param noticeTitle	公告Title
-//	 * @param noticeSummary	公告Summary
-//	 * @return				{code,message}
-//	 * @throws Exception
-//	 */
-//	@RequestMapping(value="noticeMsg",method = {RequestMethod.POST,RequestMethod.GET})
-//	@ResponseBody
-//	public String noticeMsg(String fromId,String noticeTitle,String noticeSummary) throws Exception{
-//		try{
-//			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
-//			TxtMessage messagePublishSystemTxtMessage = new TxtMessage(noticeTitle+"\r\n"+noticeSummary,"");
-//			
-//			String[] messagePublishSystemToUserId = new String[100];
-//			int i_msg = 0;
-//			AccountService accountService = new AccountService();
-//			List<Account> list_account = accountService.findAllList();
-//			if(list_account!=null && !list_account.isEmpty()){
-//				for (int i = 0 ; i<list_account.size();i++) {
-//					Account account = list_account.get(i);
-//					messagePublishSystemToUserId[i_msg] = account.getCurrentUser().getId();
-//					if(i_msg==99){
-//						rongCloud.message.PublishSystem(fromId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, "", "", 1, 1);
-//						Thread.sleep(1000);
-//						i_msg = 0;
-//					}else if(i == list_account.size() -1){
-//						String[] ToUserId_tmp = new String[i_msg+1];
-//						for (int j = 0;j<ToUserId_tmp.length;j++) {
-//							ToUserId_tmp[j] = messagePublishSystemToUserId[j];
-//							rongCloud.message.PublishSystem(fromId, ToUserId_tmp, messagePublishSystemTxtMessage, "", "", 1, 1);
-//							Thread.sleep(1000);
-//							i_msg = 0;
-//						}
-//					}else{
-//						i_msg++;
-//					}
-//				}
-//			}
-//			return "{code:1000,message:\"\"}";
-//		}catch (Exception ex) {
-//			return "{code:5000,message:\""+ex.getMessage()+"\"}";
-//		}
-//	}
+	/**
+	 * 发言消息
+	 * @param fromId 		发送用户Id
+	 * @param noticeId 		公告Id
+	 * @param noticeTitle	公告Title
+	 * @param noticeSummary	公告Summary
+	 * @param villageIds		楼盘Ids,支持多个，使用逗号隔开。	
+	 * @param sendType		消息类型	
+	 * @return				{code,message}
+	 * @throws Exception
+	 */
+	@RequestMapping(value="speakMsg",method = {RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String speakMsg(String fromId,String noticeId,String noticeTitle,String noticeSummary,String villageIds,String sendType) throws Exception{
+		try{
+			RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+			
+			String msgContent = noticeTitle+"<br>"+noticeSummary+">>详细";
+			String[] messagePublishSystemToUserId = new String[1];
+			
+			String[] arr_villageId = villageIds.split(",");
+			
+			for (String villageId : arr_villageId) {
+							
+				List<Account> list_account = accountService.findListByVillage(villageId);
+				if(list_account!=null && !list_account.isEmpty()){
+					for (int i = 0 ; i<list_account.size();i++) {
+						Account account = list_account.get(i);
+						messagePublishSystemToUserId[0] = account.getId();
+						String msgExtra = "{\"sendType\":\""+sendType+"\",\"noticeId\":\""+noticeId+"\","
+								+ "\"fromUserId\":\""+fromId+"\","
+								+ "\"toUserId\":\""+account.getId()+"\","
+								+ "\"msgContent\":\""+msgContent+"\""
+								+"}";
+						TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
+						CodeSuccessResult csr = rongCloud.message.PublishSystem(fromId, messagePublishSystemToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+						
+						SocialMsg socialMsg = new SocialMsg();
+						socialMsg.setUserid(fromId);
+						socialMsg.setUsername("");
+						socialMsg.setTouserid(account.getId());
+						socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+						socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
+						socialMsg.setNoticetime(new Date());
+						socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ADMIN);
+						socialMsg.setSectype(RongGlobal.MSG_SECTYPE_GLYFY);
+						socialMsg.setIsread(RongGlobal.MSG_IS_READ_NO);
+						socialMsgService.save(socialMsg);
+						
+						if(i%99==0)
+							Thread.sleep(1000);
+					}
+				}
+			}
+			return "{code:1000,message:\"\"}";
+		}catch (Exception ex) {
+			
+			com.its.modules.sys.entity.Log log = new com.its.modules.sys.entity.Log();
+			
+			log.setIsNewRecord(true);
+			log.setId(UUID.randomUUID().toString());
+			log.setType(com.its.modules.sys.entity.Log.TYPE_Exception);
+			log.setTitle("ticketBackMsg");
+			log.setException("message:"+ex.getMessage()+",StackTrace:"+ex.getStackTrace().toString());
+			log.setCreateDate(new Date());
+			logService.save(log);
+			
+			ex.printStackTrace();
+			return "{code:5000,message:\""+ex.getMessage()+"\"}";
+		}
+	}
+	
 	
 }

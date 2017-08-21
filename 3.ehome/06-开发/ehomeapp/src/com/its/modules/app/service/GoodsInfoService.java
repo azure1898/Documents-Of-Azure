@@ -16,7 +16,7 @@ import com.its.common.service.CrudService;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
 import com.its.modules.app.bean.GoodsSkuBean;
-import com.its.modules.app.common.PropertiesUtil;
+import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.GoodsInfoDao;
 import com.its.modules.app.dao.GoodsSkuPriceDao;
 import com.its.modules.app.entity.BusinessInfo;
@@ -92,9 +92,11 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 	 * @param businessInfoID
 	 * @return
 	 */
-	public List<GoodsInfo> getGoodsInfoBySortList(int pageIndex,int numPerPage, String sortInfoID, String businessInfoID) {
-//		return dao.getGoodsInfoBySortList(pageIndex*PropertiesUtil.getInt("numPerPage"),sortInfoID, businessInfoID);
-		return dao.getGoodsInfoBySortList(pageIndex*numPerPage,numPerPage,sortInfoID, businessInfoID);
+	public List<GoodsInfo> getGoodsInfoBySortList(int pageIndex, int numPerPage, String sortInfoID, String businessInfoID) {
+		// return
+		// dao.getGoodsInfoBySortList(pageIndex*PropertiesUtil.getInt("numPerPage"),sortInfoID,
+		// businessInfoID);
+		return dao.getGoodsInfoBySortList(pageIndex * numPerPage, numPerPage, sortInfoID, businessInfoID);
 	}
 
 	/**
@@ -194,5 +196,20 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 	 */
 	public int updateStockAndSellCount(int count, String goodsInfoId) {
 		return dao.updateStockAndSellCount(count, goodsInfoId);
+	}
+
+	/**
+	 * 获取商品价格
+	 * 
+	 * @param goodsInfo
+	 *            商品信息
+	 * @return 商品价格
+	 */
+	public double getGoodsPrice(GoodsInfo goodsInfo) {
+		if (goodsInfo.getBenefitPrice() == null) {
+			return ValidateUtil.validateDouble(goodsInfo.getBasePrice());
+		} else {
+			return ValidateUtil.validateDouble(goodsInfo.getBenefitPrice());
+		}
 	}
 }

@@ -220,7 +220,7 @@ public class RechargeManageService extends CrudService<RechargeManageDao, Rechar
 	 * 
 	 * @param rechargeManageList
 	 *            从数据库中取出的充值计划列表
-	 * @return 以楼盘区分的充值计划列表
+	 * @return 以楼盘区分的充值计划列表（按发布时间排序）
 	 */
 	private List<RechargePlanDTO> rechargeManageToRechargePlan(List<RechargeManage> rechargeManageList) {
 		// 转换科学计数法为普通数字格式

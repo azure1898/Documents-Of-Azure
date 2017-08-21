@@ -166,8 +166,8 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 		orderTrack.setOrderId(orderId);
 		orderTrack.setOrderNo(orderNo);
 		orderTrack.setOrderType(orderType);
-		orderTrack.setStateMsg(OrderGlobal.BACK_UNPAY);
-		orderTrack.setHandleMsg(OrderGlobal.BACK_UNPAY_DESC);
+		orderTrack.setStateMsg(null);
+		orderTrack.setHandleMsg(null);
 		orderTrack.setStateMsgPhone(OrderGlobal.FRONT_UNPAY);
 		orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_UNPAY_DESC);
 		orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);

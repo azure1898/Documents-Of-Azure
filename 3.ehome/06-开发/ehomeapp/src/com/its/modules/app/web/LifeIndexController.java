@@ -345,12 +345,15 @@ public class LifeIndexController extends BaseController {
 			if (CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType())) {
 				// 推荐商家
 				String recomBusinessId = villageLineRecomSpecialDetail.getRecomBusinessId();
-				if (recomBusinessId != null) {
+				String businessCategoryDictID=villageLineRecomSpecialDetail.getBusinessCategoryDictId();
+				if (recomBusinessId != null && businessCategoryDictID!=null) {
 					topicData.put("recommendID", recomBusinessId);
 					BusinessInfo businessInfo = businessInfoService.get(recomBusinessId);
 					topicData.put("recommendName", businessInfo == null ? "" : businessInfo.getBusinessName());
 					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
 					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+					//产品类型
+					topicData.put("recommendMode", businessInfoService.getProdTypeByCategoryDictId(businessCategoryDictID));
 				}
 			} else {
 				// 推荐模块
@@ -361,6 +364,8 @@ public class LifeIndexController extends BaseController {
 					topicData.put("recommendName", moduleManage == null ? "" : moduleManage.getModuleName());
 					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
 					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+					//产品类型
+					topicData.put("recommendMode", moduleManageService.getProdType(recomModuleId));
 				}
 			}
 

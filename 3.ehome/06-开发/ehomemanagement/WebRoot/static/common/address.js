@@ -89,15 +89,9 @@ function getVillageList(){
 		success: function(data){
 			$("#villageIdList").html('');
 			var domRow='';
-			var arr =$("#villageIds").val();
 			$.each(data,function(indx,item){
-				if(arr.indexOf(item.id)<0){
-					domRow+='<input  name="villageIdList"  type="checkbox" value="'+item.id+'" >'+item.villageName+'</input>';
-				}else{
-					domRow+='<input  name="villageIdList" checked="ture" type="checkbox" value="'+item.id+'" >'+item.villageName+'</input>';
-				}
+			    domRow+='<input  name="villageIdList"  type="checkbox" value="'+item.id+'" >'+item.villageName+'</input>';
 			})
-			domRow+='<span class="help-inline"><font color="red">*</font> </span>';
 			$("#villageIdList").append($(domRow));
 		}
 	})

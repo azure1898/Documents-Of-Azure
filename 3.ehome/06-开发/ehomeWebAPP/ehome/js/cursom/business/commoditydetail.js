@@ -12,12 +12,7 @@ var vm = new Vue({
         },
         commodity: {},
         currentSpecification: {},
-        shoppingcart: {
-            num: 0,
-            totalMoney: 0,
-            lessMoney: 0,
-            commodities: []
-        }
+        shoppingcart: {}
     },
     mounted: function () {//页面加载之后自动调用，常用于页面渲染
         this.$nextTick(function () {//在2.0版本中，加mounted的$nextTick方法，才能使用vm
@@ -32,34 +27,25 @@ var vm = new Vue({
 
             _this.getData(_this, "/live/getCommodityDetail", data, function (resData) {
                 _this.commodity = resData;
-                 if(_this.commodity.isNormal==0){
-					toast2("商家休息中，暂时不接受订单")
-				}
+                if (_this.commodity.isNormal == 0) {
+                    toast2("商家休息中，暂时不接受订单")
+                }
                 _this.getShoppingCart();
             });
-          })
+        })
     },
-//  updated:function(){
-//  	  $('#myCarousel').carousel({
-//              //自动4秒播放
-//              interval: 3000,
-//          });
-//          var myElement = document.getElementById('myCarousel')
-//          var hm = new Hammer(myElement);
-//          hm.on("swipeleft", function () {
-//              $('#myCarousel').carousel('next')
-//          })
-//          hm.on("swiperight", function () {
-//              $('#myCarousel').carousel('prev')
-//          })
-//
-//      
-//  },
+    updated: function () {
+        var mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            speed: 200,
+        })
+
+    },
     methods: {
-        
         collection: function (item) {
             var _this = this;
-            _this.myCollection(_this,item);
+            _this.myCollection(_this, item);
         },
         openMoreSpe: function (commodity) {
             $("#moreSpeModal .tanchukuang_fenlei a.active").removeClass("active");
@@ -79,7 +65,7 @@ var vm = new Vue({
         },
         getShoppingCart: function () {
             var _this = this;
-  
+
             var data = {
                 userID: userInfo.userID,
                 buildingID: userInfo.buildingID,
@@ -87,21 +73,26 @@ var vm = new Vue({
             };
 
             _this.getData(_this, "/live/getShoppingCart", data, function (resData) {
-                _this.shoppingcart.commodities = resData.commodities;
-                _this.shoppingcart.totalMoney = resData.totalMoney;
-                _this.shoppingcart.num = resData.totalNumber;
+                _this.shoppingcart = resData;
+
+                //PS:/live/getShoppingCart修改完注释掉
+                _this.shoppingcart.isActivity = 0;
+                _this.shoppingcart.fullMoney = 0;
+                _this.shoppingcart.giftMoney = 0;
+                _this.shoppingcart.lessMoney = 0;
 
                 if (_this.commodity.sendMoney > 0) {
                     if (_this.commodity.sendMoney > _this.shoppingcart.totalMoney) {
-                        _this.shoppingcart.lessMoney = _this.commodity.sendMoney - _this.shoppingcart.totalMoney;
+                        _this.shoppingcart.lessSendMoney = _this.commodity.sendMoney - _this.shoppingcart.totalMoney;
                     }
                     else {
-                        _this.shoppingcart.lessMoney = 0;
+                        _this.shoppingcart.lessSendMoney = 0;
                     }
                 }
                 else {
-                    _this.shoppingcart.lessMoney = 0;
+                    _this.shoppingcart.lessSendMoney = 0;
                 }
+                //以上注释掉
             });
         },
         openShoppingCart: function () {

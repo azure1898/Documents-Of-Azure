@@ -173,7 +173,7 @@
                     area: ['414px', '736px'],
                     scrollbar: true,
                     maxmin: true,
-                    content: '//218.28.28.186:9088/ehomeweb/page/home/index.html',
+                    content: '//',
                     zIndex: layer.zIndex, //重点1
                     success: function(layero){
                         layer.setTop(layero); //重点2

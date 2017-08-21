@@ -30,7 +30,7 @@ var vm = new Vue({
 				});
 				_this.items = resData;
 				_this.items3 = resData.coupons;
-				_init(_this.items,_this.items3);
+				_this.init(_this.items,_this.items3);
 
 			})
 		})

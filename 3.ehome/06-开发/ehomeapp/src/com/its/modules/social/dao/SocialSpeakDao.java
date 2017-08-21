@@ -114,5 +114,15 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @return
 	 */
 	public int countSpeak(@Param("socialSpeak") SocialSpeak socialSpeak);
+	
+	/**
+	 * @Description：根据当前用户ID，楼盘ID查询该用户在该楼盘未读消息的管理员信息
+	 * @Author：刘浩浩
+	 * @Date：2017年8月19日
+	 * @param userId 当前用户ID
+	 * @param villageId 楼盘ID
+	 * @return
+	 */
+	public List<SocialSpeakBean> findAdminList(@Param("userId") String userId, @Param("villageInfoId") String villageInfoId);
 
 }

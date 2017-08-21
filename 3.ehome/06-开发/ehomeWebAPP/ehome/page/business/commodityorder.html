@@ -50,7 +50,7 @@
                 <div class="goods_receipt clearfix">
                     <div class="fl">
                         <p>收货人：<span>{{order.contactPerson}}</span><span class="plr10">{{order.contactPhone}}</span></p>
-                        <p>收货地址：{{order.contactAddress}}</p>
+                        <p style="width:90%;">收货地址：{{order.contactAddress}}</p>
                     </div>
                     <div class="list_inbtn mt10" data-toggle="modal" data-target="#myModal_address"></div>
                 </div>
@@ -77,7 +77,7 @@
                     <img v-bind:src="commodity.commodityImage">
                 </div>
                 <div class="goods_right">
-                    <div class="goods_name">{{commodity.commodityName}}</div>
+                    <div class="goods_name oneLine">{{commodity.commodityName}}</div>
                     <div class="">
                         <div class="fl">
                             <div class="font22 mt10">&times;{{commodity.commodityNumber}}</div>

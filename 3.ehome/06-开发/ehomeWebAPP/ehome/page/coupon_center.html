@@ -1,8 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>领券中心</title>
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../css/main.css" />
@@ -137,13 +139,13 @@
         <div>
             <img src="../images/index_ad2.jpg" class="img-responsive">
         </div>
-        <div class="count">
+        <div>
             <div class="choose_coup_main" v-for="item1 in item" v-bind:data-id="item1.couponID">
                 <div class="choose_coup_main_left" v-if="item1.couponType=='0'">
-                    <p><font class="font_orange">{{item1.couponMoney|formatDecimal}}</font><br> </p>
+                    <p><font class="font_orange">{{item1.couponMoney|formatDecimal}}</font><br></p>
                 </div>
                 <div class="choose_coup_main_left" v-else>
-                    <p><font class="font_orange">{{item1.couponMoney/10}}折</font><br> </p>
+                    <p><font class="font_orange">{{item1.couponMoney/10}}折</font><br></p>
                 </div>
                 <div class="choose_coup_main_m"><img src="../images/03.png" width="12" height="100"></div>
                 <div class="choose_coup_main_right">
@@ -152,12 +154,10 @@
                     <span v-if="item1.couponStatus==1"><img src="../images/coupon/coupon_s1.png" class="c_s_img" height="100px" v-on:click="selectCoupon(item1)"></span>
                     <span v-else-if="item1.couponStatus==2"><img src="../images/coupon/coupon_s2.png" class="c_s_img" height="100px"></span>
                     <span v-else-if="item1.couponStatus==3"><img src="../images/coupon/coupon_s3.png" class="c_s_img" height="100px"></span>
-                    
-                    
-                    <p><font style="font-size:18px;">{{item1.couponName}}</font></p><p>
-                        <font class="font14">{{item1.couponCondition}}</font>
-                    </p>
-                    </p>
+
+
+                    <p><font style="font-size:18px;">{{item1.couponName}}</font></p>
+                    <p><font class="font14">{{item1.couponCondition}}</font></p>
                 </div>
                 <div class="clear"></div>
             </div>

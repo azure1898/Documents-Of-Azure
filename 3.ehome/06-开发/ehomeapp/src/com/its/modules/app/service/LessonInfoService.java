@@ -89,13 +89,11 @@ public class LessonInfoService extends CrudService<LessonInfoDao, LessonInfo> {
 	 */
 	public Double getLessonPrice(LessonInfo lessonInfo) {
 		// 课程有原价和优惠价：课程价格=优惠价，课程有原价无优惠价：课程价格=原价
-		double lessonPrice = 0;
-		if (lessonInfo.getBenefitPrice() == null || lessonInfo.getBenefitPrice() == 0) {
-			lessonPrice = ValidateUtil.validateDouble(lessonInfo.getBasePrice());
+		if (lessonInfo.getBenefitPrice() == null) {
+			return ValidateUtil.validateDouble(lessonInfo.getBasePrice());
 		} else {
-			lessonPrice = ValidateUtil.validateDouble(lessonInfo.getBenefitPrice());
+			return ValidateUtil.validateDouble(lessonInfo.getBenefitPrice());
 		}
-		return lessonPrice;
 	}
 
 	/**

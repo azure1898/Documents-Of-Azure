@@ -78,8 +78,8 @@
     <select id="findChildComment" resultType="SocialComment">
         SELECT 
             <include refid="socialCommentColumns"/>,
-            (select su1.`name` from sys_user su1 where su1.id=a.userid) as username,
-            (select su2.`name` from sys_user su2, social_comment sc1 where su2.id = sc1.userid and a.fid = sc1.id ) as replyname
+            (select ac.nickname from account ac where ac.id=a.userid) as username,
+            (select ac.nickname from account ac, social_comment sc1 where ac.id = sc1.userid and a.fid = sc1.id ) as replyname
         FROM social_comment a
         WHERE FIND_IN_SET(a.id,queryChildrenCommentInfo(#{id})) and a.id <![CDATA[ <> ]]> #{id} and a.delflag='1'
         ORDER BY a.createtime 

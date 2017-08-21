@@ -124,7 +124,7 @@
 		<c:forEach items="${page.list}" var="walletDetail" varStatus="status">
 			<tr>
 				<td>
-					${status.count}
+					${(page.pageNo - 1) * page.pageSize + status.count}
 				</td>
 				<td>
 					${walletDetail.account.phoneNum}

@@ -156,14 +156,14 @@
         <input type="text" class="hide" id="hidCityId" value="${cityId }">
         <input type="text" class="hide" id="hidAreaId" value="">
         <input type="text" class="hide" id="hidVillageId" value="${villageId }">
-        <input type="text" class="hide" id="hidDelFlag" value="${speakDelFlag }">
+        <input type="text" class="hide" id="hidDelFlag" value="${delflagId }">
         <ul class="ul-form">
             <li>
                 <input id="beginCreatetime" name="beginCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                    value="<fmt:formatDate value="${socialSubject.beginCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+                    value="<fmt:formatDate value="${socialSpeak.beginCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
                     onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
                 <input id="endCreatetime" name="endCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                    value="<fmt:formatDate value="${socialSubject.endCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+                    value="<fmt:formatDate value="${socialSpeak.endCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
                     onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
             </li>
             <li class="btns">
@@ -183,14 +183,15 @@
             </li>
             <li class="btns">
                 <select id="addrVillageInfo" name="villageInfoId" style="width: 120px">
-                    <option value="">全部楼盘</option>
+                    <option value="">全部楼盘${socialSpeak.delflag }</option>
                 </select>
             </li>
-            <li class="btns">
-                <form:select path="delflag" class="input-small">
+            
+             <li class="btns">
+                <form:select path="delflagId" class="input-small">
                     <form:option value="" label="发言状态" />
                     <form:options items="${fns:getDictList('social_delflag')}" itemLabel="label" itemValue="value" htmlEscape="false" /></form:select>
-            </li>
+          </li>
             <li><span>&nbsp;</span>
                 <form:input path="content" htmlEscape="false" class="input-medium" placeholder="内容关键字搜索" />
             </li>
@@ -275,8 +276,14 @@
                     	<input type="hidden" value="${socialSpeak.auserid }"/>
                     	${socialSpeak.ausername}
                     </td>
-                    <td>${fns:getDictLabel(socialSpeak.delflag, 'social_delflag', '')}
-                        <input type="text" id="speak_delflag" value="${socialSpeak.delflag }" style="display:none" />
+                    <td>
+                    	<c:if test="${socialSpeak.delFlag == 1 }">
+                    		正常
+                    	</c:if>
+                    	<c:if test="${socialSpeak.delFlag == 0 }">
+                    		已删除
+                    	</c:if>
+                        <input type="text" id="speak_delflag" value="${socialSpeak.delFlag }" style="display:none" />
                     </td>
                     <td>
                         <fmt:formatDate value="${socialSpeak.createtime}" pattern="yyyy-MM-dd HH:mm:ss" />

@@ -560,6 +560,17 @@ public class SystemService extends BaseService implements InitializingBean {
 			identityService.deleteUser(userId);
 		}
 	}
+	/**
+	 * 通过商家ID获取所有用户信息---商家信息
+	 * @param businessId
+	 * @return
+	 * @return List<User>
+	 * @author zhujiao   
+	 * @date 2017年8月19日 下午12:39:53
+	 */
+	public List<User> getUserListByBusiness(String businessId){
+	   return userDao.getUserListByBusiness(businessId);
+	}
 	
 	///////////////// Synchronized to the Activiti end //////////////////
 	

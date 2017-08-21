@@ -12,6 +12,7 @@
 		a.noticetime AS "noticetime",
 		a.firtype AS "firtype",
 		a.sectype AS "sectype",
+		a.remark AS "remark",
 		a.isread AS "isread"
 	</sql>
 	
@@ -71,6 +72,7 @@
 			noticetime,
 			firtype,
 			sectype,
+			remark,
 			isread
 		) VALUES (
 			#{id},
@@ -82,6 +84,7 @@
 			#{noticetime},
 			#{firtype},
 			#{sectype},
+			#{remark},
 			#{isread}
 		)
 	</insert>
@@ -96,6 +99,7 @@
 			noticetime = #{noticetime},
 			firtype = #{firtype},
 			sectype = #{sectype},
+			remark = #{remark},
 			isread = #{isread}
 		WHERE id = #{id}
 	</update>
@@ -122,6 +126,26 @@
             <if test="firType != null and firType != ''">
                 and firtype = #{firType}
             </if>
+	</select>
+	
+	<!-- 根据条件查询消息集合 -->
+	<select id="findListByPage" resultType="SocialMsg">
+	    SELECT *
+	    FROM social_msg a
+	    WHERE 1=1 
+	        <if test="socialMsg != null and socialMsg.touserid != null and socialMsg.touserid != ''">
+	            and a.touserid=#{socialMsg.touserid} 
+	        </if>
+	        <if test="socialMsg != null and socialMsg.sectype != null and socialMsg.sectype != ''">
+                and a.sectype=#{socialMsg.sectype} 
+            </if>
+            <if test="socialMsg != null and socialMsg.isread != null and socialMsg.isread != ''">
+                and a.isread=#{socialMsg.isRead}
+            </if>
+            <if test="socialMsg != null and socialMsg.firtype != null and socialMsg.firtype != ''">
+                and a.firtype = #{socialMsg.firtype}
+            </if>
+         order by noticeTime desc limit #{pageIndex},#{pageSize} 
 	</select>
 	
 </mapper>

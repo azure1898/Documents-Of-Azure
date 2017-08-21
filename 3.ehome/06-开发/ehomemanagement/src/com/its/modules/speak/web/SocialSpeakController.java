@@ -125,6 +125,7 @@ public class SocialSpeakController extends BaseController {
 		SocialSpeak socialSpeak = new SocialSpeak();
 		socialSpeak.setId(id);
 		SocialSpeak speak = socialSpeakService.findById(socialSpeak);
+		speak.setDelflag(1);
 		speak.setReadnum((Integer.parseInt(speak.getReadnum() == null ? "0" : speak.getReadnum())+1)+"");
 		socialSpeakService.save(speak);
 		SocialComment socialComment = new SocialComment();
@@ -178,7 +179,7 @@ public class SocialSpeakController extends BaseController {
 		socialSpeak.setUserid(socialSpeak.getAuserid());
 		socialSpeak.setIstop("0");
 		socialSpeak.setReadnum("0");
-		socialSpeak.setDelflag("1");
+		socialSpeak.setDelflag(1);
 		if (!beanValidator(model, socialSpeak)){
 			return form(socialSpeak, model);
 		}
@@ -247,7 +248,7 @@ public class SocialSpeakController extends BaseController {
 			return "redirect:"+Global.getAdminPath()+"/speak/socialSpeak/?repage";
 		}
 		socialSpeak.setId(id);
-		socialSpeak.setDelflag("0");
+		socialSpeak.setDelflag(0);
 		int resultNum = socialSpeakService.changeDelFlag(socialSpeak);
 		if(resultNum == 0) {
 			result = "0";

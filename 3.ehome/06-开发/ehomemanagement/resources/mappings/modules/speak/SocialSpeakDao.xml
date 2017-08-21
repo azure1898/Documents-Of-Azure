@@ -73,8 +73,8 @@
 			<if test="villageinfoid != null and villageinfoid != ''">
 				AND a.villageinfoid = #{villageInfoId} 
 			</if>
-			<if test="delflag != null and delflag != ''">
-				AND a.delflag = #{delflag} 
+			<if test="delflagId!=null and delflagId != ''">
+				AND a.delflag = #{delflagId} 
 			</if>
 			<if test="id != null and id != ''">
 				AND a.id = #{id} 

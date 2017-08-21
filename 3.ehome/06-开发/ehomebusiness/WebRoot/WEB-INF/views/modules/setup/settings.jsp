@@ -97,7 +97,7 @@
             <div class="controls">
                 <input id="newPassword" placeholder="请输入新密码" name="newPassword" type="password" value="" maxlength="12" minlength="3" class="input-medium required" /> <input id="confirmNewPassword" placeholder="再次输入新密码" name="confirmNewPassword" type="password" value="" maxlength="12" minlength="3" class="input-medium required" equalTo="#newPassword" />
                 <shiro:hasPermission name="setup:businessInfo:modifyPwd">
-                    <input id="btnSubmit" class="btn btn-success" type="submit" value=" 修改密码 " />
+                    <input id="btnSubmit" class="commonbtn" style="width:80px" type="submit" value=" 修改密码 " />
                 </shiro:hasPermission>
                 <span class="help-inline">密码可输入英文或数字，不超过12个字。</span>
             </div>

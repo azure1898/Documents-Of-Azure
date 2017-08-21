@@ -2,7 +2,7 @@ var vm = new Vue({
 	el: "#app",
 	data: {
 		urlList: {
-			siteindex: "siteindex.html?id=",
+			siteindex: "../business/businessindex.html?id=",
 			siteorder: "siteorder.html?id="
 		},
 		siteReservation: [],
@@ -12,6 +12,7 @@ var vm = new Vue({
 		times: 0, //用于判断是否是第一次
 		fullAppointment: 0, //用于判断场地是否已被全部预约
 		submitUrl: "" //用于拼接场地id
+		,num:0
 	
 	},
 	mounted: function() { //页面加载之后自动调用，常用于页面渲染
@@ -42,12 +43,17 @@ var vm = new Vue({
 						}
 					})
 					_this.siteReservation = test;
-					if (_this.siteReservation.length == _this.fullAppointment) {
+					if(_this.siteReservation.length > 0){
+						if (_this.siteReservation.length == _this.fullAppointment) {
 						$("#appointment").addClass("ser_zbtn2");
 						$("#appointment").text("预约已满");
+						
+					    }
 					}
+					
 					_this.times = 0;
 					_this.fullAppointment = 0;
+//					_this.num=_this.siteReservation.length - _this.fullAppointment;
 				})
 			});
 		})
@@ -135,10 +141,13 @@ var vm = new Vue({
 					}
 				})
 				_this.siteReservation = test;
-				if (_this.siteReservation.length == _this.fullAppointment) {
+				if(_this.siteReservation.length >0){
+					if (_this.siteReservation.length == _this.fullAppointment) {
 					$("#appointment").addClass("ser_zbtn2");
 					$("#appointment").text("预约已满");
+				        }
 				}
+				
 				_this.times = 0;
 				_this.fullAppointment = 0;
 			});

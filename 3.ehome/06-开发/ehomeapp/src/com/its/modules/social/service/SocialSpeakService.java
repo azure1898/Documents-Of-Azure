@@ -3,6 +3,7 @@
  */
 package com.its.modules.social.service;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,5 +156,17 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 	 */
 	public int countSpeak(SocialSpeak socialSpeak) {
 		return socialSpeakDao.countSpeak(socialSpeak);
+	}
+	
+	/**
+	 * @Description：根据当前用户ID，楼盘ID查询该用户在该楼盘未读消息的管理员信息
+	 * @Author：刘浩浩
+	 * @Date：2017年8月19日
+	 * @param userId 当前用户ID
+	 * @param villageId 楼盘ID
+	 * @return
+	 */
+	public List<SocialSpeakBean> findAdminList(String userId, String villageInfoId){
+		return socialSpeakDao.findAdminList(userId, villageInfoId);
 	}
 }

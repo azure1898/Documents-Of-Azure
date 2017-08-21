@@ -30,7 +30,7 @@
                 themeType : 'simple',
                 allowImageUpload:true,//允许上传图片
                 afterChange : function() {
-                    var limitNum = 65000;
+                    var limitNum = 20000;
                     if(this.count() > limitNum) {
                         $(".word_message").show();
                     } else {
@@ -113,7 +113,7 @@
 			            alertx("未选择任何图片");
 			            return;
 			        }
-	                if (KindEditor.instances[0].html().length > 65000) {
+	                if (KindEditor.instances[0].html().length > 20000) {
 	                    $(".word_message").show();
 	                    return;
 	                }
@@ -379,7 +379,7 @@
 					</c:forEach>
 					<section class="z_file fl"
 						<c:if test="${fn:length(imgUrls) gt 4}">style="display: none;"</c:if>>
-						<img src="${ctxStatic}/images/a11.png" class="add-img"> <input
+						<img src="${ctxStatic}/images/a10.png" class="add-img"> <input
 							type="file" name="file" id="file" class="file" value=""
 							accept="image/jpg,image/jpeg,image/png,image/bmp"
 							multiple="multiple" />

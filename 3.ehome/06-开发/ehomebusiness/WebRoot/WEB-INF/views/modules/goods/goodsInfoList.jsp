@@ -79,14 +79,14 @@
 	            return;
 	        } else {
 	        	var href = "${ctx}/goods/goodsInfo/muliDelete?goodsid=" + goodsid + "&sortItem=" + $("#sortItem").val() + "&sort=" + $("#sort").val();
-	        	return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', function (){confirmx('确定删除此商品？', href);});
+	        	return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', href);
 	        }
 	    }
         /*
          * 单个删除
          */
         function singledelete(href) {
-            return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', function (){confirmx('确定删除此商品？', href);});
+            return confirmx('确认要删除此商品？删除后该商品的相应已受理订单依然需要完成', href);
         }
         
         /*

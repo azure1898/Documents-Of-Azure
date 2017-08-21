@@ -95,13 +95,11 @@ public class ServiceInfoService extends CrudService<ServiceInfoDao, ServiceInfo>
 	 */
 	public Double getServicePrice(ServiceInfo serviceInfo) {
 		// 服务有原价和优惠价：服务价格=优惠价，服务有原价无优惠价：服务价格=原价
-		double servicePrice = 0;
-		if (serviceInfo.getBenefitPrice() == null || serviceInfo.getBenefitPrice() == 0) {
-			servicePrice = ValidateUtil.validateDouble(serviceInfo.getBasePrice());
+		if (serviceInfo.getBenefitPrice() == null) {
+			return ValidateUtil.validateDouble(serviceInfo.getBasePrice());
 		} else {
-			servicePrice = ValidateUtil.validateDouble(serviceInfo.getBenefitPrice());
+			return ValidateUtil.validateDouble(serviceInfo.getBenefitPrice());
 		}
-		return servicePrice;
 	}
 
 	/**

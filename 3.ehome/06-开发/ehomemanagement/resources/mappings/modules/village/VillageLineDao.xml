@@ -88,10 +88,10 @@
         AND a.village_info_id = #{villageInfoId}
       </if>
       <if test="setState != null and setState != ''">
-        AND a.set_state = #{setState}
+        AND IFNULL(a.set_state,'0') = #{setState}
       </if>
-      <if test="recomSetState != null and recomSetState != '' and recomSetState != '0'">
-        AND a.recom_set_state = #{recomSetState}
+      <if test="recomSetState != null and recomSetState != ''">
+        AND IFNULL(a.recom_set_state,'0') = #{recomSetState}
       </if>
       
       <if test="villageInfo != null and villageInfo.addrPro != null and villageInfo.addrPro != ''">
@@ -118,7 +118,7 @@
         ORDER BY ${page.orderBy}
       </when>
       <otherwise>
-        ORDER BY b.village_name
+        ORDER BY a.create_date DESC
       </otherwise>
     </choose>
   </select>

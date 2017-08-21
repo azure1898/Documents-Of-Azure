@@ -4,7 +4,7 @@ var vm = new Vue({
 		urlList: {
 			list: "modulelist.html?id=",
 			order: "siteorder.html?id=",
-			index: "siteindex.html?id=",
+			index: "../business/businessindex.html?id=",
 			groupbuy: "../groupbuy/groupbuydetail.html?id=",
 			phoneicon: "../../images/telphone.png",
 			goicon: "../../images/grey_go.png"

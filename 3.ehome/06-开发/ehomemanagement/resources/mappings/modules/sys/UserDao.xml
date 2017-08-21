@@ -305,5 +305,13 @@
     del_flag = #{DEL_FLAG_DELETE}
     WHERE id = #{id}
   </update>
+  <!-- 通过商家ID获取所有用户信息。 -->
+  <select id="getUserListByBusiness" resultType="User">
+    SELECT
+      a.id,
+      a.login_name
+    FROM sys_user a
+    WHERE a.del_flag ='0' and a.businessinfo_id=#{businessId}
+  </select>
 
 </mapper>

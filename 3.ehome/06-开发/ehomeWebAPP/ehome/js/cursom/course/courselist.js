@@ -5,7 +5,7 @@ var vm = new Vue({
 		urlList: {
 			list: "courselist.html?id=",
 			detail: "coursedetail.html?id=",
-			index: "courseindex.html?id=",
+			index: "../business/businessindex.html?id=",
 			order: "courseorder.html?id=",
 			bg: "../../images/top_bg5.jpg"
 		},

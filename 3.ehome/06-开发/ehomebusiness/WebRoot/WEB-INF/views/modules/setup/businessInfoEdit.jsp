@@ -11,8 +11,12 @@ var isVali=0;
         $("#shangpin").hide();//0如果选择的商家分类所对应的产品模式为“商品配买”，那么关联显示出此块内容
         $("#fuwu").hide();//1如果选择的商家分类所对应的产品模式为“服务预约”，那么关联显示出此块内容。
         getTimeList($("#serviceTimeInterval").val());
-        /* 绑定到点上门 */
-        bindServiceType($("#serviceModel").val());
+        /* 初始化服务预约方式为到店 */
+        if ($("#serviceModel").val() == null || $("#serviceModel").val() == "") {
+            $("input:radio[name='serviceModel'][value='1']").eq(0).attr("checked","checked");
+        }
+        /* 绑定到店上门 */
+        bindServiceType($("input:radio[name='serviceModel']:checked").eq(0).val());
         /*配送方式  */
         bindDistributeType($("#distributeModel").val());
         /*满额起配金额 */
@@ -159,9 +163,9 @@ var isVali=0;
             $("#distribute").hide();
         }
     };
-    /* 绑定上门、到店应该展示的数据 */
+    /* 绑定上门（1）、到店（0）应该展示的数据 */
     function bindServiceType(type){
-        if(type==1){
+        if(type==0){
             $("#shangmen").show();
             $(".servicesLable").html("上门")
         }else{
@@ -562,9 +566,9 @@ var isVali=0;
         </div>
         <div class="form-actions">
             <shiro:hasPermission name="setup:businessInfo:services">
-                <input id="btnSubmit" class="btn btn-success" type="submit" value="保 存"/>&nbsp;
+                <input id="btnSubmit" style="width:60px" class="commonbtn" type="submit" value="保 存"/>&nbsp;
             </shiro:hasPermission>
-            <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)"/>
+            <input id="btnCancel" style="width:60px" class="commonbtn" type="button" value="返 回" onclick="history.go(-1)"/>
         </div>
     </form:form>
     <script type="text/javascript">

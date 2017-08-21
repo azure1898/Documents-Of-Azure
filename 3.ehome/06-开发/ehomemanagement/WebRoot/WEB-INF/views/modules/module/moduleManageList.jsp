@@ -68,7 +68,7 @@
 		<c:forEach items="${page.list}" var="moduleManage" varStatus="status">
 			<tr  onClick="selectElem(this)">
 				<td>
-					${status.count}
+					${(page.pageNo - 1) * page.pageSize + status.count}
 					<input id="elemId" type="hidden" value="${moduleManage.id}"/>
 				</td>
 				<td>${moduleManage.moduleName}</td>

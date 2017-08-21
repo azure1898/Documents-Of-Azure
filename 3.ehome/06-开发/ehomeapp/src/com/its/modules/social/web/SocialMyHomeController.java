@@ -21,6 +21,9 @@ import com.alibaba.druid.util.StringUtils;
 import com.its.common.config.Global;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.web.BaseController;
+import com.its.modules.rong.common.RongGlobal;
+import com.its.modules.rong.entity.SocialMsg;
+import com.its.modules.rong.service.SocialMsgService;
 import com.its.modules.social.bean.SocialPraiseBean;
 import com.its.modules.social.bean.SocialRelationBean;
 import com.its.modules.social.bean.SocialSpeakBean;
@@ -55,30 +58,42 @@ public class SocialMyHomeController extends BaseController {
 	@Autowired
 	private SocialPraiseService socialPraiseService;
 
+	@Autowired
+	private SocialMsgService socialMsgService;
+
+	/**
+	 * @Description：我家首页信息查询
+	 * @Author：刘浩浩
+	 * @Date：2017年8月19日
+	 * @param villageInfoId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="index",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public Map<String, Object> index(String villageInfoId, String userId) throws Exception{
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		//粉丝数量
 		int countFans = socialRelationService.countFansByUserId(userId);
-		resultMap.put("countFans", countFans);
+		data.put("countFans", countFans);
 		//关注数量
 		int countFocus = socialRelationService.countFocusByUserId(userId);
-		resultMap.put("countFocus", countFocus);
+		data.put("countFocus", countFocus);
 		//点赞数量
 		int countPraise = socialPraiseService.countPraiseByUserId(userId);
-		resultMap.put("countPraise", countPraise);
+		data.put("countPraise", countPraise);
 		//发言数量
 		SocialSpeak socialSpeak = new SocialSpeak();
 		socialSpeak.setUserid(userId);
 		socialSpeak.setVillageinfoid(villageInfoId);
 		int countSpeak = socialSpeakService.countSpeak(socialSpeak);
-		resultMap.put("countSpeak", countSpeak);
+		data.put("countSpeak", countSpeak);
 		
-		resultMap.put("code", Global.CODE_SUCCESS);
-		resultMap.put("message", "查询我家首页数量统计成功");
+		data.put("code", Global.CODE_SUCCESS);
+		data.put("message", "查询我家首页数量统计成功");
 		
-		return resultMap;
+		return data;
 	}
 	
 	/**
@@ -151,7 +166,6 @@ public class SocialMyHomeController extends BaseController {
 					}
 					
 					data.put("rootSpeak", rootMap);
-					data.put("imgUrls", "");
 					
 				}else{//发言
 					data.put("reason", "");
@@ -184,11 +198,15 @@ public class SocialMyHomeController extends BaseController {
 						data.put("imgUrls", "");
 					}
 					
+					Map<String, Object> rootMap = new HashMap<String, Object>();
+					data.put("rootSpeak", rootMap);
 				}
 				
 				data.put("spkSubList", frdSubMap);
 				
 				//发言相关属性
+				int isPraise = socialPraiseService.getIsPraise(userId, sb.getId());
+				data.put("isPraise", isPraise);
 				data.put("countForward", sb.getCountForward());//转发数量
 				data.put("countComment", sb.getCountComment());//评论数量
 				data.put("countPraise", sb.getCountPraise());//点赞数量
@@ -231,9 +249,10 @@ public class SocialMyHomeController extends BaseController {
 			for(SocialRelationBean rb : relationBeanList){
 				Map<String, Object> data = new HashMap<String, Object>();
 				//人员属性
-				data.put("userId", rb.getSubuserid());// 用户id
+				data.put("userId", rb.getUserid());// 用户id
 				data.put("userName", rb.getNickName());//姓名 昵称
-				data.put("headPicSrc", rb.getPhoto());//头像
+				data.put("subUserId", rb.getSubuserid());//从用户ID
+				data.put("userHeadUrl", rb.getPhoto());//头像
 				data.put("relation", rb.getRelation());//关系 1：关注 2：相互关注
 				//根据用户id 获取该用户的最近发言
 				SocialSpeak socialSpeak = new SocialSpeakBean();
@@ -286,7 +305,8 @@ public class SocialMyHomeController extends BaseController {
 				//人员属性
 				data.put("userId", rb.getUserid());// 用户id
 				data.put("userName", rb.getNickName());//姓名 昵称
-				data.put("headPicSrc", rb.getPhoto());//头像
+				data.put("subUserId", rb.getSubuserid());//从用户ID
+				data.put("userHeadUrl", rb.getPhoto());//头像
 				data.put("relation", rb.getRelation());//关系 1：关注 2：相互关注
 				//根据用户id 获取该用户的最近发言
 				SocialSpeak socialSpeak = new SocialSpeakBean();
@@ -325,7 +345,7 @@ public class SocialMyHomeController extends BaseController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="myPraiseList",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
-	public Map<String, Object> getMyPraiseList(String userId, int pageIndex) throws Exception{
+	public Map<String, Object> getMyPraiseList(String userId, int pageIndex, HttpServletRequest request) throws Exception{
 		//结果封装
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		int pageSize = pageIndex == 0 ? SocialGlobal.PAGE_SIZE_INDEX : SocialGlobal.PAGE_SIZE;
@@ -340,7 +360,7 @@ public class SocialMyHomeController extends BaseController {
 				//点赞的人员属性
 				data.put("userId", userId);// 用户id
 				data.put("userName", pb.getNickName());//姓名 昵称
-				data.put("headPicSrc", pb.getPhoto());//头像
+				data.put("userHeadUrl", pb.getPhoto());//头像
 				
 				String createTime = DateUtil.getDaysBeforeNow(pb.getPraisetime());
 				data.put("creatTime", createTime);//点赞时间
@@ -377,6 +397,12 @@ public class SocialMyHomeController extends BaseController {
 						spkMap.put("noticeId", socialSpeakBean.getNoticeid());//公告id
 						spkMap.put("title", socialSpeakBean.getTitle());//公告标题
 						spkMap.put("summary", socialSpeakBean.getSummary());//公告摘要
+						if(StringUtils.isEmpty(socialSpeakBean.getImages())){
+							spkMap.put("imgUrls", "");//发言图片
+						}else{
+							spkMap.put("imgUrls", MyFDFSClientUtils.get_fdfs_file_url(request, socialSpeakBean.getImages().split(",")[0]));//发言图片
+						}
+						
 						//根据ID 获取话题集合
 						List<SocialSubject> spkSubList = socialSubjectService.findAllByfkId(pb.getSpeakId(), SocialGlobal.SUB_RELATION_SPK);;
 						Map<String, Object> subMap1 = new HashMap<String, Object>();
@@ -399,6 +425,11 @@ public class SocialMyHomeController extends BaseController {
 					spkMap.put("noticeId", pb.getNoticeId());//公告id
 					spkMap.put("title", pb.getTitle());//公告标题
 					spkMap.put("summary", pb.getSummary());//公告摘要
+					if(StringUtils.isEmpty(pb.getImages())){
+						spkMap.put("imgUrls", "");//发言图片
+					}else{
+						spkMap.put("imgUrls", MyFDFSClientUtils.get_fdfs_file_url(request, pb.getImages().split(",")[0]));//发言图片
+					}
 				}
 				data.put("comment", cmtMap);
 				data.put("speak", spkMap);

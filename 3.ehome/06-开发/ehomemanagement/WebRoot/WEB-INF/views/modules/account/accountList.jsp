@@ -107,7 +107,7 @@
 		<c:forEach items="${page.list}" var="account" varStatus="status">
 			<tr onClick="selectElem(this)">
 			    <td>
-					${status.count}
+					${(page.pageNo - 1) * page.pageSize + status.count}
 					<input id="oldFrozen" type="hidden" value="${account.useState}" />
 					<input id="elemId" type="hidden" value="${account.id}"/>
 				</td>

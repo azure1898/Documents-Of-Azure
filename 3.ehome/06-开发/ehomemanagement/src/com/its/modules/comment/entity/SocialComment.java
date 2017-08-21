@@ -20,11 +20,11 @@ public class SocialComment extends DataEntity<SocialComment> {
 	private String userid;		// 评论/回复人
 	private Date createtime;		// 评论/回复时间
 	private String content;		// 评论/回复内容
-	private String iscomment;		// 是否评论 1：是 0 ：否
+	private int iscomment;		// 是否评论 1：是 0 ：否
 	private String fid;		// 回复评论的id， social_comment.id
 	private String speakid;		// 发言id social_speak.id
 	private String subjectid;		// 话题id
-	private String delflag;		// 删除标识0：删除 1：正常
+	private int delflag;		// 删除标识0：删除 1：正常
 	
 	private String username;  //评论/回复人姓名
 	private String replyname;  //被评论/回复人姓名
@@ -64,11 +64,11 @@ public class SocialComment extends DataEntity<SocialComment> {
 	}
 	
 	@Length(min=0, max=11, message="是否评论 1：是 0 ：否长度必须介于 0 和 11 之间")
-	public String getIscomment() {
+	public int getIscomment() {
 		return iscomment;
 	}
 
-	public void setIscomment(String iscomment) {
+	public void setIscomment(int iscomment) {
 		this.iscomment = iscomment;
 	}
 	
@@ -100,11 +100,11 @@ public class SocialComment extends DataEntity<SocialComment> {
 	}
 	
 	@Length(min=0, max=11, message="删除标识0：删除 1：正常长度必须介于 0 和 11 之间")
-	public String getDelflag() {
+	public int getDelflag() {
 		return delflag;
 	}
 
-	public void setDelflag(String delflag) {
+	public void setDelflag(int delflag) {
 		this.delflag = delflag;
 	}
 

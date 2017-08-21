@@ -34,7 +34,7 @@ public class WXUtils {
 
     private static Logger logger = LoggerFactory.getLogger(WXUtils.class);
 
-    private static Properties props = new Properties();;
+    private static Properties props = new Properties();
 
     /**
      * 微信退款

@@ -1,12 +1,14 @@
 var vm = new Vue({
     el: "#app",
     data: {
-        allApp: [],
-        addApp: {},
-        deleApp: {},
-        n: 0,
-        status: true
-
+        urlList: {
+            add: "../images/jia.png",
+            dele: "../images/jian.png"
+        },
+        userApps: [],
+        homeApps: [],
+        commApps: [],
+        status: false
     },
     mounted: function () {
         this.$nextTick(function () {
@@ -16,101 +18,75 @@ var vm = new Vue({
                 buildingID: userInfo.buildingID
             }
             this.getData(_this, "/home/getAllApplication", data, function (resData) {
-                _this.allApp = resData;
-
+                resData.forEach(function (allApp, i) {
+                    switch (allApp.appType) {
+                        case 0:
+                            _this.userApps = allApp.apps;
+                            break;
+                        case 1:
+                            _this.homeApps = allApp.apps;
+                            break;
+                        case 2:
+                            _this.commApps = allApp.apps;
+                            break;
+                    }
+                });
             });
         })
     },
     methods: {
-        changeS: function () {
-            this.n = this.n + 1;
-            if (this.n % 2 == 1) {
-                $("#click").text("完成");
-                this.status = false;
-            }
-            else {
-                $("#click").text("编辑");
+        changeStatus: function () {
+            if (!this.status) {
                 this.status = true;
             }
+            else {
+                this.status = false;
 
-        }
-        , deleApps: function (item, num) {
+                this.submitApp();
+            }
+        },
+        submitApp: function () {
             var _this = this;
+
+            var confirmApp = [];
+
+            _this.userApps.forEach(function (userApp, index) {
+                confirmApp.push({ moduleID: userApp.moduleID, sort: (index + 1) });
+            });
+
             var data = {
                 userID: userInfo.userID,
                 buildingID: userInfo.buildingID,
-                moduleID: item.moduleID
+                modules: JSON.stringify(confirmApp)
             };
-            this.postData(_this, "/home/deleteMyApplication", data, function (resData) {
-                _this.deleApp = resData;
-            })
 
-            _this.allApp.forEach(function (app, i) {
-                //当前点击的要删除的 图标 ，在该集合中删除  判断属于哪一个集合 加到对应集合里
-                if (app.appType == 0) {
-                    app.apps.splice(num, 1)
-                    if (app.s == 1) {
+            _this.postData(_this, "/home/editMyApplication", data, function (resData) {
+            });
+        },
+        addApp: function (index, app) {
+            if (this.userApps.length < 5) {
+                this.userApps.push(app);
 
-                    }
-                    else if (app.s == 2) {
-
-                    }
+                if (app.moduleType == 1) {
+                    this.commApps.splice(index, 1);
                 }
-                //				else if(app.appType == 1){
-                //					
-                //						app.apps.push(item);
-                //					
-                //				}
-                //				else if(app.appType == 2){					
-                //					
-                //						app.apps.push(item);
-                //					
-                //					
-                //				}
-            });
-        }
-        , addApps: function (item, num, type) {
-            var _this = this;
-            var data = {
-                userID: userInfo.userID,
-                buildingID: userInfo.buildingID,
-                moduleID: item.moduleID
-            };
-            this.postData(_this, "/home/addMyApplication", data, function (resData) {
-                _this.addApp = resData;
-            });
+                else {
+                    this.homeApps.splice(index, 1);
+                }
+            }
+            else {
+                toast("����Ƽ�5��");
+            }
+        },
+        deleApp: function (index, app) {
+            this.userApps.splice(index, 1);
 
-            if (type == 2) {
-                _this.allApp.forEach(function (app, i) {
-                    if (app.appType == 1) {
-                        app.apps.splice(num, 1);
-                    }
-                })
+            if (app.moduleType == 1) {
+                this.commApps.push(app);
             }
-            if (type == 2) {
-                _this.allApp.forEach(function (app, i) {
-                    if (app.appType == 1) {
-                        app.apps.splice(num, 1);
-                    }
-                })
+            else {
+                this.homeApps.push(app);
             }
-            //			_this.allApp.forEach(function(app,i){
-            //				if(type == app.appType ){					
-            //					app.apps.push(item);
-            //				   
-            //				}
-            //				else if(app.appType == 1){
-            //					app.apps.splice(num,1);
-            //					app.s=1;
-            //					
-            //				}
-            //				else if(app.appType == 2){
-            //					app.apps.splice(num,1);
-            //					app.s=2;
-            //					 
-            //				}
-            //			});
-            //判断当前点击的  item 属于  哪一个  ，让那一个删除该  item  并添加到 常用里面
         }
     }
 })

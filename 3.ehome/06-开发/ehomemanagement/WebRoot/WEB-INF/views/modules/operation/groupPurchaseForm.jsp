@@ -219,7 +219,7 @@
 				    	checkUseRule : "请输入使用规则"
 				    },
 				},
-				submitHandler: function(form){					
+				submitHandler: function(form){						
 					if(KindEditor.instances[0].html().length > 6500 && KindEditor.instances[1].html().length > 6500){						
 						$(".word_message").show();
 						$(".word_message1").show();
@@ -227,6 +227,18 @@
 						$(".word_message").show();
 					}else if(KindEditor.instances[1].html().length > 6500){
 						$(".word_message1").show();
+					}else if(checkTime()){
+						$(".startErrorClass").each(function(){
+						   if($(this).text() !='' && $(this).text() !=null){
+							   $(this).show();
+						   }
+						});
+							
+						$(".endErrorClass").each(function(){
+						   if($(this).text() !='' && $(this).text() !=null){
+							   $(this).show();
+						   }
+						});
 					}else{
 						loading('正在提交，请稍等...');
 						form.submit();								
@@ -244,6 +256,26 @@
 			});
 		});
 		
+		//团购时间的的check
+		function checkTime(){
+			var timeFlag = false;
+			$(".startErrorClass").each(function(){
+			   if($(this).text() !='' && $(this).text() !=null){
+				   timeFlag = true;
+				   return false;
+			   }
+			 });
+			
+			$(".endErrorClass").each(function(){
+			   if($(this).text() !='' && $(this).text() !=null){
+				   timeFlag = true;
+				   return false;
+			   }
+			});
+
+			return timeFlag;
+		}
+			
 	</script>
 </head>
 <body>
@@ -331,13 +363,14 @@
 					<input name="groupPurchasetimeList[0].startTime" id="groupPurchasetimeList[0].startTime" type="text" readonly="readonly" maxlength="20" class="startTimesClass input-medium Wdate" style="margin-left: 20px;"
 						value="<fmt:formatDate value="${groupPurchase.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,onpicking:function(dp){checkStartTime(dp,this);}});"/>&nbsp;&nbsp;
+						<label id="startTime0" class="startErrorClass error startTime_message" style="display:none;"></label>
 	
 					&nbsp;&nbsp;&nbsp;*团购结束时间：&nbsp;&nbsp;
 					<input name="groupPurchasetimeList[0].endTime" id="groupPurchasetimeList[0].endTime" type="text" readonly="readonly" maxlength="20" class="endTimesClass input-medium Wdate"
 						value="<fmt:formatDate value="${groupPurchase.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,onpicking:function(dp){checkEndTime(dp,this);}});" />&nbsp;&nbsp;
-					
-					
+					<label id="endTime0" class="endErrorClass error endTime_message" style="display:none;"></label>
+				
 					&nbsp;&nbsp;&nbsp;*库存量：&nbsp;&nbsp;
 					<input name="groupPurchasetimeList[0].stockNum" id="groupPurchasetimeList[0].stockNum" value="${groupPurchase.stockNums}" maxlength="9" type="text" class="stockNumClass input-mini digits"/>&nbsp;件
 					
@@ -454,6 +487,10 @@
 		
 		$("#time"+addCount).find(".stockNumClass").attr("id","groupPurchasetimeList["+addCount+"].stockNum");
 		$("#time"+addCount).find(".stockNumClass").attr("name","groupPurchasetimeList["+addCount+"].stockNum");
+		
+		$("#time"+addCount).find(".startErrorClass").attr("id","startTime"+addCount);
+		$("#time"+addCount).find(".endErrorClass").attr("id","endTime"+addCount);
+		
 		addCount++;
 	}
 	//团购开始时间-删除一行
@@ -514,19 +551,30 @@
 		 var index=name.split('[')[1];
 		 index=index.split(']')[0];
 		 if(index > 0){
+			 var count = index;
 			 index = index -1;
 			 var endTimePre=$("input[name='groupPurchasetimeList["+index+"].endTime']").val(); 
 			 var endPre=new Date(endTimePre.replace("-", "/").replace("-", "/"));
 			 if(start < endPre){
-				 top.$.jBox.tip('团购开始时间应晚于上一段团购结束时间','error');
-				 dp.cal.setNewDateStr(null);
+				 //top.$.jBox.tip('团购开始时间应晚于上一段团购结束时间','error');
+				 //dp.cal.setNewDateStr(null);
+				 $("#startTime"+count).text("团购开始时间应晚于上一段团购结束时间");
+				 $("#startTime"+count).show();
+			 }else{
+				 $("#startTime"+count).text("");
+				 $("#startTime"+count).hide();
 			 }
 		 }
  		 
-		 if(end<start){  
-			 top.$.jBox.tip("团购开始时间应早于团购结束时间",'error');
+		 if(end<start){  			 
+			 //top.$.jBox.tip("团购开始时间应早于团购结束时间",'error');
+			 $("#startTime"+index).text("团购开始时间应早于团购结束时间");
+			 $("#startTime"+index).show();
 			 dp.cal.setNewDateStr(null);
-	     }  
+	     }else{
+			 $("#startTime"+index).text("");
+			 $("#startTime"+index).hide();
+		 }  
 	};
 	
 	//团购结束时间的check
@@ -536,12 +584,37 @@
 		 var endTime = dp.cal.getNewDateStr(); 
 		 var startTime = $("input[name='"+startname+"']").val();
 		 var start=new Date(startTime.replace("-", "/").replace("-", "/"));
-		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));	
 		 
-		 if(end<start){  
-			 top.$.jBox.tip("团购结束时间应晚于团购开始时间",'error');
-			 dp.cal.setNewDateStr(null);
-	     }  
+		 var index=name.split('[')[1];
+		 index=index.split(']')[0];
+		 var count = index;
+		 if($("input[name='groupPurchasetimeList["+index+"].startTime']").val() !='undefined'){			 
+			 index++;
+			 var startTimeNext=$("input[name='groupPurchasetimeList["+index+"].startTime']").val();
+			 if(startTimeNext !='' && startTimeNext !=null && startTimeNext!='undefined'){
+				 var startNext=new Date(startTimeNext.replace("-", "/").replace("-", "/"));
+				 if(end > startNext){
+					// top.$.jBox.tip('团购开始时间应早于下一段团购结束时间','error');
+					// dp.cal.setNewDateStr(null);
+					$("#endTime"+count).text("团购结束时间应早于下一段团购开始时间");
+					$("#endTime"+count).show(); 
+				 }else{
+					$("#endTime"+count).text("");
+					$("#endTime"+count).hide();
+				 }
+			 }
+		 }
+		 
+		 if(end<start){ 			 
+			 //top.$.jBox.tip("团购结束时间应晚于团购开始时间",'error');
+			 //dp.cal.setNewDateStr(null);
+			 $("#endTime"+count).text("团购结束时间应晚于团购开始时间");
+			 $("#endTime"+count).show();
+	     }else{
+	    	 $("#endTime"+count).text("");
+			 $("#endTime"+count).hide();
+	     } 
 	};
 	
 	//商家的change事件

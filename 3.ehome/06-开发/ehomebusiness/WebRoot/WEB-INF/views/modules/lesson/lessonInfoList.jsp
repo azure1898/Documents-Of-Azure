@@ -152,7 +152,7 @@
 			    <td>
 			    <input type="checkbox" name="itemCheckbox" onclick="itemCheck(this)" value="${lessonInfoTemp.id}">
 			    </td>
-                <td>${status.count}
+                <td>${(page.pageNo - 1) * page.pageSize + status.count}
                 </td>
 				<td>
 					${lessonInfoTemp.name}

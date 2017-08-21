@@ -3,6 +3,8 @@
  */
 package com.its.modules.rong.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
@@ -27,4 +29,14 @@ public interface SocialMsgDao extends CrudDao<SocialMsg> {
 	 */
 	public int countUnRead(@Param("toUserId") String toUserId, @Param("secType") Integer secType, @Param("isRead") Integer isRead, @Param("firType") Integer firType);
 	
+	/**
+	 * @Description：根据条件查询消息集合
+	 * @Author：刘浩浩
+	 * @Date：2017年8月19日
+	 * @param socialMsg
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	public List<SocialMsg> findListByPage(@Param("socialMsg") SocialMsg socialMsg, @Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize);
 }

@@ -101,6 +101,10 @@
             $("label[for='name']").remove();
             $("label[for='sortOrder']").remove();
         }
+        // 分类删除二次弹框确认
+        function delConfirm(href) {
+            return confirmx('确认要删除此服务分类么？', href);
+        }
 	</script>
 </head>
 <body>
@@ -128,7 +132,7 @@
                             <td style="width:30%">
                                <input id="btuElemEdit" type="button" class="commonsmallbtn" value="编辑" style="width:40px;" onclick="editSort('${sortInfo.id}','${sortInfo.name}','${sortInfo.sortOrder}')">
                                <div style="margin:0 auto;height:3px;"></div>
-                               <input id="btuElemDelete" type="button" class="commonsmallbtn" value="删除" style="width:40px;" onclick="top.$.jBox.tip.mess = null;window.location.href='${ctx}/service/serviceSortInfo/delete?id=${sortInfo.id}'">
+                               <input id="btuElemDelete" type="button" class="commonsmallbtn" value="删除" style="width:40px;" onclick="top.$.jBox.tip.mess = null;delConfirm('${ctx}/service/serviceSortInfo/delete?id=${sortInfo.id}')">
                             </td>
                             </tr>
                        </c:forEach>

@@ -245,6 +245,8 @@ public class AccountController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public String login(String phone, String pwd, HttpServletRequest request) {
+		logger.warn("会员登录phone==========>" + phone);
+		logger.warn("会员登录pwd==========>" + pwd);
 		Map<String, Object> json = new HashMap<String, Object>();
 		if (StringUtils.isBlank(phone) || StringUtils.isBlank(pwd)) {
 			json.put("code", Global.CODE_PROMOT);
@@ -293,6 +295,8 @@ public class AccountController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "quickLogin", method = RequestMethod.POST)
 	public String quickLogin(String phone, String verifiyCode, HttpServletRequest request) {
+		logger.warn("手机号快速登录phone==========>" + phone);
+		logger.warn("手机号快速登录verifiyCode==========>" + verifiyCode);
 		Map<String, Object> json = new HashMap<String, Object>();
 		if (StringUtils.isBlank(phone) || StringUtils.isBlank(verifiyCode)) {
 			json.put("code", Global.CODE_PROMOT);
@@ -353,6 +357,9 @@ public class AccountController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public String register(HttpServletRequest request, String phone, String pwd, String verifiyCode) {
+		logger.warn("用户注册phone==========>" + phone);
+		logger.warn("用户注册pwd==========>" + pwd);
+		logger.warn("用户注册verifiyCode==========>" + verifiyCode);
 		Map<String, Object> json = new HashMap<String, Object>();
 		try {
 			if (StringUtils.isBlank(phone) || !StringUtils.checkPhoneNum(phone)) {

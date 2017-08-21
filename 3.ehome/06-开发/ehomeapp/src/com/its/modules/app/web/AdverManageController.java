@@ -161,8 +161,11 @@ public class AdverManageController extends BaseController {
 				data.put("adType", adverManage.getAdverType());
 				data.put("adImage", ValidateUtil.getImageUrl(adverManage.getAdverPic(), ValidateUtil.ZERO, request));
 				ModuleManage module = moduleManageService.get(adverManage.getModuleId());
-				data.put("moduleID", adverManage.getModuleId());
+				String moduleID=adverManage.getModuleId();
+				data.put("moduleID", moduleID);
 				data.put("moduleName", (module != null && StringUtils.isNotBlank(module.getModuleName())) ? module.getModuleName() : "");
+				//产品模式
+				data.put("productMode", moduleManageService.getProdType(moduleID));
 			} else if (AppGlobal.ADVER_TYPE_BUSINESS_LINK.equals(adverManage.getAdverType())) {// 3->商家链接
 				data.put("adType", adverManage.getAdverType());
 				data.put("adImage", ValidateUtil.getImageUrl(adverManage.getAdverPic(), ValidateUtil.ZERO, request));

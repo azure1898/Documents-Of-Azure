@@ -63,7 +63,7 @@
                 <div class="goods_receipt clearfix">
                     <div class="fl">
                         <p>联系人：<span>{{ order.contactPerson}}</span><span class="plr10">{{ order.contactPhone}}</span></p>
-                        <p>服务地址：{{ order.contactAddress}}</p>
+                        <p style="width:90%;">服务地址：{{ order.contactAddress}}</p>
                     </div>
                     <div class="list_inbtn mt10" data-toggle="modal" data-target="#myModal_address"></div>
                 </div>
@@ -76,28 +76,31 @@
                 </div>-->
             </div>
         </div>
-        <div class="order_whitebox" v-else="way==1">
-            <div class="plr10" style="width: 100%;">
-                <div class="goods_receipt clearfix">
-                    <div class="fl" style="width: 100%;">
-                        <b>联系人信息</b>
-                    </div>
-                </div>
-                <br />
-                <div class="goods_receipt clearfix">
-                    <div class="fl" style="width: 100%;">
-                        <div class="message"><span>联  系  人：</span></div><input type="text" class="inut-name input" v-model="order.contactPerson" />
-                    </div>
-                </div>
-                <br />
-                <div class="goods_receipt clearfix">
-                    <div class="fl" style="width: 100%;">
-                        <div class="message"><span>联系电话：</span></div><input type="text" class="inut-phone input" v-model="order.contactPhone">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="line_ec mt10"></div>
+        
+       <div>
+           <div style="height:44px; line-height:44px; padding-left:10px;">联系人信息</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">联系人:</div>
+						<div style="margin-left:10px;float:left;">
+							<input type="text" class="names input" v-model:placeholder="order.contactPerson">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">联系电话:</div>
+						<div style="margin-left:15px; float:left;">
+							<input type="text" class="phone input" v-model:placeholder="order.contactPhone">
+						</div>
+					</div>
+				</div>
+			</div>
+       </div>
+       <div class="line_ec mt10"></div>
         <div class="order_whitebox">
             <div class="plr10">
                 <div class="goods_receipt clearfix">
@@ -109,7 +112,7 @@
             <div class="plr10">
                 <div class="goods_receipt clearfix">
                     <div class="fl">服务名称</div>
-                    <div class="fr oneLine" v-bind:data-id="order.serviceID">{{order.serviceName}}</div>
+                    <div class="fr oneLine" v-bind:data-id="order.serviceID" style="width: calc(100% - 71px );text-align:right;">{{order.serviceName}}</div>
                 </div>
             </div>
         </div>
@@ -128,6 +131,13 @@
                     <div class="fr">{{order.serviceCharge|formatDecimal}}</div>
                 </div>
             </div>
+        </div><div class="order_whitebox" v-else>
+            <div class="plr10">
+                <div class="goods_receipt clearfix">
+                    <div class="fl">服务费</div>
+                    <div class="fr">￥0.00</div>
+                </div>
+            </div>
         </div>
         <div class="order_whitebox" v-if="order.serviceWay==0">
             <div class="plr10">
@@ -141,7 +151,7 @@
         <div class="order_whitebox" v-else="order.serviceWay==1">
             <div class="plr10">
                 <div class="goods_receipt clearfix">
-                    <div class="fl">到店服务</div>
+                    <div class="fl">到店时间</div>
                     <div class="list_inbtn fr" data-toggle="modal" data-target="#timeModal"></div>
                     <div class="fr">{{serviceDate.label}}</div>
                 </div>

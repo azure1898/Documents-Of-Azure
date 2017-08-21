@@ -4,7 +4,7 @@ var vm = new Vue({
 		urlList: {
 			list: "servicelist.html?id=",
 			detail: "servicedetail.html?id=",
-			index: "serviceindex.html?id=",
+			index: "../business/businessindex.html?id=",
 			bg: "../../images/top_bg3.jpg"
 		},
 		business: {},

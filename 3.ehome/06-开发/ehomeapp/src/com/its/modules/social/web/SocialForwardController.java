@@ -18,6 +18,7 @@ import com.its.common.web.BaseController;
 import com.its.modules.social.bean.SocialRelationBean;
 import com.its.modules.social.bean.SocialSpeakBean;
 import com.its.modules.social.common.SocialGlobal;
+import com.its.modules.social.common.SortUtil;
 import com.its.modules.social.entity.SocialComment;
 import com.its.modules.social.entity.SocialSpeak;
 import com.its.modules.social.entity.SocialSubject;
@@ -128,7 +129,7 @@ public class SocialForwardController extends BaseController {
 		List<SocialRelationBean> ssbList = socialRelationService.findToUser(userId);
 		if(!StringUtils.isEmpty(ssbList)) {
 			for(SocialRelationBean socialRelationBean : ssbList) {
-				Map dataListMap = new HashMap();
+				Map<String, Object> dataListMap = new HashMap<String, Object>();
 				String friendId = socialRelationBean.getSubuserid();
 				String friendName = socialRelationBean.getNickName();
 				String headPicSrc = socialRelationBean.getPhoto();
@@ -144,7 +145,9 @@ public class SocialForwardController extends BaseController {
 			dataListMap.put("headPicSrc", "");
 			dataList.add(dataListMap);
 		}
-		toJson.put("data", dataList);
+		//对数据进行格式化，按首个汉字拼音的首个字母，进行分组，并排序
+		List data = new SortUtil().sort(dataList);
+		toJson.put("data", data);
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("message", "查询朋友用户成功");
 		return toJson;

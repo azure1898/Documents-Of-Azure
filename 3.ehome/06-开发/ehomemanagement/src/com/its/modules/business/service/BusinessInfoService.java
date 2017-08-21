@@ -3,12 +3,14 @@
  */
 package com.its.modules.business.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.common.service.ServiceException;
@@ -17,6 +19,10 @@ import com.its.modules.business.dao.BusinessCategorydictDao;
 import com.its.modules.business.dao.BusinessInfoDao;
 import com.its.modules.business.entity.BusinessCategorydict;
 import com.its.modules.business.entity.BusinessInfo;
+import com.its.modules.sys.dao.RoleDao;
+import com.its.modules.sys.dao.UserDao;
+import com.its.modules.sys.entity.Role;
+import com.its.modules.sys.entity.User;
 
 /**
  * 商家信息管理Service
@@ -35,6 +41,12 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
     @Autowired
     private BusinessServicetimeService businessServicetimeService;
 
+    @Autowired
+    private UserDao userDao;
+    
+    @Autowired
+    private RoleDao roleDao;
+    
     public BusinessInfo get(String id) {
         BusinessInfo businessInfo = businessInfoDao.get(id);
         businessInfo.setCategoryList(businessCategorydictDao.findList(new BusinessCategorydict(businessInfo)));
@@ -118,16 +130,37 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
            //删除商家分类的信息
             businessInfoDao.deleteInfoCategory(businessInfo);
             //插入商家分类的信息
+            List<String> roleIdList=new ArrayList<>();
+            if (businessInfo.getCategoryList() != null && businessInfo.getCategoryList().size() > 0) {
+                for(int i=0;i< businessInfo.getCategoryList().size();i++){
+                    roleIdList.add(Integer.parseInt(businessInfo.getCategoryList().get(i).getProdType())+2+"");
+                }
+            }
             if (businessInfo.getCategoryList() != null && businessInfo.getCategoryList().size() > 0) {
                 businessInfoDao.insertInfoCategory(businessInfo);
+               //删除商家账号下所有用户的分类角色
+                List<User> userList=userDao.getUserListByBusiness(businessInfo.getId());
+                if(userList!=null){
+                    for(int i=0;i<userList.size();i++){
+                        User user=userList.get(i);
+                        userDao.deleteUserRole(user);
+                        List<Role> roleList = Lists.newArrayList();
+                        for (Role r : roleDao.getRoleListByType()) {
+                            if (roleIdList.contains(r.getId())) {
+                                roleList.add(r);
+                            }
+                        }
+                        user.setRoleList(roleList);
+                        if (user.getRoleList() != null && user.getRoleList().size() > 0){
+                            userDao.insertUserRole(user);
+                        }else{
+                            throw new ServiceException(user.getLoginName() + "没有设置角色！");
+                        }
+                    }
+                }
             } else {
                 throw new ServiceException(businessInfo.getBusinessName() + "没有设置分类！");
             }
-            //删除商家账号下所有用户的分类角色
-            
-            
-            //添加商家账号下所有用户的分类角色
-            
             // 删除投放楼盘关联数据
             businessInfoDao.deleteInfoServiceScope(businessInfo);
             // 插入投放楼盘关联数据

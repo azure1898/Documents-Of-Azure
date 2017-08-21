@@ -18,6 +18,7 @@
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- page -->
+    <link href="../../css/cursom/common.css" rel="stylesheet">
     <link href="../../css/cursom/business.css" rel="stylesheet">
     <style type="text/css">
         a:hover {
@@ -32,7 +33,7 @@
 <body>
     <div id="app" v-cloak>
         <div class="details_top" v-bind:style="{'backgroundImage':'url('+business.businessImage+')'}">
-            <div class="container-fluid">
+            <div class="container-fluid top">
                 <div class="h20"></div>
                 <div class="topbtn_region">
                     <div class="fl">
@@ -50,8 +51,8 @@
                 <div class="details_add_tel">
                     <a href="#" v-on:click="callPhone(business.businessPhone)"><img v-bind:src="urlList.phoneicon" width="25" height="25"></a>
                 </div>
-                <div class="details_add_left">
-                    <div class="details_add_left_title">
+                <div class="details_add_left businessIndex">
+                    <div class="details_add_left_title labelEllipsis">
                         <a href="#">{{business.businessName}}</a>
                     </div>
                     <div class="details_add_left_text">
@@ -61,16 +62,28 @@
                 <div class="clear"></div>
             </div>
             <div class="mt10"></div>
-            <div class="details_spgm">
+            <div class="details_spgm" v-for="prodMode in business.prodModes">
                 <div class="details_spgm_right">
-                    <a v-bind:href="urlList.list + business.businessID">
+                    <a v-if="prodMode.modeID == 0" v-bind:href="urlList.list + business.businessID">
+                        <img v-bind:src="urlList.goicon" width="9" height="16">
+                    </a>
+                    <a v-if="prodMode.modeID == 1" v-bind:href="urlList.list + business.businessID">
+                        <img v-bind:src="urlList.goicon" width="9" height="16">
+                    </a>
+                    <a v-if="prodMode.modeID == 2" v-bind:href="urlList.list + business.businessID">
+                        <img v-bind:src="urlList.goicon" width="9" height="16">
+                    </a>
+                    <a v-if="prodMode.modeID == 3" v-bind:href="urlList.list + business.businessID">
                         <img v-bind:src="urlList.goicon" width="9" height="16">
                     </a>
                 </div>
-                <div class="details_spgm_left">商品购买</div>
+                <div class="details_spgm_left" v-if="prodMode.modeID == 0">商品购买</div>
+                <div class="details_spgm_left" v-if="prodMode.modeID == 1">服务预约</div>
+                <div class="details_spgm_left" v-if="prodMode.modeID == 2">课程购买</div>
+                <div class="details_spgm_left" v-if="prodMode.modeID == 3">场地预定</div>
                 <div class="clear"></div>
             </div>
-            <div v-if="business.groupBuy && business.groupBuy.length > 0">
+            <!--<div v-if="business.groupBuy && business.groupBuy.length > 0">
                 <div class="xq_jstitle">商家团购</div>
                 <div class="line_ec"></div>
                 <div class="plr10 sort_list" v-for="item in business.groupBuy">
@@ -92,12 +105,62 @@
                 </div>
                 <div class="order_whitebox pointer" style="text-align:center;" v-on:click="getMore(business)">查看更多团购</div>
             </div>
-            <div class="xq_jstitle">商家信息</div>
+          -->
+          
+          
+          
+          <div v-if="business.groupBuy && business.groupBuy.length > 0">
+					<div class="xq_jstitle">商家团购</div>
+					<div>
+						<div class="line_ec"></div>
+						<div class="plr10 sort_list" v-for="item in business.groupBuy">
+							<a v-bind:href="urlList.groupbuy + item.groupBuyID" style="color:black">
+								<div class="goods_list" v-bind:data-id="item.groupBuyID">
+									<div class="goods_pic"><img v-bind:src="item.groupBuyImage"></div>
+									<div class="goods_right">
+										<div class="goods_name">{{item.groupBuyName}}</div>
+										<div class="">
+											<div class="fl mt10">
+												<div class="font_orange fl">{{item.groupBuyPrice|formatDecimal}}</div>
+												<div class="font14 fl ml10"><del>{{item.marketPrice|formatDecimal}}</del></div>
+											</div>
+											<div class="goods_num fr">已售{{item.soldNum}}件</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="order_whitebox" id="openMore" style="text-align:center;" v-if="business.groupBuy && business.groupBuy.length>=2" @click="openMore()">查看更多团购</div>
+					</div>
+				</div>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <div class="xq_jstitle">商家信息</div>
             <div class="details_sjxx">
                 <p>.营业时间：{{business.businessHours}}</p>
                 <p>.商家标签：<span v-for="(label,index) in business.businessLabels"><span v-if="index > 0">,</span>{{label.labelName}}</span></p>
                 <p v-if="business.sendMoney > 0">.起&nbsp;&nbsp;送&nbsp;&nbsp;价：{{business.sendMoney | formatDecimal}}</p>
                 <p v-if="business.deliveryFee > 0">.配&nbsp;&nbsp;送&nbsp;&nbsp;费：{{business.deliveryFee | formatDecimal}}</p>
+                <p>.服务方式：{{business.serviceWay}}</p>
+                <p v-if="business.serviceCharge > 0">.服&nbsp;&nbsp;务&nbsp;&nbsp;费：{{business.serviceCharge | formatDecimal}}</p>
                 <p v-if="business.activities && business.activities > 0">.活动优惠：<span v-for="activity in business.activities">满减 {{activity.desc}}</span></p>
             </div>
             <div class="details_sjxx">

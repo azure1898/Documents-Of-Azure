@@ -438,5 +438,24 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return strb1+"|"+strb2;
     }
 
-
+    /**验证是否是手机号格式 
+     * 该方法还不是很严谨,只是可以简单验证 
+     * @param mobile 
+     * @return  true表示是正确的手机号格式,false表示不是正确的手机号格式 
+     */  
+    public static boolean isMobile(String mobile){  
+        //当前运营商号段分配  
+        //中国移动号段 1340-1348 135 136 137 138 139 150 151 152 157 158 159 187 188 147  
+        //中国联通号段 130 131 132 155 156 185 186 145  
+        //中国电信号段 133 1349 153 180 189  
+        String regular = "1[3,4,5,8]{1}\\d{9}";  
+        Pattern pattern = Pattern.compile(regular);   
+        boolean flag = false;  
+        if( mobile != null ){             
+            Matcher matcher = pattern.matcher(mobile);  
+            flag = matcher.matches();             
+        }  
+        return flag;  
+    }  
+  
 }

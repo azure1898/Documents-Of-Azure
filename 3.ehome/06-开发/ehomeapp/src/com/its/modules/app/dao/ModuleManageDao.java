@@ -79,4 +79,12 @@ public interface ModuleManageDao extends CrudDao<ModuleManage> {
 	 * @return List<ModuleManage>
 	 */
 	public List<ModuleManage> getModuleManageList(@Param("list") List<String> list, @Param("inStr") String inStr);
+	
+	/**
+	 * 获取某模块的产品模式
+	 * @param moduleID
+	 * @return
+	 *            产品模式：0商品购买 1服务预约 2课程购买 3场地预约
+	 */
+	public String getProdType(@Param("moduleID") String moduleID);
 }

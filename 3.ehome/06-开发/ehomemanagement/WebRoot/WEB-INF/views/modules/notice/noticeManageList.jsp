@@ -112,7 +112,7 @@
         <c:forEach items="${page.list}" var="noticeManage" varStatus="status">
             <tr onClick="selectElem(this)">
                 <td>
-                    ${status.count}
+                    ${(page.pageNo - 1) * page.pageSize + status.count}
                     <input id="elemId" type="hidden" value="${noticeManage.id}"/>
                 </td>
                 <td>

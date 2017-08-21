@@ -228,7 +228,6 @@
 		AND a.Recom_Type = '0'
 		AND b.Village_Info_ID = #{villageInfoId}
 		AND b.Product_Line = '0'
-		AND b.Set_State = '1'
 		ORDER BY
 			a.Sort_Num
 	</select>
@@ -255,6 +254,19 @@
 			</foreach>
 		ORDER BY
 			INSTR(#{inStr}, a.ID)
+	</select>
+	
+	<!-- 获取某模块的产品模式 -->
+	<select id="getProdType" resultType="java.lang.String">
+		SELECT b.Prod_Type as prodType
+		FROM
+			Module_Manage a,Business_CategoryDict b
+		WHERE
+			a.del_flag = '0'
+		AND	b.del_flag = '0'
+		AND a.Business_Category_Dict_Flag='1'
+		AND a.id=#{moduleID}
+		AND a.Business_Category_Dict_ID = b.id 
 	</select>
 	
 </mapper>

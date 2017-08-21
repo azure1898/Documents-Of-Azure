@@ -49,7 +49,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	private String villageinfoid;  //楼盘Id
 	private String villageinfoname;  //楼盘名称
 	private String images;  //图片
-	private String delflag;  //删除状态
+	private int delflag;  //删除状态
 	
 	private String sumforward;  //转发总数
 	private String sumcomment;  //评论总数
@@ -68,6 +68,7 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	private int picSize;
 	
 	private int source; //来源
+	private String delflagId;
 	
 	private List<SocialSubject> subList;  // 话题list
 	
@@ -234,11 +235,11 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 		this.images = images;
 	}
 
-	public String getDelflag() {
+	public int getDelflag() {
 		return delflag;
 	}
 
-	public void setDelflag(String delflag) {
+	public void setDelflag(int delflag) {
 		this.delflag = delflag;
 	}
 
@@ -410,5 +411,14 @@ public class SocialSpeak extends DataEntity<SocialSpeak> {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+	public String getDelflagId() {
+		return delflagId;
+	}
+
+	public void setDelflagId(String delflagId) {
+		this.delflagId = delflagId;
+	}
+	
 
 }

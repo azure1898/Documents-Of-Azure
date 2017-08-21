@@ -7,14 +7,14 @@ function getQueryString(name) {
 function toast(content) {
     layer.open({
         content: content,
-        skin:'msg',
-        time:2
+        skin: 'msg',
+        time: 2
     })
 }
 function toast2(content) {
     layer.open({
         content: content,
-        btn:"确定",
+        btn: "确定",
         shadeClose: false
     })
 }
@@ -139,4 +139,18 @@ Vue.prototype.myCollection = function (vm, business) {
 Vue.prototype.callPhone = function (phoneCode) {
     var json = { "data": phoneCode };
     window.location.href = "protocol://android?code=call&data=" + JSON.stringify(json);
-}
+};
+
+Vue.prototype.validateUser = function () {
+    if (userInfo.userID && userInfo.userID.length > 0) {
+        return true;
+        alert("YES");
+    }
+    else {
+        return false;
+         alert("NO");
+    }
+};
+
+Vue.prototype.goLogin = function () {
+};

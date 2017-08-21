@@ -687,7 +687,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/fastdht_client.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/my_fastdfs_client.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/alipay-sdk-java20170725114550.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/alipay-sdk-java20170725114550.jar" sourcepath="WebRoot/WEB-INF/lib/alipay-sdk-java20170725114550-source.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

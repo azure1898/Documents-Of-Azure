@@ -24,6 +24,8 @@ public class SocialSpeakBean extends SocialSpeak {
 	private String nickName;//昵称
 	
 	private String photo;//头像
+	
+	private String aid;//account id
 
 	public int getIsFocus() {
 		return isFocus;
@@ -83,6 +85,14 @@ public class SocialSpeakBean extends SocialSpeak {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getAid() {
+		return aid;
+	}
+
+	public void setAid(String aid) {
+		this.aid = aid;
 	}
 	
 	

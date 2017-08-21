@@ -26,21 +26,17 @@ var vm = new Vue({
 					toast2("商家休息中，暂时不接受订单")
 				}
 			});
-			//轮播图
-			$('#myCarousel').carousel({
-				//自动4秒播放
-				interval: 3000,
-			});
-			var myElement = document.getElementById('myCarousel')
-			var hm = new Hammer(myElement);
-			hm.on("swipeleft", function() {
-				$('#myCarousel').carousel('next')
-			})
-			hm.on("swiperight", function() {
-				$('#myCarousel').carousel('prev')
-			})
+		
 		})
 	},
+	updated: function () {
+			var mySwiper = new Swiper('.swiper-container',{
+    	                 direction: 'horizontal',						
+							loop: true,
+							speed:200,
+               })
+						
+    },
 	methods: {
 		init: function(number, status) {
 			if (status == 1) {

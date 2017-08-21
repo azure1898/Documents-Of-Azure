@@ -28,6 +28,48 @@
             }
         }
     }
+    /**
+     * 编辑
+     * 
+     * @returns {Boolean}
+     */
+    function elemEditBusniess(moduleName) {
+        console.log(moduleName)
+        if (!$("#selectElemId").val()) {
+            if(moduleName==undefined||moduleName==''){
+                alertx("请选择要编辑的行");
+            }else{
+                alertx("请选择要编辑的"+moduleName);
+            }
+            return false;
+        } else {
+            var elemId = $("#selectElemId").val();
+            $("#btuElemEdit").attr("href", $("#btuElemEdit").attr("href") + elemId+"&prodType="+$("#selectElemId2").val());
+            return true;
+        }
+    }
+     
+  // 已经被选中的行
+     var selectedElem = null;
+     function selectElem2(elem) {
+         if (selectedElem) {
+             // 撤销选中
+             if (selectedElem === elem) {
+                 $("#selectElemId").val("");
+                 $(elem).attr("class", "listRowUnSelected");
+                 selectedElem = null;
+                 return;
+             }
+         }
+
+         $("#selectElemId").val($(elem).children().find("#elemId").val());
+         $("#selectElemId2").val($(elem).children().find("#HidProdType").val());
+         $.each($(elem).parent().children(), function(index, value, array) {
+             $(value).attr("class", "listRowUnSelected");
+         });
+         $(elem).attr("class", "listRowSelected");
+         selectedElem = elem;
+     }
 </script>
 </head>
 <body>
@@ -91,7 +133,7 @@
             <a class="btn btn-primary" href="${ctx}/business/businessInfo/edit"><i class="icon-plus icon-custom"></i> 添加</a> 
         </shiro:hasPermission>
         <shiro:hasPermission name="business:businessInfo:edit">
-            <a id="btuElemEdit" href="${ctx}/business/businessInfo/edit?id=" onclick="return elemEdit('商户')" class="btn btn-primary"><i class="icon-edit icon-custom"></i> 编辑</a> 
+            <a id="btuElemEdit" href="${ctx}/business/businessInfo/edit?id=" onclick="return elemEditBusniess('商户')" class="btn btn-primary"><i class="icon-edit icon-custom"></i> 编辑</a> 
         </shiro:hasPermission>
         <shiro:hasPermission name="business:businessInfo:delete">
             <a id="btuElemDelete" href="${ctx}/business/businessInfo/delete?id=" onclick="return elemDeleteBusniess('商户信息')" class="btn btn-primary"><i class="icon-trash icon-custom"></i> 删除</a>
@@ -104,6 +146,7 @@
         </shiro:hasPermission>
     </div>
     <input id="selectElemId" type="hidden" value="" />
+    <input id="selectElemId2" type="hidden" value="" />
     <sys:message content="${message}" />
     <table id="contentTable" class="table table-bordered table-condensed">
         <thead>
@@ -124,10 +167,11 @@
         </thead>
         <tbody>
             <c:forEach items="${page.list}" var="businessInfo" varStatus="status">
-                <tr onClick="selectElem(this)">
+                <tr onClick="selectElem2(this)">
                     <td>${status.count} 
                     <input id="elemId" type="hidden" value="${businessInfo.id}" />
                     <input id="oldFrozen" type="hidden" value="${businessInfo.useState}"/>
+                    <input id="HidProdType" type="hidden" value="${businessInfo.businessCategorydict.prodType}"/>
                     </td>
                     <td>${businessInfo.businessName}</td>
                     <td><img id="preview" src="${businessInfo.businessPic}" style="width:45px; height:45;" /></td>

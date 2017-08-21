@@ -23,9 +23,13 @@ DELETE FROM sku_key;
 DELETE FROM sku_value;
 DELETE FROM sys_code_max;
 DELETE FROM business_sales; 
-INSERT INTO `sys_code_max` (`id`, `code_name`, `code_date`, `code_value`) VALUES ('001', '¶©µ¥±àºÅ',NOW(), '0');
-INSERT INTO `sys_code_max` (`id`, `code_name`, `code_date`, `code_value`) VALUES ('002', 'Ä£¿é±àºÅ', NOW(), '0');
-INSERT INTO `sys_code_max` (`id`, `code_name`, `code_date`, `code_value`) VALUES ('003', 'ÇøÓò±àºÅ', NOW(), '0');
+INSERT INTO `sys_code_max` VALUES ('001', '¶©µ¥±àºÅ', '2017-08-15 14:32:04', '1');
+INSERT INTO `sys_code_max` VALUES ('002', 'Ä£¿é±àºÅ', '2017-07-11 09:29:53', '55');
+INSERT INTO `sys_code_max` VALUES ('003', 'ÇøÓò±íÖ÷¼ü', '2017-07-17 19:06:16', '113');
+INSERT INTO `sys_code_max` VALUES ('004', 'Ê¡±àºÅ', '2017-08-16 18:36:33', '6');
+INSERT INTO `sys_code_max` VALUES ('005', '³ÇÊÐ±àºÅ', '2017-08-16 18:37:02', '8');
+INSERT INTO `sys_code_max` VALUES ('006', 'ÇøÓò±àºÅ', '2017-08-16 18:37:39', '98');
+INSERT INTO `sys_code_max` VALUES ('007', 'ÓÅ»ÝÈ¯ºÅ', '2017-08-18 15:43:39', '1');
 
 delete from account;
 delete from address;

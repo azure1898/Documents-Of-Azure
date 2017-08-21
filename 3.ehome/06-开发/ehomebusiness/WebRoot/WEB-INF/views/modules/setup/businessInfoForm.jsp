@@ -282,12 +282,12 @@
         </div>
         <div class="form-actions">
             <shiro:hasPermission name="setup:businessInfo:edit">
-                <input id="btnSubmit" class="btn btn-success" type="submit" value="保 存" />&nbsp;
+                <input id="btnSubmit" style="width:60px" class="commonbtn" type="submit" value="保 存" />&nbsp;
                 </shiro:hasPermission>
             <shiro:hasPermission name="setup:businessInfo:services">
-                <a class="btn btn-success" href="${ctx}/setup/businessInfo/edit" />继续营业设置</a>
+                <input class="commonbtn" style="width:100px" type="button" onclick="window.location.href='${ctx}/setup/businessInfo/edit'" value="继续营业设置"/>
             </shiro:hasPermission>
-            <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)" />
+            <input id="btnCancel" style="width:60px" class="commonbtn" type="button" value="返 回" onclick="history.go(-1)" />
         </div>
     </form:form>
     <script src="${ctxStatic}/common/singlefileUpload.js"></script>

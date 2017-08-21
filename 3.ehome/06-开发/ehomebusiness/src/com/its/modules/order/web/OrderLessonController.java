@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +88,6 @@ public class OrderLessonController extends BaseController {
      * @param model
      * @return
      */
-    @RequiresPermissions("order:orderLesson:view")
     @RequestMapping(value = { "list", "" })
     public String list(OrderLesson orderLesson, HttpServletRequest request, HttpServletResponse response, Model model) {
         // 从SESSION中取得商家信息
@@ -138,7 +136,6 @@ public class OrderLessonController extends BaseController {
         return "modules/order/orderLessonList";
     }
 
-    @RequiresPermissions("order:orderLesson:view")
     @RequestMapping(value = "form")
     public String form(OrderLesson orderLesson, Model model) {
         model.addAttribute("orderLesson", orderLesson);
@@ -170,7 +167,6 @@ public class OrderLessonController extends BaseController {
      *            订单取消信息
      * @return
      */
-    @RequiresPermissions("order:orderLesson:edit")
     @RequestMapping(value = "cancel")
     public String cancel(OrderLesson orderLesson, Model model, RedirectAttributes redirectAttributes,String redirectUrl) {
     	if(redirectUrl!=null && redirectUrl!="")
@@ -196,7 +192,6 @@ public class OrderLessonController extends BaseController {
         }
     }
 
-    @RequiresPermissions("order:orderLesson:view")
     @RequestMapping(value = { "export" })
     public String export(OrderLesson orderLesson, HttpServletRequest request, HttpServletResponse response,
             Model model) {

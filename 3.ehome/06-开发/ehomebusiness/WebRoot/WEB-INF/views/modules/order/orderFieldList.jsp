@@ -161,9 +161,7 @@
                 <th style="width:6.5%;">支付状态</th>
                 <th style="width:6.5%;">订单状态</th>
                 <th style="width:15%;">时间</th>
-                <shiro:hasPermission name="order:orderField:edit">
-                    <th style="width:9%;">操作</th>
-                </shiro:hasPermission>
+                <th style="width:9%;">操作</th>
             </tr>
         </thead>
         <tbody>

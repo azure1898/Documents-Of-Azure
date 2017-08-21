@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -365,6 +367,7 @@ public class CouponManageController extends BaseController {
 
 		// excel中，数据从第二行开始，设置lineNum的初始值为1
 		int lineNum = 1;
+		
 		for (Mobile mobile : mobileList) {
 			lineNum++;
 
@@ -376,11 +379,18 @@ public class CouponManageController extends BaseController {
 				// 导入的excel中，第**行的手机号为空
 				result.put("success", Boolean.FALSE);
 				result.put("msg", "导入的excel中，第" + lineNum + "行的手机号码为空，导入excel的第一列必须为手机号，且不能为空！");
+				break;
 			} else if (mobileNoStr.length() != 11) {
 
 				// 导入的excel中，第**行的第一列手机号位数不足11位
 				result.put("success", Boolean.FALSE);
 				result.put("msg", "导入的excel中，第" + lineNum + "行的第一列手机号位数不足11位，导入excel的第一列必须为手机号！");
+				break;
+			} else if(!StringUtils.isMobile(mobileNoStr)){
+				// 导入的excel中，第**行的第一列手机号不符合正则匹配
+				result.put("success", Boolean.FALSE);
+				result.put("msg", "导入的excel中，第" + lineNum + "行的第一列不是正确的手机号，导入excel的第一列必须为手机号！");
+				break;
 			} else {
 				result.put("success", Boolean.TRUE);
 			}

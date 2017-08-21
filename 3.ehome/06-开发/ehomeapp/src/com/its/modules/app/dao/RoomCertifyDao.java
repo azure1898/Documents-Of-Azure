@@ -42,4 +42,6 @@ public interface RoomCertifyDao extends CrudDao<RoomCertify> {
 	 * @return RoomCertify
 	 */
 	public RoomCertify judgeRoomCertify(@Param("accountId") String accountId, @Param("villageInfoId") String villageInfoId, @Param("roomCertifyId") String roomCertifyId);
+	
 }
+

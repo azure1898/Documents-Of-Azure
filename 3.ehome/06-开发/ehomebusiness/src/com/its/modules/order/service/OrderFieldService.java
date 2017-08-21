@@ -131,7 +131,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
      * @return
      */
     public Page<OrderField> findPage(Page<OrderField> page, OrderField orderField) {
-        page.setOrderBy("a.order_no desc");
+        page.setOrderBy("a.create_date desc,a.order_no desc");
         return super.findPage(page, orderField);
     }
 

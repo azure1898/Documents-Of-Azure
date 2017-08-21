@@ -27,6 +27,7 @@ public class SocialMsg extends DataEntity<SocialMsg> {
 	private int firtype;		// 1：订单消息2：管理员消息：3：邻里圈消息
 	private int sectype;		// 2.1:配送消息2.2：取消订单 2.3：临期提醒2.4：团购已消费 2.5：团购退款  3.1：公告通知 3.2：管理员发言  4.1：@我的消息 4.2：评论我的消息 4.3：关注我的消息
 	private int isread;		// 是否已读 1：已读 0：未读
+	private String remark;		// 备注
 	
 	public SocialMsg() {
 		super();
@@ -114,6 +115,14 @@ public class SocialMsg extends DataEntity<SocialMsg> {
 
 	public void setIsread(int isread) {
 		this.isread = isread;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 	
 }

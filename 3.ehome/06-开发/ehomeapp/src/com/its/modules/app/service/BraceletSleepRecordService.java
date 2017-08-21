@@ -6,12 +6,14 @@ package com.its.modules.app.service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.modules.app.dao.BraceletSleepRecordDao;
+import com.its.modules.app.entity.BraceletExerciseRecord;
 import com.its.modules.app.entity.BraceletSleepRecord;
 
 /**
@@ -39,6 +41,11 @@ public class BraceletSleepRecordService extends CrudService<BraceletSleepRecordD
 	@Transactional(readOnly = false)
 	public void save(BraceletSleepRecord braceletSleepRecord) {
 		super.save(braceletSleepRecord);
+	}
+	
+	@Transactional(readOnly = false)
+	public int update(BraceletSleepRecord braceletSleepRecord) {
+		return dao.update(braceletSleepRecord);
 	}
 
 	@Transactional(readOnly = false)

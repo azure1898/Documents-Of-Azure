@@ -60,4 +60,16 @@ public class SocialMsgService extends CrudService<SocialMsgDao, SocialMsg> {
 		return socialMsgDao.countUnRead(toUserId, secType, isRead, firType);
 	}
 	
+	/**
+	 * @Description：根据条件查询消息集合
+	 * @Author：刘浩浩
+	 * @Date：2017年8月19日
+	 * @param socialMsg
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	public List<SocialMsg> findList(SocialMsg socialMsg, int pageIndex, int pageSize){
+		return socialMsgDao.findListByPage(socialMsg, pageIndex, pageSize);
+	}
 }

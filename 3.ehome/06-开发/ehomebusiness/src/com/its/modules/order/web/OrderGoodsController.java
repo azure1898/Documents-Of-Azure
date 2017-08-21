@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,7 +91,6 @@ public class OrderGoodsController extends BaseController {
         return entity;
     }
 
-    @RequiresPermissions("order:orderGoods:view")
     @RequestMapping(value = { "list", "" })
     public String list(OrderGoods orderGoods, HttpServletRequest request, HttpServletResponse response, Model model) {
 
@@ -154,7 +152,6 @@ public class OrderGoodsController extends BaseController {
      * @param model
      * @return
      */
-    @RequiresPermissions("order:orderGoods:view")
     @RequestMapping(value = "form")
     public String form(OrderGoods orderGoods, Model model, HttpServletRequest request) {
 
@@ -208,7 +205,6 @@ public class OrderGoodsController extends BaseController {
      *            前回更新日时
      * @return
      */
-    @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "complete")
     public String complete(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
             RedirectAttributes redirectAttributes, String redirectUrl) {
@@ -244,7 +240,6 @@ public class OrderGoodsController extends BaseController {
      *            要处理的商品订单号
      * @return
      */
-    @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "accept")
     public String accept(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
             RedirectAttributes redirectAttributes, String redirectUrl) {
@@ -280,7 +275,6 @@ public class OrderGoodsController extends BaseController {
      *            订单取消信息
      * @return
      */
-    @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "cancel")
     public String cancel(OrderGoods orderGoods, Model model, RedirectAttributes redirectAttributes,
             String redirectUrl) {
@@ -328,7 +322,6 @@ public class OrderGoodsController extends BaseController {
      *            更新日时
      * @return
      */
-    @RequiresPermissions("order:orderGoods:edit")
     @RequestMapping(value = "dispatching")
     public String dispatching(@RequestParam(required = true) String id,
             @RequestParam(required = true) String updateDate, RedirectAttributes redirectAttributes) {
@@ -359,7 +352,6 @@ public class OrderGoodsController extends BaseController {
         }
     }
 
-    @RequiresPermissions("order:orderGoods:view")
     @RequestMapping(value = { "export" })
     public String export(OrderGoods orderGoods, HttpServletRequest request, HttpServletResponse response, Model model) {
         // 从SESSION中取得商家信息

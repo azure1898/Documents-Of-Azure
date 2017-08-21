@@ -72,6 +72,8 @@ public class GoodsInfoService extends CrudService<GoodsInfoDao, GoodsInfo> {
 
         StringBuffer orderBy = new StringBuffer();
 
+        // 优先显示推荐商品
+        orderBy.append("a.recommend DESC,");
         // 根据画面选择的条件来进行排序
         if (StringUtils.isNotBlank(goodsInfo.getSortItem())) {
             orderBy.append(goodsInfo.getSortItem());

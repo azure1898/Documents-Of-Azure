@@ -89,7 +89,7 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
     }
 
     public Page<OrderService> findPage(Page<OrderService> page, OrderService orderService) {
-        page.setOrderBy("a.order_no desc");
+        page.setOrderBy("a.create_date desc,a.order_no desc");
         return super.findPage(page, orderService);
     }
 

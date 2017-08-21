@@ -4,10 +4,23 @@
     overflow: hidden;
 }
 
-.business_nr .business_name {
+.business_nr .business_name,.media-body {
     width: calc(100% - 65px);
 }
 
-.full_cut .labelEllipsis {
+.full_cut .labelEllipsis{
     width: calc(100% - 50px);
+}
+.Boutique_buy .labelEllipsis {
+    width: calc(50% - 50px);
+    margin:0 auto;
+}
+
+.businessIndex {
+    width: calc(100% - 40px);
+}
+.goods_right .goods_name{
+	
+	 width: calc(100% - 40px);
+	
 }

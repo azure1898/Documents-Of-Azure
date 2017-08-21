@@ -19,6 +19,11 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style type="text/css">
+    	.goods_right .goods_name{
+    		width: calc( 100% - 50px );
+    	}
+    </style>
 </head>
 <body>
     <div id="app" v-cloak>
@@ -65,7 +70,7 @@
                             <a v-bind:href="urlList.detail + serviceList.serviceID"><img v-bind:src="serviceList.serviceImage"></a>
                         </div>
                         <div class="goods_right">
-                            <div class="goods_name twoLine"><a v-bind:href="urlList.detail + serviceList.serviceID">{{serviceList.serviceName}}</a></div>
+                            <div class="goods_name oneLine"><a v-bind:href="urlList.detail + serviceList.serviceID">{{serviceList.serviceName}}</a></div>
                             <div class="">
                                 <div class="fl mt10" v-if="serviceList.discountedPrice!=0">
                                     <div class="font_orange fl">{{serviceList.discountedPrice|formatDecimal}}/{{serviceList.serviceUnit}}</div>

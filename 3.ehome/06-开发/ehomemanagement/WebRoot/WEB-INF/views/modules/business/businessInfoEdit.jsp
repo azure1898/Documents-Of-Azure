@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%
+    request.setCharacterEncoding("UTF-8");
+    String prodType = request.getParameter("prodType");
+%>
 <html>
 <head>
 <title>商家信息管理</title>
@@ -24,16 +28,7 @@
         }
         $("#longitude").prop("readonly", true);
         $("#latitude").prop("readonly", true); 
-        //如果为编辑状态则服务范围不可修改
-        if ($('#businessinfoId').val() != null && $('#businessinfoId').val() != "") {
-          $("input[name='villageIdList']").each(function() {
-            $(this).prop("disabled", true)
-          });
-          $("#addrDetail").prop("disabled", true);
-          $("#longitude").prop("disabled", true);
-          $("#latitude").prop("disabled", true);
-        }
-        
+      
         // 富文本编辑器初始化
         KindEditor.ready(function(K) {
             var editor1 = K.create('textarea[name="businessIntroduce"]', {
@@ -72,6 +67,19 @@
                 return true;
             }
 	    }, "请上传商家图片");
+        jQuery.validator.addMethod("checkVillage", function(value, element,params) {
+            var villageIdList = '';
+            $("input[name='villageIdList']").each(function() {
+                if ($(this).attr("checked") == 'checked') {
+                    villageIdList += $(this).val();
+                }
+            });
+            if (villageIdList == '') {
+                return false;
+            }else{
+                return true;
+            }
+	    }, "请选择服务范围");
         $.validator.addMethod("compareValiTime", function(value, element) {
             var startTime = $("#stopBusinessBeginTime").val();
             var endTime = $("#stopBusinessEndTime").val();
@@ -122,9 +130,6 @@
                 categoryIdList : {
                     required : true
                 },
-                villageIdList : {
-                    required : true
-                },
                 addrCity : {
                     required : true
                 },
@@ -137,6 +142,9 @@
                 checkImg:{
                     checkImg:"params"
                 },
+                checkVillage:{
+                    checkVillage:"params"
+                },
                 businessLabel : {
                     required : true,
                     checkBusinessLabel : true,
@@ -146,6 +154,9 @@
             messages : {
                 checkImg:{
                     checkImg:"请上传商家图片"
+                },
+                checkVillage:{
+                    checkVillage:"请选择服务范围"
                 },
                 businessName : {
                     remote : "商家名称已存在",
@@ -160,9 +171,6 @@
                 },
                 categoryIdList : {
                     required : "请选择商家分类"
-                },
-                villageIdList : {
-                    required : "请选择服务范围"
                 },
                 addrCity : {
                     required : "请选择服务城市"
@@ -194,17 +202,6 @@
 	                    $(".word_message").show();
 	                    return;
 	            }
-                var villageIdList = '';
-                $("input[name='villageIdList']").each(function() {
-                    if ($(this).attr("checked") == 'checked') {
-                        villageIdList += $(this).val();
-                    }
-                });
-                
-                if (villageIdList == '') {
-                    top.$.jBox.tip('请选择服务范围', 'error');
-                    return;
-                } 
                 /*check服务时间段是否符合时间规则  */
                 $.ajax({
                     type : 'POST',
@@ -314,7 +311,7 @@
         });
 
         //通过分类选择 判断是否显示 或者是否可以选择
-        var str = '';
+        var str = $("#prodType").val()+',';
         $("input[name='categoryIdList']").click(function() {
             var pattren = $(this).attr("pattren");
             if ($(this).attr('checked') == "checked") {
@@ -331,8 +328,8 @@
                     str = str.replace(pattren + ",", "");
                     $(this).removeAttr('checked');
                 }
-
             }
+            console.log(str);
             if (str.indexOf("0") >= 0) {
                 $("#shangpin").show();
             } else {
@@ -640,14 +637,7 @@
                         domRow += '<input  name="villageIdList" checked="ture" type="checkbox" value="' + item.id + '" >' + item.villageName + '</input>';
                     }
                 })
-                domRow += '<span class="help-inline"><font color="red">*</font> </span>';
                 $("#villageIdList").append($(domRow));
-                //如果为修改 则服务范围不能修改
-                if ($('#businessinfoId').val() != null && $('#businessinfoId').val() != "") {
-                    $("input[name='villageIdList']").each(function() {
-                        $(this).prop("disabled", true)
-                    });
-                }
             }
         })
     }
@@ -675,6 +665,7 @@
     <br />
     <form:form id="inputForm" modelAttribute="businessInfo" action="${ctx}/business/businessInfo/save" method="post" enctype="multipart/form-data" class="form-horizontal">
         <form:hidden id="businessinfoId" path="id" />
+        <input id="prodType" type="hidden" value="<%=prodType %>" />
         <input id="serviceModel" type="hidden" value="${businessInfo.serviceModel}" />
         <input id="villageIds" type="hidden" value="${businessInfo.villageIds}" />
         <input id="categoryIds" type="hidden" value="${businessInfo.categoryIdList}" />
@@ -693,21 +684,12 @@
         <div class="control-group">
             <label class="control-label">商户名称：</label>
             <div class="controls">
-                <c:choose>
-                    <c:when test="${not empty businessInfo.id}">
-                        <input id="businessName" type="text" value="${businessInfo.businessName}" readonly="readonly" name="businessName">
-                    </c:when>
-                    <c:otherwise>
-                        <form:input path="businessName" htmlEscape="false" maxlength="64" class="input-xlarge required" />
-                    </c:otherwise>
-                </c:choose>
-
+                <form:input path="businessName" htmlEscape="false" maxlength="64" class="input-xlarge required" />
                 <span class="help-inline">
                     <font color="red">*</font>
                 </span>
             </div>
         </div>
-
         <div class="control-group">
             <label class="control-label">商家图片：</label>
             <div id="localImag">
@@ -768,7 +750,7 @@
             <div class="controls">
                 <span>
                     <c:forEach items="${allCategory}" var="category" varStatus="status">
-                        <input ${not empty businessInfo.id?'disabled="disabled" ':''} name="categoryIdList" type="checkbox" pattren="${category.prodType}" value="${category.id}">${category.categoryName}</input>
+                        <input name="categoryIdList" type="checkbox" pattren="${category.prodType}" value="${category.id}">${category.categoryName}</input>
                     </c:forEach>
                     <span class="help-inline">
                         <font color="red">*</font>
@@ -782,13 +764,13 @@
                 <input type="text" class="hide" id="hidProId" value="${businessInfo.addrPro }">
                 <input type="text" class="hide" id="hidCityId" value="${businessInfo.addrCity }">
                 <input type="text" class="hide" id="hidAreaId" value="${businessInfo.addrArea }">
-                <select id="addrpro" ${not empty businessInfo.id?'disabled="disabled" ':''} name="addrPro" style="width: 120px" onchange="changeCity()">
+                <select id="addrpro" name="addrPro" style="width: 120px" onchange="changeCity()">
                     <option value="">全部省份</option>
                 </select>
-                <select id="addrcity" ${not empty businessInfo.id?'disabled="disabled" ':''} name="addrCity" style="width: 120px" onchange="changeArea()">
+                <select id="addrcity" name="addrCity" style="width: 120px" onchange="changeArea()">
                     <option value="">全部城市</option>
                 </select>
-                <select id="addrarea" ${not empty businessInfo.id?'disabled="disabled" ':''} name="addrArea" style="width: 120px">
+                <select id="addrarea" name="addrArea" style="width: 120px">
                     <option value="">全部区域</option>
                 </select>
                 <form:input path="addrDetail" placeholder="详细地址" htmlEscape="false" maxlength="200" class="input-xlarge required" />
@@ -832,8 +814,11 @@
         </div>
         <div class="control-group">
             <label class="control-label">服务范围：</label>
-
             <div class="controls" id="villageIdList"></div>
+            <input id="checkVillage" name="checkVillage" value="" style="width: 0px; height: 0px; border: 0px;">
+            <span class="help-inline">
+                    <font color="red">*</font>
+            </span>
         </div>
         <div class="control-group">
             <label class="control-label">是否推荐：</label>

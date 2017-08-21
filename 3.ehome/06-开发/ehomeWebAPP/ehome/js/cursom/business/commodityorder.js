@@ -96,8 +96,8 @@ var vm = new Vue({
     methods: {
         // 渲染页面
         init:function(item,coup){
-        	var arr=new Arrey();
-        	coup.foreach(function(e,i){
+        	var arr=new Array();
+        	coup.forEach(function(e,i){
         		if(item.totalMoney >= e.couponCondition){
         		arr.push(e);
         	}

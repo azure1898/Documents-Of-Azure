@@ -79,7 +79,7 @@
         ORDER BY ${page.orderBy}
       </when>
       <otherwise>
-        ORDER BY a.update_date DESC
+        ORDER BY a.create_date DESC
       </otherwise>
     </choose>
   </select>
@@ -183,7 +183,7 @@
     LEFT JOIN sys_area b on a.Addr_Pro=b.id
     LEFT JOIN village_line c on a.ID=c.Village_Info_ID
     <where>
-      a.del_flag = #{DEL_FLAG_NORMAL}
+      a.del_flag = #{DEL_FLAG_NORMAL} and a.state='0'
       <if test="villageLineId != null and villageLineId != ''">
         AND c.Product_Line = #{villageLineId}
       </if>
@@ -201,10 +201,18 @@
     LEFT JOIN village_line c on a.ID=c.Village_Info_ID
     <where>
       a.del_flag = #{DEL_FLAG_NORMAL}
-      AND a.Addr_Pro = #{id}
+      and a.state='0'
       <if test="villageLineId != null and villageLineId != ''">
         AND c.Product_Line = #{villageLineId}
       </if>
+      <choose>
+        <when test="id != null and id != ''">
+          AND a.Addr_Pro = #{id}
+        </when>
+        <otherwise>
+          AND a.Addr_Pro is null
+        </otherwise>
+      </choose>
     </where>
     GROUP BY b.name
   </select>
@@ -216,26 +224,34 @@
     FROM village_info a
     LEFT JOIN village_line b on a.ID=b.Village_Info_ID
     <where>
-      a.del_flag = #{DEL_FLAG_NORMAL} AND b.del_flag=#{DEL_FLAG_NORMAL}
+      a.del_flag = #{DEL_FLAG_NORMAL} AND b.del_flag=#{DEL_FLAG_NORMAL} and a.state='0'
       <if test="villageLineId != null and villageLineId != ''">
         AND b.Product_Line = #{villageLineId}
       </if>
-      AND a.Addr_City = #{id};
+      <choose>
+        <when test="id != null and id != ''">
+          AND a.Addr_City = #{id}
+        </when>
+        <otherwise>
+          AND a.Addr_City is null
+        </otherwise>
+      </choose>
     </where>
   </select>
-  
-  <!-- 根据城市获取楼盘数据    <设置管理>-->
+
+  <!-- 根据城市获取楼盘数据 <设置管理> -->
   <select id="findVillageList" resultType="VillageInfo">
     SELECT
     a.id AS "id",
     a.Village_Name AS "villageName"
     FROM village_info a
     where a.id in(
-   select b.Village_Info_ID from village_line b  where b.del_flag=#{DEL_FLAG_NORMAL}
-      <if test="villageLineId != null and villageLineId != ''">
-        AND b.Product_Line = #{villageLineId}
-      </if>) 
-    AND a.Addr_City = #{id}  and a.del_flag=#{DEL_FLAG_NORMAL}
+    select b.Village_Info_ID from village_line b where b.del_flag=#{DEL_FLAG_NORMAL}
+    <if test="villageLineId != null and villageLineId != ''">
+      AND b.Product_Line = #{villageLineId}
+    </if>
+    )
+    AND a.Addr_City = #{id} and a.del_flag=#{DEL_FLAG_NORMAL} and a.state='0'
   </select>
 
   <update id="updateState">
@@ -249,10 +265,18 @@
     a.id AS "id",
     a.Village_Name AS "villageName"
     FROM
-    village_info a 
+    village_info a
     <where>
       a.del_flag = #{DEL_FLAG_NORMAL}
-      AND a.Addr_City = #{id};
+      and a.state !='1'
+      <choose>
+        <when test="id != null and id != ''">
+          AND a.Addr_City = #{id}
+        </when>
+        <otherwise>
+          AND a.Addr_City is null
+        </otherwise>
+      </choose>
     </where>
   </select>
 

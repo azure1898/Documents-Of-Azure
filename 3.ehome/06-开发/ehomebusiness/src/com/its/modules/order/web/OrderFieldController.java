@@ -17,7 +17,6 @@ import com.its.modules.setup.service.BusinessInfoService;
 import com.its.modules.sys.entity.User;
 import com.its.modules.sys.utils.UserUtils;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,7 +98,6 @@ public class OrderFieldController extends BaseController {
         return entity;
     }
 
-    @RequiresPermissions("order:orderField:view")
     @RequestMapping(value = { "list", "" })
     public String list(OrderField orderField, HttpServletRequest request, HttpServletResponse response, Model model) {
 
@@ -155,7 +153,6 @@ public class OrderFieldController extends BaseController {
         return "modules/order/orderFieldList";
     }
 
-    @RequiresPermissions("order:orderField:view")
     @RequestMapping(value = "form")
     public String form(OrderField orderField, Model model) {
 
@@ -189,7 +186,6 @@ public class OrderFieldController extends BaseController {
      * @param redirectAttributes
      * @return
      */
-    @RequiresPermissions("order:orderField:edit")
     @RequestMapping(value = "save")
     public String save(OrderField orderField, Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, orderField)) {
@@ -207,7 +203,6 @@ public class OrderFieldController extends BaseController {
      * @param redirectAttributes
      * @return
      */
-    @RequiresPermissions("order:orderField:edit")
     @RequestMapping(value = "delete")
     public String delete(OrderField orderField, RedirectAttributes redirectAttributes) {
         orderFieldService.delete(orderField);
@@ -224,7 +219,6 @@ public class OrderFieldController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequiresPermissions("order:orderField:add")
     @RequestMapping(value = "addOrderFieldList")
     public String addOrderFieldList(OrderField orderField, RedirectAttributes redirectAttributes, Model model) {
         FieldInfo fieldInfo = fieldInfoService.get(orderField.getFieldInfoId());
@@ -246,7 +240,6 @@ public class OrderFieldController extends BaseController {
         return "预约成功!";
     }
 
-    @RequiresPermissions("order:orderField:view")
     @RequestMapping(value = { "export" })
     public String export(OrderField orderField, HttpServletRequest request, HttpServletResponse response, Model model) {
         // 从SESSION中取得商家信息
@@ -320,7 +313,6 @@ public class OrderFieldController extends BaseController {
      *            订单取消信息
      * @return
      */
-    @RequiresPermissions("order:orderField:edit")
     @RequestMapping(value = "cancel")
     public String cancel(OrderField orderField, Model model, RedirectAttributes redirectAttributes,String redirectUrl) {
     	if(redirectUrl!=null && redirectUrl!="")

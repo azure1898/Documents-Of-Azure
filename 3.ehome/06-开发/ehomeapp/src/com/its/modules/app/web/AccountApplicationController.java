@@ -72,16 +72,23 @@ public class AccountApplicationController extends BaseController {
 
 		/* ====================常用应用==================== */
 		// 获取常用模块数据
-		List<String> commonStrs = accountApplicationService.getAccountApplicationList(userID, buildingID);
+		List<AccountApplication> commonApplications = accountApplicationService.getAccountApplicationList(userID, buildingID);
+		List<String> commonStrs = new ArrayList<String>();
+		for (AccountApplication accountApplication : commonApplications) {
+			commonStrs.add(accountApplication.getModuleManageId());
+		}
 		List<ModuleManage> commonList = moduleManageService.getModuleManageList(commonStrs);
 
 		Map<String, Object> commonApplication = new HashMap<String, Object>();
 		List<Map<String, Object>> commonApps = new ArrayList<Map<String, Object>>();
-		for (ModuleManage moduleManage : commonList) {
+		for (int i = 0; i < commonList.size(); i++) {
+			ModuleManage moduleManage = commonList.get(i);
 			Map<String, Object> app = new HashMap<String, Object>();
 			app.put("moduleID", moduleManage.getId());
 			app.put("moduleName", moduleManage.getModuleName());
+			app.put("moduleType", moduleManage.getModuleType());
 			app.put("moduleIcon", ValidateUtil.getImageUrl(moduleManage.getModuleIcon(), ValidateUtil.ZERO, request));
+			app.put("sort", commonApplications.get(i).getSortNum());
 
 			commonApps.add(app);
 		}
@@ -103,11 +110,14 @@ public class AccountApplicationController extends BaseController {
 
 		Map<String, Object> lifeApplication = new HashMap<String, Object>();
 		List<Map<String, Object>> lifeApps = new ArrayList<Map<String, Object>>();
-		for (ModuleManage moduleManage : lifeList) {
+		for (int i = 0; i < lifeList.size(); i++) {
+			ModuleManage moduleManage = lifeList.get(i);
 			Map<String, Object> app = new HashMap<String, Object>();
 			app.put("moduleID", moduleManage.getId());
 			app.put("moduleName", moduleManage.getModuleName());
+			app.put("moduleType", moduleManage.getModuleType());
 			app.put("moduleIcon", ValidateUtil.getImageUrl(moduleManage.getModuleIcon(), ValidateUtil.ZERO, request));
+			app.put("sort", (i + 1));
 
 			lifeApps.add(app);
 		}
@@ -129,11 +139,14 @@ public class AccountApplicationController extends BaseController {
 
 		Map<String, Object> communityApplication = new HashMap<String, Object>();
 		List<Map<String, Object>> communityApps = new ArrayList<Map<String, Object>>();
-		for (ModuleManage moduleManage : communityList) {
+		for (int i = 0; i < communityList.size(); i++) {
+			ModuleManage moduleManage = communityList.get(i);
 			Map<String, Object> app = new HashMap<String, Object>();
 			app.put("moduleID", moduleManage.getId());
 			app.put("moduleName", moduleManage.getModuleName());
+			app.put("moduleType", moduleManage.getModuleType());
 			app.put("moduleIcon", ValidateUtil.getImageUrl(moduleManage.getModuleIcon(), ValidateUtil.ZERO, request));
+			app.put("sort", (i + 1));
 
 			communityApps.add(app);
 		}
@@ -149,71 +162,34 @@ public class AccountApplicationController extends BaseController {
 	}
 
 	/**
-	 * 增加常用应用
+	 * 编辑常用应用
 	 * 
 	 * @param userID
 	 *            用户ID（不可空）
 	 * @param buildingID
 	 *            楼盘ID（不可空）
-	 * @param moduleID
-	 *            模块ID（不可空）
+	 * @param modules
+	 *            [{ "moduleID":"", "sort":1 }] moduleID：模块ID sort：排序
 	 * @return Map<String, Object>
 	 */
-	@RequestMapping(value = "addMyApplication", method = RequestMethod.POST)
+	@RequestMapping(value = "editMyApplication", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> addMyApplication(String userID, String buildingID, String moduleID) {
+	public Map<String, Object> editMyApplication(String userID, String buildingID, String modules) {
 		// 验证接收到的参数
 		Map<String, Object> toJson = new HashMap<String, Object>();
 		if (ValidateUtil.validateParams(toJson, userID, buildingID)) {
 			return toJson;
 		}
-		AccountApplication toJudge = accountApplicationService.getAccountApplication(userID, buildingID, moduleID);
-		if (toJudge != null) {
+
+		// 判断是否更新成功
+		if (!accountApplicationService.editMyApplication(userID, buildingID, modules)) {
 			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "应用已存在");
+			toJson.put("message", "应用更新失败");
 			return toJson;
 		}
-
-		AccountApplication accountApplication = new AccountApplication();
-		accountApplication.setAccountId(userID);
-		accountApplication.setVillageInfoId(buildingID);
-		accountApplication.setModuleManageId(moduleID);
-		accountApplication.setSortNum(null);
-		accountApplicationService.save(accountApplication);
 
 		toJson.put("code", Global.CODE_SUCCESS);
-		toJson.put("message", "应用已添加");
-		return toJson;
-	}
-
-	/**
-	 * 删除常用应用
-	 * 
-	 * @param userID
-	 *            用户ID（不可空）
-	 * @param buildingID
-	 *            楼盘ID（不可空）
-	 * @param moduleID
-	 *            模块ID（不可空）
-	 * @return Map<String, Object>
-	 */
-	@RequestMapping(value = "deleteMyApplication", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> deleteMyApplication(String userID, String buildingID, String moduleID) {
-		// 验证接收到的参数
-		Map<String, Object> toJson = new HashMap<String, Object>();
-		if (ValidateUtil.validateParams(toJson, userID, buildingID)) {
-			return toJson;
-		}
-		AccountApplication accountApplication = accountApplicationService.getAccountApplication(userID, buildingID, moduleID);
-		if (accountApplication == null) {
-			toJson.put("code", Global.CODE_PROMOT);
-			toJson.put("message", "应用不存在");
-			return toJson;
-		}
-		accountApplicationService.delete(accountApplication);
-		toJson.put("code", Global.CODE_SUCCESS);
-		toJson.put("message", "应用已删除");
+		toJson.put("message", "应用更新成功");
 		return toJson;
 	}
 }

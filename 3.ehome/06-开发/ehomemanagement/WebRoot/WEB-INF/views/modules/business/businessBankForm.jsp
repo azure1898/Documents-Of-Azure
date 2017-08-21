@@ -27,7 +27,8 @@
                     required : "请输入开户名称"
                 },
                 bankAccount : {
-                    required : "请输入银行账号"
+                    required : "请输入银行账号",
+                    number:"请输入合法的银行账号",
                 }
             },
             submitHandler : function(form) {
@@ -80,7 +81,7 @@
         <div class="control-group">
             <label class="control-label">银行账号：</label>
             <div class="controls">
-                <form:input path="bankAccount" htmlEscape="false" maxlength="32" class="input-xlarge required" />
+                <form:input path="bankAccount" htmlEscape="false" maxlength="32" class="input-xlarge required number" />
                 <span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>

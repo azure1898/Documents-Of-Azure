@@ -80,6 +80,9 @@ public class ModuleManageService extends CrudService<ModuleManageDao, ModuleMana
 	 */
 	public List<ModuleManageBean> getModuleList(String recomModules, String villageInfoId) {
 		List<String> moduleIds = this.getStrSplitList(recomModules);
+		if (moduleIds.size() == 0) {
+			return new ArrayList<ModuleManageBean>();
+		}
 		return dao.getModuleList(moduleIds);
 	}
 
@@ -155,5 +158,15 @@ public class ModuleManageService extends CrudService<ModuleManageDao, ModuleMana
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * 获取某模块的产品模式
+	 * @param moduleID
+	 * @return
+	 *            产品模式：0商品购买 1服务预约 2课程购买 3场地预约
+	 */
+	public String getProdType(String moduleID) {
+		return dao.getProdType(moduleID);
 	}
 }

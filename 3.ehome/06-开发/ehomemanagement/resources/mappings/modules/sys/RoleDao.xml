@@ -191,5 +191,12 @@
     del_flag = #{DEL_FLAG_DELETE}
     WHERE id = #{id}
   </update>
-
+  <!-- 查找所有商家角色 -->
+  <select id="getRoleListByType" resultType="Role">
+    SELECT
+    a.id,
+    a.name  
+    FROM sys_role a
+    WHERE a.del_flag = '0' and a.type_flag='2'
+  </select>
 </mapper>

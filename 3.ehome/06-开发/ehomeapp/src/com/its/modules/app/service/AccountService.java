@@ -48,6 +48,15 @@ public class AccountService extends CrudService<AccountDao, Account> {
 		return super.findList(account);
 	}
 
+	/**
+	 * 获取一个楼盘的所有用户数据
+	 * @param villageId	楼盘Id
+	 * @return
+	 */
+	public List<Account> findListByVillage(String villageId) {
+		return dao.findListByVillage(villageId);
+	}
+	
 	public Page<Account> findPage(Page<Account> page, Account account) {
 		return super.findPage(page, account);
 	}

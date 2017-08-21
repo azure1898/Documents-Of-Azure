@@ -9,9 +9,11 @@
 		<title>课程详情</title>
 		<!-- Bootstrap -->
 		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/swiper-3.4.2.min.css"/>
 		<link href="../../css/common.css" rel="stylesheet">
 		<link href="../../css/main.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
@@ -23,6 +25,7 @@
 			position:absolute;
 			bottom: 0;
 		}
+		
 	</style>
 	</head>
 
@@ -42,20 +45,18 @@
 						
 					</div>
 				</div>
-				
-				<div id="myCarousel" class="carousel slide">
-					<ul class="carousel-inner">
-						<li class="item" v-for="(image,index) in course.courseImage" v-bind:class="{'active':index==0}"><img v-bind:src="image.url" /></li>
-					</ul>
-				<div class="bussinessbreak" v-if="course.isNormal==0">商家休息中</div>
-				</div>			
-		
+			<div class="swiper-container">
+             <div class="swiper-wrapper">
+                 <div class="swiper-slide" v-for="(image,index) in course.courseImage"><img v-bind:src="image.url"> </div>
+             </div>
+			</div>
+			<div class="bussinessbreak" v-if="course.isNormal==0">商家休息中</div>
 			</div>
 			<div class="clear"></div>
 			<div class="mt20 clearfix">
-				<div class="details_title_box">
+				<div class="details_title_box" style="height:auto;">
 					<div class="plr10" v-bind:data-id="course.courseID">
-						<div class="details_title" v-html="course.courseName"></div>
+						<div class="details_title"  style="width: calc(100% - 50px);" v-html="course.courseName"></div>
 						<div class="mt4 clearfix">
 							<div class="font_orange font18 fl">{{course.discountedPrice|formatDecimal}}</div>
 							<div class="font14 fl ml10 mt4"><del>{{course.originalPrice|formatDecimal}}</del></div>
@@ -72,7 +73,7 @@
 				</div>
 				<div class="details_title_box mt10">
 					<div class="plr10 clearfix">
-						<div class="shop_name" v-bind:data-id="course.businessID">
+						<div class="shop_name oneLine2" v-bind:data-id="course.businessID" style="width:50%;">
 							<img src="../../images/dian.png">{{course.businessName}}
 						</div>
 						<div class="shop_call">
@@ -101,17 +102,13 @@
 				</div>
 				
 			</div>
-			<!--<div class="business_bottom"  v-else>
-				<div class="ser_zbtn2" ><a href="#">立即预约</a></div>
-			</div>-->
-			
 		</div>
 		<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/static/bootstrap.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
+		<script src="../../js/static/swiper-3.4.2.jquery.min.js" type="text/javascript" charset="utf-8"></script>		
 		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/cursom/course/coursedetail.js" type="text/javascript" charset="utf-8"></script>
 	</body>

@@ -105,6 +105,12 @@
 		</choose>
 	</select>
 	
+	<select id="findListByVillage" resultType="Account">
+		SELECT DISTINCT A.*
+		FROM account A INNER JOIN room_certify B ON A.ID = B.Account_Id 
+		WHERE B.Village_Info_ID = #{villageId}
+	</select>
+	
 	
 	<insert id="insert">
 		INSERT INTO account(

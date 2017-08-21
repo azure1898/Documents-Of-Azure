@@ -109,20 +109,10 @@
 		WHERE id = #{id}
 	</update>
 	
-	<!-- 获取某用户在某楼盘下的常用应用 -->
-	<select id="getAccountApplicationList" resultType="java.lang.String">
-		SELECT
-			a.Module_Manage_Id
-		FROM
-			Account_Application a
-		WHERE
-			a.Del_Flag = '0'
-		AND a.Account_Id = #{accountId}
-		AND a.Village_Info_Id = #{villageInfoId}
-	</select>
+	<!-- ============================================================== -->
 	
-	<!-- 获取某用户在某楼盘下的某常用应用 -->
-	<select id="getAccountApplication" resultType="AccountApplication">
+	<!-- 获取某用户在某楼盘下的常用应用 -->
+	<select id="getAccountApplicationList" resultType="AccountApplication">
 		SELECT
 			<include refid="accountApplicationColumns"/>
 		FROM
@@ -131,6 +121,22 @@
 			a.Del_Flag = '0'
 		AND a.Account_Id = #{accountId}
 		AND a.Village_Info_Id = #{villageInfoId}
-		AND a.Module_Manage_Id = #{moduleManageId}
+		ORDER BY
+			a.Sort_Num
 	</select>
+	
+	<!-- 批量删除用户常用应用 -->
+	<update id="deleteList">
+		UPDATE Account_Application a
+		SET a.Del_Flag = '1'
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Account_Id = #{accountId}
+		AND a.Village_Info_Id = #{villageInfoId}
+		AND a.Module_Manage_Id IN
+			<foreach collection="list" item="moduleId" open="(" separator="," close=")">
+				#{moduleId}
+			</foreach>
+	</update>
+	
 </mapper>

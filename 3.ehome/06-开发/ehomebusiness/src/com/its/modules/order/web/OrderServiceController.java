@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,7 +83,6 @@ public class OrderServiceController extends BaseController {
         return entity;
     }
 
-    @RequiresPermissions("order:orderService:view")
     @RequestMapping(value = { "list", "" })
     public String list(OrderService orderService, HttpServletRequest request, HttpServletResponse response,
             Model model) {
@@ -135,7 +133,6 @@ public class OrderServiceController extends BaseController {
         return "modules/order/orderServiceList";
     }
 
-    @RequiresPermissions("order:orderService:view")
     @RequestMapping(value = { "export" })
     public String export(OrderService orderService, HttpServletRequest request, HttpServletResponse response,
             Model model) {
@@ -191,7 +188,6 @@ public class OrderServiceController extends BaseController {
         return "modules/order/orderServiceList";
     }
 
-    @RequiresPermissions("order:orderService:view")
     @RequestMapping(value = "form")
     public String form(OrderService orderService, Model model, HttpServletRequest request) {
 
@@ -243,7 +239,6 @@ public class OrderServiceController extends BaseController {
      *            订单取消信息
      * @return
      */
-    @RequiresPermissions("order:orderService:cancel")
     @RequestMapping(value = "cancel")
     public String cancel(OrderService orderService, Model model, RedirectAttributes redirectAttributes,
             String redirectUrl) {
@@ -287,7 +282,6 @@ public class OrderServiceController extends BaseController {
      *            前回更新日时
      * @return
      */
-    @RequiresPermissions("order:orderService:complete")
     @RequestMapping(value = "complete")
     public String complete(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
             RedirectAttributes redirectAttributes, String redirectUrl) {
@@ -321,7 +315,6 @@ public class OrderServiceController extends BaseController {
      *            要处理的服务订单号
      * @return
      */
-    @RequiresPermissions("order:orderService:accept")
     @RequestMapping(value = "accept")
     public String accept(@RequestParam(required = true) String id, @RequestParam(required = true) String updateDate,
             RedirectAttributes redirectAttributes, String redirectUrl) {

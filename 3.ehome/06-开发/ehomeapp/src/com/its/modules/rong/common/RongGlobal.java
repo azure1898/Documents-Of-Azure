@@ -34,11 +34,11 @@ public class RongGlobal {
 	public static final int MSG_SECTYPE_PLWD = 22;
 	public static final int MSG_SECTYPE_GZWD = 23;
 	
-	/** 消息是否通知*/
+	/** 消息是否通知 1：已通知 0：未通知*/
 	public static final int MSG_IS_NOTICE_YES = 1;
 	public static final int MSG_IS_NOTICE_NO = 0;
 
-	/** 消息是否已读*/
+	/** 消息是否已读 1:已读 0：未读*/
 	public static final int MSG_IS_READ_YES = 1;
 	public static final int MSG_IS_READ_NO = 0;
 	

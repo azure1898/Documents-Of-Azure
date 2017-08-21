@@ -298,4 +298,22 @@
 		</if>
 	</select>
 	
+	<!-- 根据当前用户ID，楼盘ID查询该用户在该楼盘未读消息的管理员信息 -->
+	<select id="findAdminList" resultType="SocialSpeakBean">
+		SELECT 
+		  DISTINCT a.ID as aid,
+		  a.Nickname as nickName,
+		  a.Photo as photo 
+		FROM
+		  sys_user u,
+		  account a,
+		  social_msg m 
+		WHERE u.app_user_phone = a.Phone_Num 
+		  AND a.id = m.toUserId 
+		  AND m.isRead = 0 
+		  AND m.isNotice = 1 
+		  AND a.ID = #{userId}
+		  AND <![CDATA[ FIND_IN_SET(#{villageInfoId}, u.village_info_ids) ]]>
+	</select>
+	
 </mapper>

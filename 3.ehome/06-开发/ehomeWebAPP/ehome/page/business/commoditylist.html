@@ -20,6 +20,11 @@
     <![endif]-->
     <!-- page -->
     <link href="../../css/cursom/business.css" rel="stylesheet">
+    <style type="text/css">
+    	/*.goods_right .goods_name{
+               width: calc(100% - 50px);
+       }*/
+    </style>
 </head>
 <body>
     <div id="app" v-cloak>
@@ -28,43 +33,43 @@
             <div style="position:fixed; bottom:0; left:0; z-index:999; width:100%;">
                 <div class="choice_goods">
                     <div class="choicegoods_title">
-                        <div class="title_name">已选商品<span class="grey">已选{{shoppingcart.num}}件</span></div>
-                        <div class="delete_btn" v-if="shoppingcart.num > 0" v-on:click="clearShoppingCart">清空</div>
+                        <div class="title_name">已选商品<span class="grey">已选{{shoppingcart.totalNumber}}件</span></div>
+                        <div class="delete_btn" v-if="shoppingcart.totalNumber > 0" v-on:click="clearShoppingCart">清空</div>
                     </div>
                     <div class="plr10">
-                        <div class="goods_list" v-for="commodity in shoppingcart.commodities">
-                            <div class="goods_pic"><img v-bind:src="commodity.commodityImage"></div>
+                        <div class="goods_list" v-for="shopCommodity in shoppingcart.commodities">
+                            <div class="goods_pic"><img v-bind:src="shopCommodity.commodityImage"></div>
                             <div class="goods_right">
-                                <div class="goods_name">{{commodity.commodityName}}</div>
+                                <div class="goods_name">{{shopCommodity.commodityName}}</div>
                                 <div class="">
                                     <div class="fl">
-                                        <div class="font_orange fl" v-if="commodity.discountedPrice > 0">{{commodity.discountedPrice | formatDecimal}}</div>
-                                        <div class="font_orange fl" v-else>{{commodity.originalPrice | formatDecimal}}</div>
-                                        <div class="font14 fl ml10" v-if="commodity.discountedPrice > 0"><del>{{commodity.originalPrice | formatDecimal}}</del></div>
+                                        <div class="font_orange fl" v-if="shopCommodity.discountedPrice > 0">{{shopCommodity.discountedPrice | formatDecimal}}</div>
+                                        <div class="font_orange fl" v-else>{{shopCommodity.originalPrice | formatDecimal}}</div>
+                                        <div class="font14 fl ml10" v-if="shopCommodity.discountedPrice > 0"><del>{{shopCommodity.originalPrice | formatDecimal}}</del></div>
                                     </div>
                                     <div class="goods_num fr" v-if="business.isNormal==1">
-                                        <a href="#" class="num_jian" v-if="commodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,commodity)"></a>
-                                        <span class="goods_shuzi" v-if="commodity.commodityNumber > 0">{{commodity.commodityNumber}}</span>
-                                        <a href="#" class="num_zeng" v-on:click="addShoppingCart(2,commodity)"></a>
+                                        <a href="#" class="num_jian" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
+                                        <span class="goods_shuzi" v-if="shopCommodity.commodityNumber > 0">{{shopCommodity.commodityNumber}}</span>
+                                        <a href="#" class="num_zeng" v-on:click="addShoppingCart(2,shopCommodity)"></a>
                                     </div>
                                     <div class="goods_num fr" v-else>
-                                    	<a href="#" class="num_jian"></a>
-                                        <span class="goods_shuzi">{{commodity.commodityNumber}}</span>
-                                        <a href="#" class="num_zeng1" ></a>
+                                        <a href="#" class="num_jian"></a>
+                                        <span class="goods_shuzi">{{shopCommodity.commodityNumber}}</span>
+                                        <a href="#" class="num_zeng1"></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--<div class="ts_txt">满20减5，还差5元</div>-->
+                    <div class="ts_txt" v-if="shoppingcart.isActivity == 1">满{{shoppingcart.fullMoney}}减{{shoppingcart.giftMoney}}，还差{{shoppingcart.lessMoney}}元</div>
                     <div class="choicegoods_bottom">
                         <div class="total_amount">{{shoppingcart.totalMoney | formatDecimal}}</div>
                         <div class="business_zbtn" v-if="business.isNormal==1">
-                            <a href="#" class="font_grey" v-if="shoppingcart.lessMoney > 0">还差 {{shoppingcart.lessMoney | formatDecimal}} 起送</a>
+                            <a href="#" class="font_grey" v-if="shoppingcart.lessSendMoney > 0">还差 {{shoppingcart.lessSendMoney | formatDecimal}} 起送</a>
                             <a v-bind:href="urlList.order + business.businessID" v-else>去结算</a>
                         </div>
                         <div class="business_zbtn" v-else>
-                        	<a href="#" class="font_grey" >去结算</a>
+                            <a href="#" class="font_grey">去结算</a>
                         </div>
                     </div>
                 </div>
@@ -128,7 +133,7 @@
                         </div>
                         <div class="goods_right">
                             <div class="goods_name">
-                                <span>{{commodity.commodityName}}</span>
+                                <span class="oneLine" style="float:left;width:60%;">{{commodity.commodityName}}</span>
                                 <span class="goods_label cursor" v-if="commodity.isMoreSpe" data-toggle="modal" data-target="#moreSpeModal" v-on:click="openMoreSpe(commodity)">多规格</span>
                             </div>
                             <div class="">
@@ -153,23 +158,23 @@
         </div>
         <div class="business_bottom">
             <div style="position:relative; float:left;">
-                <div class="shopping_chart_tb ml10 cursor" v-if="shoppingcart.num > 0" v-on:click="openShoppingCart">
+                <div class="shopping_chart_tb ml10 cursor" v-if="shoppingcart.totalNumber > 0" v-on:click="openShoppingCart">
                     <img v-bind:src="urlList.shoppingcarticon">
                 </div>
-                <div class="shopping_chart_tb ml10 cursor bggrey" v-if="shoppingcart.num == 0">
+                <div class="shopping_chart_tb ml10 cursor bggrey" v-if="shoppingcart.totalNumber == 0">
                     <img v-bind:src="urlList.shoppingcarticon">
                 </div>
-                <span class="cartgoods_num" v-if="shoppingcart.num > 0">{{shoppingcart.num}}</span>
+                <span class="cartgoods_num" v-if="shoppingcart.totalNumber > 0">{{shoppingcart.totalNumber}}</span>
             </div>
-            <div class="total_amount" v-if="shoppingcart.num > 0">{{shoppingcart.totalMoney | formatDecimal}}</div>
+            <div class="total_amount" v-if="shoppingcart.totalNumber > 0">{{shoppingcart.totalMoney | formatDecimal}}</div>
             <div class="total_amount nocommodity" v-else>未选购商品</div>
             <div class="business_zbtn" v-if="business.isNormal==1">
-                <a href="#" class="font_grey" v-if="shoppingcart.num > 0 && shoppingcart.lessMoney > 0">还差 {{shoppingcart.lessMoney |formatDecimal}} 起送</a>
-                <a v-bind:href="urlList.order + business.businessID" v-if="shoppingcart.num > 0 && shoppingcart.lessMoney == 0">去结算</a>
-                <a href="#" class="font_grey" v-if="shoppingcart.num == 0">去结算</a>
+                <a href="#" class="font_grey" v-if="shoppingcart.totalNumber > 0 && shoppingcart.lessSendMoney > 0">还差 {{shoppingcart.lessSendMoney |formatDecimal}} 起送</a>
+                <a v-bind:href="urlList.order + business.businessID" v-if="shoppingcart.totalNumber > 0 && shoppingcart.lessSendMoney == 0">去结算</a>
+                <a href="#" class="font_grey" v-if="shoppingcart.totalNumber == 0">去结算</a>
             </div>
             <div class="business_zbtn" v-else>
-            	<a href="#" class="font_grey">去结算</a>	
+                <a href="#" class="font_grey">去结算</a>
             </div>
         </div>
         <div id="moreSpeModal" class="modal fade" tabindex="-1" role="dialog">
@@ -183,11 +188,12 @@
                         <div class="tanchukuang_title2">{{currentCommodity.speCategory}}</div>
                         <div class="tanchukuang_fenlei">
                             <a href="#" class="cursor" v-for="(specification,index) in currentCommodity.specifications">
-                                <span v-on:click="changeSpecification(specification)">{{specification.specificationName}}</span>
+                                <span v-if="specification.specificationNumber&&specification.specificationNumber>0" v-on:click="changeSpecification(specification)">{{specification.specificationName}}</span>
+                                <span v-else>{{specification.specificationName}}</span>
                             </a>
                         </div>
                         <div class="tanchukuang_bottom">
-                            <div class="tanchukuang_bottom_but cursor" v-on:click="confirmSpecification">确定</div>
+                            <div class="tanchukuang_bottom_but cursor" v-on:click="confirmSpecification()">确定</div>
                             <div class="tanchukuang_bottom_left">
                                 <span class="font_orange ft14" v-if="currentSpecification.specificationdisPrice>0">{{currentSpecification.specificationdisPrice | formatDecimal}}</span>
                                 <span class="font_orange ft14" v-else>{{currentSpecification.specificationPrice | formatDecimal}}</span>

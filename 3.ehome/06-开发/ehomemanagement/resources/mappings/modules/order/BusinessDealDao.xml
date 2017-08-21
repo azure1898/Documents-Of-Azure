@@ -77,10 +77,7 @@
             </if>
              <if test="filter != null and filter != ''">
                 AND (
-                	a.orderNo like
-					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+                	a.orderNo =#{filter}
 					or b.business_name like
 					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>

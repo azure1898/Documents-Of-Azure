@@ -91,14 +91,22 @@ public class BraceletSleepRecordController extends BaseController {
 			record.setVillageinfoId(buildingID);
 			record.setBraceletId(braceletInfo.getId());
 			record.setRecordDate(DateUtils.parseDate(date));
+			
+			record.setSleepTime(Double.parseDouble(sleepTimeTotal));
+			record.setDeepSleepTime(Double.parseDouble(sleepTimeDeep));
+			record.setLightSleepTime(Double.parseDouble(sleepTimeLight));
+			record.setSleepStart(sleepStart);
+			record.setSleepEnd(sleepEnd);
+			braceletSleepRecordService.save(record);
+		}else{
+			record.setSleepTime(Double.parseDouble(sleepTimeTotal));
+			record.setDeepSleepTime(Double.parseDouble(sleepTimeDeep));
+			record.setLightSleepTime(Double.parseDouble(sleepTimeLight));
+			record.setSleepStart(sleepStart);
+			record.setSleepEnd(sleepEnd);
+			int row = braceletSleepRecordService.update(record);
+			System.out.println(row);
 		}
-
-		record.setSleepTime(Double.parseDouble(sleepTimeTotal));
-		record.setDeepSleepTime(Double.parseDouble(sleepTimeDeep));
-		record.setLightSleepTime(Double.parseDouble(sleepTimeLight));
-		record.setSleepStart(sleepStart);
-		record.setSleepEnd(sleepEnd);
-		braceletSleepRecordService.save(record);
 		json.put("code", Global.CODE_SUCCESS);
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
@@ -111,10 +119,12 @@ public class BraceletSleepRecordController extends BaseController {
 	 *            用户ID(不可空)
 	 * @param buildingID
 	 *            楼盘ID(不可空)
-	 * @param bandID
-	 *            手环ID(不可空)
-	 * @param date
-	 *            日期(不可空)
+	 * @param bandMac
+	 *            手环mac(不可空)
+	 * @param startDate
+	 *            开始日期(不可空)
+	 * @param endDate
+	 *            结束日期(不可空)
 	 * @return
 	 */
 	@ResponseBody

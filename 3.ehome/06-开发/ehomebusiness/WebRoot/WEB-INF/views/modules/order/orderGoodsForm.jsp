@@ -105,7 +105,7 @@
                 <th>支付状态</th>
                 <th>订单状态</th>
                 <th>时间</th>
-                <shiro:hasPermission name="order:orderGoods:edit"><th>操作</th></shiro:hasPermission>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>

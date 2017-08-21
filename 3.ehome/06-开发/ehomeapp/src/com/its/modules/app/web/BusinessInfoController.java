@@ -93,7 +93,7 @@ public class BusinessInfoController extends BaseController {
 				goods.put("commodityID", g.getId());
 				goods.put("commodityName", g.getName());
 				goods.put("commodityImage", goodsInfoService.getGoodsPicUrl(g, request));
-				goods.put("commodityPrice", g.getBasePrice());
+				goods.put("commodityPrice", goodsInfoService.getGoodsPrice(g));
 				goods.put("url", "");
 				goodsJson.add(goods);
 			}
@@ -159,6 +159,8 @@ public class BusinessInfoController extends BaseController {
 		data.put("isCollection", StringUtils.isNotBlank(userID) ? myCollectService.isCollect(userID, buildingID, businessID) : 0);
 		data.put("activities", getBusinessSalse(businessID));// 商家满减活动
 		data.put("groupBuy", groupJson);// 商家团购活动
+		data.put("serviceWay", info.getServiceModel());
+		data.put("serviceCharge", ValidateUtil.validateDouble(info.getServiceCharge()));
 		data.put("businessDesc", info.getBusinessIntroduce());// 商家介绍[富文本内容，需要特殊处理]
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("data", data);

@@ -61,7 +61,7 @@ a {
 	.bussinessbreak{
 		position:absolute;
 		bottom:0px;
-		
+		z-index: 10;
 	}
 	.bussinessbreak2{
 		    width: 100%;
@@ -73,6 +73,7 @@ a {
 			position:absolute;
 			bottom:0px;
 			font-size:12px;
+			
 		
 	}
 	.details_top,.business_pic75,.goods_pic{

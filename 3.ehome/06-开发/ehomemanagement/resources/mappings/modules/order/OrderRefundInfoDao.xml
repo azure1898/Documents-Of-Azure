@@ -4,7 +4,6 @@
     
     <sql id="orderRefundInfoColumns">
         a.id AS "id",
-        a.business_info_id AS "businessInfoId",
         a.order_no AS "orderNo",
         a.order_type AS "orderType",
         a.pay_type AS "payType",

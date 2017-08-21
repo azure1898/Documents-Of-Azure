@@ -36,8 +36,6 @@ import com.its.modules.app.service.AddressService;
 import com.its.modules.app.service.RoomCertifyService;
 import com.its.modules.app.service.VillageInfoService;
 
-import net.sf.json.JSONObject;
-
 /**
  * 房间认证Controller
  * 
@@ -70,18 +68,27 @@ public class RoomCertifyController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getRoomList")
-	public String getRoomList(String userID, String buildingID) {
-		if (StringUtils.isBlank(userID) || StringUtils.isBlank(buildingID)) {
-			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
+	public Map<String, Object> getRoomList(String userID, String buildingID) {
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, userID, buildingID)) {
+			return toJson;
 		}
 		Account account = accountService.get(userID);
 		if (account == null) {
-			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"用户不存在\"}";
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "用户不存在");
+			return toJson;
 		}
 		VillageInfo village = villageInfoService.get(buildingID);
 		if (village == null) {
-			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"楼盘不存在\"}";
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "楼盘不存在");
+			return toJson;
 		}
+
+		Map<String, Object> datas = new HashMap<String, Object>();
+		datas.put("customerService", village.getPhoneNum());
 		List<Map<String, Object>> data = new ArrayList<>();
 		List<RoomCertify> list = roomCertifyService.getAccountRoomCertify(userID, buildingID);
 		for (RoomCertify room : list) {
@@ -91,7 +98,6 @@ public class RoomCertifyController extends BaseController {
 			map.put("roomName", room.getBuildingName() + room.getRoomName());
 			map.put("authentication", StringUtils.isNotBlank(room.getAccountId()) ? "1" : "0");
 			map.put("isOwner", "0".equals(room.getCustomerType()) ? "1" : "0");
-			map.put("customerService", village.getPhoneNum());
 			map.put("userID", room.getAccountId());
 			map.put("userName", room.getCustomerName());
 			map.put("userPhone", room.getPhoneNum());
@@ -107,11 +113,12 @@ public class RoomCertifyController extends BaseController {
 			map.put("member", fData);
 			data.add(map);
 		}
-		Map<String, Object> json = new HashMap<String, Object>();
-		json.put("code", Global.CODE_SUCCESS);
-		json.put("data", data);
-		json.put("message", "成功");
-		return JSONObject.fromObject(json).toString();
+		datas.put("rooms", data);
+
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", datas);
+		toJson.put("message", "成功");
+		return toJson;
 	}
 
 	/**

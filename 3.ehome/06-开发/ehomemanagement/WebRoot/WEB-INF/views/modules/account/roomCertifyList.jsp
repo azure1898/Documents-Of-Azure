@@ -95,7 +95,7 @@
 		<c:forEach items="${page.list}" var="roomCertify" varStatus="status">
 			<tr>
 				<td>
-					${status.count}
+					${(page.pageNo - 1) * page.pageSize + status.count}
 				</td>
 				<td>
 					${roomCertify.villageInfo.villageName}

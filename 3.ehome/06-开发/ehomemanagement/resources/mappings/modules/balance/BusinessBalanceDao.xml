@@ -1203,7 +1203,6 @@
         <where>
             bb.business_info_id = bi.id
             AND bi.Addr_City = a.id
-            AND bs.businessinfo_id = bb.Business_Info_ID
             <if test="businessInfoId != null and businessInfoId != ''">
                 AND bb.business_info_id = #{businessInfoId}
             </if>

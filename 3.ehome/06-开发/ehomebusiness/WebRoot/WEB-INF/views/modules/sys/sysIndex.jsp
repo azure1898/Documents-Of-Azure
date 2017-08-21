@@ -237,6 +237,9 @@
 /*.accordion-group>.accordion-heading.active>a{
 	color:#60C1F7;
 }*/
+a{
+	cursor: pointer;
+}
 </style>
 <script type="text/javascript">
 		$(document).ready(function() {
@@ -542,17 +545,17 @@
 		   };
 		   ws.onmessage = function (evt) 
 	  	 	{ 
+			   console.log(evt.data);
 				var received_msg = eval("("+evt.data+")");
-				console.log(received_msg);
 				if(received_msg.show=="true"){
-					$.jBox.messager("<a class='blue' href='javascript:void(0)' onclick='openPage(\""+received_msg.ptitle+"\",\""+received_msg.url+"\")'>"+received_msg.content+"</a>", received_msg.title, 50000, {
+					$.jBox.messager(received_msg.content, received_msg.title, 50000, {
 					    width: 300,
 					    showType: 'show',
 					    buttons: received_msg.buttons,
 					    submit: function (v, h, f) {
 					    	if (v == true){
 					    		var url = received_msg.url;
-					    		openPage(received_msg.ptitle,url.substr(0,url.indexOf("\?")))
+					    		openPage(received_msg.ptitle,url);
 					    	}
 					        return true;
 					    }
@@ -580,6 +583,17 @@
 		//pause()方法也可以暂停，具体可查html5的audio标签
 	}
 	 function openPage(title,url){
+		 if(url==undefined || url=="undefined"){
+			url=$(title).parent().attr("url");
+		
+			if($(title).parent().attr("type")<10){
+				url=url+"?id="; 
+			}else{
+				url=url+"?orderNo=";
+			}
+			url+=$(title).attr("id");
+			title=$(title).parent().next().attr("title");
+		 }
 		addTabByMy(title,url);
 	 }
 </script>

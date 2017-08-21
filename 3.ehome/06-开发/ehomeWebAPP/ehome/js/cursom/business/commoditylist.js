@@ -12,12 +12,7 @@ var vm = new Vue({
         commodityList: [],
         currentCommodity: {},
         currentSpecification: {},
-        shoppingcart: {
-            num: 0,
-            totalMoney: 0,
-            lessMoney: 0,
-            commodities: []
-        }
+        shoppingcart: {}
     },
     mounted: function () {//页面加载之后自动调用，常用于页面渲染
         this.$nextTick(function () {//在2.0版本中，加mounted的$nextTick方法，才能使用vm
@@ -36,8 +31,10 @@ var vm = new Vue({
             };
 
             _this.getData(_this, "/live/getCommodityCategory", data, function (resData) {
-                _this.business = resData;
-                 if(_this.business.isNormal==0){
+               
+                if(_this.validateUser()){
+                	 _this.business = resData;
+                	 if(_this.business.isNormal==0){
 					toast2("商家休息中，暂时不接受订单")
 				}
                 _this.getShoppingCart();
@@ -48,6 +45,8 @@ var vm = new Vue({
                 else {
                     _this.getCommodity();
                 }
+                }
+                 
             });
         },
         getCommodity: function () {
@@ -97,8 +96,11 @@ var vm = new Vue({
             $("#moreSpeModal .tanchukuang_fenlei a.active").removeClass("active");
         },
         changeSpecification: function (specification) {
-            $("#moreSpeModal .tanchukuang_fenlei a.active").removeClass("active");
-            $(event.target).closest("a").addClass("active");
+//      	if(specification.specificationNumber>0){
+        		 $("#moreSpeModal .tanchukuang_fenlei a.active").removeClass("active");
+                 $(event.target).closest("a").addClass("active");
+//      	}
+           
             this.currentSpecification = specification;
         },
         confirmSpecification: function () {
@@ -125,21 +127,26 @@ var vm = new Vue({
             };
 
             _this.getData(_this, "/live/getShoppingCart", data, function (resData) {
-                _this.shoppingcart.commodities = resData.commodities;
-                _this.shoppingcart.totalMoney = resData.totalMoney;
-                _this.shoppingcart.num = resData.totalNumber;
+                _this.shoppingcart = resData;
+
+                //PS:/live/getShoppingCart修改完注释掉
+                _this.shoppingcart.isActivity = 0;
+                _this.shoppingcart.fullMoney = 0;
+                _this.shoppingcart.giftMoney = 0;
+                _this.shoppingcart.lessMoney = 0;
 
                 if (_this.business.sendMoney > 0) {
                     if (_this.business.sendMoney > _this.shoppingcart.totalMoney) {
-                        _this.shoppingcart.lessMoney = _this.business.sendMoney - _this.shoppingcart.totalMoney;
+                        _this.shoppingcart.lessSendMoney = _this.business.sendMoney - _this.shoppingcart.totalMoney;
                     }
                     else {
-                        _this.shoppingcart.lessMoney = 0;
+                        _this.shoppingcart.lessSendMoney = 0;
                     }
                 }
                 else {
-                    _this.shoppingcart.lessMoney = 0;
+                    _this.shoppingcart.lessSendMoney = 0;
                 }
+                //以上注释掉
             });
         },
         openShoppingCart: function () {

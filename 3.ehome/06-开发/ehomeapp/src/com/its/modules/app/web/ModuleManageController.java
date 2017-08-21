@@ -21,6 +21,7 @@ import com.its.modules.app.common.AppGlobal;
 import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
+import com.its.modules.app.entity.AccountApplication;
 import com.its.modules.app.entity.ModuleManage;
 import com.its.modules.app.entity.OrderGroupPurc;
 import com.its.modules.app.entity.OrderTrack;
@@ -99,13 +100,17 @@ public class ModuleManageController extends BaseController {
 			return toJson;
 		}
 		List<ModuleManage> moduleManages = null;
-		List<String> accountApplication = accountApplicationService.getAccountApplicationList(userID, buildingID);
-		if (accountApplication == null || accountApplication.size() == 0) {
+		List<AccountApplication> accountApplications = accountApplicationService.getAccountApplicationList(userID, buildingID);
+		if (accountApplications == null || accountApplications.size() == 0) {
 			// 如果用户没有设置常用应用，获取首页推荐模块数据
 			moduleManages = moduleManageService.getModuleManageList(villageLine.getMaintRecomModule());
 		} else {
 			// 如果用户设置了常用应用，获取用户的常用应用数据
-			moduleManages = moduleManageService.getModuleManageList(accountApplication);
+			List<String> commonStrs = new ArrayList<String>();
+			for (AccountApplication accountApplication : accountApplications) {
+				commonStrs.add(accountApplication.getModuleManageId());
+			}
+			moduleManages = moduleManageService.getModuleManageList(commonStrs);
 		}
 		if (moduleManages == null || moduleManages.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);

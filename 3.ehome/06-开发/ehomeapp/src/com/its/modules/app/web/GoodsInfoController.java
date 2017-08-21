@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
@@ -39,6 +36,7 @@ import net.sf.json.JSONObject;
  * 商品信息Controller
  * 
  * @author like
+ * 
  * @version 2017-07-05
  */
 @Controller
@@ -64,17 +62,17 @@ public class GoodsInfoController extends BaseController {
 	 *            楼盘ID(不可空)
 	 * @param categoryID
 	 *            分类ID(可空)
-	 * @return
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getCommoditiesByCategory")
-	public String getCommoditiesByCategory(String userID,@RequestParam(value="pageIndex",required=true,defaultValue="0")int pageIndex, String businessID, String buildingID, String categoryID, HttpServletRequest request) {
+	public String getCommoditiesByCategory(String userID, @RequestParam(value = "pageIndex", required = true, defaultValue = "0") int pageIndex, String businessID, String buildingID, String categoryID, HttpServletRequest request) {
 		long start = new Date().getTime();
 		try {
 			if (StringUtils.isBlank(buildingID) || StringUtils.isBlank(businessID)) {
 				return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
 			}
-			List<GoodsInfo> list = goodsInfoService.getGoodsInfoBySortList(pageIndex,PropertiesUtil.getInt("numPerPage"),categoryID, businessID);
+			List<GoodsInfo> list = goodsInfoService.getGoodsInfoBySortList(pageIndex, PropertiesUtil.getInt("numPerPage"), categoryID, businessID);
 			if (list.size() == 0) {
 				return "{\"code\":" + Global.CODE_SUCCESS + ",\"data\":[],\"message\":\"该分类暂无商品\"}";
 			}
@@ -127,6 +125,7 @@ public class GoodsInfoController extends BaseController {
 						}
 					}
 					beanMap.put("specificationNumber", cartSkuNum);
+					beanMap.put("specificationStock", ValidateUtil.validateInteger(bean.getStock()));
 					specifications.add(beanMap);
 				}
 				map.put("specifications", specifications);
@@ -162,7 +161,7 @@ public class GoodsInfoController extends BaseController {
 	 *            商家ID(不可空)
 	 * @param commodityID
 	 *            商品ID(不可空)
-	 * @return
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getCommodityDetail")
@@ -247,8 +246,10 @@ public class GoodsInfoController extends BaseController {
 	 * 获取商品规格
 	 * 
 	 * @param userID
+	 *            用户ID(可空)
 	 * @param commodityID
-	 * @return
+	 *            商品ID(不可空)
+	 * @return String
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSpecifications")
@@ -270,5 +271,4 @@ public class GoodsInfoController extends BaseController {
 		json.put("message", "成功");
 		return JSONObject.fromObject(json).toString();
 	}
-
 }

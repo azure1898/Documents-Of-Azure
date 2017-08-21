@@ -19,6 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.AlipayUtils;
 import com.its.common.utils.HttpUtils;
 import com.its.common.utils.NumberUtil;
 import com.its.common.utils.WXUtils;
@@ -97,7 +98,7 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
     }
 
     public Page<OrderGoods> findPage(Page<OrderGoods> page, OrderGoods orderGoods) {
-        page.setOrderBy("a.order_no desc");
+        page.setOrderBy("a.create_date desc,a.order_no desc");
         return super.findPage(page, orderGoods);
     }
 
@@ -194,34 +195,64 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         OrderGoods orderGoodsInfo = super.get(orderGoodsFromJsp.getId());
         // 如果订单支付状态为1：已支付的话，执行退款处理
         if ("1".equals(orderGoodsInfo.getPayState())) {
-            // 如果是支付宝的话，生成退款信息，交由总后台进行退款
+            // 如果是支付宝的话
             if ("1".equals(orderGoodsInfo.getPayOrg())) {
                 // 更新订单表
                 orderGoodsInfo.preUpdate();
                 // 将该订单的支付状态改为2：退款中
                 orderGoodsInfo.setPayState("2");
                 super.save(orderGoodsInfo);
-                OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
-                orderRefundInfo.setOrderId(orderGoodsInfo.getId());
-                orderRefundInfo.setOrderNo(orderGoodsInfo.getOrderNo());
-                // 支付宝交易号
-                orderRefundInfo.setTransactionId(orderGoodsInfo.getTransactionID());
-                // 因为是商品订单发生退款，所以固定为0：商品类
-                orderRefundInfo.setOrderType("0");
-                orderRefundInfo.setPayType(orderGoodsInfo.getPayType());
-                orderRefundInfo.setOrderMoney(orderGoodsInfo.getPayMoney());
-                // 终端类型固定为商家后台
-                orderRefundInfo.setType("2");
-                orderRefundInfo.setModuleManageId(orderGoodsInfo.getModuleManageId());
-                // 产品模式固定为0:商品购买
-                orderRefundInfo.setProdType("0");
-                orderRefundInfo.setRefundMoney(orderGoodsInfo.getPayMoney());
-                orderRefundInfo.setRefundType(orderGoodsInfo.getPayOrg());
-                // 退款状态：待退款
-                orderRefundInfo.setRefundState("0");
-                orderRefundInfoService.save(orderRefundInfo);
+
+                // 执行支付宝退款
+                JSONObject refundResult = AlipayUtils.alipayRefundRequest(orderGoodsInfo.getOrderNo(),
+                        String.valueOf(orderGoodsInfo.getPayMoney()), orderGoodsFromJsp.getCancelRemarks());
+                if (refundResult != null && "10000".equals(refundResult.get("code"))) {
+                    // 更新订单表
+                    orderGoodsInfo.preUpdate();
+                    // 将该订单的支付状态改为3：已退款
+                    orderGoodsInfo.setPayState("3");
+                    super.save(orderGoodsInfo);
+                    OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
+                    orderRefundInfo.setOrderId(orderGoodsInfo.getId());
+                    orderRefundInfo.setOrderNo(orderGoodsInfo.getOrderNo());
+                    // 微信交易号
+                    orderRefundInfo.setTransactionId(orderGoodsInfo.getTransactionID());
+                    // 因为是商品订单发生退款，所以固定为0：商品类
+                    orderRefundInfo.setOrderType("0");
+                    orderRefundInfo.setPayType(orderGoodsInfo.getPayType());
+                    orderRefundInfo.setOrderMoney(orderGoodsInfo.getPayMoney());
+                    // 终端类型固定为商家后台
+                    orderRefundInfo.setType("2");
+                    orderRefundInfo.setModuleManageId(orderGoodsInfo.getModuleManageId());
+                    // 产品模式固定为0:商品购买
+                    orderRefundInfo.setProdType("0");
+                    orderRefundInfo.setRefundMoney(orderGoodsInfo.getPayMoney());
+
+                    orderRefundInfo.setRefundNo(orderGoodsInfo.getOrderNo());
+                    // 微信退款单号
+                    orderRefundInfo.setRefundTransactionId(refundResult.get("out_trade_no").toString());
+                    orderRefundInfo.setRefundType(orderGoodsInfo.getPayOrg());
+
+                    // 退款状态：退款成功
+                    orderRefundInfo.setRefundState("2");
+
+                    // 退款完成时间
+                    orderRefundInfo.setRefundOverTime(new Date());
+
+                    // 退款原因
+                    orderRefundInfo.setRefundReason(orderGoodsFromJsp.getCancelRemarks());
+
+                    orderRefundInfoService.save(orderRefundInfo);
+                } else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                }
                 // 如果是微信的话，直接调用接口进行退款
             } else if ("0".equals(orderGoodsInfo.getPayOrg())) {
+                // 更新订单表
+                orderGoodsInfo.preUpdate();
+                // 将该订单的支付状态改为2：退款中
+                orderGoodsInfo.setPayState("2");
+                super.save(orderGoodsInfo);
                 // 以订单号为退款号
                 Map<String, String> refund_result = WXUtils.doRefund(orderGoodsInfo.getOrderNo(),
                         orderGoodsInfo.getOrderNo(),
