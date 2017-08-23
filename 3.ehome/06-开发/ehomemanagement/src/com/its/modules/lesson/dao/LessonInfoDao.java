@@ -32,4 +32,14 @@ public interface LessonInfoDao extends CrudDao<LessonInfo> {
      * @return
      */
     Integer findAllListCount(LessonInfo lessonInfo_where);
+    
+    /**
+     *  通过商家ID获取课程列表 -广告发布
+     * @param buinessInfoId
+     * @return
+     * @return List<FieldInfo>
+     * @author zhujiao   
+     * @date 2017年8月21日 下午5:24:30
+     */
+    List<LessonInfo> getLessonInfoList(String businessInfoId);
 }

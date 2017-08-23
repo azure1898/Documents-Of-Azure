@@ -47,11 +47,11 @@
                                         <div class="font_orange fl" v-else>{{shopCommodity.originalPrice | formatDecimal}}</div>
                                         <div class="font14 fl ml10" v-if="shopCommodity.discountedPrice > 0"><del>{{shopCommodity.originalPrice | formatDecimal}}</del></div>
                                     </div>
-                                    <div class="goods_num fr" v-if="business.isNormal==1">
-                                        <a href="#" class="num_jian" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
+                                    <div class="goods_num fr" v-if="business.isNormal==1"> 
+                                        <a href="#" class="num_jian2" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
                                         <span class="goods_shuzi" v-if="shopCommodity.commodityNumber > 0">{{shopCommodity.commodityNumber}}</span>
                                         <a href="#" class="num_zeng" v-on:click="addShoppingCart(2,shopCommodity)"></a>
-                                    </div>
+                                    	   </div>
                                     <div class="goods_num fr" v-else>
                                         <a href="#" class="num_jian"></a>
                                         <span class="goods_shuzi">{{shopCommodity.commodityNumber}}</span>
@@ -84,7 +84,6 @@
                     </div>
                     <div class="fr">
                         <span v-bind:class="business.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(business)"></span>
-
                     </div>
                 </div>
                 <div class="business_price_box">
@@ -143,12 +142,23 @@
                                     <div class="font14" v-if="commodity.discountedPrice > 0"><del>{{commodity.originalPrice | formatDecimal}}</del></div>
                                 </div>
                                 <div class="goods_num fr" v-if="business.isNormal == 1">
-                                    <a href="#" class="num_jian" v-if="commodity.commodityNumber>0" v-on:click="reduceShoppingCart(1,commodity)"></a>
+                                	<div v-if="commodity.isMoreSpe == 0">
+                                    <a href="#" class="num_jian2" v-if="commodity.commodityNumber>0" v-on:click="reduceShoppingCart(1,commodity)"></a>
                                     <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
                                     <a href="#" class="num_zeng" v-on:click="addShoppingCart(1,commodity)"></a>
+                                   </div>
+                                	<div v-else>
+                                		  <a href="#" class="num_jian" v-if="commodity.commodityNumber>0" ></a>
+                                    <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
+                                    <a href="#" class="num_zeng" v-on:click="addShoppingCart(1,commodity)"></a>
+                                		
+                                	</div>
+                                
                                 </div>
                                 <div class="goods_num fr" v-else>
-                                    <a href="#" class="num_zeng1"></a>
+                                    <a href="#" class="num_jian" v-if="commodity.commodityNumber>0" ></a>
+                                    <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
+                                    <a href="#" class="num_zeng1" ></a>
                                 </div>
                             </div>
                         </div>
@@ -187,8 +197,8 @@
                     <div class="modal-body spepadding">
                         <div class="tanchukuang_title2">{{currentCommodity.speCategory}}</div>
                         <div class="tanchukuang_fenlei">
-                            <a href="#" class="cursor" v-for="(specification,index) in currentCommodity.specifications">
-                                <span v-if="specification.specificationNumber&&specification.specificationNumber>0" v-on:click="changeSpecification(specification)">{{specification.specificationName}}</span>
+                            <a href="#" class="cursor" v-for="(specification,index) in currentCommodity.specifications" >
+                                <span v-if="specification.specificationStock>0" v-on:click="changeSpecification(specification)">{{specification.specificationName}}</span>
                                 <span v-else>{{specification.specificationName}}</span>
                             </a>
                         </div>

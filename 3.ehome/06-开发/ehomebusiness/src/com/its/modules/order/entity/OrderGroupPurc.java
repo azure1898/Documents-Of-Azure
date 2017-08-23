@@ -55,6 +55,7 @@ public class OrderGroupPurc extends DataEntity<OrderGroupPurc> {
 	private List<OrderGroupPurcList> orderGroupPurcList; // 团购券
 	protected Date createDate; // 创建日期
 
+	protected Date consumeTime;//消费时间
 	private String timeForExcel; // 时间（EXCEL导出用）
 	private String searchFlg; // 检索按钮按下标示
 
@@ -362,6 +363,14 @@ public class OrderGroupPurc extends DataEntity<OrderGroupPurc> {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Date getConsumeTime() {
+		return consumeTime;
+	}
+
+	public void setConsumeTime(Date consumeTime) {
+		this.consumeTime = consumeTime;
 	}
 
 	@Override

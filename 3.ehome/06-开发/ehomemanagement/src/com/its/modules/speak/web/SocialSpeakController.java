@@ -27,10 +27,13 @@ import com.its.common.persistence.Page;
 import com.its.common.web.BaseController;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
+import com.its.modules.account.entity.Account;
+import com.its.modules.account.service.AccountService;
 import com.its.modules.comment.entity.SocialComment;
 import com.its.modules.comment.service.SocialCommentService;
 import com.its.modules.praise.entity.SocialPraise;
 import com.its.modules.praise.service.SocialPraiseService;
+import com.its.modules.speak.common.SentUtil;
 import com.its.modules.speak.entity.SocialSpeak;
 import com.its.modules.speak.entity.SocialSpeakPic;
 import com.its.modules.speak.service.SocialSpeakService;
@@ -38,7 +41,10 @@ import com.its.modules.subject.entity.SocialSubject;
 import com.its.modules.subject.service.SocialSubjectService;
 import com.its.modules.subrelation.entity.SocialSubRelation;
 import com.its.modules.subrelation.service.SocialSubRelationService;
+import com.its.modules.sys.entity.User;
 import com.its.modules.sys.utils.UserUtils;
+import com.its.modules.village.entity.VillageInfo;
+import com.its.modules.village.service.VillageInfoService;
 
 /**
  * 发言管理Controller
@@ -64,6 +70,14 @@ public class SocialSpeakController extends BaseController {
 	@Autowired
 	private SocialSubjectService socialSubjectService;
 	
+	@Autowired
+	private AccountService accountService;
+	
+	@Autowired
+	private VillageInfoService villageInfoService;
+	
+	private static final String SMSURL = "http://localhost:8080/ehomeapp/app/msgSend/speakSendMsg";
+	
 	@ModelAttribute
 	public SocialSpeak get(@RequestParam(required=false) String id) {
 		SocialSpeak entity = null;
@@ -82,6 +96,21 @@ public class SocialSpeakController extends BaseController {
 		Page<SocialSpeak> page = socialSpeakService.findPage(new Page<SocialSpeak>(request, response), socialSpeak); 
 		for(SocialSpeak ss : page.getList()) {
 			List<SocialSubject> subList = socialSubjectService.findSubListBySpeakId(ss.getId());
+			String villageName = "";
+			String villageInfoIds = ss.getVillageinfoid();
+			if(!StringUtils.isEmpty(villageInfoIds)) {
+				String[] villageIds = villageInfoIds.split(",");
+				for(int i=0; i<villageIds.length; i++) {
+					String villageId = villageIds[i];
+					VillageInfo villageInfo = villageInfoService.get(villageId);
+					if(i == (villageIds.length-1)) {
+						villageName+=villageInfo.getVillageName();
+					} else {
+						villageName+=(villageInfo.getVillageName()+",");
+					}
+				}
+				ss.setVillageinfoname(villageName);
+			}
 			ss.setSubList(subList);
 		}
 		// 图片显示编辑
@@ -108,13 +137,15 @@ public class SocialSpeakController extends BaseController {
 	@RequiresPermissions("speak:socialSpeak:view")
 	@RequestMapping(value = "form")
 	public String form(SocialSpeak socialSpeak, Model model) {
-		String userId = UserUtils.getUser().getId();
+		User user = UserUtils.getUser();
+		String userId = user.getId();
 		SocialSpeak ss = socialSpeakService.findUser(userId);
-		
+		socialSpeak.setForbitcomment("0");
+		socialSpeak.setForbidforward("0");
 		model.addAttribute("socialSpeak", socialSpeak);
 		if(ss != null) {
 			model.addAttribute("auserid", ss.getAuserid());
-			model.addAttribute("ausername", ss.getUsername());
+			model.addAttribute("ausername", ss.getAusername());
 		}
 		return "modules/speak/socialSpeakForm";
 	}
@@ -137,9 +168,6 @@ public class SocialSpeakController extends BaseController {
 			List<SocialComment> replyComment = socialCommentService.findChildComment(comment);
 			socialCommentList.addAll(replyComment);
 		}
-//		SocialForward socialForward = new SocialForward();
-//		socialForward.setSpeakid(id);
-//		List<SocialForward> forward = socialForwardService.findBySpeakId(socialForward);
 		List<SocialSpeak> ssfList = socialSpeakService.findForwardsByRootId(id);
 		SocialPraise socialPraise = new SocialPraise();
 		socialPraise.setPid(id);
@@ -179,6 +207,7 @@ public class SocialSpeakController extends BaseController {
 		socialSpeak.setUserid(socialSpeak.getAuserid());
 		socialSpeak.setIstop("0");
 		socialSpeak.setReadnum("0");
+		socialSpeak.setIsspeak(1);
 		socialSpeak.setDelflag(1);
 		if (!beanValidator(model, socialSpeak)){
 			return form(socialSpeak, model);
@@ -220,13 +249,48 @@ public class SocialSpeakController extends BaseController {
         }
         socialSpeak.setImages(imgUrls.toString());
 		socialSpeakService.save(socialSpeak);
+		String tag = socialSpeak.getTag();
+		SocialSubject socialSubject = new SocialSubject();
+		if(!StringUtils.isEmpty(tag)) {
+			tag = "#"+tag+"#";
+			socialSubject = socialSubjectService.findByTag(tag);
+			if(socialSubject == null || socialSubject == null) {
+				socialSubject = new SocialSubject();
+				socialSubject.setSubname(tag);
+				socialSubject.setIsrecommend("0");
+				socialSubject.setVillageInfoId(socialSpeak.getVillageinfoid());
+				socialSubject.setCreaterid(socialSpeak.getUserid());
+				Account account = accountService.get(socialSpeak.getUserid());
+				socialSubject.setCreatername(account.getNickname());
+				socialSubject.setCreatetime(new Date());
+				socialSubjectService.save(socialSubject);
+			}
+		}
 		SocialSpeak newSocialSpeak = socialSpeakService.get(socialSpeak);
 		SocialSubRelation socialSubRelation = new SocialSubRelation();
 		socialSubRelation.setSpeakid(newSocialSpeak.getId());
-		socialSubRelation.setSubjectid(socialSpeak.getSubjectid());
+		if(!StringUtils.isEmpty(tag)) {
+			socialSubRelation.setSubjectid(socialSpeak.getSubjectid());
+		} else {
+			socialSubRelation.setSubjectid(socialSubject.getId());
+		}
 		socialSubRelationService.save(socialSubRelation);
 		addMessage(redirectAttributes, "保存发言成功");
-		return "redirect:"+Global.getAdminPath()+"/speak/socialSpeak/?repage";
+		
+		Account account = accountService.get(socialSpeak.getAuserid());
+		
+		String villageInfoIds = socialSpeak.getVillageinfoid();
+		String[] villageIds = villageInfoIds.split(",");
+		
+		String param = "userId="+account.getId()+"&userNickname="+account.getNickname()+""
+				+ "content="+socialSpeak.getContent()+"&villageIds="+villageIds;
+		
+		String ret = SentUtil.sendPost(SMSURL,param);
+		if (ret.indexOf("失败") < 0) {
+			return "redirect:"+Global.getAdminPath()+"/speak/socialSpeak/?repage";
+		} else {
+			return "消息发送失败";
+		}
 	}
 	
 	@RequiresPermissions("speak:socialSpeak:edit")

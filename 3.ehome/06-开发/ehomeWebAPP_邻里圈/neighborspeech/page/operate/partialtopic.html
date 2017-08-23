@@ -8,7 +8,7 @@
 	</div>
 	<div class="choose_title" v-if="searchValue.length==0">热门话题</div>
 	<div class="choose_title" v-else>搜索结果</div>
-	<div class="main_box mt10" style="border-top:solid 1px #ececec;" v-if="searchValue.length==0">
+	<div class="main_box mt10" style="border-top:solid 1px #ececec;" v-if="searchValue.length==0||searchValue=='#'">
 		<div class="choose_main1">
 			<ul>
 				<li v-for="(topic,index) in Htopics"><a href="#" @click="choice(topic)">{{topic.subName}}</a><span v-if="topic.id == '' ">(新话题)</span></li>
@@ -34,7 +34,6 @@
 			},
 			mounted: function() { 
 				this.$nextTick(function() { 
-					debugger
 					this.getHottopic();
 					
 				});
@@ -42,7 +41,7 @@
 			methods: {
 				getHottopic: function() {
 					var _this = this;
-					this.$http.post(interfaceUrl + "/subject/hotSubjectList",{emulateJSON: true}).then(function(res){
+					this.$http.get(interfaceUrl + "/subject/hotSubjectList").then(function(res){
 							_this.Htopics = res.data.data;
 						});
 				},
@@ -61,31 +60,35 @@
 				},
 				choice:function(topic){
 					var _this = this;
-					if(topic.id==""){
-						this.$http.post(interfaceUrl + "/speak/speakDetail",{
-							subName:_this.searchValue,
-							villageInfoId:1,
-							createrId:1,
-						},{emulateJSON: true}).then(function(res){
-							topic.id=res.data.id
-						});
-						if(topic.subName.substr(-1,1)=="#"&&topic.subName.substr(1,1)=="#"){ //判断最后一个是否带# 和第一是否带#
-							vm.topic.id=topic.id
-							vm.topic.name=topic.subName
-							vm.appendTopic()
-							this.cancel()
-						}else{//少两中情况
-							vm.topic.id=topic.id
-							vm.topic.name= "#"+topic.subName+"#"
-							vm.appendTopic()
-							this.cancel()
+					//先对name做一下处理
+					var name=topic.subName
+					if(topic.subName.substr(-1,1)=="#"&&topic.subName.substr(0,1)=="#"){//前后都等于#
+							name=topic.subName;
+						}else if(topic.subName.substr(-1,1)!="#"&&topic.subName.substr(0,1)!="#"){//前后都不等于#
+							name="#"+ topic.subName + "#";
+						}else if(topic.subName.substr(-1,1)!="#"&&topic.subName.substr(0,1)=="#"){//前等于#后不等于#
+							name=topic.subName + "#";
+						}else{//前不等于#后等于#
+							name="#"+topic.subName;
 						}
+					if(topic.id==""){//如果id为空请求接口获取id
+						this.$http.post(interfaceUrl + "/subject/saveSubject",{
+							subName:name,
+							villageInfoId:userInfo.addressId,
+							createrId:userInfo.userID,
+						},{emulateJSON: true}).then(function(res){
+							debugger
+							topic.id=res.data.id;
+							vm.topic.id=topic.id;
+							vm.topic.name=name;
+							vm.appendTopic();
+							this.cancel();
+						});
 						
 						
 					}else{
-			
 						vm.topic.id=topic.id
-						vm.topic.name=topic.subName
+						vm.topic.name=name
 						vm.appendTopic()
 						this.cancel()
 					}

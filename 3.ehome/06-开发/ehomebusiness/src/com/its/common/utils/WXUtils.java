@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.its.common.utils.WXUtilsConfig.SignType;
-import com.its.modules.gen.util.GenUtils;
 
 public class WXUtils {
 
@@ -246,70 +245,6 @@ public class WXUtils {
     }
 
     /**
-     * 生成带有 sign 的 XML 格式字符串
-     *
-     * @param data
-     *            Map类型数据
-     * @param key
-     *            API密钥
-     * @return 含有sign字段的XML
-     */
-    private static String generateSignedXml(final Map<String, String> data, String key) throws Exception {
-        return generateSignedXml(data, key, SignType.MD5);
-    }
-
-    /**
-     * 生成带有 sign 的 XML 格式字符串
-     *
-     * @param data
-     *            Map类型数据
-     * @param key
-     *            API密钥
-     * @param signType
-     *            签名类型
-     * @return 含有sign字段的XML
-     */
-    private static String generateSignedXml(final Map<String, String> data, String key, SignType signType)
-            throws Exception {
-        String sign = generateSignature(data, key, signType);
-        data.put(WXUtilsConfig.FIELD_SIGN, sign);
-        return mapToXml(data);
-    }
-
-    /**
-     * 判断签名是否正确
-     *
-     * @param xmlStr
-     *            XML格式数据
-     * @param key
-     *            API密钥
-     * @return 签名是否正确
-     * @throws Exception
-     */
-    private static boolean isSignatureValid(String xmlStr, String key) throws Exception {
-        Map<String, String> data = xmlToMap(xmlStr);
-        if (!data.containsKey(WXUtilsConfig.FIELD_SIGN)) {
-            return false;
-        }
-        String sign = data.get(WXUtilsConfig.FIELD_SIGN);
-        return generateSignature(data, key).equals(sign);
-    }
-
-    /**
-     * 判断签名是否正确，必须包含sign字段，否则返回false。使用MD5签名。
-     *
-     * @param data
-     *            Map类型数据
-     * @param key
-     *            API密钥
-     * @return 签名是否正确
-     * @throws Exception
-     */
-    private static boolean isSignatureValid(Map<String, String> data, String key) throws Exception {
-        return isSignatureValid(data, key, SignType.MD5);
-    }
-
-    /**
      * 判断签名是否正确，必须包含sign字段，否则返回false。
      *
      * @param data
@@ -377,15 +312,6 @@ public class WXUtils {
     }
 
     /**
-     * 获取随机字符串 Nonce Str
-     *
-     * @return String 随机字符串
-     */
-    private static String generateNonceStr() {
-        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
-    }
-
-    /**
      * 生成 MD5
      *
      * @param data
@@ -422,24 +348,6 @@ public class WXUtils {
             sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
         }
         return sb.toString().toUpperCase();
-    }
-
-    /**
-     * 获取当前时间戳，单位秒
-     * 
-     * @return
-     */
-    private static long getCurrentTimestamp() {
-        return System.currentTimeMillis() / 1000;
-    }
-
-    /**
-     * 获取当前时间戳，单位毫秒
-     * 
-     * @return
-     */
-    private static long getCurrentTimestampMs() {
-        return System.currentTimeMillis();
     }
 
     /**

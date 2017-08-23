@@ -3,12 +3,11 @@
  */
 package com.its.modules.field.dao;
 
+import java.util.List;
+
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
 import com.its.modules.field.entity.FieldInfo;
-import com.its.modules.field.entity.FieldInfoPrice;
-
-import java.util.List;
 
 /**
  * 场地预约DAO接口
@@ -44,5 +43,5 @@ public interface FieldInfoDao extends CrudDao<FieldInfo> {
      */
     Integer findAllListCountFull(FieldInfo fieldInfo_where);
     
-    
+    void deleteAll(FieldInfo fieldInfo);//删除场地信息
 }

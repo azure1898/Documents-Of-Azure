@@ -55,7 +55,7 @@
                                         <div class="font14" v-if="commodity.discountedPrice > 0"><del>{{shopCommodity.originalPrice | formatDecimal}}</del></div>
                                     </div>
                                     <div class="goods_num fr" v-if="commodity.isNormal==1">
-                                        <a href="#" class="num_jian" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
+                                        <a href="#" class="num_jian2" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
                                         <span class="goods_shuzi" v-if="shopCommodity.commodityNumber > 0">{{shopCommodity.commodityNumber}}</span>
                                         <a href="#" class="num_zeng" v-on:click="addShoppingCart(2,shopCommodity)"></a>
                                     </div>
@@ -112,12 +112,14 @@
                         <div class="font14 fl ml10 mt4" v-if="commodity.discountedPrice > 0"><del>{{commodity.originalPrice | formatDecimal}}</del></div>
                     </div>
                     <div class="goods_num fr nomargintop" v-if="commodity.isNormal==1">
-                        <a href="#" class="num_jian" v-if="commodity.commodityNumber>0" v-on:click="reduceShoppingCart(1,commodity)"></a>
+                        <a href="#" class="num_jian2" v-if="commodity.commodityNumber>0" v-on:click="reduceShoppingCart(1,commodity)"></a>
                         <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
                         <a href="#" class="num_zeng" v-on:click="addShoppingCart(1,commodity)"></a>
                     </div>
                     <div class="goods_num fr" v-else>
-                        <a href="#" class="num_zeng1"></a>
+                         <a href="#" class="num_jian" v-if="commodity.commodityNumber>0"></a>
+                        <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
+                        <a href="#" class="num_zeng1" ></a>
                     </div>
                 </div>
             </div>

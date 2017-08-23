@@ -283,12 +283,12 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
 				return false;
 			}
 			// 插入订单追踪
-			orderTrackService.createTrackCancel(OrderGlobal.ORDER_SERVICE, orderService.getId(), orderService.getOrderNo(), cancelType);
+			orderTrackService.createTrackCanceled(OrderGlobal.ORDER_SERVICE, orderService.getId(), orderService.getOrderNo(), cancelType);
 		} else {
 			// 订单状态"待受理"——用户取消订单——订单状态"退款中"
 			orderService.setPayState(OrderGlobal.ORDER_PAY_STATE_REFUNDING);
 			// 插入订单追踪
-			orderTrackService.createTrackRefund(OrderGlobal.ORDER_SERVICE, orderService.getId(), orderService.getOrderNo());
+			orderTrackService.createTrackRefunding(OrderGlobal.ORDER_SERVICE, orderService.getId(), orderService.getOrderNo());
 		}
 
 		// 更新订单主表

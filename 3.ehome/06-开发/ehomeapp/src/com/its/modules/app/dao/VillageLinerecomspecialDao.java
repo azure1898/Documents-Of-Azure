@@ -1,5 +1,7 @@
 package com.its.modules.app.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
@@ -17,13 +19,13 @@ import com.its.modules.app.entity.VillageLineRecomSpecial;
 public interface VillageLineRecomSpecialDao extends CrudDao<VillageLineRecomSpecial> {
 
 	/**
-	 * 获取某楼盘APP产品线下某位置的专题推荐
+	 * 获取某楼盘APP产品线下某位置的专题推荐列表
 	 * 
 	 * @param recommendPosition
 	 *            推荐位置：00 首页专题推荐 10 社区推荐 20 生活推荐
 	 * @param villageInfoId
 	 *            楼盘ID
-	 * @return VillageLineRecomSpecial
+	 * @return List<VillageLineRecomSpecial>
 	 */
-	public VillageLineRecomSpecial getVillageLineRecomSpecial(@Param("recommendPosition") String recommendPosition, @Param("villageInfoId") String villageInfoId);
+	public List<VillageLineRecomSpecial> getVillageLineRecomSpecialList(@Param("recommendPosition") String recommendPosition, @Param("villageInfoId") String villageInfoId);
 }

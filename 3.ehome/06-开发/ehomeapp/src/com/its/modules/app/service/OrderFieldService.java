@@ -226,7 +226,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
 		// 更新订单主表
 		this.update(orderField);
 		// 插入订单追踪
-		orderTrackService.createTrackCancel(OrderGlobal.ORDER_FIELD, orderField.getId(), orderField.getOrderNo(), cancelType);
+		orderTrackService.createTrackCanceled(OrderGlobal.ORDER_FIELD, orderField.getId(), orderField.getOrderNo(), cancelType);
 		return true;
 	}
 }

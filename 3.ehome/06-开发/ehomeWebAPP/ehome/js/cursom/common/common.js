@@ -18,6 +18,22 @@ function toast2(content) {
         shadeClose: false
     })
 }
+var userInfo = {
+    userID: 'ad46667a7c8a4ef9abc777da68783f4c',
+    buildingID: '1',
+    buildingName: "普罗旺世"
+};
+
+function getUserInfo(user) {
+    this.userInfo = JSON.parse(user);
+    dealData();
+}
+
+$(window).ready(function () {
+    //window.location.href = "protocol://android?code=getUserInfo"
+    dealData();
+})
+
 function judge(item, id) {
     if (item == 1) {
         $(id).removeClass().addClass('sc_business2')
@@ -29,11 +45,6 @@ function judge(item, id) {
 }
 //var interfaceUrl = "http://218.28.28.186:9088/ehomeapp/app";
 var interfaceUrl = "http://192.168.6.8:8081/ehomeapp/app";
-
-var userInfo = {
-    userID: 'ad46667a7c8a4ef9abc777da68783f4c',
-    buildingID: '1'
-};
 
 Vue.filter("formatDecimal", function (value) {
     var f = parseFloat(value);
@@ -137,20 +148,24 @@ Vue.prototype.myCollection = function (vm, business) {
 };
 
 Vue.prototype.callPhone = function (phoneCode) {
-    var json = { "data": phoneCode };
-    window.location.href = "protocol://android?code=call&data=" + JSON.stringify(json);
+    var json = { "phoneCode": phoneCode };
+    window.location.href = "protocol://android?code=callPhone&data=" + JSON.stringify(json);
+};
+
+Vue.prototype.orderPay = function (orderID, orderMoney) {
+    var json = { "orderID": orderID, "orderMoney": orderMoney };
+    window.location.href = "protocol://android?code=orderPay&data=" + JSON.stringify(json);
 };
 
 Vue.prototype.validateUser = function () {
     if (userInfo.userID && userInfo.userID.length > 0) {
         return true;
-        alert("YES");
     }
     else {
-        return false;
-         alert("NO");
+        return false;      
     }
 };
 
 Vue.prototype.goLogin = function () {
+    window.location.href = "protocol://android?code=goLogin"
 };

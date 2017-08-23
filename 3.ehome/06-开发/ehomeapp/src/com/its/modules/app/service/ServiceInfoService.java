@@ -182,4 +182,15 @@ public class ServiceInfoService extends CrudService<ServiceInfoDao, ServiceInfo>
 	public int updateSellCount(int count, String serviceInfoId) {
 		return dao.updateSellCount(count, serviceInfoId);
 	}
+	
+	/**
+	 * 根据服务ID获取商家服务项目
+	 * @param id
+	 * 			服务id
+	 * @return serviceInfo
+	 * 			服务信息
+	 */
+	public ServiceInfo getValidateById(String id) {
+		return dao.getValidateById(id);
+	}
 }

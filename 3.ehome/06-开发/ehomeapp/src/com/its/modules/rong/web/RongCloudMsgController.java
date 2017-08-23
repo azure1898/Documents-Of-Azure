@@ -84,7 +84,8 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+			socialMsg.setContent(msgContent);
+			socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -142,7 +143,8 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+			socialMsg.setContent(msgContent);
+			socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -200,7 +202,8 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+			socialMsg.setContent(msgContent);
+			socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -256,7 +259,8 @@ public class RongCloudMsgController {
 			socialMsg.setUserid(businessId);
 			socialMsg.setUsername(businessName);
 			socialMsg.setTouserid(toUserId);
-			socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+			socialMsg.setContent(msgContent);
+			socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 			socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 			socialMsg.setNoticetime(new Date());
 			socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);
@@ -319,7 +323,8 @@ public class RongCloudMsgController {
 					socialMsg.setUserid(fromId);
 					socialMsg.setUsername("");
 					socialMsg.setTouserid(account.getId());
-					socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+					socialMsg.setContent(msgContent);
+					socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 					socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 					socialMsg.setNoticetime(new Date());
 					socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ADMIN);
@@ -390,7 +395,8 @@ public class RongCloudMsgController {
 						socialMsg.setUserid(fromId);
 						socialMsg.setUsername("");
 						socialMsg.setTouserid(account.getId());
-						socialMsg.setContent("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
+						socialMsg.setContent(msgContent);
+						socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 						socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 						socialMsg.setNoticetime(new Date());
 						socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ADMIN);

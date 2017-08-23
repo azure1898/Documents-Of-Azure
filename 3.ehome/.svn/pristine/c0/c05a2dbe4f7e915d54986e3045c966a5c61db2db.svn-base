@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialSpeakDao">
+    
+	<sql id="socialSpeakColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.tag AS "tag",
+		a.content AS "content",
+		a.visrange AS "visrange",
+		a.forbitcomment AS "forbitcomment",
+		a.forbidforward AS "forbidforward",
+		a.createtime AS "createtime",
+		a.istop AS "istop",
+		a.toptime AS "toptime",
+		a.readnum AS "readnum",
+		a.plateid AS "plateid",
+		a.villageinfoid AS "villageinfoid",
+		a.images AS "images",
+		a.delflag AS "delflag",
+		a.isspeak AS "isspeak",
+		a.reason AS "reason",
+		a.fid AS "fid",
+		a.rootid AS "rootid",
+		a.noticeid AS "noticeid",
+		a.title AS "title",
+		a.summary AS "summary",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="socialSpeakJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		<where>
+			
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="beginCreatetime != null and endCreatetime != null and beginCreatetime != '' and endCreatetime != ''">
+				AND a.createtime BETWEEN #{beginCreatetime} AND #{endCreatetime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_speak(
+			id,
+			userid,
+			tag,
+			content,
+			visrange,
+			forbitcomment,
+			forbidforward,
+			createtime,
+			istop,
+			toptime,
+			readnum,
+			plateid,
+			villageinfoid,
+			images,
+			delflag,
+			isspeak,
+			reason,
+			fid,
+			rootid,
+			noticeid,
+			title,
+			summary,
+			remarks
+		) VALUES (
+			#{id},
+			#{userid},
+			#{tag},
+			#{content},
+			#{visrange},
+			#{forbitcomment},
+			#{forbidforward},
+			#{createtime},
+			#{istop},
+			#{toptime},
+			#{readnum},
+			#{plateid},
+			#{villageinfoid},
+			#{images},
+			#{delflag},
+			#{isspeak},
+			#{reason},
+			#{fid},
+			#{rootid},
+			#{noticeid},
+			#{title},
+			#{summary},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_speak SET 	
+			userid = #{userid},
+			tag = #{tag},
+			content = #{content},
+			visrange = #{visrange},
+			forbitcomment = #{forbitcomment},
+			forbidforward = #{forbidforward},
+			createtime = #{createtime},
+			istop = #{istop},
+			toptime = #{toptime},
+			readnum = #{readnum},
+			plateid = #{plateid},
+			villageinfoid = #{villageinfoid},
+			images = #{images},
+			delflag = #{delflag},
+			isspeak = #{isspeak},
+			reason = #{reason},
+			fid = #{fid},
+			rootid = #{rootid},
+			noticeid = #{noticeid},
+			title = #{title},
+			summary = #{summary},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_speak
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据用户id查询该用户关注的人的发言集合 -->
+	<select id="findListByUserId" resultType="SocialSpeakBean">
+		SELECT 
+			<include refid="socialSpeakColumns"/>,
+			(SELECT COUNT(*) FROM social_relation r WHERE r.userId = #{userId} AND r.subUserId = a.userId) AS isFocus,
+			(SELECT COUNT(*) FROM social_praise p WHERE p.userId = #{userId} AND p.pid = a.id AND p.state = 1) AS isPraise,
+			(SELECT COUNT(*) FROM social_speak f  where f.fid = a.id and f.delflag != 0) as countForward,
+			(SELECT COUNT(*) FROM social_comment c where c.speakid = a.id and c.delflag != 0) as countComment,
+			(select count(*) from social_praise pr where pr.pid = a.id AND pr.state = 1) as countPraise,
+			ac.Nickname as nickName,
+			ac.photo as photo
+		FROM social_speak a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialSpeak!=null and socialSpeak.villageinfoid != null and socialSpeak.villageinfoid != ''">
+				AND a.villageInfoId = #{socialSpeak.villageinfoid}
+			</if>
+			<if test="socialSpeak!=null and socialSpeak.delflag != null and socialSpeak.delflag != ''">
+				AND a.delflag = #{socialSpeak.delflag}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.userId = (SELECT subUserId FROM social_relation r WHERE r.userId = #{userId}) 
+			</if>
+		order by a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 根据用户id查询该用户关注的人的发言集合 -->
+	<select id="getSocialSpeakBeanById" resultType="SocialSpeakBean">
+		SELECT 
+			<include refid="socialSpeakColumns"/>,
+			(SELECT COUNT(*) FROM social_speak f  where f.fid = a.id ) as countForward,
+			(SELECT COUNT(*) FROM social_comment c where c.speakid = a.id ) as countComment,
+			(select count(*) from social_praise pr where pr.pid = a.id AND pr.state = 1) as countPraise,
+			ac.Nickname as nickName,
+			ac.photo as photo
+		FROM social_speak a left join account ac on a.userid = ac.id 
+		where 1 = 1 
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+	</select>
+	
+	<!-- 根据条件查询发言/转发集合 -->
+	<select id="findSpeakList" resultType="SocialSpeakBean">
+		SELECT 
+			<include refid="socialSpeakColumns"/>,
+			ac.Nickname AS nickName,
+		    ac.photo AS photo
+		FROM social_speak a LEFT JOIN account ac ON a.userid = ac.id 
+		where 1 = 1 
+			<if test="socialSpeak !=null and socialSpeak.userid != null and socialSpeak.userid != ''">
+				AND a.userId = #{socialSpeak.userid}
+			</if>
+			<if test="socialSpeak !=null and socialSpeak.delflag != null and socialSpeak.delflag != ''">
+				AND a.delFlag = #{socialSpeak.delflag}
+			</if>
+			<if test="socialSpeak !=null and socialSpeak.fid != null and socialSpeak.fid != ''">
+				AND a.fid = #{socialSpeak.fid}
+			</if>
+			<if test="socialSpeak !=null and socialSpeak.isspeak != null and socialSpeak.isspeak != ''">
+				AND a.isSpeak = #{socialSpeak.isspeak}
+			</if>
+			<if test="socialSpeak !=null and socialSpeak.userid != null and socialSpeak.userid != ''">
+				AND a.userid = #{socialSpeak.userid}
+			</if>
+			<if test="socialSpeak !=null and socialSpeak.villageinfoid != null and socialSpeak.villageinfoid != ''">
+				AND a.villageInfoid = #{socialSpeak.villageinfoid}
+			</if>
+		ORDER BY a.isTop DESC, a.topTime DESC, a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 根据用户id查询该用户的所有发言数据（单表） -->
+	<select id="getListByUserId" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a 
+		where a.userid = #{userid}
+		ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<!-- 根据speakid查询转发数量 -->
+	<select id="countForward" resultType="int">
+		SELECT count(*)
+		FROM social_speak a 
+		where a.rootid = #{speakid}
+	</select>
+	
+	<!-- 根据用户id 查询该用户的发言 -->
+    <select id="findSpeakBySpeakId" resultType="SocialSpeakBean">
+        SELECT 
+            <include refid="socialSpeakColumns"/>,
+            ac.Nickname AS nickName,
+            ac.photo AS photo
+        FROM social_speak a LEFT JOIN account ac ON a.userid = ac.id 
+        WHERE a.id=#{speakId}
+    </select>
+    
+    <!-- 根据话题名称和楼盘id查询发言 -->
+    <select id="findByAddIdAndSubName" resultType="SocialSpeakBean">
+        SELECT 
+            <include refid="socialSpeakColumns"/>,
+            (SELECT COUNT(*) FROM social_praise p WHERE p.userId = #{userId} AND p.pid = a.id ) AS isPraise,
+            (SELECT COUNT(*) FROM social_speak f  where f.fid = a.id ) as countForward,
+            (SELECT COUNT(*) FROM social_comment c where c.speakid = a.id ) as countComment,
+            (select count(*) from social_praise pr where pr.pid = a.id AND pr.state = 1) as countPraise,
+            ac.Nickname as nickName,
+            ac.photo as photo
+        FROM social_subject ss left join social_sub_relation ssr on  ss.id = ssr.subjectid 
+            left join social_speak a on a.id = ssr.speakid 
+            left join account ac on ac.id=a.userid
+        WHERE 1 = 1 
+            <if test="addressId != null and addressId != '' ">
+                AND ss.villageinfoid = #{addressId}
+            </if>
+            <if test="subjectName != null and subjectName != '' ">
+                AND ss.subname like concat('%',#{subjectName},'%')
+            </if>
+            <if test="subjectId != null and subjectId != '' ">
+                AND ss.id = #{subjectId} 
+            </if>
+        ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize}
+    </select>
+	
+	<!-- 根据speakid查询转发数量 -->
+	<select id="countSpeak" resultType="int">
+		SELECT count(*)
+		FROM social_speak a 
+		where 1=1 
+		<if test="socialSpeak != null and socialSpeak.userid != null and socialSpeak.userid != ''">
+			and a.userId = #{socialSpeak.userid}
+		</if>
+		<if test="socialSpeak != null and socialSpeak.villageinfoid != null and socialSpeak.villageinfoid != ''">
+			and a.villageinfoid = #{socialSpeak.villageinfoid}
+		</if>
+	</select>
+	
+	<!-- 根据当前用户ID，楼盘ID查询该用户在该楼盘未读消息的管理员信息 -->
+	<select id="findAdminList" resultType="SocialSpeakBean">
+		SELECT 
+		  DISTINCT a.ID as aid,
+		  a.Nickname as nickName,
+		  a.Photo as photo 
+		FROM
+		  sys_user u,
+		  account a,
+		  social_msg m 
+		WHERE u.app_user_phone = a.Phone_Num 
+		  AND a.id = m.toUserId 
+		  AND m.isRead = 0 
+		  AND m.isNotice = 1 
+		  AND a.ID = #{userId}
+		  AND <![CDATA[ FIND_IN_SET(#{villageInfoId}, u.village_info_ids) ]]>
+	</select>
+
+	<!-- 根据用户ID查询当前用户是否是管理员 -->
+	<select id="getAdminAccount" resultType="com.its.modules.app.entity.Account">
+		SELECT 
+		  a.* 
+		FROM
+		  account a, sys_user u  
+		WHERE u.app_user_phone = a.Phone_Num 
+		  AND a.ID = #{userId}
+	</select>
+
+	<!-- 根据用户ID查询当前用户是否是管理员 -->
+	<select id="getAccountListByVillId" resultType="com.its.modules.app.entity.Account">
+		SELECT 
+		  a.* 
+		FROM
+		  account a 
+		WHERE a.Village_Info_ID = #{villageInfoId}
+	</select>
+	
+</mapper>

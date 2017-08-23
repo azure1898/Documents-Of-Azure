@@ -12,7 +12,7 @@
 .fyxq_main_r{ float:right; padding-top:10px; padding-right:10px;}
 .fyxq_main2{ padding:0 10px; margin-top:6px;}
 .fyxq_main2 p{ font-size:14px;}
-.ftcred{ color:#df2d1f;}
+.ftcred{ color:#df2d1f!important;}
 .ftc5050{ color:#505050;}
 .fyxq_main3{ margin-top:6px;}
 .fyxq_main3 ul li{ width:30%; height:110px; float:left; margin-left:2%;}

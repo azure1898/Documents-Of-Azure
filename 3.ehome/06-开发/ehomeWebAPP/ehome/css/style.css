@@ -77,5 +77,8 @@ a {
 		
 	}
 	.details_top,.business_pic75,.goods_pic{
-		position:relative;
+		position:relative;}
+		.num_jian2{
+			background-image:url(../images/service/num_jian2.png);
+		}
 	

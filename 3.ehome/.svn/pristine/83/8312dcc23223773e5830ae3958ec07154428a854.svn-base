@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection" />
+    <title>help1</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css" />
+    <link rel="stylesheet" href="css/iconfont/iconfont.css">
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+    <style>
+        .help h3 {
+            font-weight: 400;
+            font-size: 17px;
+            width: auto;
+            overflow: hidden;
+            margin-bottom: 4px;
+            color: #505050;
+        }
+
+        .help p {
+            font-weight: 400;
+            font-size: 15px;
+            width: auto;
+            overflow: hidden;
+            margin-bottom: 4px;
+            color: #000000;
+        }
+
+        .help p.txt2 {
+            padding-top: 20px;
+        }
+
+        .help-flex {
+            display: -webkit-flex;
+            display: flex;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+        }
+
+        .help-flex li {
+            width: 48%;
+        }
+
+        .help-flex li img {
+            width: 100%;
+            -moz-box-shadow: 2px 2px 5px #eee;
+            -webkit-box-shadow: 2px 2px 5px #eee;
+            box-shadow: 2px 2px 5px #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="help">
+            <h3>1.业主使用购房预留手机号注册可自动绑定房间</h3>
+            <p>1)使用购房预留手机号注册</p>
+            <ul class="help-flex">
+                <li>
+                    <img src="帮助说明图/01注册.jpg" alt="">
+                </li>
+                <li>
+                    <img src="帮助说明图/02匹配成功.jpg" alt="">
+                </li>
+            </ul>
+            <p class="txt2">2)查看房间绑定信息</p>
+            <ul class="help-flex">
+                <li>
+                    <img src="帮助说明图/04房间绑定.jpg" alt="">
+                </li>
+            </ul>
+        </div>
+
+
+
+    </div>
+    <!-- body 最后 -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

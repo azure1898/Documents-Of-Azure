@@ -105,6 +105,8 @@ public class UserUtils {
 		CacheUtils.remove(CACHE_AREA_LIST);
 		CacheUtils.remove(CACHE_OFFICE_LIST);
 		CacheUtils.remove(CACHE_OFFICE_ALL_LIST);
+		CacheUtils.remove("sysCache");//清除系统缓存
+		CacheUtils.remove("dictMap");//清除字典
 	}
 	
 	/**

@@ -80,7 +80,7 @@ public interface SocialCommentDao extends CrudDao<SocialComment> {
 	 * @param socialComment
 	 * @return
 	 */
-	public List<SocialComment> findListByUserId(@Param("userId")String userId);
+	public List<SocialComment> findListByUserId(@Param("userId")String userId, @Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize);
 	
 	/**
 	 * 

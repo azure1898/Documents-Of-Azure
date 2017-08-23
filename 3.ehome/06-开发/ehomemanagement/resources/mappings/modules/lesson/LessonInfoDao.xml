@@ -202,4 +202,13 @@
           FOR UPDATE
         </where>
     </select>
+    <!-- 通过商家ID获取课程列表（广告发布）add zhujiao -->
+    <select id="getLessonInfoList" resultType="LessonInfo">
+      SELECT
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.name AS "name"
+      FROM lesson_info a
+      WHERE a.business_info_id = #{businessInfoId} and a.del_flag='0'
+    </select>
 </mapper>

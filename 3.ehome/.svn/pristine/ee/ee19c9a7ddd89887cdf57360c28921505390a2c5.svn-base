@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.field.dao.FieldInfoDao">
+
+
+  <!-- begin 联查 场地预约- 分段信息 旧的 ofType指定students集合中的对象类型 -->
+  <resultMap type="com.its.modules.field.entity.FieldInfo" id="fieldInfoAndFieldPartitionPriceList">
+    <id property="id" column="id" />
+    <result column="business_info_id" property="businessInfoId" />
+    <result column="serial_numbers" property="serialNumbers" />
+    <result column="name" property="name" />
+    <result column="monday" property="monday" />
+    <result column="tuesday" property="tuesday" />
+    <result column="wednesday" property="wednesday" />
+    <result column="thursday" property="thursday" />
+    <result column="friday" property="friday" />
+    <result column="saturday" property="saturday" />
+    <result column="sunday" property="sunday" />
+    <result column="short_time" property="shortTime" />
+    <result column="start_open_time" property="startOpenTime" />
+    <result column="end_open_time" property="endOpenTime" />
+    <result column="base_price" property="basePrice" />
+    <result column="is_child" property="isChild" />
+    <result column="state" property="state" />
+    <result column="create_state" property="createState" />
+    <collection property="fieldPartitionPriceList" ofType="com.its.modules.field.entity.FieldPartitionPrice">
+      <id property="id" column="b_id" />
+      <result property="businessInfoId" column="b_business_info_id" />
+      <result property="fieldInfoId" column="b_field_info_id" />
+      <result property="appointmentTime" column="b_appointment_time" />
+      <result property="startTime" column="b_start_time" />
+      <result property="endTime" column="b_end_time" />
+      <result property="basePrice" column="b_base_price" />
+      <result property="state" column="b_state" />
+      <result property="outTimeState" column="outTimeState" />
+    </collection>
+  </resultMap>
+
+  <select id="queryFieldPartitionPriceListByFieldInfo" resultMap="fieldInfoAndFieldPartitionPriceList">
+    select a.*,
+    b.id AS "b_id",
+    b.business_info_id AS "b_business_info_id",
+    b.field_info_id AS "b_field_info_id",
+    b.appointment_time AS "b_appointment_time",
+    b.start_time AS "b_start_time",
+    b.end_time AS "b_end_time",
+    b.base_price AS "b_base_price",
+    b.state AS "b_state",
+    (b.end_time>now()) AS "outTimeState"
+    from field_info a LEFT JOIN field_partition_price b ON a.id=b.field_info_id
+    AND TO_DAYS(b.appointment_time)=TO_DAYS(#{partitionPrice.appointmentTime})
+    WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+    ORDER BY a.serial_numbers,b.start_time ASC
+  </select>
+  <!-- end -->
+
+
+
+
+
+
+
+  <select id="queryOpenList" resultMap="fieldInfoAndFieldPartitionPriceList">
+    select a.*,
+    b.id AS "b_id",
+    b.business_info_id AS "b_business_info_id",
+    b.field_info_id AS "b_field_info_id",
+    b.appointment_time AS "b_appointment_time",
+    b.start_time AS "b_start_time",
+    b.end_time AS "b_end_time",
+    b.base_price AS "b_base_price",
+    b.state AS "b_state",
+    (b.end_time>now()) AS "outTimeState"
+    from field_info a LEFT JOIN field_partition_price b ON a.id=b.field_info_id
+    WHERE a.del_flag = '0' AND a.state='0' AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+
+  </select>
+
+  <sql id="fieldInfoColumns">
+    a.id AS "id",
+    a.business_info_id AS "businessInfoId",
+    a.serial_numbers AS "serialNumbers",
+    a.name AS "name",
+    a.monday AS "monday",
+    a.tuesday AS "tuesday",
+    a.wednesday AS "wednesday",
+    a.thursday AS "thursday",
+    a.friday AS "friday",
+    a.saturday AS "saturday",
+    a.sunday AS "sunday",
+    a.short_time AS "shortTime",
+    a.start_open_time AS "startOpenTime",
+    a.end_open_time AS "endOpenTime",
+    a.base_price AS "basePrice",
+    a.is_child AS "isChild",
+    a.state AS "state",
+    a.create_state AS "createState",
+    a.create_by AS "createBy.id",
+    a.create_date AS "createDate",
+    a.update_by AS "updateBy.id",
+    a.update_date AS "updateDate",
+    a.remarks AS "remarks",
+    a.del_flag AS "delFlag"
+  </sql>
+
+  <sql id="fieldInfoJoins">
+  </sql>
+
+  <select id="get" resultType="FieldInfo">
+    SELECT
+    <include refid="fieldInfoColumns" />
+    FROM field_info a
+    <include refid="fieldInfoJoins" />
+    WHERE a.id = #{id}
+  </select>
+
+  <!-- 旧的 2017/08/04(原工程此处并没有具体使用到) <select id="findList" resultType="FieldInfo"> SELECT <include refid="fieldInfoColumns"/> FROM field_info a <include refid="fieldInfoJoins"/> <where> a.del_flag ='0' AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}' <if test="name != null and name != ''"> AND a.name LIKE <if test="dbName == 'oracle'">'%'||#{name}||'%'</if> <if test="dbName == 'mssql'">'%'+#{name}+'%'</if> <if test="dbName == 'mysql'">concat('%',#{name},'%')</if> </if> </where> <choose> <when test="page !=null and page.orderBy != null and page.orderBy != ''"> ORDER BY ${page.orderBy} </when> <otherwise> ORDER BY a.update_date DESC </otherwise> </choose> </select> -->
+  <!-- 新的 2017/08/04 -->
+  <!-- begin===联合查询场地预约 >分段信息 ======================================================================== -->
+  <resultMap type="FieldInfo" id="FieldInfoMap">
+    <result column="ID" property="id" />
+    <result column="Business_Info_ID" property="businessInfoId" />
+    <result column="Serial_Numbers" property="serialNumbers" />
+    <result column="Name" property="name" />
+    <result column="Monday" property="monday" />
+    <result column="Tuesday" property="tuesday" />
+    <result column="Wednesday" property="wednesday" />
+    <result column="Thursday" property="thursday" />
+    <result column="Friday" property="friday" />
+    <result column="Saturday" property="saturday" />
+    <result column="Sunday" property="sunday" />
+    <result column="Short_Time" property="shortTime" />
+    <result column="Start_Open_Time" property="startOpenTime" />
+    <result column="End_Open_Time" property="endOpenTime" />
+    <result column="Base_Price" property="basePrice" />
+    <result column="Is_Child" property="isChild" />
+    <result column="State" property="state" />
+    <result column="Create_State" property="createState" />
+    <result column="Sell_Count" property="sellCount" />
+    <association property="fieldPartitionPriceList" column="{id=id,appointmentTime=appointmentTime,startTime=startTime,endTime=endTime}" select="getFieldPartitionPriceList" />
+  </resultMap>
+  <select id="findList" parameterType="FieldInfo" resultMap="FieldInfoMap">
+    select a.*,TO_DAYS(#{partitionPrice.appointmentTime}) appointmentTime,TO_DAYS(#{partitionPrice.startTime}) startTime ,TO_DAYS(#{partitionPrice.endTime}) endTime from field_info a
+    where a.del_flag ='0' and a.Business_Info_ID ='${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+    <if test="id != null and id != ''">
+      AND a.id = #{id}
+    </if>
+    order by Serial_Numbers
+  </select>
+  <resultMap type="FieldPartitionPrice" id="FieldPartitionPriceMap">
+    <result column="ID" property="id" />
+    <result column="Business_Info_ID" property="businessInfoId" />
+    <result column="Field_Info_ID" property="fieldInfoId" />
+    <result column="Appointment_Time" property="appointmentTime" />
+    <result column="Start_Time" property="startTime" />
+    <result column="End_Time" property="endTime" />
+    <result column="Base_Price" property="basePrice" />
+    <result column="Sum_Money" property="sumMoney" />
+    <result column="State" property="state" />
+    <result property="outTimeState" column="outTimeState" />
+  </resultMap>
+  <select id="getFieldPartitionPriceList" parameterType="hashMap" resultMap="FieldPartitionPriceMap">
+    select a.*,(a.end_time>now()) AS "outTimeState" from field_partition_price a
+    where a.Field_Info_ID=#{id} and a.Del_Flag=0
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+      and TO_DAYS(a.appointment_time) >=#{endTime} and TO_DAYS(a.appointment_time)<![CDATA[<=]]>#{startTime}
+    </if>
+    <if test="startTime == null or startTime == '' or endTime == null or endTime == ''">
+      and TO_DAYS(a.appointment_time)=#{appointmentTime}
+    </if>
+
+    order by Start_Time
+  </select>
+  <!-- end================================================================================= -->
+
+
+
+
+
+
+
+  <select id="findAllList" resultType="FieldInfo">
+    SELECT
+    <include refid="fieldInfoColumns" />
+    FROM field_info a
+    <include refid="fieldInfoJoins" />
+    <where>
+      a.del_flag = '0'
+      AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date DESC
+      </otherwise>
+    </choose>
+  </select>
+
+
+  <select id="findAllListCount" resultType="Integer">
+    SELECT
+    count(1)
+    FROM field_info a
+    <include refid="fieldInfoJoins" />
+    <where>
+      a.del_flag = '0'
+      AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+    </where>
+  </select>
+
+
+  <select id="findAllListCountFull" resultType="Integer">
+    SELECT count(1) FROM (
+    SELECT
+    (SELECT count(1) FROM field_partition_price b where b.field_info_id=a.id AND b.state='0' AND to_days(b.start_time)-to_days(now())&lt;=6 AND to_days(b.start_time)-to_days(now())&gt;=0) as noFull
+    FROM field_info a
+    where
+    a.del_flag = #{DEL_FLAG_NORMAL}
+    AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+    ) tb where tb.noFull=0
+  </select>
+
+  <insert id="insert">
+    INSERT INTO field_info(
+    id,
+    business_info_id,
+    serial_numbers,
+    name,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday,
+    short_time,
+    start_open_time,
+    end_open_time,
+    base_price,
+    is_child,
+    state,
+    create_state,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remarks,
+    del_flag
+    ) VALUES (
+    #{id},
+    #{businessInfoId},
+    #{serialNumbers},
+    #{name},
+    #{monday},
+    #{tuesday},
+    #{wednesday},
+    #{thursday},
+    #{friday},
+    #{saturday},
+    #{sunday},
+    #{shortTime},
+    #{startOpenTime},
+    #{endOpenTime},
+    #{basePrice},
+    #{isChild},
+    #{state},
+    #{createState},
+    #{createBy.id},
+    #{createDate},
+    #{updateBy.id},
+    #{updateDate},
+    #{remarks},
+    #{delFlag}
+    )
+  </insert>
+
+  <update id="update">
+    UPDATE field_info SET
+    business_info_id = #{businessInfoId},
+    serial_numbers = #{serialNumbers},
+    name = #{name},
+    monday = #{monday},
+    tuesday = #{tuesday},
+    wednesday = #{wednesday},
+    thursday = #{thursday},
+    friday = #{friday},
+    saturday = #{saturday},
+    sunday = #{sunday},
+    short_time = #{shortTime},
+    start_open_time = #{startOpenTime},
+    end_open_time = #{endOpenTime},
+    base_price = #{basePrice},
+    is_child = #{isChild},
+    state = #{state},
+    update_by = #{updateBy.id},
+    update_date = #{updateDate},
+    remarks = #{remarks}
+    WHERE id = #{id}
+  </update>
+
+  <update id="delete">
+    UPDATE field_info SET
+    del_flag = #{DEL_FLAG_DELETE}
+    WHERE id = #{id}
+  </update>
+  <!-- 通过商家ID获取场地列表（综合管理平台-广告发布）add zhujiao -->
+  <select id="getFieldInfoList" resultType="FieldInfo">
+    SELECT
+      a.id AS "id",
+      a.business_info_id AS "businessInfoId",
+      a.name AS "name"
+    FROM field_info a
+    WHERE a.business_info_id = #{businessInfoId} and a.del_flag='0'
+  </select>
+
+
+</mapper>

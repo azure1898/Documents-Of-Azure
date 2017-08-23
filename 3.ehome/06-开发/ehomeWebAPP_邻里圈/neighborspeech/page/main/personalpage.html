@@ -80,11 +80,10 @@
 				</div>
 				<div class="fyxq_main2">
 					<p class="ftc5050">
-						<font class="ftcred" v-for="(subject,index) in releaseDetail.subjectList" :key="index">
+						<!--<font class="ftcred" v-for="(subject,index) in releaseDetail.subjectList" :key="index">
 							{{subject.subjectName}}
-						</font>
-						<a :href="urlList.speechdetail + releaseDetail.speakId">{{releaseDetail.speak.speakContent}}</a>
-						<!--<font class="ftcred">@优米的米</font>-->
+						</font>-->
+						<a :href="urlList.speechdetail + releaseDetail.speakId"><span v-html="releaseDetail.speak.speakContent"></span></a>
 					</p>
 				</div>
 				
@@ -104,28 +103,28 @@
 						<div class="fyxq_main_l2_img"><img :src="releaseDetail.rootSpeak.imgUrl" width="110" height="110"></div>
 						<div class="fyxq_main_l_title2">
 						<p>@{{releaseDetail.rootSpeak.userName}}</p>
-						<p><span>
-							<!--<font class="ftcred">#装修作业#</font>-->
-							{{releaseDetail.rootSpeak.speakContent}}</span>
-						</p>
+						<p><span v-html="releaseDetail.rootSpeak.content"></span></p>
 						</div>
 					</div>
 					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
 					原发言已被删除
 					</div>
 				</div>
-						<div class="clear"></div>
+				<div class="clear"></div>
+				
 				<!--底部的三个按钮-->
 				<div class="personal_main_bottom">
 					<ul>
-						<li>
-							<a :href="urlList.forward + releaseDetail.speakId" class="bottom_icon1">{{releaseDetail.countForword}}</a>
-						</li>
-						<li>
-							<a :href="releaseDetail.countComment>0?urlList.speechdetail + releaseDetail.speakId:urlList.comments + releaseDetail.speakId" class="bottom_icon2">{{releaseDetail.countComment}}</a>
-						</li>
-						<li style="border-right:none;">
+						<li v-if="releaseDetail.countForward>0"><a :href="urlList.forward + releaseDetail.speakId" class="bottom_icon1">{{releaseDetail.countForward}}</a></li>
+						<li v-else><a :href="urlList.forward + releaseDetail.speakId" class="bottom_icon1">转发</a></li>
+						<li v-if="releaseDetail.countComment>0"><a :href="urlList.speechdetail + releaseDetail.speakId" class="bottom_icon2">{{releaseDetail.countComment}}</a></li>
+						<li v-else><a :href="urlList.comments + releaseDetail.speakId" class="bottom_icon2">评论</a></li>
+						
+						<li style="border-right:none;" v-if="releaseDetail.countPraise>0">
 							<a href="###" :class="releaseDetail.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(releaseDetail,1)">{{releaseDetail.countPraise}}</a>
+						</li>
+						<li style="border-right:none;" v-else>
+							<a href="###" :class="releaseDetail.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(releaseDetail,1)">赞</a>
 						</li>
 					</ul>
 				</div>

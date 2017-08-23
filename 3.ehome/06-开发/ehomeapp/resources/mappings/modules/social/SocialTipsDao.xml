@@ -32,13 +32,7 @@
 		<where>
 			a.userId = #{userId} and a.type = #{type} 
 		</where>		
-		<!-- <choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-			</otherwise>
-		</choose> -->
+		ORDER BY a.noticetime DESC limit #{pageIndex},#{pageSize}
 	</select>
 	
 	<select id="findList" resultType="SocialTips">

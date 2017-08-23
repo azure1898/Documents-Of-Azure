@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2014 <a href="https://its111.com">Its111</a> All rights reserved.
- */
 package com.its.modules.app.web;
 
 import java.util.ArrayList;
@@ -23,14 +20,15 @@ import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.app.bean.FieldInfoBean;
 import com.its.modules.app.common.AppUtils;
+import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.BusinessInfo;
+import com.its.modules.app.entity.FieldInfo;
 import com.its.modules.app.entity.FieldPartitionPrice;
 import com.its.modules.app.service.BusinessInfoService;
+import com.its.modules.app.service.FieldInfoService;
 import com.its.modules.app.service.FieldPartitionPriceService;
 import com.its.modules.app.service.MyCollectService;
-
-import net.sf.json.JSONObject;
 
 /**
  * 场地分段预约表Controller
@@ -41,12 +39,18 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value = "${appPath}/live")
 public class FieldPartitionPriceController extends BaseController {
+
 	@Autowired
 	private BusinessInfoService businessInfoService;
+
 	@Autowired
 	private FieldPartitionPriceService fieldPartitionPriceService;
+
 	@Autowired
 	private MyCollectService myCollectService;
+
+	@Autowired
+	private FieldInfoService fieldInfoService;
 
 	/**
 	 * 获取商家场地信息
@@ -121,31 +125,41 @@ public class FieldPartitionPriceController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSiteReservation")
-	public String getSiteReservation(String userID, String businessID, String date, String siteID) {
+	public Map<String, Object> getSiteReservation(String userID, String businessID, String date, String siteID) {
 		long start = new Date().getTime();
-		if (StringUtils.isBlank(businessID) || StringUtils.isBlank(date) || StringUtils.isBlank(siteID)) {
-			return "{\"code\":" + Global.CODE_PROMOT + ",\"message\":\"参数有误\"}";
+		// 验证接收到的参数
+		Map<String, Object> toJson = new HashMap<String, Object>();
+		if (ValidateUtil.validateParams(toJson, userID)) {
+			return toJson;
+		}
+		FieldInfo fieldInfo = fieldInfoService.get(siteID);
+		if (fieldInfo == null) {
+			toJson.put("code", Global.CODE_PROMOT);
+			toJson.put("message", "场地不存在");
 		}
 		List<FieldPartitionPrice> list = fieldPartitionPriceService.findFieldPartition(businessID, date, siteID);
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-		for (FieldPartitionPrice f : list) {
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("siteReservationID", f.getId());
-			m.put("siteID", f.getFieldInfoId());
-			m.put("reservationDate", DateFormatUtils.format(f.getAppointmentTime(), "yyyy-MM-dd"));
-			m.put("timePeriod", DateFormatUtils.format(f.getStartTime(), "HH:mm") + "~" + DateFormatUtils.format(f.getEndTime(), "HH:mm"));
-			m.put("price", f.getSumMoney());
-			m.put("isBooked", f.getState());
-			data.add(m);
+		for (FieldPartitionPrice part : list) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("siteReservationID", part.getId());
+			map.put("siteID", part.getFieldInfoId());
+			map.put("reservationDate", DateFormatUtils.format(part.getAppointmentTime(), "yyyy-MM-dd"));
+			map.put("timePeriod", DateFormatUtils.format(part.getStartTime(), "HH:mm") + "~" + DateFormatUtils.format(part.getEndTime(), "HH:mm"));
+			map.put("price", part.getSumMoney());
+			if (CommonGlobal.YES.equals(fieldInfo.getState()) || part.getStartTime().getTime() <= new Date().getTime() || CommonGlobal.FIELD_APPOINTMENT_STATE_ALREADY.equals(part.getState())) {
+				map.put("isBooked", CommonGlobal.YES);
+			} else if (CommonGlobal.FIELD_APPOINTMENT_STATE_WAITING.equals(part.getState())) {
+				map.put("isBooked", CommonGlobal.NO);
+			}
+			data.add(map);
 		}
-		Map<String, Object> json = new HashMap<String, Object>();
-		json.put("code", Global.CODE_SUCCESS);
-		json.put("data", data);
-		json.put("message", "成功");
+
+		toJson.put("code", Global.CODE_SUCCESS);
+		toJson.put("data", data);
+		toJson.put("message", "成功");
 		if (AppUtils.DEBUG_MODEL) {
 			System.out.println("/live/getSiteReservation()运行时间：" + (new Date().getTime() - start) + "ms");
 		}
-		return JSONObject.fromObject(json).toString();
+		return toJson;
 	}
-
 }

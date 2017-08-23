@@ -34,6 +34,8 @@ import com.its.common.utils.StringUtils;
 import com.its.common.utils.excel.ExportExcel;
 import com.its.common.utils.excel.ImportExcel;
 import com.its.common.web.BaseController;
+import com.its.modules.account.entity.Account;
+import com.its.modules.account.service.AccountService;
 import com.its.modules.sys.entity.Office;
 import com.its.modules.sys.entity.Role;
 import com.its.modules.sys.entity.User;
@@ -51,6 +53,10 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private SystemService systemService;
+	
+	@Autowired
+	private AccountService accountService;
+	
 	/** 来源于JSP页面的FLG：解冻 */
 	private static final String FLAG_FROM_JSP_UNFROZEN = "0";
 	/** 用户登录状态：冻结 */
@@ -81,20 +87,69 @@ public class UserController extends BaseController {
 		if(user!=null && StringUtils.isBlank(user.getLoginFlag())){
 			user.setLoginFlag(LOGIN_FLAG_UNFROZEN);
 		}
+		
+		//用户管理：获取【所有角色】下拉框取值
+		List<Role> roleList = systemService.getAllRoleList(new Role());
+		
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
 		
+		model.addAttribute("roleList", roleList);
         model.addAttribute("page", page);
 		return "modules/sys/userList";
 	}
 
+	/**
+	 * 角色管理：管理用户列表页查询
+	 * @param user
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("sys:user:roleview")
+	@RequestMapping(value = {"roleUserList", ""})
+	public String roleUserList(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+		//从角色管理中管理用户页面传来的角色id
+		String roleId=request.getParameter("roleId");
+		if(StringUtils.isNotBlank(roleId)){		
+		    Role role = new Role();
+		    role.setId(roleId);
+		    user.setRole(role);
+		}
+		
+		//页面初始化为正常
+		if(user!=null && StringUtils.isBlank(user.getLoginFlag())){
+			user.setLoginFlag(LOGIN_FLAG_UNFROZEN);
+		}
+
+		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
+		
+        model.addAttribute("page", page);
+		return "modules/sys/roleUserList";
+	}
+	
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = "form")
-	public String form(User user, Model model) {
+	public String form(User user, Model model,HttpServletRequest request) {
+		//从角色管理中管理用户页面传来的角色id
+		String roleId=request.getParameter("roleId");
+		if(StringUtils.isNotBlank(roleId)){		
+		    Role role = new Role();
+		    role.setId(roleId);
+		    user.setRole(role);
+		}
+				
 		if (user.getCompany()==null || user.getCompany().getId()==null){
 			user.setCompany(UserUtils.getUser().getCompany());
 		}
 		if (user.getOffice()==null || user.getOffice().getId()==null){
 			user.setOffice(UserUtils.getUser().getOffice());
+		}
+		//修改
+		if(StringUtils.isNotBlank(user.getId())){
+			//角色管理-查看用户-删除某角色的用户，此处重新查询新的角色
+			List<Role> roleList = systemService.getUserRole(user);
+			user.setRoleList(roleList);
 		}
 		model.addAttribute("user", user);
 		model.addAttribute("allRoles", systemService.findAllListM(new Role()));
@@ -104,10 +159,18 @@ public class UserController extends BaseController {
 	@RequiresPermissions(value={"sys:user:add","sys:user:edit"},logical=Logical.OR)
 	@RequestMapping(value = "save")
 	public String save(User user, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+		//角色id
+		String roleId = null;
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/user/list?repage";
 		}
+		
+		//从角色管理中管理用户页面传来的角色id
+		if(user !=null && user.getRole() !=null && StringUtils.isNotBlank(user.getRole().getId())){
+			roleId = user.getRole().getId();
+		}
+		
 		// 修正引用赋值问题，不知道为何，Company和Office引用的一个实例地址，修改了一个，另外一个跟着修改。
 		user.setCompany(new Office(request.getParameter("company.id")));
 		user.setOffice(new Office(request.getParameter("office.id")));
@@ -116,11 +179,11 @@ public class UserController extends BaseController {
 			user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
 		}
 		if (!beanValidator(model, user)){
-			return form(user, model);
+			return form(user, model,request);
 		}
 		if (!"true".equals(checkLoginName(user.getOldLoginName(), user.getLoginName()))){
 			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
-			return form(user, model);
+			return form(user, model,request);
 		}
 		// 角色数据有效性验证，过滤不在授权内的角色
 		List<Role> roleList = Lists.newArrayList();
@@ -139,16 +202,29 @@ public class UserController extends BaseController {
 			//UserUtils.getCacheMap().clear();
 		}
 		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
-		return "redirect:" + adminPath + "/sys/user/list?repage";
+		
+		//从角色管理中管理用户页面迁移过来，返回角色管理中管理用户页面
+		if(StringUtils.isNotBlank(roleId)){
+			redirectAttributes.addAttribute("roleId", roleId);
+		    return "redirect:" + adminPath + "/sys/user/roleUserList?repage";
+		//用户管理页面
+		}else{
+			return "redirect:" + adminPath + "/sys/user/list?repage";
+		}
+		
 	}
 	
 	@RequiresPermissions(value={"sys:user:frozen","sys:user:unfrozen"},logical=Logical.OR)
 	@RequestMapping(value = "updateLoginFlag")
-	public String updateLoginFlag(User user, RedirectAttributes redirectAttributes) {
+	public String updateLoginFlag(User user, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/user/list?repage";
 		}
+		
+		//从角色管理中管理用户页面传来的角色id
+		String roleId=request.getParameter("roleId");
+		
 		String flagName="";
 		if(user.getLoginFlag().equals(FLAG_FROM_JSP_UNFROZEN)){
 			user.setLoginFlag(LOGIN_FLAG_UNFROZEN);
@@ -163,12 +239,22 @@ public class UserController extends BaseController {
 			systemService.updateUserLoginFlag(user);
 			addMessage(redirectAttributes, flagName+"用户成功");
 		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
+		//从角色管理中管理用户页面迁移过来，返回角色管理中管理用户页面
+		if(StringUtils.isNotBlank(roleId)){
+			redirectAttributes.addAttribute("roleId", roleId);
+		    return "redirect:" + adminPath + "/sys/user/roleUserList?repage";
+		}else{
+			return "redirect:" + adminPath + "/sys/user/list?repage";
+		}
 	}
 	
 	@RequiresPermissions("sys:user:delete")
 	@RequestMapping(value = "delete")
-	public String delete(User user, RedirectAttributes redirectAttributes) {
+	public String delete(User user, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		
+		//从角色管理中管理用户页面传来的角色id
+		String roleId=request.getParameter("roleId");
+				
 		if(Global.isDemoMode()){
 			addMessage(redirectAttributes, "演示模式，不允许操作！");
 			return "redirect:" + adminPath + "/sys/user/list?repage";
@@ -178,10 +264,46 @@ public class UserController extends BaseController {
 		}else if (User.isAdmin(user.getId())){
 			addMessage(redirectAttributes, "删除用户失败, 不允许删除超级管理员用户");
 		}else{
-			systemService.deleteUser(user);
+			if(StringUtils.isNotBlank(roleId)){
+				Role role = new Role();
+				role.setId(roleId);
+				user.setRole(role);
+				systemService.deleteRoleUser(user);
+			}else{
+				systemService.deleteUser(user);
+			}			
 			addMessage(redirectAttributes, "删除用户成功");
 		}
-		return "redirect:" + adminPath + "/sys/user/list?repage";
+		//从角色管理中管理用户页面迁移过来，返回角色管理中管理用户页面
+		if(StringUtils.isNotBlank(roleId)){
+			redirectAttributes.addAttribute("roleId", roleId);
+			return "redirect:" + adminPath + "/sys/user/roleUserList?repage";
+		}else{
+			return "redirect:" + adminPath + "/sys/user/list?repage";
+		}
+		
+	}
+	
+	/**
+	 * 判断绑定的APP公号是否在APP已注册账号
+	 * @param appUserPhone
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "checkAppUserPhone")
+	public String checkAppUserPhone(String appUserPhone) {
+	
+		if (appUserPhone !=null){
+			Account account = new Account();
+			account.setPhoneNum(appUserPhone);
+			//查询APP公号账号的数量
+			int appUserPhoneCount = accountService.CountPhoneNum(account);
+			if(appUserPhoneCount == 0){
+				return "false";
+			}			
+		}
+		
+		return "true";
 	}
 	
 	/**

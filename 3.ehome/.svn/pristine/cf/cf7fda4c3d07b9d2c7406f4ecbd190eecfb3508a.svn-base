@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderGoodsDao">
+    
+	<sql id="orderGoodsColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.order_no AS "orderNo",
+		a.type AS "type",
+		a.module_manage_id AS "moduleManageId",
+		a.prod_type AS "prodType",
+		a.sum_money AS "sumMoney",
+		a.benefit_money AS "benefitMoney",
+		a.coupon_money AS "couponMoney",
+		a.village_info_id AS "villageInfoId",
+		a.pay_money AS "payMoney",
+		a.order_state AS "orderState",
+		a.check_order_state AS "checkOrderState",
+		str_to_date(a.check_time,'%Y-%m-%d %H:%i') AS "checkTime",
+		a.check_state AS "checkState",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.account_phone_number AS "accountPhoneNumber",
+		a.account_msg AS "accountMsg",
+		a.pay_type AS "payType",
+		a.pay_org AS "payOrg",
+		str_to_date(a.pay_time,'%Y-%m-%d %H:%i') AS "payTime",
+		a.pay_user_name AS "payUserName",
+		a.pay_state AS "payState",
+		a.address_type AS "addressType",
+		a.address AS "address",
+		a.address_state AS "addressState",
+		a.address_money AS "addressMoney",
+		a.address_benefit AS "addressBenefit",
+		str_to_date(a.over_time,'%Y-%m-%d %H:%i') AS "overTime",
+		a.transaction_id AS "transactionID",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderGoodsJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+			<if test="orderState != null and orderState != ''">
+				AND a.order_state = #{orderState}
+			</if>
+			<if test="payState != null and payState != ''">
+				AND a.pay_state = #{payState}
+			</if>
+			<if test="addressType != null and addressType != ''">
+				AND a.address_type = #{addressType}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != ''">
+				AND a.create_date <![CDATA[>= ]]> #{beginCreateDate}
+			</if>
+            <if test="endCreateDate != null and endCreateDate != ''">
+                AND a.create_date <![CDATA[< ]]> DATE_ADD(#{endCreateDate},INTERVAL 1 DAY)
+            </if>
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+            <if test="prodType != null and prodType != ''">
+                AND a.prod_type = #{prodType}
+            </if>
+            <if test="pending == 1">
+                AND a.order_state != 3 AND a.order_state != 4
+            </if>
+            <if test="isCancel == 1">
+                AND a.order_state != 4
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllListCount" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag ='0'
+				AND YEARWEEK(date_format(a.create_date,'%Y-%m-%d')) = YEARWEEK(now())
+				AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		</where>
+	</select>
+
+	<select id="findAllListMoney" resultType="java.lang.Double">
+		SELECT
+			IFNULL(sum(a.sum_money),0.0)
+		FROM order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = '0'
+				AND YEARWEEK(date_format(a.create_date,'%Y-%m-%d')) = YEARWEEK(now())
+				AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		</where>
+	</select>
+	
+	<select id="check"  parameterType="Map" resultType="int">
+	    SELECT COUNT(1)
+	      FROM order_goods a
+	    <where>
+	        a.id = #{id}
+	    AND a.update_date = str_to_date(#{updateDate},'%Y-%m-%d %T')
+	    </where>
+	</select>
+	<insert id="insert">
+		INSERT INTO order_goods(
+			id,
+			order_no,
+			business_info_id,
+			type,
+			module_manage_id,
+			prod_type,
+			sum_money,
+			benefit_money,
+			coupon_money,
+			pay_money,
+			order_state,
+			check_order_state,
+			check_time,
+			check_state,
+			account_id,
+			account_name,
+			account_phone_number,
+			pay_type,
+			pay_org,
+			pay_time,
+			pay_user_name,
+			pay_state,
+			address_type,
+			address,
+			address_state,
+			address_money,
+			address_benefit,
+			over_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{businessInfoId},
+			#{type},
+			#{moduleManageId},
+			#{prodType},
+			#{sumMoney},
+			#{benefitMoney},
+			#{couponMoney},
+			#{payMoney},
+			#{orderState},
+			#{checkOrderState},
+			#{checkTime},
+			#{checkState},
+			#{accountId},
+			#{accountName},
+			#{accountPhoneNumber},
+			#{payType},
+			#{payOrg},
+			#{payTime},
+			#{payUserName},
+			#{payState},
+			#{addressType},
+			#{address},
+			#{addressState},
+			#{addressMoney},
+			#{addressBenefit},
+			#{overTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_goods SET 	
+			order_no = #{orderNo},
+			type = #{type},
+			module_manage_id = #{moduleManageId},
+			prod_type = #{prodType},
+			sum_money = #{sumMoney},
+			benefit_money = #{benefitMoney},
+			coupon_money = #{couponMoney},
+			pay_money = #{payMoney},
+			order_state = #{orderState},
+			check_order_state = #{checkOrderState},
+			check_time = #{checkTime},
+			check_state = #{checkState},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			account_phone_number = #{accountPhoneNumber},
+			pay_type = #{payType},
+			pay_org = #{payOrg},
+			pay_time = #{payTime},
+			pay_user_name = #{payUserName},
+			pay_state = #{payState},
+			address_type = #{addressType},
+			address = #{address},
+			address_state = #{addressState},
+			address_money = #{addressMoney},
+			address_benefit = #{addressBenefit},
+			over_time = #{overTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+    <update id="complete">
+        UPDATE order_goods SET 
+            order_state = "3",
+            over_time = #{overTime},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+	
+	<update id="accept">
+        UPDATE order_goods SET 
+            order_state = "1",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+    
+    <update id="cancel">
+        UPDATE order_goods SET 
+            order_state = "4",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+    
+    <update id="dispatching">
+        UPDATE order_goods SET 
+            order_state = "2",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+</mapper>

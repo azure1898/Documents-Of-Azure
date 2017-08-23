@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.speak.dao.SocialSpeakDao">
+    
+	<sql id="socialSpeakColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.tag AS "tag",
+		a.content AS "content",
+		a.visrange AS "visrange",
+		a.forbitcomment AS "forbitcomment",
+		a.forbidforward AS "forbidforward",
+		a.createtime AS "createtime",
+		a.istop AS "istop",
+		a.readnum AS "readnum",
+		a.plateid AS "plateid",
+		a.villageinfoid AS "villageinfoid",
+		a.images AS "images",
+		a.delflag AS "delflag",
+		a.isspeak AS "isspeak",
+        a.reason AS "reason",
+        a.fid AS "fid",
+        a.rootid AS "rootid",
+        a.toptime AS "toptime",
+		a.noticeid AS "noticeid",
+		a.title AS "title",
+		a.summary AS "summary",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="socialSpeakJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>, vi.village_name AS villageinfoname, 
+			(select count(*) from social_speak ssf where ssf.rootid = a.id) as sumforward,
+			(select count(*) from social_comment sc where sc.speakid = a.id) as sumcomment,
+			(select acc.nickname from account acc where acc.id = a.userid) as ausername,
+			(select count(*) from account ac, sys_user su where ac.phone_num = su.app_user_phone and ac.id = a.userid) as source 
+		FROM village_info vi 
+			RIGHT JOIN social_speak a on vi.id = a.villageinfoid 
+		<include refid="socialSpeakJoins"/>
+		<where>
+			1=1
+			<if test="content != null and content != ''">
+				AND a.content like 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if> 
+			</if>
+			<if test="beginCreatetime != null and endCreatetime != null and beginCreatetime != '' and endCreatetime != ''">
+				AND a.createtime BETWEEN #{beginCreatetime} AND #{endCreatetime}
+			</if>
+			<if test="addrpro != null and addrpro != ''">
+				AND a.villageinfoid IN(
+					SELECT c.id FROM village_info c WHERE c.addr_pro =  #{addrpro}
+				) 
+			</if>
+			<if test="addrcity != null and addrcity != ''">
+				AND a.villageinfoid IN(
+					SELECT d.id FROM village_info d WHERE d.addr_city =  #{addrcity}
+				) 
+			</if>
+			<if test="villageinfoid != null and villageinfoid != ''">
+				AND a.villageinfoid = #{villageInfoId} 
+			</if>
+			<if test="delflagId!=null and delflagId != ''">
+				AND a.delflag = #{delflagId} 
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id} 
+			</if>
+			AND a.isspeak = 1
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY #{page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.istop desc, a.toptime desc, a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findById" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>, vi.village_name AS "villageinfoname", ss.subname AS "subjectname", ss.id AS "subjectid",
+			(select count(*) from social_speak ssf where ssf.rootid = a.id) as sumforward,
+			(select count(*) from social_comment sc where sc.speakId = a.id) as sumcomment,
+			(select ac.nickname from account ac where ac.id = a.userid) as username
+		FROM village_info vi 
+			RIGHT JOIN social_speak a on vi.id = a.villageinfoid 
+			LEFT JOIN social_sub_relation ssr on a.id=ssr.speakId 
+			LEFT JOIN social_subject ss ON ssr.subjectId = ss.id 
+		<include refid="socialSpeakJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findAllList" resultType="SocialSpeak">
+		SELECT 
+			<include refid="socialSpeakColumns"/>
+		FROM social_speak a
+		<include refid="socialSpeakJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY #{page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_speak(
+			id,
+			userid,
+			tag,
+			content,
+			visrange,
+			forbitcomment,
+			forbidforward,
+			createtime,
+			istop,
+			toptime,
+			readnum,
+			plateid,
+			villageinfoid,
+			images,
+			delflag,
+			isspeak,
+			reason,
+			fid,
+			rootid,
+			noticeid,
+			title,
+			summary,
+			remarks
+		) VALUES (
+			#{id},
+			#{userid},
+			#{tag},
+			#{content},
+			#{visrange},
+			#{forbitcomment},
+			#{forbidforward},
+			#{createtime},
+			#{istop},
+			#{toptime},
+			#{readnum},
+			#{plateid},
+			#{villageinfoid},
+			#{images},
+			#{delflag},
+			#{isspeak},
+			#{reason},
+			#{fid},
+			#{rootid},
+			#{noticeid},
+			#{title},
+			#{summary},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_speak SET 	
+			forbitcomment = #{forbitcomment},
+			forbidforward = #{forbidforward},
+			createtime = #{createtime},
+			istop = #{istop},
+			readnum = #{readnum},
+			villageinfoid = #{villageinfoid},
+			images = #{images},
+			delflag = #{delflag},
+			isspeak = #{isspeak},
+			reason = #{reason},
+			fid = #{fid},
+			rootid = #{rootid},
+			noticeid = #{noticeid},
+			title = #{title},
+			summary = #{summary},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_speak
+		WHERE id = #{id}
+	</update>
+	
+	<update id="changeDelFlag">
+		UPDATE social_speak SET
+			delflag = #{delflag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="changeTop">
+		UPDATE social_speak SET
+			istop = #{istop},
+			toptime = #{toptime}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findForwardsByRootId" resultType="SocialSpeak">
+	    SELECT 
+	        <include refid="socialSpeakColumns"/>, ac.nickname AS username
+	    FROM social_speak a, account ac
+	    WHERE a.rootid = #{rootId} AND a.userid = ac.id AND a.delflag = 1
+	</select>
+	
+	<select id="findUser" resultType="SocialSpeak">
+		SELECT
+			a.nickname as ausername,
+			a.id as auserid
+		FROM account a, sys_user su
+		WHERE a.phone_num = su.app_user_phone and su.id=#{userId}
+	</select>
+	
+</mapper>

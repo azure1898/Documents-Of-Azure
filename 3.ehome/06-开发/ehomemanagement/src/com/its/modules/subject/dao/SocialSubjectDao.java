@@ -53,5 +53,14 @@ public interface SocialSubjectDao extends CrudDao<SocialSubject> {
 	 * @return
 	 */
 	public List<SocialSubject> findSubListBySpeakId(@Param("speakId") String speakId);
+
+	/**
+	 * @Description：根据话题名称查询话题
+	 * @Author：王萌萌
+	 * @Date：2017年8月23日
+	 * @param tag
+	 * @return
+	 */
+	public SocialSubject findByTag(@Param("tag") String tag);
 	
 }

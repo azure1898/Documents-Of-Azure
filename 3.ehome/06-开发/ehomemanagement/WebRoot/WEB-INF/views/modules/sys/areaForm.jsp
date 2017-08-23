@@ -79,13 +79,11 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-	    <li style="height:30px"> 基础资料>
-           <span><a href="${ctx}/sys/area/">城市管理> </a></span><c:if test="${editFlag==1}">添加下级区域</c:if><c:if test="${editFlag!=1}">${not empty area.id?'修改':'添加'}区域</c:if>
-        </li>
-		<%--<li><a href="${ctx}/sys/area/">区域列表</a></li>
-		<li class="active"><a href="form?id=${area.id}&parent.id=${area.parent.id}">区域<shiro:hasPermission name="sys:area:edit">${not empty area.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="sys:area:edit">查看</shiro:lacksPermission></a></li> --%>
-	</ul><br/>
+    <ul class="nav nav-tabs">
+      <li>
+         <span class="common-breadcrumb">基础资料 &nbsp;>&nbsp;<a href="${ctx}/sys/area/">城市管理&nbsp;>&nbsp;</a><c:if test="${editFlag==1}">添加下级区域</c:if><c:if test="${editFlag!=1}">${not empty area.id?'编辑':'添加'}区域</c:if></span>
+      </li>
+    </ul>
 	<form:form id="inputForm" modelAttribute="area" action="${ctx}/sys/area/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
@@ -107,7 +105,7 @@
 		</div>
 		<div class="control-group">
 		    
-			<label class="control-label" ><span class="help-inline"><font color="red">*</font></span>&nbsp;&nbsp;&nbsp;区域名称:</label>
+			<label class="control-label" ><span class="help-inline"><font color="red">*</font></span>区域名称:</label>
 			<div class="controls">			    
 				<form:input path="name" htmlEscape="false" maxlength="50" class="required"/>				
 			</div>
@@ -119,9 +117,9 @@
 			</div>
 		</div>--%>
 		<div class="control-group">
-			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>&nbsp;&nbsp;&nbsp;区域类型:</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>区域类型:</label>
 			<div class="controls">
-				<form:select path="type" id="type" class="input-medium required">
+				<form:select path="type" id="type" class="input-large required" style="width:220px;">
 					<form:options items="${fns:getDictList('sys_area_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>

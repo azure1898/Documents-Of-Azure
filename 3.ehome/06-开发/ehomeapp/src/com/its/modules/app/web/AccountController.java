@@ -37,9 +37,11 @@ import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
 import com.its.modules.app.entity.BusinessInfo;
 import com.its.modules.app.entity.BusinessSales;
+import com.its.modules.app.entity.GoodsSkuPrice;
 import com.its.modules.app.service.AccountService;
 import com.its.modules.app.service.BusinessInfoService;
 import com.its.modules.app.service.GoodsInfoService;
+import com.its.modules.app.service.GoodsSkuPriceService;
 import com.its.modules.app.service.ShoppingCartService;
 import com.its.modules.app.service.VerifyCodeRecordService;
 
@@ -70,6 +72,9 @@ public class AccountController extends BaseController {
 
 	@Autowired
 	private BusinessInfoService businessInfoService;
+
+	@Autowired
+	private GoodsSkuPriceService goodsSkuPriceService;
 
 	/**
 	 * 获取个人资料
@@ -574,8 +579,9 @@ public class AccountController extends BaseController {
 				commodity.put("commodityImage", goodsInfoService.getGoodsPicUrl(goodsInfoBean, request));
 				commodity.put("specificationID", StringUtils.isNotBlank(goodsInfoBean.getGoodsSkuPriceID()) ? goodsInfoBean.getGoodsSkuPriceID() : "");
 				if (StringUtils.isNotBlank(goodsInfoBean.getGoodsSkuPriceID())) {
-					commodity.put("originalPrice", ValidateUtil.validateDouble(goodsInfoBean.getSkuBasePrice()));
-					commodity.put("discountedPrice", ValidateUtil.validateDouble(goodsInfoBean.getSkuBenefitPrice()));
+					GoodsSkuPrice goodsSkuPrice = goodsSkuPriceService.get(goodsInfoBean.getGoodsSkuPriceID());
+					commodity.put("originalPrice", ValidateUtil.validateDouble(goodsSkuPrice.getBasePrice()));
+					commodity.put("discountedPrice", ValidateUtil.validateDouble(goodsSkuPrice.getBenefitPrice()));
 				} else {
 					commodity.put("originalPrice", ValidateUtil.validateDouble(goodsInfoBean.getBasePrice()));
 					commodity.put("discountedPrice", ValidateUtil.validateDouble(goodsInfoBean.getBenefitPrice()));

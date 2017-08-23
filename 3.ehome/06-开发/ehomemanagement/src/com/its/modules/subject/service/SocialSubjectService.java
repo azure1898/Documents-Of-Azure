@@ -97,4 +97,14 @@ public class SocialSubjectService extends CrudService<SocialSubjectDao, SocialSu
 		return socialSubjectDao.findSubListBySpeakId(speakId);
 	}
 
+	/**
+	 * @Description：根据话题名称查询话题
+	 * @Author：王萌萌
+	 * @Date：2017年8月23日
+	 * @param tag
+	 */
+	public SocialSubject findByTag(String tag) {
+		return socialSubjectDao.findByTag(tag);
+	}
+
 }

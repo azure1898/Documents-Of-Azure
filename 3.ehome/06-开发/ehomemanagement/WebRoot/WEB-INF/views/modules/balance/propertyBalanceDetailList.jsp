@@ -19,6 +19,10 @@
                 });
                 top.$('.jbox-body .jbox-icon').css('top', '55px');
             });
+            $("#btnSubmit").click(function() {
+                $("#searchForm").prop("action", "${ctx}/balance/propertyBalanceDetail/");
+                $("#searchForm").submit();
+            });
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -65,7 +69,7 @@
                         itemLabel="label" itemValue="value" htmlEscape="false" />
                 </form:select></li>
             <li class="btns"><input id="btnSubmit" class="btn btn-primary"
-                type="submit" value="查询" /></li>
+                type="button" value="查询" /></li>
             <li style="float: right"><a class="btn btn-primary"
                 href="${ctx}/balance/propertyBalance/"><i
                     class="icon-eye-open icon-custom"></i> 返回</a></li>

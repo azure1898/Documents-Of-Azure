@@ -14,10 +14,9 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-        <li style="height:30px"><span><a href="${ctx}/coupon/groupPurchase/">优惠/验券管理 </a>
-        > 验券
-        </span>
+    <ul class="nav nav-tabs">
+        <li>
+           <span class="common-breadcrumb">优惠/验券管理&nbsp;>&nbsp;验券</span>
         </li>
     </ul>
     <form:form id="searchForm" modelAttribute="orderGroupPurcList" action="${ctx}/coupon/testCoupon/" method="post" class="breadcrumb form-search" style="width:700px;">		

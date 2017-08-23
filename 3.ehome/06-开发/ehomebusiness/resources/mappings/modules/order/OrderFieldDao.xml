@@ -37,11 +37,7 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag",
-		str_to_date(b.appointment_time,'%Y-%m-%d %H:%i') AS "orderFieldList.appointmentTime",
-		str_to_date(b.start_time,'%Y-%m-%d %H:%i') AS "orderFieldList.startTime",
-		str_to_date(b.end_time,'%Y-%m-%d %H:%i') AS "orderFieldList.endTime",
-        (b.end_time <![CDATA[ <= ]]> now()) AS "outTimeState"
+		a.del_flag AS "delFlag"
 	</sql>
 	
 	<sql id="orderFieldJoins">
@@ -52,7 +48,6 @@
 		SELECT 
 			<include refid="orderFieldColumns"/>
 		FROM order_field a
-		<include refid="orderFieldJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
@@ -60,7 +55,6 @@
 		SELECT 
 			<include refid="orderFieldColumns"/>
 		FROM order_field a
-		<include refid="orderFieldJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="orderNo != null and orderNo != ''">
@@ -104,6 +98,9 @@
             </if>
              <if test="pending == 1">
                 AND a.order_state != 1 AND a.order_state != 2
+            </if>
+             <if test="isCancel == 1">
+                AND a.order_state != 2
             </if>
 		</where>
 		<choose>

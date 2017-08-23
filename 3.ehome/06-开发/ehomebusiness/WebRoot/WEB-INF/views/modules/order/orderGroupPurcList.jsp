@@ -99,9 +99,9 @@
                 </form:select>
             </li>
             <form:hidden path="searchFlg" value="1"/>
-            <li class="btns"><i class="icon-search icon-white"></i>
-            <input id="btnSubmit" class="commonsmallbtn" type="submit" style="width: 60px;height: 30px;font-size: 14px;"  onclick="changeAction('0')" value="查询"/></li>
-            <li class="btns"><input id="btnExport" class="commonbtn" style="width: 60px;" type="submit"  onclick="changeAction('1')" value="导出"/></li>
+            <li class="btns"> <input id="btnSubmit" class="commonsmallbtn" type="submit" style="width: 60px;height: 30px;font-size: 14px;"  onclick="changeAction('0')" value="查询"/></li>
+           	<li class="btns"> <input class="commonsmallbtn" type="button" style="width: 60px;height: 30px;font-size: 14px;" onclick="formReset('#searchForm')" value="重置"/></li>
+            <li class="btns"> <input id="btnExport" class="commonbtn" style="width: 60px;" type="submit"  onclick="changeAction('1')" value="导出"/></li>
         </ul>
     </form:form>
     <sys:message content="${message}"/>
@@ -149,7 +149,10 @@
                     <span>下单：<fmt:formatDate value="${orderGroupPurc.createDate}" pattern="yyyy-MM-dd HH:mm"/></span><br/>
                     </c:if>
                     <c:if test="${orderGroupPurc.payTime !=null && orderGroupPurc.payTime !=''}">
-                    <span>支付：<fmt:formatDate value="${orderGroupPurc.payTime}" pattern="yyyy-MM-dd HH:mm"/></span>
+                    <span>支付：<fmt:formatDate value="${orderGroupPurc.payTime}" pattern="yyyy-MM-dd HH:mm"/></span><br/>
+                    </c:if>
+                     <c:if test="${orderGroupPurc.orderState=='1' && orderGroupPurc.consumeTime !=null && orderGroupPurc.consumeTime !=''}">
+                    <span>消费：<fmt:formatDate value="${orderGroupPurc.consumeTime}" pattern="yyyy-MM-dd HH:mm"/></span>
                     </c:if>
                 </td>
             </tr>

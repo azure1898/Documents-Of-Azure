@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.setup.dao.BusinessSalesDao">
+    
+    <sql id="businessSalesColumns">
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.money AS "money",
+        a.benefit_money AS "benefitMoney",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+    
+    <sql id="businessSalesJoins">
+    </sql>
+    
+    <select id="get" resultType="BusinessSales">
+        SELECT 
+            <include refid="businessSalesColumns"/>
+        FROM business_sales a
+        <include refid="businessSalesJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="BusinessSales">
+        SELECT 
+            <include refid="businessSalesColumns"/>
+        FROM business_sales a
+        <include refid="businessSalesJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.money ASC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="BusinessSales">
+        SELECT 
+            <include refid="businessSalesColumns"/>
+        FROM business_sales a
+        <include refid="businessSalesJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO business_sales(
+            id,
+            business_info_id,
+            money,
+            benefit_money,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{businessInfoId},
+            #{money},
+            #{benefitMoney},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE business_sales SET     
+            business_info_id = #{businessInfoId},
+            money = #{money},
+            benefit_money = #{benefitMoney},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    <!--通过商家Id删除信息  -->
+    <update id="delete">
+        DELETE FROM business_sales WHERE business_info_id = #{businessInfoId}
+    </update>
+    
+</mapper>

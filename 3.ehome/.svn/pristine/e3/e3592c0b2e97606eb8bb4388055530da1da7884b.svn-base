@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection"/>
+    <title>帮助说明</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css"/>
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+</head>
+
+<body>
+<header>
+    <p>
+        <span id="demo"></span>
+        <span>帮助说明</span>
+    </p>
+</header>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelContent">
+                1.业主如何绑定房间？
+            </p>
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelContent">
+                2.业主手机号变更如何绑定房间？
+            </p>
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelContent">
+                3.家属如何绑定房间？
+            </p>
+        </div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelContent">
+                4.业主如何为家属授权房间？
+            </p>
+        </div>
+    </a>
+</div>
+<div class="weui-footer">
+    <p class="weui-footer__text">客服电话 58965120</p>
+</div>
+
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

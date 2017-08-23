@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection"/>
+    <title>使用协议</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css"/>
+    <!--<link rel="stylesheet" href="css/iconfont/iconfont.css">-->
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+    <style>
+        .txtInd{
+            text-indent: 1.6em;
+        }
+        .pdl{
+            padding-left:2.5em;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <p>
+        <span id="demo"></span>
+        <span>用户使用协议</span>
+    </p>
+</header>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">一、通用条款</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、广州普及网络科技有限公司开发的哈奇(Hachi)软件同意按照本协议的规定及其不时发布的操作规则提供基于互联网以及移动网的相关服务（以下称“软件服务”）。服务使用人（包含业主、物业、商家等，以下称“用户”）同意本协议的全部条款。用户一旦签订本协议或开始使用哈奇(Hachi)的相关服务，即表示用户完全理解并接受本协议项下的全部条款。</p>
+                <p class="txtInd">2、当用户使用哈奇(Hachi)平台的各项功能时，用户应遵守哈奇(Hachi)公布的与该功能相关的指引和规则。</p>
+                <p class="txtInd">3、本协议许可的是软件使用权，许可使用的哈奇(Hachi)软件产品版权属广州普及网络科技有限公司所有，并受《中华人民共和国著作权法》和其他有关法律、法规的保护。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">二、免责声明 </p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、用户同意，对于用户以任何方式从哈奇(Hachi)所获得的任何内容的信息（包括但不限于广告、商户信息、链接等），服务方不保证其准确性、完整性、可靠性；对于用户因本软件上的内容信息而购买、获取的任何产品、服务、信息或资料，哈奇(Hachi)不承担任何责任。其使用哈奇(Hachi)软件服务所存在的风险将完全由其自己承担；因其使用哈奇(Hachi)软件服务而产生的一切后果也由其自己承担，哈奇(Hachi)对用户不承担任何责任。</p>
+                <p class="txtInd">2、由于用户需求的多样化，哈奇(Hachi)无法担保其提供的软件服务一定能满足用户的要求。哈奇(Hachi)亦无法对软件服务的及时性、安全性和准确性作出保证或承诺。哈奇(Hachi)可根据实际情况随时调整软件平台上的服务内容、服务种类及服务形式。对于因平台调整给用户或任何第三方造成的负面影响或损失，哈奇(Hachi)不承担任何责任。</p>
+                <p class="txtInd">3、哈奇(Hachi)仅提供相关的软件服务，除此之外与相关软件服务有关的设备（如个人电脑、手机、及其他与接入互联网或移动网有关的装置）及所需的费用（如为接入互联网而支付的电话费及上网费、为使用移动网而支付的手机费）均应由用户自行负担。哈奇(Hachi)不保证为用户便利而设置的外部链接（如购物软件链接、商家官网链接等）的准确性、完整性和可读性，同时，对于该等外部链接指向的不由哈奇(Hachi)实际控制的任何网页上的内容，哈奇(Hachi)不承担任何责任。</p>
+                <p class="txtInd">4、用户同意，对于哈奇(Hachi)向用户提供的包括但不限于下列产品或者服务的质量缺陷本身及其引发的任何损失，哈奇(Hachi)无需承担任何责任：</p>
+                    <p class="pdl">4.1 哈奇(Hachi)向用户免费提供的各项软件服务；</p>
+                    <p class="pdl">4.2 哈奇(Hachi)向用户赠送的任何产品或者服务；</p>
+                    <p class="pdl">4.3 哈奇(Hachi)向收费软件服务用户附赠的各种产品或者服务；</p>
+                    <p class="pdl">4.4 哈奇(Hachi)向用户提供的其他免责服务。</p>
+                <p class="txtInd">5、用户在使用哈奇(Hachi)软件服务过程中，必须遵循以下原则：</p>
+                    <p class="pdl">5.1 遵守中国有关的法律和法规；</p>
+                    <p class="pdl">5.2 遵守所有与软件服务有关的软件协议、规定和程序；不得侵犯其他任何第三方的专利权、著作权、商标权、名誉权、隐私权或其他任何合法权益；</p>
+                    <p class="pdl">5.3不得为任何非法目的而使用哈奇(Hachi)软件服务；不得利用哈奇(Hachi)提供的软件服务上传、展示或传播任何虚假的、骚扰性的、中伤他人的、辱骂性的、恐吓性的、庸俗淫秽、暴力的或其他任何违反国家法律法规规定的信息资料；</p>
+                    <p class="pdl">5.4不得以任何形式使用哈奇(Hachi)软件服务侵犯任何人的商业利益，包括并不限于发布非经哈奇(Hachi)许可的商业广告；不得利用哈奇(Hachi)软件服务进行任何可能对互联网或移动网正常运转造成不利影响的行为；</p>
+                    <p class="pdl">5.5不得利用哈奇(Hachi)软件服务系统进行任何不利于哈奇(Hachi)的行为；在任何情况下，用户上传到哈奇(Hachi)的任何信息，不得违反法律法规的规定，或侵犯任何第三方的在先权利或其他合法权益。</p>
+                <p class="txtInd">6、对于因不可抗力或哈奇(Hachi)不能控制的原因造成的软件服务中断或其它缺陷，哈奇(Hachi)不承担任何责任。</p>
+                <p class="txtInd">7、用户通过哈奇(Hachi)软件与第三方进行任何形式的交易行为。用户因前述交易行为与第三方发生纠纷的，应由用户及第三方自行解决，哈奇(Hachi)对此不承担任何责任。</p>
+                <p class="txtInd">8、对于用户上传到哈奇(Hachi)平台上的任何内容，用户授予哈奇(Hachi)在全世界范围内具有免费的、永久的、不可撤销的、非独家的许可以及再许可的权利，以使用、复制、修改、改编、出版、翻译、据以创作衍生作品、传播、表演和展示此等内容（整体或部分），和/或将此等内容编入当前已知的或以后开发的其他任何形式的作品、媒体或技术中。任何其他用户或软件需要转载该作品的，必须征得原文作者授权。</p>
+                <p class="txtInd">9、哈奇(Hachi)鼓励用户充分利用哈奇(Hachi)平台张贴并共享自己的信息。用户可以张贴从哈奇(Hachi)个人主页或其他软件复制的图片、文字等内容，但这些内容必须位于公共领域内，或者用户自身拥有这些内容的合法使用权。用户对自己向哈奇(Hachi)平台上载、展示或传播的内容承担全部法律责任。未经版权人许可，用户不得在哈奇(Hachi)平台上张贴任何受版权保护的内容。用户对于其创作并在哈奇(Hachi)上发布的合法内容依法享有著作权及相关权利。</p>
+                <p class="txtInd">10、哈奇(Hachi)针对某些特定的哈奇(Hachi)软件服务的使用通过各种方式（包括但不限于网页公告、站内信、电子邮件、短信提醒等）做出的任何声明、通知、警示等内容视为本协议的一部分，用户如使用该等哈奇(Hachi)软件服务，视为用户同意该等声明、通知、警示的内容。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">三、知识产权</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、哈奇（Hachi）提供的软件服务中包含的任何文本、图片、图形、音频和/或视频资料，均受版权、商标和/或其它财产所有权法律的保护。未经相关权利人同意，上述资料均不得在任何媒体直接或间接发布、播放、出于播放或发布目的而改写或再发行，或者被用于其他任何商业目的。所有这些资料或资料的任何部分仅可作为私人和非商业用途而保存在某台计算机内。哈奇（Hachi）不就由上述资料产生或在传送或递交全部或部分上述资料过程中产生的延误、不准确、错误和遗漏或由此产生的任何损失，向用户或者任何第三方承担责任。</p>
+                <p class="txtInd">2、哈奇（Hachi）自身在平台上制作、发布、传播的信息内容（包括文字、图片、网页版式设计、软件栏目等），以及哈奇（Hachi）软件的专有内容、原创内容和其他通过授权取得的独占或独家内容，其版权归哈奇（Hachi）所有，非经哈奇（Hachi）许可，任何用户或者第三方不得复制、修改或者转载该内容，或者将其用于任何商业目的。</p>
+                <p class="txtInd">3、哈奇（Hachi）为提供软件服务而使用的任何软件（包括但不限于软件中所含的任何图象、照片、动画、录像、录音、音乐、文字和附加程序、随附的帮助材料）的一切权利均属于该软件的著作权人，未经该软件的著作权人许可，用户不得对该软件进行反向工程、反向编译或反汇编。</p>
+                <p class="txtInd">4、“哈奇（Hachi）”为哈奇（Hachi）的商标，未经哈奇（Hachi）的书面授权，任何用户或者第三方不得擅自使用，或以此牟取任何商业利益。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">四、隐私保护</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、关于哈奇（Hachi）的隐私保护政策，哈奇（Hachi）： 我们不会向任何第三方发布、分享或出售在本软件收集的访客个人信息。 我们不会寄发垃圾邮件。 </p>
+                <p class="txtInd">2、如果您通过填写线上表格，如反馈意见表、购买表格等，我们将询问并记录您的姓名、电子邮件地址、家庭住址、电话等必须的信息。该信息由您自愿提供。但您提供的信息越详细，越有助于我们提供更好的服务。</p>
+                <p class="txtInd">3、Cookie 是软件服务器发送到您的浏览器并保存在您的硬盘上的小量数据。 所有来访者浏览网页时，我们的网页将在其电脑写入cookie。但cookie绝无可能与任何个人信息相联系，再高级的骇客也不可能从cookie中判断个人信息。</p>
+                <p class="txtInd">4、服务器日志文件和任何其他软件服务器一样，我们也通过服务器日志文件记录IP地址、浏览器版本、访问时间等信息。 </p>
+                <p class="txtInd">5、如果本软件所有权发生变更，如合并、被收购等，通常订阅者和客户资料将作为资产的一部分发生所有权变更。在这种情况下，所有订阅者和客户将得到事先通知。订阅者可以选择不同意将个人资料转移给新的所有者，我们将把订阅者的所有资料从我们的系统中删除。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">五、违约赔偿</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">用户同意保障和维护哈奇（Hachi）及其他用户的利益，如因用户违反有关法律、法规或本协议项下的任何条款而给哈奇（Hachi）或任何其他第三方造成损失，用户同意承担由此造成的损害赔偿责任。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">六、协议修改</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、用户同意哈奇（Hachi）有权随时修改本协议的任何条款，一旦本协议的内容发生变动，哈奇（Hachi）将会直接在哈奇（Hachi）软件上公布修改之后的协议内容，该公布行为视为哈奇（Hachi）已经通知用户修改内容。对本协议的所有改动一经发布即产生法律效力，并适用于改动发布后对本软件的一切访问和使用行为。哈奇（Hachi）也可通过其他适当方式向用户提示修改内容。</p>
+                <p class="txtInd">2、如果不同意哈奇（Hachi）对本协议相关条款所做的修改，用户有权停止使用哈奇（Hachi）的软件服务。如果用户继续使用软件服务，则视为用户接受哈奇（Hachi）对本协议相关条款所做的修改。</p>
+                <p class="txtInd">3、如发生包括但不限于下列任何一种情形的，哈奇（Hachi）有权随时中断或终止向特定用户提供本协议项下的软件服务（包括收费软件服务）而无需对该用户或任何第三方承担任何责任： </p>
+                    <p class="pdl">3.1 该用户提供的个人资料不真实；</p>
+                    <p class="pdl">3.2 该用户违反本协议或者用户违反哈奇（Hachi）的各项使用规则；</p>
+                    <p class="pdl">3.3 该用户在使用收费软件服务时未按规定向哈奇（Hachi）支付相应的服务费；</p>
+                    <p class="pdl">3.4 用户出现的其他行为。</p><p class="pdl">5.5不得利用哈奇(Hachi)软件服务系统进行任何不利于哈奇(Hachi)的行为；在任何情况下，用户上传到哈奇(Hachi)的任何信息，不得违反法律法规的规定，或侵犯任何第三方的在先权利或其他合法权益。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">七、法律管辖</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、本协议的订立、执行和解释及争议的解决均应适用中华人民共和国法律。</p>
+                <p class="txtInd">2、如双方就本协议内容或其执行发生任何争议，双方应尽量友好协商解决；协商不成时，任何一方均可向广州仲裁委员会申请仲裁解决。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">八、其他约定</p>
+            <p class="oneLevelContent">
+                <p class="txtInd">1、如本协议中的任何条款无论因何种原因完全或部分无效或不具有执行力，本协议的其余条款仍有效并且有约束力。</p>
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+</div>
+</div>
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

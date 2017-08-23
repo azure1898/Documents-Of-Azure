@@ -57,6 +57,9 @@
 			<if test="fieldInfoId != null and fieldInfoId != ''">
 				AND a.field_info_id = #{fieldInfoId}
 			</if>
+			<if test="ymd != null and ymd != ''">
+				and DATE_FORMAT(Appointment_Time,'%Y%m%d')=#{ymd}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -190,4 +193,14 @@
 		AND business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
 		 order by field_info_id
 	</select>
+	
+	<update id="deleteAll">
+		 UPDATE field_partition_price SET 
+		 	del_flag='1' 
+		 WHERE Field_Info_ID=#{findInfoId}
+	</update>
+	
+	<update id="taskUpdateState">
+		update field_partition_price set State='2' where <![CDATA[End_Time<NOW()]]> and state='1'
+	</update>
 </mapper>

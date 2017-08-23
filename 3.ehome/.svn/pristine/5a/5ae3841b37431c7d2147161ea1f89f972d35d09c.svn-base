@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>精品团购</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/groupbuy.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="green_back" onclick="javascript :history.go(-1)"></a>
+				精品团购
+			</div>
+			<div class="Boutique_buy_title">
+				<div class="Boutique_buy_title_left" style="border-right:solid 1px #ececec;"><a href="#" v-on:click=changeActivity("first") class="active">团购进行中</a></div>
+				<div class="Boutique_buy_title_left"><a href="#" v-on:click=changeActivity("second")>即将开始</a></div>
+			</div>
+			<div class="Boutique_buy">
+				<div class="Boutique_buy_main"  style="height:auto;" v-for="group in groups" v-if="groups&&groups.length>0">
+					<div class="Boutique_buy_main_tupian" style="position: relative">
+						<a v-bind:href="urlList.detail+group.groupBuyID">
+							<img v-bind:src="group.groupBuyImage">
+							<div class="Boutique_buy_main_qianggou3" v-if="group.groupBuyStatus==1" style="color:white;"><a href="#">即将开始</a></div>
+							<div class="Boutique_buy_main_qianggou" v-if="group.groupBuyStatus==2" style="color:white;"><a href="#">抢购中</a></div>
+							<div class="Boutique_buy_main_qianggou2" v-if="group.groupBuyStatus==3" style="color:white;"><a href="#">已抢光</a></div>
+						</a>
+					</div>
+					<div class="details_title_box" style="border-bottom:none;height:auto; width:100%;position:absolute;bottom: 0px;">
+						<div class="plr10">
+							<div class="details_title" >{{group.groupBuyName}}</div>
+							<div class="mt4 clearfix">
+								<div class="fl">
+									<div class="font_orange font18 fl">{{group.groupBuyPrice|formatDecimal}}</div>
+									<div class="font14 fl ml10 mt4"><del>{{group.marketPrice|formatDecimal}}</del></div>
+								</div>
+								<div class="goods_num fr font14">已售{{group.soldNum}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="Boutique_buy_main " id="second" v-else>暂无团购活动上线</div>
+			</div>
+		</div>
+		<script src="../../js/static/jquery.js"></script>
+		<script src="../../js/static/bootstrap.js"></script>
+		<script src="../../js/static/vue.js"></script>
+		<script src="../../js/static/vue-resource.js"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/groupbuy/modulelist.js"></script>
+	</body>
+
+</html>

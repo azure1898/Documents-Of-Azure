@@ -88,7 +88,14 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-    <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderField/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
     <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
@@ -116,11 +123,13 @@
                 </td>
                 <td>
                     ${orderField.name}
-                    <c:if test="${orderField.orderFieldList != null}">
+                    <c:if test="${orderField.orderFieldList != null && fn:length(orderField.orderFieldList) gt 0}">
                         <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.appointmentTime}" pattern="yyyy年M月d日"/>
-                        <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderField.orderFieldList.endTime}" pattern="HH:mm"/>
+                        <fmt:formatDate value="${orderField.orderFieldList[0].appointmentTime}" pattern="yyyy年M月d日"/>
+                        <c:forEach items="${orderField.orderFieldList}" var="orderFieldList" varStatus="status1">
+                            <br/>
+                            <fmt:formatDate value="${orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderFieldList.endTime}" pattern="HH:mm"/>
+                        </c:forEach>
                     </c:if>
                 </td>
                 <td>
@@ -229,7 +238,14 @@
             <input id="btuElemCancelDown" type="button" class="commonbtn" value="取消" style="width:60px;" data-toggle="modal" data-target="#myModal">
         </c:otherwise>
     </c:choose>
-    <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderField/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
 </body>

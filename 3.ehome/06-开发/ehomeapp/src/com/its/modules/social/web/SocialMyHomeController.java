@@ -21,8 +21,8 @@ import com.alibaba.druid.util.StringUtils;
 import com.its.common.config.Global;
 import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.web.BaseController;
-import com.its.modules.rong.common.RongGlobal;
-import com.its.modules.rong.entity.SocialMsg;
+import com.its.modules.app.entity.Account;
+import com.its.modules.app.service.AccountService;
 import com.its.modules.rong.service.SocialMsgService;
 import com.its.modules.social.bean.SocialPraiseBean;
 import com.its.modules.social.bean.SocialRelationBean;
@@ -60,6 +60,9 @@ public class SocialMyHomeController extends BaseController {
 
 	@Autowired
 	private SocialMsgService socialMsgService;
+	
+	@Autowired
+	private AccountService accountService;
 
 	/**
 	 * @Description：我家首页信息查询
@@ -155,6 +158,14 @@ public class SocialMyHomeController extends BaseController {
 					SocialSpeak root = socialSpeakService.get(sb.getRootid());
 					Map<String, Object> rootMap = new HashMap<String, Object>();
 					rootMap.put("id", root.getId());//发言id
+					rootMap.put("userId", root.getUserid());//发言用户id
+					//根据ID获取用户信息
+					Account account = accountService.get(root.getUserid());
+					if(account!=null){
+						rootMap.put("userName", account.getNickname());//发言用户昵称
+					}else{
+						rootMap.put("userName", "");//发言用户昵称
+					}
 					rootMap.put("noticeId", root.getNoticeid());//公告id
 					rootMap.put("title", root.getTitle());//公告标题
 					rootMap.put("summary", root.getSummary());//公告摘要

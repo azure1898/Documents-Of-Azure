@@ -86,7 +86,7 @@ public class OrderServiceController extends BaseController {
 			toJson.put("message", "用户不存在");
 			return toJson;
 		}
-		ServiceInfo serviceInfo = serviceInfoService.get(serviceID);
+		ServiceInfo serviceInfo = serviceInfoService.getValidateById(serviceID);
 		if (serviceInfo == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "服务不存在");

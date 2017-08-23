@@ -21,27 +21,62 @@ var vm = new Vue({
 			id: 0,
 			name: ""
 		},
+		urlList: {
+			index:"../home/index.html",
+			speechdetail: "../main/speechdetails.html?id=",
+			commentdetail: "../main/commentdetails.html?id=",
+			comments:"../main/comment.html?id=",
+			forward:"../main/forward.html?id=",
+			myspeech:"myspeech.html?id=",
+			mypraise:"mypraise.html?id=",
+			personalpage:"../main/personalpage.html?id="
+		},
 		uploadImageNum:0,//选择照片的数量
 		showPopup: false,//显示隐藏标示
 		textnum:200,//限制字数用
-		atwhos:[]//用于装@对象
-		
-		
-		
+		atwhos:[],//用于装@对象
+		top:"",//向后台传的话题id
+		fd:""//向后台传的朋友id.
 
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
 		this.$nextTick(function(){//在2.0版本中，加mounted的$nextTick方法，才能使用vm
 			this.cartView();
+			this.loademoji();
 		});
 	},
 	
 	methods:{
+	//页面加载时导入emoji表情包
+	    loademoji:function(){
+                var emos = getEmojiList()[0];//此处按需是否生成所有emoji
+	            var html = '<div >常用表情</div><ul>';
+	            for (var j = 0; j < emos.length; j++) {
+	            	if (j<=38) {
+                    var emo = emos[j];
+	                var data = 'data:image/png;base64,' + emo[2];	                
+	                html += "<img style='display: inline;vertical-align: middle;'  id=img"+j.toString()+" src=" + data + "  unicode16=" + emo[1] + " onclick=\"addemoji('img"+j.toString()+"')\"  /></li>";
+	               };
+	            }
+			    var oDiv = document.getElementById("faceid");				
+				oDiv.innerHTML = html;			      			
+		},
+				
+		//点击笑脸图片显示表情
+		faceidshow:function(){			
+			var node=$('#faceid');
+			if(node.is(':hidden')){　　//如果node是隐藏的则显示node元素，否则隐藏
+			    document.getElementById("editable").focus();
+			　　node.show();　
+			}else{
+			　　node.hide();
+			}
+		},		
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
 			this.$http.post(interfaceUrl+"/forward/toForward",{
-				speakId: "ggy001"    //这个发言的地址应该来自上一个页面
+				speakId: getQueryString("id")   //这个发言的地址应该来自上一个页面getQueryString("id")
 			},{emulateJSON: true}).then(function(res){
 				_this.forwardData = res.data;
 			});
@@ -70,24 +105,31 @@ var vm = new Vue({
 //				});
 //				return;
 //			}
+			var topiclists=[];
+			var friend=[];
+			
 			$('#results').html(sHtml);
 			$('#results .atlink').each(function(i, e) {
-				$(e).attr('href', '../main/topiclist.html?id=' + $(e).attr('data-atid'));
+				$(e).attr('href', '../home/topiclist.html?id=' + $(e).attr('data-atid'));
+				topiclists.push($(e).attr('data-atid'));
 			});
 			$('#results .atlinkobj').each(function(i, e) {
-				$(e).attr('href', '../main/personalpage.html?id=' + $(e).attr('data-atid'));
+				$(e).attr('href', '../home/personalpage.html?id=' + $(e).attr('data-atid'));
+				friend.push($(e).attr('data-atid'));
 			})
+			_this.top = topiclists.join()
+  			_this.fd = friend.join()
+           _this.forwardingReason=$('#results').html();
 			
 			this.$http.post(interfaceUrl+"/forward/saveForward",{
-				speakId:"ggy001",  //发言的id 应该来自上一个页面
-//				reason: $('#results').html(),    //当前用户id  
-				isComment:_this.isComment,
+				speakId:getQueryString("id"),  //发言的id 应该来自上一个页面
+				reason:_this.forwardingReason,    //转发是输入的内容 
+				isComment:_this.isComment,//是否同时评论
 				visible: _this.rangeValue.type,         //可见范围
-//				imageUrl:_this.speakData,        //选择图片
+				imageUrl:_this.speakData,        //选择图片
+				toUsersId:_this.fd			//@用户id
 			},{emulateJSON: true}).then(function(res){
-				_this.personalpage = res.data;
-                _this.releaseDetails=_this.personalpage.data
-//				console.log(_this.releasePictures);
+				if(res.data.code==1000){window.location.href=_this.urlList.index}
 			});
 			
 		},

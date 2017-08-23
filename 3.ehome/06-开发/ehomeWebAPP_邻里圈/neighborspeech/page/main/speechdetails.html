@@ -80,20 +80,19 @@
 			<div class="main_box">
 				<div class="fyxq_main">
 					<div class="fyxq_main_l">
-						<div class="fyxq_main_l_img"><img :src="customer.userHeadSrc" width="110" height="110"></div>
+						<div class="fyxq_main_l_img"><img :src="customer.headPicSrc" width="110" height="110"></div>
 						<div class="fyxq_main_l_title">
-							<p>{{customer.userName}}</p>
+							<a :href="urlList.personalpage + customer.userId"><p>{{customer.userName}}</p></a>
 							<p><span>{{customer.createTime}}</span></p>
 						</div>
 					</div>
 					<div class="fyxq_main_r" v-if="customer.isFocus==1"><img src="../../images/xl_icon.png" width="12" height="7" @click="selective()"></div>
-					<div class="fyxq_main_r" v-else><span class="collection_btn" @click="attention(customer)">+关注</span>&nbsp;&nbsp;<span @click="shield()">X</span></div>
+					<div class="fyxq_main_r" v-else><span class="collection_btn" @click="attention(customer)">+关注</span>&nbsp;&nbsp;<span @click="shield(customer)">X</span></div>
 					<div class="clear"></div>
 				</div>
 				<div class="fyxq_main2">
-					<p class="ftc5050">
-						<font class="ftcred">{{customer.subjectName}}</font>{{customer.spContent}}
-						<!--<font class="ftcred" v-for="(obj,index) in customer.friend" :key="index">{{obj.object}}</font>-->
+					<p class="ftc5050" v-html="customer.spContent">
+						<!--<font class="ftcred">{{customer.subjectName}}</font>-->
 					</p>
 				</div>
 				<div class="fyxq_main3">
@@ -102,6 +101,23 @@
 						<div class="clear"></div>
 					</ul>
 				</div>
+				<!--转发别人的发言-->
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="customer.isSpeak==0">
+					<div v-if="customer.rootSpeak.delFlag==1">
+						<div class="fyxq_main_l2_img"><img :src="customer.rootSpeak.images" width="110" height="110"></div>
+						<div class="fyxq_main_l_title2">
+							<p v-if="customer.rootSpeak.noticeId ==''">@{{customer.rootSpeak.userName}}</p>
+							<p v-else>{{customer.rootSpeak.title}}</p>
+							<p><span v-html="customer.rootSpeak.content"></span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+					原发言已被删除
+					</div>
+				</div>
+				<div class="clear"></div>
+				
+				
 			</div>
 			<div class="Boutique_buy_title mt10">
 				<div class="Boutique_buy_title_left"><a href="#" @click="forwardingList()">转发{{customer.spCountFwd}}</a></div>
@@ -115,7 +131,7 @@
 						<div class="fyxq_main_l">
 							<div class="fyxq_main_l_img"><img :src="comment.headPicSrc" width="110" height="110"></div>
 							<div class="fyxq_main_l_title">
-								<p>{{comment.userName}}</p>
+								<a :href="urlList.personalpage + customer.userId"><p>{{comment.userName}}</p></a>
 								<p><span>{{comment.createTime}}</span></p>
 							</div>
 						</div>
@@ -146,7 +162,7 @@
 						<div class="zan_xq">
 							<div class="fyxq_main_l_img"><img :src="praise.headPicSrc" width="110" height="110"></div>
 							<div class="zan_xq_r">
-								<p>{{praise.userName}}</p>
+								<a :href="urlList.personalpage + customer.userId"><p>{{praise.userName}}</p></a>
 							</div>
 						</div>
 
@@ -162,7 +178,7 @@
 						<div class="fyxq_main_l">
 							<div class="fyxq_main_l_img"><img :src="forward.headPicSrc" width="110" height="110"></div>
 							<div class="fyxq_main_l_title">
-								<p>{{forward.userName}}</p>
+								<a :href="urlList.personalpage + customer.userId"><p>{{forward.userName}}</p></a>
 								<p><span>{{forward.createTime}}</span></p>
 							</div>
 						</div>
@@ -178,8 +194,8 @@
 			<!--底部三个按钮-->
 			<div class="business_bottom">
 				<ul>
-					<li><a href="forward.html" class="bottom2_icon1">转发</a></li>
-					<li><a href="comment.html" class="bottom2_icon2">评论</a></li>
+					<li><a :href="urlList.forward + customer.id" class="bottom2_icon1">转发</a></li>
+					<li><a :href="urlList.comments + customer.id" class="bottom2_icon2">评论</a></li>
 					<!--:class="releaseDetail.isPraise==1?'bottom_icon6':'bottom2_icon3'"-->
 					<li style="border-right:none;"><a href="#" :class="customer.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(customer,1)">赞</a></li>
 				</ul>

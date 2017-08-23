@@ -50,7 +50,7 @@ public class FieldInfo extends DataEntity<FieldInfo> {
 	private FieldPartitionPrice partitionPrice;//用于条件查询
 	
 	private int fstate;//验证是否有分段信息1有,0没有
-
+	private int df ; //预约完成后删除标记
 
 	private String stock;		// 用于条件查询,约满
 
@@ -313,6 +313,14 @@ public class FieldInfo extends DataEntity<FieldInfo> {
 
 	public void setFstate(int fstate) {
 		this.fstate = fstate;
+	}
+
+	public int getDf() {
+		return df;
+	}
+
+	public void setDf(int df) {
+		this.df = df;
 	}
 
 	@Override

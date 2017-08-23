@@ -98,8 +98,13 @@ public class OrderFieldController extends BaseController {
 				toJson.put("message", "商家不存在");
 				return toJson;
 			}
-			Address address = addressService.getDefaultAddress(userID, buildingID);
 			List<FieldPartitionBean> list = fieldPartitionPriceService.findSelectedFieldPartition(siteReservationID);
+			if (list == null) {
+				toJson.put("code", Global.CODE_PROMOT);
+				toJson.put("message", "场地预约已暂停");
+				return toJson;
+			}
+			Address address = addressService.getDefaultAddress(userID, buildingID);
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("businessID", business.getId());
 			data.put("businessName", business.getBusinessName());
@@ -143,7 +148,6 @@ public class OrderFieldController extends BaseController {
 			}
 			data.put("coupons", coupons);
 			/* 优惠券结束 */
-
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("data", data);
 			toJson.put("message", "成功");
@@ -222,7 +226,7 @@ public class OrderFieldController extends BaseController {
 			order.setAccountPhoneNumber(contactPhone);
 			order.setAccountMsg(leaveMessage);// 留言
 			// 生成订单
-			Map<String, String> result = orderFieldService.createOrderField(order, business, list, userID, businessID, couponManage);
+			Map<String, String> result = orderFieldService.createOrderField(order, business, list, userID, buildingID, couponManage);
 			// 返回接口运行结果
 			Map<String, Object> json = new HashMap<String, Object>();
 			if (Global.CODE_SUCCESS.equals(result.get("code"))) {

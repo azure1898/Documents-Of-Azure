@@ -97,7 +97,7 @@
                 "\t\t\t\t<br>\n" +
                 "\t\t\t\t<br>\n" +
                 "\t\t\t\t时段价格：\n" +
-                "\t\t\t\t<input maxlength=\"10\" style=\"width:305px;\" name=\"fieldInfoPrices["+index_num+"].basePrice\" class=\"input-xlarge required number\" type=\"text\" value=\"\">\n" +
+                "\t\t\t\t<input maxlength=\"9\" style=\"width:305px;\" name=\"fieldInfoPrices["+index_num+"].basePrice\" class=\"input-xlarge required number\" type=\"text\" value=\"\">\n" +
                 "\t\t\t\t<span class=\"help-inline\"> 元/小时 </span>\n" +
                 "\t\t\t\t<span class=\"addPriceSpan\" >＋</span>\n" +
                 "\t\t\t\t<span class=\"delPriceSpan\" >－</span>\n" +"\t\t\t</div>";
@@ -790,7 +790,7 @@
 		  <div class="form-group">
 		    <label class="col-lg-2 control-label" style="text-align: left;">价格：</label>
 		    <div class="col-lg-10">
-		 	  <form:input path="basePrice" htmlEscape="false" maxlength="10" style="width: 305px;" class="input-xlarge required number"/>
+		 	  <form:input path="basePrice" htmlEscape="false" maxlength="9" style="width: 305px;" class="input-xlarge required number"/>
 				<span class="help-inline" > 元/小时 </span><br>
 		    </div>
 		     <label class="col-lg-2 control-label" style="text-align: left;"></label>
@@ -988,7 +988,7 @@
 					<br>
 					<br>
 					时段价格：
-					<input maxlength="10" style="width:305px;" name="fieldInfoPrices[${sta.index}].basePrice" class="input-xlarge required number" type="text" value="${fieldInfoPrice.basePrice}">
+					<input maxlength="9" style="width:305px;" name="fieldInfoPrices[${sta.index}].basePrice" class="input-xlarge required number" type="text" value="${fieldInfoPrice.basePrice}">
 					<span class="help-inline"> 元/小时 </span>
 					<span class="addPriceSpan" >＋</span>
 					<span class="delPriceSpan" <c:if test="${fn:length(fieldInfoPrices)==1}"> style="display: none;" </c:if> >－</span>

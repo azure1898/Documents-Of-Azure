@@ -18,7 +18,7 @@
 			        themeType : 'simple',
 			        allowImageUpload:true,//允许上传图片
 			        afterChange : function() {
-			            var limitNum = 65000;
+			            var limitNum = 20000;
 			            if(this.count() > limitNum) {
 			                $(".word_message").show();
 			            } else {
@@ -122,11 +122,7 @@
                                         }
                                     },
                                     submitHandler : function(form) {
-                                        if ($(".up-section").size() == 0) {
-                                			alertx("未选择任何图片");
-                                			return;
-                                		}
-                                	    if (KindEditor.instances[0].html().length > 65000) {
+                                	    if (KindEditor.instances[0].html().length > 20000) {
                                 	        $(".word_message").show();
                                 	        return;
                                 	    }
@@ -319,6 +315,7 @@
 								src="${ctxStatic}/images/a7.png" class="close-upimg"> <img
 								src="${imgTemp.imgUrl}" class="up-img"> <input
 								type="hidden" class="filename" value="${imgTemp.myfileid}">
+								<input type="hidden" class="picindex" value="${status.index}" readonly="readonly">
 						</section>
 					</c:forEach>
 					<section class="z_file fl"

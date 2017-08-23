@@ -125,7 +125,19 @@
 			#{phoneNum}
 		)
 	</insert>
-	
+	<!-- 用户管理：查询APP公号账号 -->
+    <select id="CountPhoneNum" resultType="java.lang.Integer">
+       SELECT
+         COUNT(id)
+       FROM account a
+       <where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="phoneNum != null and phoneNum != ''">
+		      AND a.phone_num = #{phoneNum}
+		</if>
+	   </where>
+    </select>
+    
 	<update id="update">
 		UPDATE account SET 	
 			id = #{id},
@@ -237,5 +249,22 @@
                 #{item}
             </foreach>
             )); 
+    </select>
+    
+    <select id="findExportList" resultType="Account">
+        SELECT phone_num AS phoneNum,
+               regist_date AS registDate
+          FROM account
+         WHERE regist_date is not null
+           AND phone_num is not null
+        LIMIT 20
+    </select>
+    
+    <!-- 根据后台userId查询APP用户相关信息 -->
+    <select id="findBySysUserId" resultType="Account">
+    	SELECT 
+    		<include refid="accountColumns"/>
+    	FROM account a left join sys_user su on su.app_user_phone = a.phone_num 
+    	WHERE su.id = #{userId}
     </select>
 </mapper>

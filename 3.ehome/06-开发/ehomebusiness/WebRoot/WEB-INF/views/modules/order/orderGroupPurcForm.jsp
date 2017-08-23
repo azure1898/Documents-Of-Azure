@@ -193,7 +193,7 @@
      		<div style="width: 800px;height: 24px;position:absolute;z-index:5; background-color: #fff;">
      			<h4>验券消费</h4> 
      		</div>
-     		<iframe id="mbi" style="border: 0px;width: 100%;height: 100%;" src="${ctx}/coupon/testCoupon/"></iframe>
+     		<iframe id="mbi" style="border: 0px;width: 100%;height: 100%;"></iframe>
      	 </div>
    	 	<div class="modal-footer">
        	 <button type="button" class="btn btn-default" data-dismiss="modal">完成</button>

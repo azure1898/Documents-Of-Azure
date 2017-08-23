@@ -34,6 +34,7 @@ import com.its.common.web.BaseController;
 import com.its.modules.business.entity.BusinessCategorydict;
 import com.its.modules.business.service.BusinessCategorydictService;
 import com.its.modules.business.service.BusinessInfoService;
+import com.its.modules.module.entity.ModuleManage;
 import com.its.modules.module.entity.VillageLinerecombusitype;
 import com.its.modules.module.entity.VillageLinerecombusitypedetail;
 import com.its.modules.module.entity.VillageLinerecommodule;
@@ -240,6 +241,15 @@ public class VillageLineController extends BaseController {
         villageLineService.updateMaintRecomModule(villageLine);
         addMessage(redirectAttributes, "保存首页设置成功");
         return "redirect:" + Global.getAdminPath() + "/module/villageLine/recommendList";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "mainPreview")
+    public  List<ModuleManage> mainPreview(VillageLine villageLine,HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+        List<String> moduleIds = getModuleIds(villageLine.getMaintRecomModule());
+        List<ModuleManage> list=moduleManageService.getSetModuleList(moduleIds);
+        request.setAttribute("list", list);
+        return list;
     }
 
     /**

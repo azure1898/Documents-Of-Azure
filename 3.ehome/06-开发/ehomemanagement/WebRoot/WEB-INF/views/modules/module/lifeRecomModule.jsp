@@ -942,20 +942,35 @@
             <input id="btnCancel" class="btn btn-success" type="button" value="返 回" onclick="history.go(-1)" />
         </div>
         <script type="text/javascript">
-            function showPage(){
-                layer.open({
-                    type: 2,
-                    title:'生活推荐预览',
-                    area: ['414px', '736px'],
-                    scrollbar: true,
-                    maxmin: true,
-                    content: '//218.28.28.186:9088/ehomeweb/page/home/index.html',
-                    zIndex: layer.zIndex, //重点1
-                    success: function(layero){
-                        layer.setTop(layero); //重点2
-                    },
-                });
-            }
+        function showPage(){
+            var formdata=new FormData($("#inputForm")[0]);
+            console.log(formdata);
+            $.ajax({
+                type : "POST",
+                url : ctx + "/module/villageLine/mainPreview",
+                data : formdata,
+                dataType : "JSON",
+                processData: false,
+                contentType: false,
+                success : function(data) {
+                    console.log(data);
+                    layer.open({
+                        type: 2,
+                        title:'首页推荐预览',
+                        area: ['414px', '736px'],
+                        scrollbar: true,
+                        maxmin: true,
+                        content: '${contextPath}/moblie/page/home/index.html',
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            
+                            layer.setTop(layero); //重点2
+                        },
+                    });  
+                }
+            })
+            
+        }
         </script>
     </form:form>
 </body>

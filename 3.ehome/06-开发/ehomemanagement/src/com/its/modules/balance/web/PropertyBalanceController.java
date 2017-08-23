@@ -4,7 +4,9 @@
 package com.its.modules.balance.web;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.its.common.config.Global;
@@ -104,6 +107,12 @@ public class PropertyBalanceController extends BaseController {
 				}
 			}
 		}
+		
+		// 设置页面查询条件 全部物业集合
+		PropertyCompany propertyCompany = new PropertyCompany();
+		List<PropertyCompany> propertyCompanyList = propertyCompanyService.findList(propertyCompany);
+		model.addAttribute("propertyCompanyList", propertyCompanyList);
+		
 		model.addAttribute("sumOrderMoney", sumOrderMoney);
 		model.addAttribute("sumCouponMoney", sumCouponMoney);
 		model.addAttribute("sumDeductionMoney", sumDeductionMoney);
@@ -163,10 +172,14 @@ public class PropertyBalanceController extends BaseController {
 	 */
 	@RequiresPermissions("balance:propertyBalance:edit")
 	@RequestMapping(value = "check")
-	public String check(PropertyBalance propertyBalance, RedirectAttributes redirectAttributes) {
+	@ResponseBody
+	public Map<String, Object> check(PropertyBalance propertyBalance, RedirectAttributes redirectAttributes) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		propertyBalanceService.check(propertyBalance);
-		addMessage(redirectAttributes, "勾选结算单核对成功");
-		return "redirect:" + Global.getAdminPath() + "/balance/propertyBalance/?repage";
+		result.put("success", Boolean.TRUE);
+		result.put("msg", "结算单核对成功");
+		
+		return result;
 	}
 	
 	@RequiresPermissions("balance:propertyBalance:view")
@@ -174,6 +187,7 @@ public class PropertyBalanceController extends BaseController {
 	public String export(PropertyBalance propertyBalance, HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes redirectAttributes) {
 		try {
+			double sumPayMoney = 0.0;
 			String fileName = "结算申请单" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
 			List<PropertyBalance> propertyBalanceList = propertyBalanceService.findBalanceApply(propertyBalance);
 			Date balanceTimeMin = DateUtils.addYears(new Date(), 1000);
@@ -185,8 +199,17 @@ public class PropertyBalanceController extends BaseController {
 				if (balanceTimeMax.compareTo(pb.getBalanceEndTime()) < 0) {
 					balanceTimeMax = pb.getBalanceEndTime();
 				}
+				if(pb.getPayMoney()!=null){
+					sumPayMoney += pb.getPayMoney();
+				}
 
 			}
+			
+			// 设置合计对象
+			PropertyBalance propertyBalanceSum = new PropertyBalance();
+			propertyBalanceSum.setSerialNum("合计");
+			propertyBalanceSum.setPayMoney(sumPayMoney);
+			propertyBalanceList.add(propertyBalanceSum);
 
 			String title = "结算申请单（" + DateUtils.formatDate(balanceTimeMin, "yyyy.M.d") + "-"
 					+ DateUtils.formatDate(balanceTimeMax, "yyyy.M.d") + "）";

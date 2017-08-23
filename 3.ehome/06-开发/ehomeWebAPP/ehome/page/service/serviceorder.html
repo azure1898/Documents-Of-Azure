@@ -8,6 +8,7 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>服务_确认订单</title>
     <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
     <link href="../../css/bootstrap.css" rel="stylesheet">
     <link href="../../css/main.css" rel="stylesheet">
     <link href="../../css/common.css" rel="stylesheet">
@@ -50,6 +51,17 @@
             text-align:center;
             line-height: 100px;
         }*/
+       .p_icon{
+       	font-size:15px;
+       }
+       .iconfont{
+       	font-size:22px;
+       }
+       a,a:hover{
+  	    color:grey;
+       	text-decoration: none;
+       }
+       
     </style>
 </head>
 <body>
@@ -60,31 +72,31 @@
         </div>
         <div class="order_whitebox" v-if="way==0">
             <div class="plr10">
-                <div class="goods_receipt clearfix">
+                <div class="goods_receipt clearfix" v-if="items2.length>0">
                     <div class="fl">
                         <p>联系人：<span>{{ order.contactPerson}}</span><span class="plr10">{{ order.contactPhone}}</span></p>
-                        <p style="width:90%;">服务地址：{{ order.contactAddress}}</p>
+                        <p>服务地址：{{ order.contactAddress}}</p>
                     </div>
                     <div class="list_inbtn mt10" data-toggle="modal" data-target="#myModal_address"></div>
                 </div>
                 <!--如果没有联系人是显示添加联系人-->
-                <!--<div class="goods_receipt clearfix">
-                    <div class="fl">
-                        <p><span class="glyphicon glyphicon-plus-sign">请添加联系人信息</span></p>
+              
+                    <div  v-else>
+                        <p class="p_icon" style="text-align: center;"><a href="#"><i class="iconfont icon-icon02"></i>请添加联系人信息</a></p>
                     </div>
-                    <div class="list_inbtn mt10"></div>
-                </div>-->
+                    
+                
             </div>
         </div>
         
-       <div>
+       <div v-else>
            <div style="height:44px; line-height:44px; padding-left:10px;">联系人信息</div>
 			<div class="order_whitebox">
 				<div class="plr10">
 					<div class="goods_receipt clearfix">
 						<div class="fl">联系人:</div>
 						<div style="margin-left:10px;float:left;">
-							<input type="text" class="names input" v-model:placeholder="order.contactPerson">
+							<input type="text" class="names input"v-model:placeholder="order.contactPerson">
 						</div>
 					</div>
 				</div>

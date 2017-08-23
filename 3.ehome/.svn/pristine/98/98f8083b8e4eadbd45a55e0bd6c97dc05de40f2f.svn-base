@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>课程详情</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/swiper-3.4.2.min.css"/>
+		<link href="../../css/common.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<style type="text/css">
+		.bot{
+			position:absolute;
+			bottom: 0;
+		}
+		
+	</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="details_top">
+				<div class="container-fluid top">
+					<div class="h20"></div>
+					<div class="topbtn_region">
+						<div class="fl">
+							<span class="back_btn cursor" onclick="javascript :history.go(-1)"></span>
+						</div>
+						<div class="fr">
+							<span v-bind:class="course.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(course)"></span>
+
+						</div>
+						
+					</div>
+				</div>
+			<div class="swiper-container">
+             <div class="swiper-wrapper">
+                 <div class="swiper-slide" v-for="(image,index) in course.courseImage"><img v-bind:src="image.url"> </div>
+             </div>
+			</div>
+			<div class="bussinessbreak" v-if="course.isNormal==0">商家休息中</div>
+			</div>
+			<div class="clear"></div>
+			<div class="mt20 clearfix">
+				<div class="details_title_box" style="height:auto;">
+					<div class="plr10" v-bind:data-id="course.courseID">
+						<div class="details_title"  style="width: calc(100% - 50px);" v-html="course.courseName"></div>
+						<div class="mt4 clearfix">
+							<div class="font_orange font18 fl">{{course.discountedPrice|formatDecimal}}</div>
+							<div class="font14 fl ml10 mt4"><del>{{course.originalPrice|formatDecimal}}</del></div>
+							<div class="goods_num fr"></div>
+						</div>
+					</div>
+				</div>
+				<div class=" mt10"></div>
+				<div class="details_sjxx" style="border-bottom:1px solid #ececec;">
+					<p>课&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;次：{{course.classNumber}}</p>
+					<p>限制人数：{{course.limitPeople}}</p>
+					<p>上课时间：{{course.classTime}}</p>
+					<p>上课地点：{{course.classLocation}}</p>
+				</div>
+				<div class="details_title_box mt10">
+					<div class="plr10 clearfix">
+						<div class="shop_name oneLine2" v-bind:data-id="course.businessID" style="width:50%;">
+							<img src="../../images/dian.png">{{course.businessName}}
+						</div>
+						<div class="shop_call">
+                            <a href="#" v-on:click="callPhone(course.businessPhone)">
+                                <img src="../../images/phone.png">
+                            </a>联系商家
+						</div>
+					</div>
+					<div class="detail_twobtn">
+						<a href="#" class="sc_business">收藏商家</a>
+						<a v-bind:href="urlList.index+course.businessID" class="in_business">进入商家</a>
+					</div>
+				</div>
+				<div class="xq_jstitle">课程详情</div>
+				<div class="details_sjxx">
+					<p>
+						.详细介绍：
+						<div v-html="course.courseDesc"></div>
+					</p>
+				</div>
+			</div>
+			<div class="height44"></div>
+			<div class="business_bottom">
+				<div class="ser_zbtn" id="change_coursedetail" @click="change_stockNumbe()">
+					<a v-bind:href="Change?urlList.order+course.courseID+'&businessID='+course.businessID:'#'"></a>
+				</div>
+				
+			</div>
+		</div>
+		<script src="../../js/static/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/swiper-3.4.2.jquery.min.js" type="text/javascript" charset="utf-8"></script>		
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/course/coursedetail.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

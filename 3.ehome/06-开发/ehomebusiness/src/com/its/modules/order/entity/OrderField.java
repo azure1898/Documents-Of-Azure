@@ -4,6 +4,8 @@
 package com.its.modules.order.entity;
 
 import org.hibernate.validator.constraints.Length;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class OrderField extends DataEntity<OrderField> {
     private Date payTime; // 支付时间
     private String payUserName; // 支付账号
     private String payState; // 支付状态:0未支付1已支付2退款中3已退款
-    private OrderFieldList orderFieldList = new OrderFieldList(); // 场地预约详情
+    private List<OrderFieldList> orderFieldList = new ArrayList<OrderFieldList>(); // 场地预约详情
     private String fieldPartitionPriceId;// 场地预约分区ID
     private Date beginCreateDate; // 开始 创建时间
     private Date endCreateDate; // 结束 创建时间
@@ -63,7 +65,7 @@ public class OrderField extends DataEntity<OrderField> {
     private List<OrderTrack> orderTrackList; // 订单跟踪明细
 
     private int pending;// 查询未完成标记
-
+    private int isCancel;//是否取消标记  1=查询所有未取消订单
     public OrderField() {
         super();
     }
@@ -288,11 +290,11 @@ public class OrderField extends DataEntity<OrderField> {
         this.payState = payState;
     }
 
-    public OrderFieldList getOrderFieldList() {
+    public List<OrderFieldList> getOrderFieldList() {
         return orderFieldList;
     }
 
-    public void setOrderFieldList(OrderFieldList orderFieldList) {
+    public void setOrderFieldList(List<OrderFieldList> orderFieldList) {
         this.orderFieldList = orderFieldList;
     }
 
@@ -441,5 +443,13 @@ public class OrderField extends DataEntity<OrderField> {
     public void setTransactionID(String transactionID) {
         this.transactionID = transactionID;
     }
+
+	public int getIsCancel() {
+		return isCancel;
+	}
+
+	public void setIsCancel(int isCancel) {
+		this.isCancel = isCancel;
+	}
 
 }

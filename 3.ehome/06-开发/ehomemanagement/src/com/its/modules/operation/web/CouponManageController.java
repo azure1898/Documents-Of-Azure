@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +31,7 @@ import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.utils.DateUtils;
 import com.its.common.utils.StringUtils;
+import com.its.common.utils.excel.ExportExcel;
 import com.its.common.utils.excel.ImportExcel;
 import com.its.common.web.BaseController;
 import com.its.modules.account.entity.Account;
@@ -556,6 +556,21 @@ public class CouponManageController extends BaseController {
 			}
 		}
 		return accountList;
-
 	}
+	
+    @RequestMapping(value = "export", method=RequestMethod.GET)
+    public String export(CouponManage couponManage, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+		try {
+            String fileName = "用户数据导入模板"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
+            List<Account> accountList = accountService.findExportList(null);
+            
+            // 导入模板无大标题，只有字段名称
+            String title = null;
+    		new ExportExcel(title, Account.class).setDataList(accountList).write(response, fileName).dispose();
+    		return null;
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "下载用户数据导入模板失败！失败信息："+e.getMessage());
+		}
+		return "redirect:" + adminPath + "/operation/couponManage/form?repage";
+    }
 }

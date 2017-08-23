@@ -21,8 +21,11 @@ import com.its.modules.app.service.AccountService;
 import com.its.modules.social.bean.SocialSpeakBean;
 import com.its.modules.social.common.DateUtil;
 import com.its.modules.social.common.SocialGlobal;
+import com.its.modules.social.entity.SocialSpeak;
+import com.its.modules.social.entity.SocialSubRelation;
 import com.its.modules.social.entity.SocialSubject;
 import com.its.modules.social.service.SocialSpeakService;
+import com.its.modules.social.service.SocialSubRelationService;
 import com.its.modules.social.service.SocialSubjectService;
 
 import net.sf.json.JSONObject;
@@ -44,6 +47,9 @@ public class SocialSubjectController extends BaseController {
 	
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private SocialSubRelationService socialSubRelationService;
 	
 	/**
 	 * @Description：话题结果
@@ -81,11 +87,61 @@ public class SocialSubjectController extends BaseController {
 				dataListMap.put("headPicSrc", socialSpeakBean.getPhoto());
 				String createTime = DateUtil.getDaysBeforeNow(socialSpeakBean.getCreatetime());
 				dataListMap.put("createTime", createTime);
+				
+				String id = socialSpeakBean.getId();
+				dataListMap.put("speakId", id); // TODO
+				int isspeak = socialSpeakBean.getIsspeak();
+				dataListMap.put("isSpeak", isspeak);
+				Map<String, Object> rootSpeakMap = new HashMap<>();
+				if(SocialGlobal.SPEAK_IS_SPEAK_NO == isspeak) {
+					String rootid = socialSpeakBean.getRootid();
+					rootSpeakMap.put("speakId", rootid);
+					SocialSpeak socialSpeak = socialSpeakService.get(rootid);
+					rootSpeakMap.put("noticeId", socialSpeak.getNoticeid());
+					String userid2 = socialSpeak.getUserid();
+					rootSpeakMap.put("userId", userid2);
+					rootSpeakMap.put("userName", accountService.get(userid2).getNickname());
+					rootSpeakMap.put("delFlag", socialSpeak.getDelflag());
+					
+					List<Map<String, Object>> subjectList = new ArrayList<>();
+					Map<String, Object> subjectListMap = new HashMap<>();
+					//根据用户id从关系表中找到话题id，然后查询话题名称
+					SocialSubRelation socialSubRelation = new SocialSubRelation();
+					socialSubRelation.setSpeakid(rootid);
+					List<SocialSubRelation> findList = socialSubRelationService.findList(socialSubRelation);
+					for (SocialSubRelation socialSubRelation2 : findList) {
+						String subjectid = socialSubRelation2.getSubjectid();
+						subjectListMap.put("id", subjectid); // 话题id
+						//根据话题id查找话题名称
+						SocialSubject socialSubject = socialSubjectService.get(subjectid);
+						if(socialSubject != null){
+							String subName = socialSubject.getSubname();
+							subjectListMap.put("subName", subName); // 话题
+						}else {
+							subjectListMap.put("subName", ""); // 话题
+						}
+						subjectList.add(subjectListMap);
+					}
+					rootSpeakMap.put("subjectList", subjectList);
+					rootSpeakMap.put("content", socialSpeak.getContent());
+					rootSpeakMap.put("title", socialSpeak.getTitle());
+					rootSpeakMap.put("summary", socialSpeak.getSummary());
+					
+					String images = socialSpeak.getImages();
+					if (org.apache.commons.lang.StringUtils.isNotBlank(images)) {
+						rootSpeakMap.put("images", images);
+					}else {
+						rootSpeakMap.put("images", "");
+					}
+				}
+				
+				dataListMap.put("rootSpeak", rootSpeakMap);
 				dataListMap.put("speakContent", socialSpeakBean.getContent());
 				dataListMap.put("countForword", socialSpeakBean.getCountForward());
 				dataListMap.put("countComment", socialSpeakBean.getCountComment());
 				dataListMap.put("countPraise", socialSpeakBean.getCountPraise());
 				dataListMap.put("isPraise", socialSpeakBean.getIsPraise());
+				
 				String image = socialSpeakBean.getImages();
 				if(!StringUtils.isEmpty(image)) {
 					String[] images = image.split(",");
@@ -107,6 +163,7 @@ public class SocialSubjectController extends BaseController {
 			}
 		}
 		toJson.put("data", dataList);
+		toJson.put("subjectName", subjectName);
 		toJson.put("code", Global.CODE_SUCCESS);
 		toJson.put("message", "根据楼盘id和话题名称查询发言成功");
 		System.out.println("+++++++" + JSONObject.fromObject(toJson).toString());
@@ -224,7 +281,7 @@ public class SocialSubjectController extends BaseController {
 			for(SocialSubject socialSubject : socialSubjectList) {
 				Map dataListMap = new HashMap();
 				dataListMap.put("id", socialSubject.getId());
-				dataListMap.put("subtName", socialSubject.getSubname());
+				dataListMap.put("subName", socialSubject.getSubname());
 				dataList.add(dataListMap);
 			}
 		}

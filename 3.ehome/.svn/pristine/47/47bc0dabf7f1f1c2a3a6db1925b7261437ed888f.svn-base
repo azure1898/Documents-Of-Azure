@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>评论我的</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			.topBorder {
+				border-top: solid 1px #ececec;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="black_back" onclick="javascript :history.go(-1)"></a>
+				<div class="grey_top_title">
+					<div class="grey_top_title_left"><a href="#" class="active" @click="switchs(1)">评论我的</a></div>
+					<div class="grey_top_title_left"><a href="#" @click="switchs(2)">我的评论</a></div>
+				</div>
+			</div>
+			<div class="main_box" v-for="(commentme,index) in commentmes">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><a :href="urlList.personalpage + commentme.commontList[0].userId"><img :src="commentme.commontList[0].userHeadUrl" width="110" height="110"></a></div>
+						<div class="fyxq_main_l_title">
+							<a :href="urlList.personalpage + commentme.commontList[0].userId"><p>{{commentme.commontList[0].userName}}</p></a>
+							<p><span>{{commentme.commontList[0].time}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r" v-if="type==0"><a href="#" class="topic_list_btn2" @click="reply(commentme)">回复</a></div>
+					<div class="fyxq_main_r" v-else><a href="#" class="topic_list_btn2" @click="deleteComments(commentme,index)">删除</a></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2" v-if="commentme.commontList.length==1">
+					<!--他的评论带图-->
+					<p class="ftc5050"><a :href="urlList.commentdetail + commentme.commontList[0].id">{{commentme.commontList[0].content}}</a><a v-bind:src="commentme.commontList[0].images[0].imageUrl" v-if="commentme.commontList.images&&commentme.commontList.images.length>0">查看原图</a></p>
+				</div>
+				<!--v-for="(obj,index) in commentme.commontList"-->
+				<div class="fyxq_main2" v-else>
+					<!--他的评论带图-->
+					<div>
+						<p class="ftc5050">回复<a :href="urlList.personalpage + commentme.commontList[1].userId" class="ftcred">@{{commentme.commontList[1].userName}}</a><a :href="urlList.commentdetail + commentme.commontList[0].id">{{commentme.commontList[0].content}}</a><a v-bind:src="commentme.commontList[0].images[0].imageUrl"v-if="commentme.commontList.images&&commentme.commontList.images.length>0">查看原图</a></p>
+					</div>
+					<!--我的评论带图没删除-->
+					<div v-if="commentme.commontList[1].delFlag==1">
+						<p class="ftc5050"><a :href="urlList.personalpage + commentme.commontList[1].userId" class="ftcred">@{{commentme.commontList[1].userName}}</a> <a :href="urlList.commentdetail + commentme.commontList[1].id"></a> {{commentme.commontList[1].content}} <a v-bind:src="commentme.commontList[1].images[0].imageUrl" v-if="commentme.commontList.images&&commentme.commontList.images.length>0"> 查看原图 </a>							</p>
+					</div>
+					<div v-else>
+						<p class="ftc5050" style="background:#f5f5f5; padding:7px;">该评论已被删除</p>
+					</div>
+				</div>
+
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="commentme.speak.delFlag==1">
+					<div class="fyxq_main_l2_img">
+						<img :src="commentme.speak.images" width="110" height="110">
+					</div>
+					<div class="fyxq_main_l_title2">
+						<p v-if="commentme.speak.noticeId!=''">{{commentme.speak.title}}</p>
+						<p v-else><a :href="urlList.personalpage + commentme.speak.userId" class="ftcred">@{{commentme.speak.userName}}</a></p>
+						<!--<font class="ftcred" v-for="lable in commentme.speak.subjectList">{{lable.subName}}</font>-->
+						<a :href="urlList.speechdetail + commentme.speak.id">
+							<p class="twoLine" v-html="commentme.speak.content"></p>
+						</a>
+					</div>
+				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+					原发言已被删除
+				</div>
+
+				<div class="clear"></div>
+			</div>
+
+			<!--<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><a href="#" class="topic_list_btn2">发送</a></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">赞了这条评论</p>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">@装修作业：</font>从交房验房，到涉及预算到后期开</p>
+				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;">
+					原发言已被删除
+				</div>
+				<div class="clear"></div>
+			</div>
+
+			<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><a href="#" class="topic_list_btn2">发送</a></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">赞了这条评论</p>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<font class="ftcred">@装修作业：</font>从交房验房，到涉及预算到后期开</p>
+				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+					<div class="fyxq_main_l2_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+					<div class="fyxq_main_l_title2">
+						<p>@蓝色理想</p>
+						<p><span><font class="ftcred">#装修作业#</font>从交房验房，到涉及预算到后期开始装修以及...</span></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="main_box mt10" style="border-top:solid 1px #ececec;">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+						<div class="fyxq_main_l_title">
+							<p>蓝色理想</p>
+							<p><span>昨天 18:30</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"><a href="#" class="topic_list_btn2">发送</a></div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">赞了这条评论</p>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050" style="background:#f5f5f5; padding:7px;">该评论已被删除</p>
+				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+					<div class="fyxq_main_l2_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
+					<div class="fyxq_main_l_title2">
+						<p>@蓝色理想</p>
+						<p><span><font class="ftcred">#装修作业#</font>从交房验房，到涉及预算到后期开始装修以及...</span></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>-->
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/commentme.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

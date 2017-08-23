@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection"/>
+    <title>帮助说明</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css"/>
+    <!--<link rel="stylesheet" href="css/iconfont/iconfont.css">-->
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+</head>
+
+<body>
+<header>
+    <p>
+        <span id="demo"></span>
+        <span>余额说明</span>
+    </p>
+</header>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q1：余额是什么？</p>
+            <p class="oneLevelContent">
+                • 余额是您在哈奇（Hachi） APP中可以在线下单使用的账户资金，订单支付时选择余额支付
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q2：余额如何使用？</p>
+            <p class="oneLevelContent">
+                • 在线下单支付时选择余额支付。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q3：余额不足怎么办？</p>
+            <p class="oneLevelContent">
+                • 原路退，目前暂无到账通知短信，请您谅解。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q4：余额可以提现吗？</p>
+            <p class="oneLevelContent">
+                • 很抱歉，充值的余额暂未开通提现功能。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q5：订单金额超过了余额可以选择余额支付吗？</p>
+            <p class="oneLevelContent">
+                • 钱包余额不足时，不可以选择余额支付。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q6：钱包余额扣款说明</p>
+            <p class="oneLevelContent">
+                • 钱包余额不足时，不可以选择余额支付。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+</div>
+</div>
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

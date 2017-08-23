@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VillageLineDao">
+    
+	<sql id="villageLineColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.product_line AS "productLine",
+		a.set_state AS "setState",
+		a.set_time AS "setTime",
+		a.recom_set_state AS "recomSetState",
+		a.recom_set_time AS "recomSetTime",
+		a.main_navigation AS "mainNavigation",
+		a.community_module AS "communityModule",
+		a.life_module AS "lifeModule",
+		a.maint_recom_module AS "maintRecomModule",
+		a.community_recom_module AS "communityRecomModule",
+		a.life_recom_module AS "lifeRecomModule",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.community_module_sort AS "communityModuleSort",
+		a.life_module_sort AS "lifeModuleSort",
+		a.maint_recom_module_sort AS "maintRecomModuleSort",
+		a.community_recom_module_sort AS "communityRecomModuleSort",
+		a.life_recom_module_sort AS "lifeRecomModuleSort"
+	</sql>
+	
+	<sql id="villageLineJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageLine">
+		SELECT 
+			<include refid="villageLineColumns"/>
+		FROM village_line a
+		<include refid="villageLineJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageLine">
+		SELECT 
+			<include refid="villageLineColumns"/>
+		FROM village_line a
+		<include refid="villageLineJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageLine">
+		SELECT 
+			<include refid="villageLineColumns"/>
+		FROM village_line a
+		<include refid="villageLineJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_line(
+			id,
+			village_info_id,
+			product_line,
+			set_state,
+			set_time,
+			recom_set_state,
+			recom_set_time,
+			main_navigation,
+			community_module,
+			life_module,
+			maint_recom_module,
+			community_recom_module,
+			life_recom_module,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			community_module_sort,
+			life_module_sort,
+			maint_recom_module_sort,
+			community_recom_module_sort,
+			life_recom_module_sort
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{productLine},
+			#{setState},
+			#{setTime},
+			#{recomSetState},
+			#{recomSetTime},
+			#{mainNavigation},
+			#{communityModule},
+			#{lifeModule},
+			#{maintRecomModule},
+			#{communityRecomModule},
+			#{lifeRecomModule},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{communityModuleSort},
+			#{lifeModuleSort},
+			#{maintRecomModuleSort},
+			#{communityRecomModuleSort},
+			#{lifeRecomModuleSort}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_line SET 	
+			village_info_id = #{villageInfoId},
+			product_line = #{productLine},
+			set_state = #{setState},
+			set_time = #{setTime},
+			recom_set_state = #{recomSetState},
+			recom_set_time = #{recomSetTime},
+			main_navigation = #{mainNavigation},
+			community_module = #{communityModule},
+			life_module = #{lifeModule},
+			maint_recom_module = #{maintRecomModule},
+			community_recom_module = #{communityRecomModule},
+			life_recom_module = #{lifeRecomModule},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			community_module_sort = #{communityModuleSort},
+			life_module_sort = #{lifeModuleSort},
+			maint_recom_module_sort = #{maintRecomModuleSort},
+			community_recom_module_sort = #{communityRecomModuleSort},
+			life_recom_module_sort = #{lifeRecomModuleSort}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_line SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ================================================ -->
+	
+	<!-- 获取某楼盘下已设置的业主APP产品线信息 -->
+	<select id="getByVillageInfoId" resultType="VillageLine">
+		SELECT
+			<include refid="villageLineColumns"/>
+		FROM
+			Village_Line a
+		WHERE
+			a.del_flag = 0
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Product_Line = '0'
+	</select>
+	
+</mapper>

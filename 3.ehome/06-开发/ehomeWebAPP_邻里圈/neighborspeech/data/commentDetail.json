@@ -1,5 +1,6 @@
 {
 	"headPicSrc":"../../images/pic01.jpg",
+	"id":123,
 	"userName":"姜昊",
 	"createTime":"1分鐘之前",
 	"countPraise":5,

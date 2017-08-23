@@ -4,10 +4,10 @@
 		{
 			"commontList": [
 				{
-					"id": "",
+					"id": "asduiashd",
 					"userId": "12345",
 					"userName": "张三",
-					"delFlag":1,
+					"delFlag":0,
 					"userHeadUrl": "../../images/pic01.jpg",
 					"content": "赞了这条发言，晒个图~",
 					"fid": "",
@@ -28,9 +28,9 @@
 			],
 			
 			"speak": {
-				"id": "",
-				"userId": "",
-				"delFlag":1,
+				"id": "asda",
+				"userId": "123",
+				"delFlag":0,
 				"userName": "蓝色理想",
 				"subjectList": [
 					{
@@ -38,16 +38,19 @@
 						"subName": "#装修作业#"
 					}
 				],
+				"noticeId":"",
+				"title":"公告",
+				"summary":"内容",
 				"content": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是...",
 				"images": "../../images/pic01.jpg"
 			}
 		}, {
 			"commontList": [
 				{
-					"id": "",
+					"id": "sdasdas",
 					"userId": "123456789",
 					"userName": "蓝色理想",
-					"delFlag":1,
+					"delFlag":0,
 					"userHeadUrl": "../../images/pic01.jpg",
 					"content": "赞了这条发言，晒个图~",
 					"fid": "",
@@ -93,13 +96,16 @@
 				"id": "",
 				"userId": "123456",
 				"userName": "蓝色理想",
-				"delFlag":1,
+				"delFlag":0,
 				"subjectList": [
 					{
 						"id": "",
 						"subName": "#装修作业#"
 					}
 				],
+				"noticeId":"123",
+				"title":"公告",
+				"summary":"内容",
 				"content": "从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是...",
 				"images": "../../images/pic01.jpg"
 			}
@@ -112,7 +118,7 @@
 					"userName": "蓝色理想",
 					"userHeadUrl": "../../images/pic01.jpg",
 					"content": "赞了这条发言，晒个图~",
-					"delFlag":1,
+					"delFlag":0,
 					"fid": "",
 					"speakId": "",
 					"time": "昨天18:30",
@@ -134,7 +140,7 @@
 					"userName": "蓝色理想",
 					"userHeadUrl": "../../images/pic01.jpg",
 					"content": "赞了这条发言，晒个图~",
-					"delFlag":1,
+					"delFlag":0,
 					"fid": "",
 					"speakId": "",
 					"time": "昨天18:30",
@@ -153,7 +159,7 @@
 			],
 			
 			
-			"speak": {"delFlag":0}
+			"speak": {"delFlag":1}
 		
 		}
 	],

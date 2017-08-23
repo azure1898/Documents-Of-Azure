@@ -26,6 +26,8 @@ public class FieldPartitionPrice extends DataEntity<FieldPartitionPrice> {
 	private Double sumMoney;		// 总价格
 	private String state;		// 场地状态： 0可预约1已预约2已消费
 
+	private String ymd;//yyyyMMdd 查询当天预约用
+	
 	private boolean outTimeState;//结束时段 是否超过当前日期
 	
 	public FieldPartitionPrice() {
@@ -114,4 +116,13 @@ public class FieldPartitionPrice extends DataEntity<FieldPartitionPrice> {
 	public void setSumMoney(Double sumMoney) {
 		this.sumMoney = sumMoney;
 	}
+
+	public String getYmd() {
+		return ymd;
+	}
+
+	public void setYmd(String ymd) {
+		this.ymd = ymd;
+	}
+	
 }

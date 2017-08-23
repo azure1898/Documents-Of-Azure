@@ -15,7 +15,7 @@
 
 </head>
 
-<body style="border: #ccc solid 1px; padding: 10px">
+<body style="border: #ccc solid 1px; padding: 10px; height: 100%;">
      <sys:message content="${message}" />
     <div style="float: left; width: 50%; word-break: break-all; padding-right: 20px">
         <div class="control-group">
@@ -46,11 +46,6 @@
         <div class="control-group" style="  height:65%;overflow: auto;">
             <div class="controls">
                  <span id="desc"></span>
-            </div>
-        </div>
-        <div class="control-group" style="margin-top: 15px">
-            <div class="controls">
-                <input type="checkbox" id="state"> 暂停营业
             </div>
         </div>
     </div>

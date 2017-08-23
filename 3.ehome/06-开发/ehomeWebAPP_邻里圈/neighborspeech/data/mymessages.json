@@ -1,9 +1,27 @@
 {
 "code" : 1000,
 "data" : {
-  "countAtMe":1,
+"count":{
+ 	"countAtMe":0,
   "countComment":0,
-  "countPraise":1
+  "countPraise":0,
+	"countOrder":0
+},
+	"orderMsgConter":"你有新的交易订单，请查看",
+	"orderMsgTime":"06-01",
+	"adminList":[{
+	"id":"123",
+  "userHeadUrl":"../../images/icon05.png",
+  "userName":"常春藤管家",
+  "content":"今晚十点五一广场",
+  "createTime":"5-30"
+},{
+	"id":"123",
+  "userHeadUrl":"../../images/icon05.png",
+  "userName":"常春藤管家",
+  "content":"今晚十点五一广场",
+  "createTime":"5-30"
+}]
 },
 "message" : ""
 }

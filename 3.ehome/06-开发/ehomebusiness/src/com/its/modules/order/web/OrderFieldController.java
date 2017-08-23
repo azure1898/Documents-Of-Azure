@@ -33,6 +33,7 @@ import com.its.common.utils.DateUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.utils.excel.ExportExcel;
 import com.its.modules.order.entity.OrderField;
+import com.its.modules.order.entity.OrderFieldList;
 import com.its.modules.order.entity.OrderRefundInfo;
 import com.its.modules.order.entity.OrderTrack;
 import com.its.modules.order.service.OrderFieldService;
@@ -86,6 +87,12 @@ public class OrderFieldController extends BaseController {
     @Autowired
     private OrderRefundInfoService orderRefundInfoService;
 
+    /**
+     * 如果参数中有id的话则取出Entity
+     * 
+     * @param id
+     * @return
+     */
     @ModelAttribute
     public OrderField get(@RequestParam(required = false) String id) {
         OrderField entity = null;
@@ -278,19 +285,25 @@ public class OrderFieldController extends BaseController {
                 StringBuffer fieldName = new StringBuffer();
                 fieldName.append(orderFieldExcelData.getName());
                 if (null != orderFieldExcelData.getOrderFieldList()
-                        && null != orderFieldExcelData.getOrderFieldList().getAppointmentTime()) {
-                    fieldName.append((char) 10);
-                    fieldName.append(DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getAppointmentTime(),
-                            "yyyy年M月d日"));
-                }
-                if (null != orderFieldExcelData.getOrderFieldList()
-                        && null != orderFieldExcelData.getOrderFieldList().getStartTime()) {
-                    fieldName.append((char) 10);
-                    fieldName.append(
-                            DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getStartTime(), "HH:mm"));
-                    fieldName.append("~");
-                    fieldName.append(
-                            DateUtils.formatDate(orderFieldExcelData.getOrderFieldList().getEndTime(), "HH:mm"));
+                        && orderFieldExcelData.getOrderFieldList().size() > 0) {
+                    // 场地预约时间，一个订单只能预约一个场地，故取第一条的数据
+                    if (orderFieldExcelData.getOrderFieldList().get(0).getAppointmentTime() != null) {
+                        fieldName.append((char) 10);
+                        fieldName.append(DateUtils.formatDate(
+                                orderFieldExcelData.getOrderFieldList().get(0).getAppointmentTime(), "yyyy年M月d日"));
+                    }
+                    // 起始时间与结束时间
+                    for (OrderFieldList fieldList : orderFieldExcelData.getOrderFieldList()) {
+                        if (fieldList.getStartTime() != null) {
+                            fieldName.append((char) 10);
+                            fieldName.append(DateUtils.formatDate(fieldList.getStartTime(), "HH:mm"));
+                        }
+                        if (fieldList.getEndTime() != null) {
+                            fieldName.append("~");
+                            fieldName.append(DateUtils.formatDate(fieldList.getEndTime(), "HH:mm"));
+                        }
+
+                    }
                 }
                 orderFieldExcelData.setFieldNameForExcel(fieldName.toString());
             }
@@ -314,11 +327,12 @@ public class OrderFieldController extends BaseController {
      * @return
      */
     @RequestMapping(value = "cancel")
-    public String cancel(OrderField orderField, Model model, RedirectAttributes redirectAttributes,String redirectUrl) {
-    	if(redirectUrl!=null && redirectUrl!="")
-    		redirectUrl="redirect:" + Global.getAdminPath() +redirectUrl;
-    	else
-    		redirectUrl="redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
+    public String cancel(OrderField orderField, Model model, RedirectAttributes redirectAttributes,
+            String redirectUrl) {
+        if (redirectUrl != null && redirectUrl != "")
+            redirectUrl = "redirect:" + Global.getAdminPath() + redirectUrl;
+        else
+            redirectUrl = "redirect:" + Global.getAdminPath() + "/order/orderField/?repage";
         // 如果更新日时已经发生变化，则不再进行更新处理
         if (!orderFieldService.check(orderField.getId(), orderField.getUpdateDateString())) {
             addMessage(redirectAttributes, "订单信息已被他人修正，操作失败");

@@ -43,4 +43,12 @@ public interface FieldInfoDao extends CrudDao<FieldInfo> {
      * @return
      */
     Integer findAllListCountFull(FieldInfo fieldInfo_where);
+    /**
+     * 通过商家ID获取场地列表（综合管理平台--广告发布）
+     * @return
+     * @return List<FieldInfo>
+     * @author zhujiao   
+     * @date 2017年8月21日 下午4:44:47
+     */
+    List<FieldInfo> getFieldInfoList(String businessInfoId);
 }

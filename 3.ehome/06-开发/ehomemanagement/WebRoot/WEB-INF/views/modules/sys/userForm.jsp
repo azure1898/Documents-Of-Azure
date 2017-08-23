@@ -45,8 +45,16 @@
                 },
                 name:{
                     checkName:"params"
+                },
+                appUserPhone:{
+                	remote : {
+                		type:"POST",
+		                url:"${ctx}/sys/user/checkAppUserPhone",
+		                data:{
+		                	appUserPhone:function(){return $("#appUserPhone").val();}
+		                } 
+                	}
                 }
-                
             },
             messages : {  
                 loginName : {
@@ -69,8 +77,10 @@
                 },
                 villageInfoIds : {
                     checkVillage : "请选择楼盘权限",
+                },
+                appUserPhone:{
+                	remote :"输入的APP公号未在APP注册，无法绑定"
                 }
-               
             },
             submitHandler : function(form) {
                 loading('正在提交，请稍等...');
@@ -154,17 +164,22 @@
 </script>
 </head>
 <body>
-
     <ul class="nav nav-tabs">
-        <li>
-             <span>系统管理 > <a href="${ctx}/sys/user/list">用户管理 > </a>${not empty user.id?'修改':'添加'}用户
-            </span>
-        </li>
-    </ul>
-    <br />
+      <li>
+	    <c:choose>
+		     <c:when test="${not empty user.role.id}">
+		        <span class="common-breadcrumb">系统管理&nbsp;>&nbsp;<a href="${ctx}/sys/role/list">角色管理&nbsp;>&nbsp;</a><a href="${ctx}/sys/user/roleUserList">查看用户&nbsp;>&nbsp;</a>编辑用户</span>
+		     </c:when>
+		     <c:otherwise>
+		         <span class="common-breadcrumb">系统管理 &nbsp;>&nbsp;<a href="${ctx}/sys/user/list">用户管理 &nbsp;>&nbsp;</a>${not empty user.id?'编辑':'添加'}用户</span>
+		     </c:otherwise>
+		</c:choose>
+	   </li>
+	</ul>
     <form:form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/save" method="post" class="form-horizontal">
         <form:hidden path="id" />
         <form:hidden path="userType" value="1" />
+        <form:hidden path="role.id" value="${user.role.id}" />
         <sys:message content="${message}" />
 
         <div class="control-group" style="display: none">
@@ -189,57 +204,61 @@
         <div class="control-group" style="display: none">
             <label class="control-label">用户状态:</label>
             <div class="controls">
-                <form:input path="loginFlag" value="1" htmlEscape="false" maxlength="100" />
+                <form:input path="loginFlag" value="${not empty user.id?user.loginFlag:1}" htmlEscape="false" maxlength="100" />
             </div>
         </div>
 
         <div class="control-group">
-            <label class="control-label">用户名:</label>
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>用户名:</label>
             <div class="controls">
                 <input id="oldLoginName" name="oldLoginName" type="hidden" value="${user.loginName}">
                 <form:input id="aaa" path="loginName" htmlEscape="false" maxlength="50" class="required userName" />
-                <span class="help-inline"><font color="red">*</font> </span>
+             
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">密码:</label>
+            <label class="control-label"><c:if test="${empty user.id}"><span class="help-inline"><font color="red">*</font></span></c:if>密码:</label>
             <div class="controls">
                 <input id="newPassword" name="newPassword" type="password" value="" maxlength="50" minlength="3" class="${empty user.id?'required':''}" />
-                <c:if test="${empty user.id}">
-                    <span class="help-inline"><font color="red">*</font> </span>
-                </c:if>
+               
                 <c:if test="${not empty user.id}">
                     <span class="help-inline">若不修改密码，请留空。</span>
                 </c:if>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">姓名:</label> 
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>姓名:</label> 
             <div class="controls">
                 <form:input path="name" htmlEscape="false" maxlength="50" class="required" />
-                <span class="help-inline"><font color="red">*</font> </span>
+                
             </div>
         </div>
         <div class="control-group"> 
-            <label class="control-label">手机号:</label>  
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>手机号:</label>  
             <div class="controls">
                 <form:input path="mobile" htmlEscape="false" class="required " maxlength="11" />
-                <span class="help-inline"><font color="red">*</font> </span>
+                
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">角色权限:</label>
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>角色权限:</label>
             <div class="controls">
                 <form:checkboxes path="roleIdList" items="${allRoles}" itemLabel="name" itemValue="id" htmlEscape="false" class="required" />
-                <span class="help-inline"><font color="red">*</font> </span>
+               
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">楼盘权限：</label>
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>楼盘权限：</label>
             <div class="controls">
                 <ul id="tree" class="ztree" style="border: 1px solid #ccc; padding: 10px; width: 200px;" onclick="village()"></ul>
                 <form:input path="villageInfoIds" style="width: 0px; height: 0px; border: 0px"/>
-                <span class="help-inline"><font color="red">*</font> </span>
+               
+            </div>
+        </div>
+        <div class="control-group"> 
+            <label class="control-label">绑定APP公号:</label>  
+            <div class="controls">
+                <form:input path="appUserPhone" htmlEscape="false" class="" maxlength="11" placeholder="请输入APP公号账号"/>
             </div>
         </div>
         <div class="form-actions">

@@ -79,7 +79,14 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-    <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderLesson/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
     <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
@@ -196,7 +203,14 @@
     <c:if test="${orderLesson.payState ==  '0' && orderLesson.orderState ==  '0'}">
         <input id="btnElemCancelDown" class="commonbtn" style="width:60px;" type="button" value="取消" data-toggle="modal" data-target="#myModal"/>
     </c:if>
-    <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderLesson/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
 </body>

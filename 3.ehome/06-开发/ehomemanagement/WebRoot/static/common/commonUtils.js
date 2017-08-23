@@ -41,3 +41,18 @@ function getNewDate(str) {
         return date;
     }
 }
+
+
+
+//表单重置
+function formReset(form){
+	 $(form).find('input:text').each(function(){
+		 $(this).val("");
+	 });
+	 $(form).find('.select2-chosen').each(function(){
+		 $(this).html("");
+	 });
+	 $(form).find('select').each(function(){
+		 $(this).prev().find('.select2-chosen').html($(this).find(":first-child").html())
+	 });
+}

@@ -362,7 +362,7 @@ public class BusinessInfoController extends BaseController {
         for (int i = 0; i < stimes.length - 1; i++) {
             if (DateUtils.compareTo(stimes[i + 1], etimes[i]) < 0) {
                 count += 1;
-                msg = "时间段的结束时间应该小于或者第二个时间段的开始时间";
+                msg = "时间段的结束时间应该小于或者等于第二个时间段的开始时间";
             }
         }
         System.out.println("错误" + count + "条，消息提示为：" + msg);

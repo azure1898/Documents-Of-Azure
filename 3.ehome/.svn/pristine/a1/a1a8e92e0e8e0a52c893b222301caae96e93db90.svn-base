@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.OrderGroupPurcDao">
+    
+	<sql id="OrderGroupPurcColumns">
+		a.id AS "id",
+		a.Business_Info_id AS "businessInfoid",
+		a.Order_No AS "orderNo",
+		a.Module_Manage_id AS "moduleManageid",
+		a.Prod_Type AS "prodType",
+		a.Type AS "type",
+		a.Village_Info_id AS "villageInfoid",
+		a.Province_id AS "provinceid",
+		a.City_id AS "cityid",
+		a.Group_Purchase_id AS "groupPurchaseid",
+		a.Name AS "name",
+		a.Base_Price AS "basePrice",
+		a.Group_Purc_Price AS "group_PurcPrice",
+		a.Pay_Number AS "payNumber",
+		a.Sum_Money AS "sumMoney",
+		a.Benefit_Money AS "benefitMoney",
+		a.Coupon_Money AS "couponMoney",
+		a.Pay_Money AS "payMoney",
+		a.Order_State AS "orderState",
+		a.Check_Order_State AS "check_OrderState",
+		a.Check_Time AS "checkTime",
+		a.Check_State AS "checkState",
+		a.Account_id AS "accountid",
+		a.Account_Name AS "accountName",
+		a.Account_Phone_Number AS "accountPhoneNumber",
+		a.Account_Msg AS "accountMsg",
+		a.Pay_Type AS "payType",
+		a.Pay_Org AS "payOrg",
+		a.Pay_Time AS "payTime",
+		a.Pay_User_Name AS "payUserName",
+		a.Pay_State AS "payState",
+		a.Create_By AS "createBy",
+		a.Create_Date AS "createDate",
+		a.Update_By AS "updateBy",
+		a.Update_Date AS "updateDate",
+		a.Remarks AS "remarks",
+		a.Del_Flag AS "delFlag"
+	</sql>
+	
+	<sql id="OrderGroupPurcJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="OrderGroupPurcColumns"/>
+		FROM order_group_purc a
+		<include refid="OrderGroupPurcJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="OrderGroupPurcColumns"/>,max(b.Consume_Time) consumeTime
+		FROM order_group_purc a left join order_group_purc_list b on(a.id=b.Order_Group_Purc_ID)
+		<include refid="OrderGroupPurcJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+			<if test="orderNo != null and orderNo != ''">
+				AND a.order_no = #{orderNo}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name like 
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="accountPhoneNumber != null and accountPhoneNumber != ''">
+				AND a.Account_Phone_Number like 
+				<if test="dbName == 'oracle'">'%'||#{accountPhoneNumber}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{accountPhoneNumber}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{accountPhoneNumber},'%')</if>
+			</if>
+			<if test="orderState != null and orderState != ''">
+				AND a.order_state = #{orderState}
+			</if>
+		</where>
+		
+		group by a.order_no 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGroupPurc">
+		SELECT 
+			<include refid="OrderGroupPurcColumns"/>
+		FROM order_group_purc a
+		<include refid="OrderGroupPurcJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllListCount" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM order_group_purc a
+		<include refid="OrderGroupPurcJoins"/>
+		<where>
+			a.del_flag ='0'
+				AND YEARWEEK(date_format(a.create_date,'%Y-%m-%d')) = YEARWEEK(now())
+				AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		</where>
+	</select>
+
+	<select id="findAllListMoney" resultType="java.lang.Double">
+		SELECT
+			IFNULL(sum(a.sum_money),0.0)
+		FROM order_group_purc a
+		<include refid="OrderGroupPurcJoins"/>
+		<where>
+			a.del_flag = '0'
+				AND YEARWEEK(date_format(a.create_date,'%Y-%m-%d')) = YEARWEEK(now())
+				AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+		</where>
+	</select>
+	
+	<select id="check"  parameterType="Map" resultType="int">
+	    SELECT COUNT(1)
+	      FROM order_group_purc a
+	    <where>
+	        a.id = #{id}
+	    AND a.update_date = str_to_date(#{updateDate},'%Y-%m-%d %T')
+	    </where>
+	</select>
+	<insert id="insert">
+		INSERT INTO order_group_purc(
+			id,
+			order_no,
+			business_info_id,
+			type,
+			module_manage_id,
+			prod_type,
+			sum_money,
+			benefit_money,
+			coupon_money,
+			pay_money,
+			order_state,
+			check_order_state,
+			check_time,
+			check_state,
+			account_id,
+			account_name,
+			account_phone_number,
+			pay_type,
+			pay_org,
+			pay_time,
+			pay_user_name,
+			pay_state,
+			address_type,
+			address,
+			address_state,
+			address_money,
+			address_benefit,
+			over_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderNo},
+			#{businessInfoId},
+			#{type},
+			#{moduleManageId},
+			#{prodType},
+			#{sumMoney},
+			#{benefitMoney},
+			#{couponMoney},
+			#{payMoney},
+			#{orderState},
+			#{checkOrderState},
+			#{checkTime},
+			#{checkState},
+			#{accountId},
+			#{accountName},
+			#{accountPhoneNumber},
+			#{payType},
+			#{payOrg},
+			#{payTime},
+			#{payUserName},
+			#{payState},
+			#{addressType},
+			#{address},
+			#{addressState},
+			#{addressMoney},
+			#{addressBenefit},
+			#{overTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_group_purc SET 	
+			order_no = #{orderNo},
+			type = #{type},
+			module_manage_id = #{moduleManageId},
+			prod_type = #{prodType},
+			sum_money = #{sumMoney},
+			benefit_money = #{benefitMoney},
+			coupon_money = #{couponMoney},
+			pay_money = #{payMoney},
+			order_state = #{orderState},
+			check_order_state = #{checkOrderState},
+			check_time = #{checkTime},
+			check_state = #{checkState},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			account_phone_number = #{accountPhoneNumber},
+			pay_type = #{payType},
+			pay_org = #{payOrg},
+			pay_time = #{payTime},
+			pay_user_name = #{payUserName},
+			pay_state = #{payState},
+			address_type = #{addressType},
+			address = #{address},
+			address_state = #{addressState},
+			address_money = #{addressMoney},
+			address_benefit = #{addressBenefit},
+			over_time = #{overTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE order_group_purc SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<!-- 优惠/验券管理（验券）：依据订单号，更新订单状态-->
+	<update id="updateOrderState">
+		UPDATE order_group_purc SET 	
+			order_state = #{orderState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE order_no = #{orderNo}
+	</update>
+    <update id="complete">
+        UPDATE order_group_purc SET 
+            order_state = "3",
+            over_time = #{overTime},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+	
+	<update id="accept">
+        UPDATE order_group_purc SET 
+            order_state = "1",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+    
+    <update id="cancel">
+        UPDATE order_group_purc SET 
+            order_state = "4",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+    
+    <update id="dispatching">
+        UPDATE order_group_purc SET 
+            order_state = "2",
+            update_by = #{updateBy.id},
+            update_date = #{updateDate}
+        WHERE order_no = #{orderNo}
+    </update>
+    
+</mapper>

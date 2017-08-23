@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.AccountApplicationDao">
+    
+	<sql id="accountApplicationColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.village_info_id AS "villageInfoId",
+		a.module_manage_id AS "moduleManageId",
+		a.sort_num AS "sortNum",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountApplicationJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountApplication">
+		SELECT 
+			<include refid="accountApplicationColumns"/>
+		FROM account_application a
+		<include refid="accountApplicationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountApplication">
+		SELECT 
+			<include refid="accountApplicationColumns"/>
+		FROM account_application a
+		<include refid="accountApplicationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountApplication">
+		SELECT 
+			<include refid="accountApplicationColumns"/>
+		FROM account_application a
+		<include refid="accountApplicationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO account_application(
+			id,
+			account_id,
+			village_info_id,
+			module_manage_id,
+			sort_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{moduleManageId},
+			#{sortNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE account_application SET 	
+			account_id = #{accountId},
+			village_info_id = #{villageInfoId},
+			module_manage_id = #{moduleManageId},
+			sort_num = #{sortNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE account_application SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================================== -->
+	
+	<!-- 获取某用户在某楼盘下的常用应用 -->
+	<select id="getAccountApplicationList" resultType="AccountApplication">
+		SELECT
+			<include refid="accountApplicationColumns"/>
+		FROM
+			Account_Application a
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Account_Id = #{accountId}
+		AND a.Village_Info_Id = #{villageInfoId}
+		ORDER BY
+			a.Sort_Num
+	</select>
+	
+	<!-- 批量删除用户常用应用 -->
+	<update id="deleteList">
+		UPDATE Account_Application a
+		SET a.Del_Flag = '1'
+		WHERE
+			a.Del_Flag = '0'
+		AND a.Account_Id = #{accountId}
+		AND a.Village_Info_Id = #{villageInfoId}
+		AND a.Module_Manage_Id IN
+			<foreach collection="list" item="moduleId" open="(" separator="," close=")">
+				#{moduleId}
+			</foreach>
+	</update>
+	
+</mapper>

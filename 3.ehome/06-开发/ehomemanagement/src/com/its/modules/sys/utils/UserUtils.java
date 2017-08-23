@@ -107,6 +107,15 @@ public class UserUtils {
         removeCache(CACHE_OFFICE_LIST);
         removeCache(CACHE_OFFICE_ALL_LIST);
         UserUtils.clearCache(getUser());
+        
+        CacheUtils.remove("menuNamePathMap");//清除菜单名称
+		CacheUtils.remove(CACHE_ROLE_LIST);
+		CacheUtils.remove(CACHE_MENU_LIST);
+		CacheUtils.remove(CACHE_AREA_LIST);
+		CacheUtils.remove(CACHE_OFFICE_LIST);
+		CacheUtils.remove(CACHE_OFFICE_ALL_LIST);
+		CacheUtils.remove("sysCache");//清除系统缓存
+		CacheUtils.remove("dictMap");//清除字典
     }
 
     /**

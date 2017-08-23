@@ -181,8 +181,8 @@
 					<div class="control-group">
 						<label class="control-label">团购券有效期：</label>
 						<div class="controls">
-							<fmt:formatDate value="${groupPurchase.validityStartTime}" pattern="yyyy-MM-dd"/>&nbsp;至
-							<fmt:formatDate value="${groupPurchase.validityEndTime}" pattern="yyyy-MM-dd"/>
+							<fmt:formatDate value="${groupPurchase.validityStartTime}" pattern="yyyy-MM-dd HH"/>&nbsp;点&nbsp;至
+							<fmt:formatDate value="${groupPurchase.validityEndTime}" pattern="yyyy-MM-dd HH"/>&nbsp;点
 						</div>
 					</div>
 				</td>

@@ -173,7 +173,7 @@ public class CouponManageController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, userID, buildingID)) {
 			return toJson;
 		}
-		List<CouponManage> couponManages = couponManageService.getCanReceiveCoupons(buildingID);
+		List<CouponManage> couponManages = couponManageService.getCouponsOfReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_RECEIVE, buildingID);
 		if (couponManages == null || couponManages.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无数据");
@@ -255,7 +255,8 @@ public class CouponManageController extends BaseController {
 		} else if (CommonGlobal.COUPON_RECEIVE_RULE_ONLYONE.equals(couponManage.getReceiveRule())) {
 			receiveNum = memberDiscountService.getReceiveCount(couponManage.getVillageInfoId(), userID, couponManage.getId());
 		}
-		if (!"立即领取".equals(couponManageService.getCouponStatus(couponManage, receiveNum))) {
+		// 如果优惠券不可领取，则返回优惠券无法领取
+		if (couponManageService.getCouponStatus(couponManage, receiveNum) != 1) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "优惠券无法领取");
 			return toJson;

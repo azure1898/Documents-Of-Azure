@@ -9,6 +9,7 @@
 		<title>赞过我的</title>
 		<!-- Bootstrap -->
 		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 		<link href="../../css/main.css" rel="stylesheet">
 		<link href="../../css/common.css" rel="stylesheet">
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -25,14 +26,14 @@
 				<a href="#" class="black_back" onclick="javascript :history.go(-1)"></a>
 				赞过我的
 			</div>
-			<div class="main_box mb10" v-for="item in praiseDetail.data">
+			<div class="main_box mb10" v-for="item in praiseDetail">
 				<div class="fyxq_main">
 					<div class="fyxq_main_l">
 						<div class="fyxq_main_l_img">
 							<img v-bind:src="item.userHeadUrl" width="110" height="110">
 						</div>
 						<div class="fyxq_main_l_title">
-							<p>{{item.userName}}</p>
+							<a :href="urlList.personalpage + item.speak.userId"><p>{{item.userName}}</p></a>
 							<p><span>{{item.creatTime}}</span></p>
 						</div>
 					</div>
@@ -40,18 +41,19 @@
 					<div class="clear"></div>
 				</div>
 				<div class="fyxq_main2">
-					<p class="ftc5050" v-if="item.isComment===0">赞了这条发言</p>
+					<p class="ftc5050" v-if="item.isComment==0">赞了这条发言</p>
 					<p class="ftc5050" v-else>赞了这条评论</p>
 				</div>
 				<div class="fyxq_main2" v-if="item.isComment===1">
 					<p class="ftc5050">
 						<font class="ftcred">@{{item.comment.userName}}</font>：
-						<font class="ftcred" v-for="subject in item.comment.subjectList">#{{subject.subName}}#&nbsp;</font>
-						{{item.comment.content}}
+						<!--<font class="ftcred" v-for="subject in item.comment.subjectList">#{{subject.subName}}#&nbsp;</font>-->
+						<a :href="urlList.commentdetail + item.comment.id">{{item.comment.content}}</a>
 					</p>
 						<a v-bind:src="item.comment.imgUrls[0].url" v-if="item.comment.imgUrls.length>0">查看原图</a>
 				</div>
-				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
+				
+				<!--<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
 					<div class="fyxq_main_l2_img">
 						<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
 						<img v-bind:src="item.userHeadUrl" v-else width="110" height="110">
@@ -62,7 +64,24 @@
 							<font class="ftcred" v-for="subject in item.speak.subjectList">#{{subject.subName}}#&nbsp;</font>
 							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>
 					</div>
+				</div>-->
+				<!--原发言-->
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="item.speak.delFlag==1">
+					<div class="fyxq_main_l2_img">
+						<a :href="urlList.speechdetail + item.speak.id"><img :src="item.speak.imgUrls" width="110" height="110"></a>
+					</div>
+					<div class="fyxq_main_l_title2">
+						<p v-if="item.speak.noticeId!=''">{{item.speak.title}}</p>
+						<p v-else><a :href="urlList.personalpage + item.speak.userId" class="ftcred">@{{item.speak.userName}}</a></p>
+						<a :href="urlList.speechdetail + item.speak.id">
+							<p class="twoLine" v-html="item.speak.content"></p>
+						</a>
+					</div>
 				</div>
+				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+					原发言已被删除
+				</div>
+				
 				<div class="clear"></div>
 			</div>
 		</div>

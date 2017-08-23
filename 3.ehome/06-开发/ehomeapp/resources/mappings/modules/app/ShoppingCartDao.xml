@@ -214,13 +214,26 @@
 	
 	<!-- 获取购物车商品信息 -->
 	<select id="getShoppingCartList" resultType="GoodsInfoBean">
-		SELECT <include refid="goodsInfoColumns"/>,b.number AS cartNumber,b.price AS cartPrice,b.goods_sku_price_id AS goodsSkuPriceID,
-			c.base_price AS skuBasePrice,c.benefit_price AS skuBenefitPrice,c.sku_key_id AS skuKeyID,c.sku_value_id AS skuValueID
- 		from goods_info a,shopping_cart b LEFT JOIN goods_sku_price c ON b.goods_sku_price_id=c.ID
- 		<where>
- 		a.ID=b.Goods_Info_ID AND a.Del_Flag=0 AND b.Del_Flag=0 AND b.Order_status=0 AND b.Number>0
- 		AND b.account_id=#{0} AND b.village_info_id=#{1} AND b.business_info_id=#{2} 
- 		</where>
+ 		SELECT
+			<include refid="goodsInfoColumns"/>,
+			b.Number AS cartNumber,
+			b.price AS cartPrice,
+			b.Goods_Sku_Price_ID AS goodsSkuPriceID
+		FROM
+			Goods_Info a,
+			Shopping_Cart b
+		WHERE
+			a.ID = b.Goods_Info_ID
+		AND a.Del_Flag = '0'
+		AND b.Del_Flag = '0'
+		AND b.Order_status = '0'
+		AND b.Account_ID = #{0}
+		AND b.Village_Info_ID = #{1}
+		AND b.Business_Info_ID = #{2}
+		AND b.Number > 0
+		AND a.State = '1'
+		ORDER BY
+			b.Create_Date DESC
 	</select>
 	
 	<!-- 查询会员当前楼盘某商家，加入购物车的商品 -->

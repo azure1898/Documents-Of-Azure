@@ -19,6 +19,7 @@ import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.common.OrderGlobal;
 import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.common.payUtil.alipay.AlipayConfig;
+import com.its.modules.app.common.payUtil.alipay.AlipayNotify;
 import com.its.modules.app.common.payUtil.wechatpay.PayConfigUtil;
 import com.its.modules.app.common.payUtil.wechatpay.PayToolUtil;
 import com.its.modules.app.entity.Account;
@@ -63,9 +64,10 @@ public class OrderPayService extends BaseService {
 
 	@Autowired
 	private WalletDetailService walletDetailService;
-	
+
 	/**
 	 * 创建签名
+	 * 
 	 * @param appid
 	 *            应用ID（不可空）
 	 * @param mch_id
@@ -132,13 +134,17 @@ public class OrderPayService extends BaseService {
 			// 微信支付订单号
 			String transaction_id = packageParams.get("transaction_id");
 			int orderType = ValidateUtil.validateInteger(myOrderViewBean.getOrderType());
-			int row = this.updateOrder(orderType, out_trade_no, OrderGlobal.ORDER_PAY_TYPE, OrderGlobal.PAY_PLATFORM_WECHAT, payTime, openid, OrderGlobal.ORDER_PAY_STATE_PAYED, transaction_id);
+			int row = this.updateOrder(orderType, myOrderViewBean.getOrderId(), OrderGlobal.ORDER_PAY_TYPE, OrderGlobal.PAY_PLATFORM_WECHAT, payTime, openid, OrderGlobal.ORDER_PAY_STATE_PAYED, transaction_id);
 			if (row == 0) {
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				logger.warn("微信支付回调接口==========>Order Update Fail");
 				return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[Order Update Fail]]></return_msg></xml> ";
 			}
 			logger.warn("微信支付回调接口==========>Order Update Success");
+
+			// 插入订单跟踪
+			orderTrackService.createTrackPayed(String.valueOf(orderType - 1), myOrderViewBean.getOrderId(), myOrderViewBean.getOrderNo());
+
 			// 通知微信异步确认成功
 			logger.warn("微信支付回调接口==========>Synchronizing Confirm Success");
 			return "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[Synchronizing Confirm Success]]></return_msg>" + "</xml> ";
@@ -207,7 +213,7 @@ public class OrderPayService extends BaseService {
 
 			// 更新订单主表
 			int orderType = ValidateUtil.validateInteger(myOrderViewBean.getOrderType());
-			int row = this.updateOrder(orderType, out_trade_no, OrderGlobal.ORDER_PAY_TYPE, OrderGlobal.PAY_PLATFORM_ALIPAY, payTime, buyer_logon_id, OrderGlobal.ORDER_PAY_STATE_PAYED, trade_no);
+			int row = this.updateOrder(orderType, myOrderViewBean.getOrderId(), OrderGlobal.ORDER_PAY_TYPE, OrderGlobal.PAY_PLATFORM_ALIPAY, payTime, buyer_logon_id, OrderGlobal.ORDER_PAY_STATE_PAYED, trade_no);
 			// 判断是否更新成功
 			if (row == 0) {
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -215,6 +221,9 @@ public class OrderPayService extends BaseService {
 				return "Order Update Fail";
 			}
 			logger.warn("支付宝支付回调接口==========>Order Update Success");
+
+			// 插入订单跟踪
+			orderTrackService.createTrackPayed(String.valueOf(orderType - 1), myOrderViewBean.getOrderId(), myOrderViewBean.getOrderNo());
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
@@ -295,6 +304,9 @@ public class OrderPayService extends BaseService {
 				return 0;
 			}
 			logger.warn("平台钱包支付==========>Order Update Success");
+
+			// 插入订单跟踪
+			orderTrackService.createTrackPayed(String.valueOf(orderType - 1), myOrderViewBean.getOrderId(), myOrderViewBean.getOrderNo());
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();

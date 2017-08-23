@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.common.utils.StringUtils;
-import com.its.modules.app.entity.VillageLine;
 import com.its.modules.app.common.CommonGlobal;
 import com.its.modules.app.dao.VillageLineDao;
+import com.its.modules.app.entity.VillageLine;
 
 /**
  * 楼盘产品线及产品线设置管理Service
@@ -73,21 +73,9 @@ public class VillageLineService extends CrudService<VillageLineDao, VillageLine>
 			for (String navigation : navigationArray) {
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put("navID", navigation);
-				if (CommonGlobal.MAIN_NAVIGATION_MAINT.equals(navigation)) {
-					data.put("navName", "首页");
-				}
-				if (CommonGlobal.MAIN_NAVIGATION_COMMUNITY.equals(navigation)) {
-					data.put("navID", CommonGlobal.MAIN_NAVIGATION_MAINT);
-					data.put("navName", "社区");
-				}
-				if (CommonGlobal.MAIN_NAVIGATION_LIFE.equals(navigation)) {
-					data.put("navID", CommonGlobal.MAIN_NAVIGATION_MAINT);
-					data.put("navName", "生活");
-				}
-				if (CommonGlobal.MAIN_NAVIGATION_NEIGHBOR.equals(navigation)) {
-					data.put("navID", CommonGlobal.MAIN_NAVIGATION_MAINT);
-					data.put("navName", "邻里圈");
-				}
+				data.put("navName", dao.findSysDict(CommonGlobal.MAIN_NAVIGATION, navigation));
+				data.put("navUrl", null);
+
 				datas.add(data);
 			}
 		}

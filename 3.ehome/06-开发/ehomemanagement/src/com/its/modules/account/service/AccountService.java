@@ -69,5 +69,28 @@ public class AccountService extends CrudService<AccountDao, Account> {
 	public List<Account> findListByOrder(Account account) {
 		return dao.findListByOrder(account);
 	}
+	
+	/**
+	 * 用户管理：查询APP公号账号
+	 * @param account
+	 * @return
+	 */
+	public int CountPhoneNum(Account account){
+		return dao.CountPhoneNum(account);
+	}
 
+	public List<Account> findExportList(Account account) {
+		return dao.findExportList(account);
+	}
+	
+	/**
+	 * @Description：根据后台userId查询APP用户相关信息
+	 * @Author：王萌萌
+	 * @Date：2017年8月23日
+	 * @param userId
+	 * @return
+	 */
+	public Account findBySysUserId(String userId) {
+		return accountDao.findBySysUserId(userId);
+	}
 }

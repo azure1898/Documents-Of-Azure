@@ -91,7 +91,14 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-    <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBack" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderGoods/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
     <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:98.3%">
@@ -356,7 +363,7 @@
                     ${orderTrack.handleMsg}
                 </td>
                 <td style="width:12.5%">
-                    ${orderTrack.createName}
+                    ${fns:operatingView(orderTrack.createName)}
                 </td>
                 <td style="width:25%">
                     <c:if test="${not empty orderTrack.remarks}">${orderTrack.remarks}</c:if>
@@ -379,7 +386,14 @@
     <c:if test="${orderGoods.orderState !=  '3' && orderGoods.orderState !=  '4'}">
         <input id="btnElemCancelDown" class="commonbtn" type="button" value="取消" style="width:60px;" data-toggle="modal" data-target="#myModal"/>
     </c:if>
-    <input id="btnBackDown" class="commonbtn" type="button" value="返回" style="width:60px;" onclick="history.go(-1)"/>
+    <c:choose>
+        <c:when test="${not empty param.backurl}">
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${param.backurl}'"/>
+        </c:when>
+        <c:otherwise>
+            <input id="btnBackDown" class="commonbtn" style="width:60px;" type="button" value="返回" onclick="window.location.href = '${ctx}/order/orderGoods/'"/>
+        </c:otherwise>
+    </c:choose>
     </div>
     </div>
 </body>

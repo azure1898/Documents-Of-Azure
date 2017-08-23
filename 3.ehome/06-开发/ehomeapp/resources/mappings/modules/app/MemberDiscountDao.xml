@@ -164,4 +164,18 @@
 		AND DATE_FORMAT(a.Obtain_Date, "%Y-%m-%d") = DATE_FORMAT(NOW(), "%Y-%m-%d")
 	</select>
 	
+	<!-- 下单赠送优惠券时判断优惠券是否已赠送 -->
+	<select id="judgeMemberDiscount" resultType="MemberDiscount">
+		SELECT
+			<include refid="memberDiscountColumns"/>
+		FROM
+			Member_Discount a
+		WHERE
+			a.del_flag = '0'
+		AND a.Village_Info_ID = #{villageInfoId}
+		AND a.Account_ID = #{accountId}
+		AND a.Discount_ID = #{couponId}
+		AND a.Receive_Type = '1'
+	</select>
+	
 </mapper>

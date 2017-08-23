@@ -45,15 +45,15 @@ public class VillageLineRecomSpecialService extends CrudService<VillageLineRecom
 	}
 
 	/**
-	 * 获取某楼盘APP产品线下某位置的专题推荐
+	 * 获取某楼盘APP产品线下某位置的专题推荐列表
 	 * 
 	 * @param recommendPosition
 	 *            推荐位置：00 首页专题推荐 10 社区推荐 20 生活推荐
 	 * @param villageInfoId
 	 *            楼盘ID
-	 * @return VillageLineRecomSpecial
+	 * @return List<VillageLineRecomSpecial>
 	 */
-	public VillageLineRecomSpecial getVillageLineRecomSpecial(String recommendPosition, String villageInfoId) {
-		return dao.getVillageLineRecomSpecial(recommendPosition, villageInfoId);
+	public List<VillageLineRecomSpecial> getVillageLineRecomSpecialList(String recommendPosition, String villageInfoId) {
+		return dao.getVillageLineRecomSpecialList(recommendPosition, villageInfoId);
 	}
 }

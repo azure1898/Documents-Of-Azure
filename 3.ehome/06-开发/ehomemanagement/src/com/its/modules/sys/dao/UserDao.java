@@ -44,6 +44,12 @@ public interface UserDao extends CrudDao<User> {
 	public long findAllCount(User user);
 	
 	/**
+	 * 查找当前系统下的用户
+	 * @param user
+	 * @return
+	 */
+	public List<User> findHomeUserList(User user);
+	/**
 	 * 更新用户密码
 	 * @param user
 	 * @return
@@ -63,6 +69,13 @@ public interface UserDao extends CrudDao<User> {
 	 * @return
 	 */
 	public int deleteUserRole(User user);
+	
+	/**
+	 * 依据角色，删除用户角色关联数据
+	 * @param user
+	 * @return
+	 */
+	public int deleteRoleUser(User user);
 	
 	/**
 	 * 插入用户角色关联数据

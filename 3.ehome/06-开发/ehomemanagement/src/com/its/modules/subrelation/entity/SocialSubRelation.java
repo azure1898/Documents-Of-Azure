@@ -17,7 +17,6 @@ public class SocialSubRelation extends DataEntity<SocialSubRelation> {
 	private static final long serialVersionUID = 1L;
 	private String subjectid;		// 话题id
 	private String speakid;		// 发言id
-	private String forwardid;		// 转发id
 	private String commentid;		// 评论id
 	
 	public SocialSubRelation() {
@@ -44,15 +43,6 @@ public class SocialSubRelation extends DataEntity<SocialSubRelation> {
 
 	public void setSpeakid(String speakid) {
 		this.speakid = speakid;
-	}
-	
-	@Length(min=0, max=64, message="转发id长度必须介于 0 和 64 之间")
-	public String getForwardid() {
-		return forwardid;
-	}
-
-	public void setForwardid(String forwardid) {
-		this.forwardid = forwardid;
 	}
 	
 	@Length(min=0, max=64, message="评论id长度必须介于 0 和 64 之间")

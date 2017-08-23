@@ -3,7 +3,6 @@
  */
 package com.its.modules.order.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.Map;
 
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +17,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.AlipayUtils;
 import com.its.common.utils.HttpUtils;
 import com.its.common.utils.NumberUtil;
 import com.its.common.utils.WXUtils;
@@ -26,11 +25,8 @@ import com.its.common.utils.WXUtilsConfig;
 import com.its.modules.order.entity.Account;
 import com.its.modules.order.entity.OrderRefundInfo;
 import com.its.modules.order.entity.OrderService;
-import com.its.modules.order.entity.OrderServiceList;
 import com.its.modules.order.entity.OrderTrack;
 import com.its.modules.order.entity.WalletDetail;
-import com.its.modules.service.dao.ServiceInfoDao;
-import com.its.modules.service.entity.ServiceInfo;
 import com.its.modules.setup.dao.BusinessInfoDao;
 import com.its.modules.setup.entity.BusinessInfo;
 import com.its.modules.sys.entity.User;
@@ -54,17 +50,10 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
     @Autowired
     private OrderRefundInfoService orderRefundInfoService;
 
-    /** 服务管理Service */
-    @Autowired
-    private ServiceInfoDao serviceInfoDao;
-
     /** 订单跟踪表Service */
     @Autowired
     private OrderTrackService orderTrackService;
 
-    /** 订单-服务类子表-服务清单Service */
-    @Autowired
-    private OrderServiceListService orderServiceListService;
 
     /** 钱包明细Dao */
     @Autowired
@@ -145,32 +134,58 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
         OrderService orderServiceInfo = super.get(orderService.getId());
         // 如果订单支付状态为1：已支付的话，执行退款处理
         if ("1".equals(orderServiceInfo.getPayState())) {
-            // 如果是支付宝的话，生成退款信息，交由总后台进行退款
+            // 如果是支付宝的话
             if ("1".equals(orderServiceInfo.getPayOrg())) {
                 // 更新订单表
                 orderServiceInfo.preUpdate();
                 // 将该订单的支付状态改为2：退款中
                 orderServiceInfo.setPayState("2");
                 super.save(orderServiceInfo);
-                OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
-                orderRefundInfo.setOrderId(orderServiceInfo.getId());
-                orderRefundInfo.setOrderNo(orderServiceInfo.getOrderNo());
-                // 支付宝交易号
-                orderRefundInfo.setTransactionId(orderServiceInfo.getTransactionID());
-                // 因为是商品订单发生退款，所以固定为1：服务类
-                orderRefundInfo.setOrderType("1");
-                orderRefundInfo.setPayType(orderServiceInfo.getPayType());
-                orderRefundInfo.setOrderMoney(orderServiceInfo.getPayMoney());
-                // 终端类型固定为商家后台
-                orderRefundInfo.setType("2");
-                orderRefundInfo.setModuleManageId(orderServiceInfo.getModuleManageId());
-                // 产品模式固定为1:服务预约
-                orderRefundInfo.setProdType("1");
-                orderRefundInfo.setRefundMoney(orderServiceInfo.getPayMoney());
-                orderRefundInfo.setRefundType(orderServiceInfo.getPayOrg());
-                // 退款状态：待退款
-                orderRefundInfo.setRefundState("0");
-                orderRefundInfoService.save(orderRefundInfo);
+
+                // 执行支付宝退款
+                JSONObject refundResult = AlipayUtils.alipayRefundRequest(orderServiceInfo.getOrderNo(),
+                        String.valueOf(orderServiceInfo.getPayMoney()), orderService.getCancelRemarks());
+                if (refundResult != null && "10000".equals(refundResult.get("code"))) {
+                    // 更新订单表
+                    orderServiceInfo.preUpdate();
+                    // 将该订单的支付状态改为3：已退款
+                    orderServiceInfo.setPayState("3");
+                    super.save(orderServiceInfo);
+                    OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
+                    orderRefundInfo.setOrderId(orderServiceInfo.getId());
+                    orderRefundInfo.setOrderNo(orderServiceInfo.getOrderNo());
+                    // 微信交易号
+                    orderRefundInfo.setTransactionId(orderServiceInfo.getTransactionID());
+                    // 因为是商品订单发生退款，所以固定为1：服务类
+                    orderRefundInfo.setOrderType("1");
+                    orderRefundInfo.setPayType(orderServiceInfo.getPayType());
+                    orderRefundInfo.setOrderMoney(orderServiceInfo.getPayMoney());
+                    // 终端类型固定为商家后台
+                    orderRefundInfo.setType("2");
+                    orderRefundInfo.setModuleManageId(orderServiceInfo.getModuleManageId());
+                    // 产品模式固定为1:服务预约
+                    orderRefundInfo.setProdType("1");
+                    orderRefundInfo.setRefundMoney(orderServiceInfo.getPayMoney());
+
+                    orderRefundInfo.setRefundNo(orderServiceInfo.getOrderNo());
+                    // 微信退款单号
+                    orderRefundInfo.setRefundTransactionId(refundResult.get("out_trade_no").toString());
+                    orderRefundInfo.setRefundType(orderServiceInfo.getPayOrg());
+
+                    // 退款状态：退款成功
+                    orderRefundInfo.setRefundState("2");
+
+                    // 退款完成时间
+                    orderRefundInfo.setRefundOverTime(new Date());
+
+                    // 退款原因
+                    orderRefundInfo.setRefundReason(orderService.getCancelRemarks());
+
+                    orderRefundInfoService.save(orderRefundInfo);
+                } else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return result;
+                }
                 // 如果是微信的话，直接调用接口进行退款
             } else if ("0".equals(orderServiceInfo.getPayOrg())) {
                 // 以订单号为退款号
@@ -226,9 +241,12 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
                 }
                 // 如果是用户钱包支付的话
             } else if ("2".equals(orderServiceInfo.getPayOrg())) {
+                logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "退款开始");
                 // 取得用户信息,并施加行级锁
                 Account userInfo = accountDao.getForUpdate(orderService.getAccountId());
                 if (userInfo == null) {
+                    logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "，取得不到用户信息");
+                    logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "退款异常结束");
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 }
                 // 根据订单ID取得支付明细（即本金支付多少，赠送金额支付多少）
@@ -247,6 +265,8 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
                 result = accountDao.update(userInfo);
                 // 若更新失败则回滚事务
                 if (result == 0) {
+                    logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "，钱包余额修改失败");
+                    logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "退款异常结束");
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return result;
                 }
@@ -272,43 +292,10 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
                 walletDetail.setPayType("0");
                 // 执行插入操作
                 walletDetailDao.insert(walletDetail);
-            }
-        }
-
-        // 商品订单明细取得
-        OrderServiceList orderServiceList = new OrderServiceList();
-        // 根据订单号检索
-        orderServiceList.setOrderNo(orderService.getOrderNo());
-        // 取得该订单对应的信息
-        List<OrderServiceList> orderServiceInfoList = orderServiceListService.findList(orderServiceList);
-
-        List<String> serviceId = new ArrayList<String>();
-        // 商品数量信息MAP
-        Map<String, Integer> serviceStock = new HashMap<String, Integer>();
-        for (OrderServiceList orderServiceListTemp : orderServiceInfoList) {
-            serviceId.add(orderServiceListTemp.getServiceInfoId());
-            // 算出该订单每种商品一共多少库存
-            int stock = nullToZero(orderServiceListTemp.getPayCount())
-                    + nullToZero(serviceStock.get(orderServiceListTemp.getServiceInfoId()));
-            serviceStock.put(orderServiceListTemp.getServiceInfoId(), stock);
-        }
-        // 虽然逻辑上不会有商品为空的订单，为了程序的健壮性依然增加了该判断
-        if (serviceId != null & serviceId.size() > 0) {
-            // 对商品信息添加行级锁
-            List<ServiceInfo> serviceInfoList = serviceInfoDao.findServiceInfoListForUpdate(serviceId);
-
-            // 库存回退
-            for (ServiceInfo serviceInfo : serviceInfoList) {
-                serviceInfo.preUpdate();
-                serviceInfo.setStock(
-                        nullToZero(serviceInfo.getStock()) + nullToZero(serviceStock.get(serviceInfo.getId())));
-                serviceInfo.preUpdate();
-                result = serviceInfoDao.update(serviceInfo);
-                // 若更新失败则回滚事务
-                if (0 == result) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return result;
-                }
+                logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "，退款金额如下：");
+                logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "，钱包本金：" + payInfo.getWalletPrincipal());
+                logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "，钱包赠送金额：" + payInfo.getWalletPresent());
+                logger.warn("用户钱包退款------------>订单号：" + orderServiceInfo.getOrderNo() + "退款正常结束");
             }
         }
 
@@ -320,12 +307,14 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
         orderTrack.setHandleMsg("商家已取消");
         orderTrack.setStateMsgPhone("已取消");
         orderTrack.setHandleMsgPhone("订单已成功取消");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrack.setRemarks(orderService.getCancelRemarks());
         orderTrackService.save(orderTrack);
 
-        // 从SESSION中取得商家信息
-        User user = UserUtils.getUser();
         // 向用户推送订单取消信息
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("businessId", user.getBusinessinfoId());
@@ -343,20 +332,6 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
             return result;
         }
         return result;
-    }
-
-    /**
-     * 如果为NULL则变为0
-     * 
-     * @param number
-     *            待转换数字
-     * @return
-     */
-    private Integer nullToZero(Integer number) {
-        if (number == null) {
-            return NumberUtils.INTEGER_ZERO;
-        }
-        return number;
     }
 
     /**
@@ -384,7 +359,11 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
         orderTrack.setHandleMsg("完成服务/送达/已自提");
         orderTrack.setStateMsgPhone("已完成");
         orderTrack.setHandleMsgPhone("感谢您的订购");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrack.setRemarks(orderService.getCancelRemarks());
         orderTrackService.save(orderTrack);
         return result;
@@ -414,7 +393,11 @@ public class OrderServiceService extends CrudService<OrderServiceDao, OrderServi
         orderTrack.setHandleMsg("商家已受理，服务中");
         orderTrack.setStateMsgPhone("已受理");
         orderTrack.setHandleMsgPhone("商家已受理，服务中");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrack.setRemarks(orderService.getCancelRemarks());
         orderTrackService.save(orderTrack);
         return result;

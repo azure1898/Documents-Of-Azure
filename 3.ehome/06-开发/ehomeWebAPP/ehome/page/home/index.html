@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>首页</title>
     <!-- Bootstrap -->
@@ -167,7 +167,6 @@
                         <div class="swiper-container_group swiper-container">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide" v-for="group in groupBuy">
-
                                     <div class="details_title labelEllipsis">{{group.groupBuyName}}</div>
                                     <div class="mt4 clearfix">
                                         <div class="fl">
@@ -186,12 +185,13 @@
             </div>
         </div>
         <!--专题推荐-->
-        <div class="teshkj" v-if="topic.topicData && topic.topicData.length>0">
-            <div class="xq_jstitle">{{topic.topicName}}</div>
+        <div class="teshkj" v-if="topic && topic.length>0" v-for="tpdata in topic"> 
+            <div class="xq_jstitle">{{tpdata.topicName}}</div>
             <div class="Boutique_buy_main_pic3">
-                <div v-for="(item,index) in topic.topicData" v-on:click="topicClick(item)"
-                     v-bind:class="{'topic_image_small':topicClass==2||(topicClass==3&&index>1),'topic_image_big':topicClass==1||(topicClass==3&&index<2)}">
-                    <img v-bind:src="item.recommendImage">
+                <!--<div v-for="(item,index) in tpdata.topicData"  v-on:click="topicClick(item)" v-bind:class="{'topic_image_small':topicClass==2||(topicClass==3&&index>1),'topic_image_big':topicClass==1||(topicClass==3&&index<2)}">-->
+                <div v-for="(item,index) in tpdata.topicData"  v-on:click="topicClick(item)" v-bind:class="{'topic_image_small':tpdata.topicData.length%3==0||(tpdata.topicData.length==5 && index>1),'topic_image_big':tpdata.topicData.length%2==0||(tpdata.topicData.length==5&&index<2)}">
+                   
+                   <img v-bind:src="item.recommendImage">
                     <div class="topic_title">
                         <a href="#" style="color: white;padding-left:3px;">{{item.recommendName}}</a>
                     </div>
@@ -199,7 +199,8 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <!--中部商家-->
+    	
+      <!--中部商家-->
         <div class="Boutique_buy" v-if="middleBusiness && middleBusiness.length>0" v-for="business_m in middleBusiness">
             <div class="xq_jstitle labelEllipsis" style="padding-top:10px;">{{business_m.businessName}}</div>
             <div class="swiper-middle swiper-container">

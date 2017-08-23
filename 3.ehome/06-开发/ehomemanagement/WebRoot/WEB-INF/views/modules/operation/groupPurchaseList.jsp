@@ -17,10 +17,9 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-        <li class="active">
-            <a href="${ctx}/operation/groupPurchase/">团购管理列表</a>
-            <shiro:hasPermission name="operation:groupPurchase:add"><li><a href="${ctx}/operation/groupPurchase/form">团购管理添加</a></li></shiro:hasPermission>
+    <ul class="nav nav-tabs">
+        <li> 
+           <span class="common-breadcrumb">运营管理&nbsp;>&nbsp;<a href="${ctx}/operation/groupPurchase/">团购管理 </a></span>
         </li>
     </ul>
 	<form:form id="searchForm" modelAttribute="groupPurchase" action="${ctx}/operation/groupPurchase/" method="post" class="breadcrumb form-search">

@@ -11,6 +11,22 @@
 	            var patrn=/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
 	            return this.optional(element) || (patrn.test(value));
 	        }, "请输入中文，英文或数字");
+	        // 规格项必输CHECK
+	        $.validator.addMethod("goodsSkuPriceRequired", function(value) {
+	            if (value == "") {
+	                return false;
+	            } else {
+	                return true;
+	            }
+	        }, "请填写规格价格");
+	        // 规格项必输CHECK
+	        $.validator.addMethod("goodsSkuStockRequired", function(value) {
+	            if (value == "") {
+	                return false;
+	            } else {
+	                return true;
+	            }
+	        }, "请填写规格库存");
 	        jQuery.validator.addMethod("quotanum", function(value, element,params) {
 	            if ($("#quota").val() != "") {
 	            	if (value == "") {
@@ -70,7 +86,8 @@
                         number: true,
                         maxlength: 9,
                         min:0,
-                        digits:true 
+                        digits:true ,
+                        required:true
                     },
                     quotaNum: {
                     	number: true,
@@ -100,7 +117,8 @@
                     },
                     stock: {
                         number: "请填写数字",
-                        maxlength: "库存长度不能超过9"
+                        maxlength: "库存长度不能超过9",
+                        required: "请填写商品库存"
                     },
                     quotaNum: {
                     	number: "请填写数字",
@@ -109,10 +127,6 @@
                     }
 	            },
 				submitHandler: function(form){
-	                if ($(".up-section").size() == 0) {
-			            alertx("未选择任何图片");
-			            return;
-			        }
 	                if (KindEditor.instances[0].html().length > 20000) {
 	                    $(".word_message").show();
 	                    return;
@@ -254,7 +268,8 @@
             }
         }
 	    function openSortInfo(obj,refresh) {
-	    	var $obj = $("a[href='${ctx}/goods/sortInfo']", window.parent.document);
+	    	
+	    	/*var $obj = $("a[href='${ctx}/goods/sortInfo']", window.parent.document);
 	    	if ($obj == undefined) {
 	    		$obj = $(this);
 	    	}
@@ -262,7 +277,17 @@
 	        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_close>a', window.parent.document).html('<i class="fa fa-remove"></i>');
 	        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left', window.parent.document).css('width','100px');
 	        $('#jerichotab .tab_pages>div.tabs>ul>li>div.tab_left>div.tab_text', window.parent.document).css('width','87px');
-            return false;
+            return false;*/
+                //IE 
+	    	if(document.all) { 
+	    	    feature="dialogWidth:1000px;dialogHeight:800px;status:no;help:no;scrollbars:yes"; 
+	    	    window.showModalDialog('${ctx}/goods/sortInfo',null,feature); 
+	    	} else { 
+	    	    //modelessDialog可以将modal换成dialog=yes 
+	    	    feature ="width=1000,height=800,menubar=no,toolbar=no,location=no,"; 
+	    	    feature+="scrollbars=yes,status=no,modal=yes";   
+	    	    window.open('${ctx}/goods/sortInfo',null,feature); 
+	    	}  
 	    }
 	    // 下拉菜单刷新
 	    function sortInfoRefresh() {
@@ -337,24 +362,23 @@
 		<form:hidden id="sort" path="sort" htmlEscape="false" />
 		<sys:message content="${message}" />
 		<div class="control-group">
-			<label class="control-label">商品名称：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font> </span>商品名称：</label>
 			<div class="controls">
 				<form:input path="name" htmlEscape="false" maxlength="20"
 					placeholder="请输入商品名称（建议在20个字以内）" class="input-xlarge" />
-				<span class="help-inline"><font color="red">*</font></span>
 			</div>
 		</div>
 		<c:if test="${sortInfoList != null && sortInfoList.size() > 0}">
 			<div class="control-group">
-				<label class="control-label">商品分类：</label>
+				<label class="control-label"><span class="help-inline"><font color="red">*</font> </span>商品分类：</label>
 				<div class="controls">
 					<form:select path="sortInfoId" class="input-xlarge required" onkeydown="sortInfoRefresh()" onmousedown = "sortInfoRefresh()" onchange="clearError(this);">
 						<form:option value="" label="请选择商品分类" />
 						<form:options items="${sortInfoList}" itemLabel="name"
 							itemValue="id" htmlEscape="false" />
 					</form:select>
-					<span class="help-inline"><font color="red">*</font> </span>
-					<a onclick="openSortInfo(this)" style="cursor:pointer">分类添加</a>
+					<a onclick="openSortInfo(this)" href="#">新增分类</a>
+					<!--<a href="${ctx}/goods/sortInfo" data-toggle="modal" data-target="#myModal">新增分类</a> -->
 				</div>
 			</div>
 		</c:if>
@@ -369,12 +393,13 @@
 			<form:hidden path="delImageName" />
 			<section class=" img-section">
 				<div class="z_photo upimg-div clear">
-					<c:forEach items="${imgUrls}" var="imgTemp">
+					<c:forEach items="${imgUrls}" var="imgTemp" varStatus="status">
 						<section class="up-section fl">
 							<span class="up-span"></span> <img
 								src="${ctxStatic}/images/a7.png" class="close-upimg"> <img
 								src="${imgTemp.imgUrl}" class="up-img"> <input
 								type="hidden" class="filename" value="${imgTemp.myfileid}" readonly="readonly">
+								<input type="hidden" class="picindex" value="${status.index}" readonly="readonly">
 						</section>
 					</c:forEach>
 					<section class="z_file fl"
@@ -412,18 +437,19 @@
 		<div class="control-group">
 			<label class="control-label">商品价格：</label>
 			<div class="controls">
+			    <span><span class="help-inline"><font color="red">*</font> </span>原价：</span>
 				<form:input path="basePrice" placeholder="请填写商品价格"
 					htmlEscape="false" maxlength="10"
 					value="${fns:doubleFormatForInput(goodsInfo.basePrice)}"
 					class="input-xlarge required" />
-				<span class="help-inline"><font color="red">*</font> </span> <span>优惠价：</span>
+				 <span>优惠价：</span>
 				<form:input path="benefitPrice" htmlEscape="false"
 					class="input-xlarge "
 					value="${fns:doubleFormatForInput(goodsInfo.benefitPrice)}"
 					maxlength="10" />
 				<span>库存：</span>
 				<form:input path="stock" htmlEscape="false" maxlength="9" placeholder="请填写商品库存"
-					class="input-xlarge " />
+					class="input-xlarge required" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -449,18 +475,16 @@
                                 <span id="goodsSkuPriceList{{idx}}_skuValueName">{{row.skuValueName}}</span>
                             </td>
                             <td >
-                                <span>原价：</span>
-                                <input id="goodsSkuPriceList{{idx}}_basePrice" name="goodsSkuPriceList[{{idx}}].basePrice" type="text" placeholder="请填写规格价格" value="{{row.basePrice}}"  maxlength="10" class="min:0 input-small required number"/>
-                                <span class="help-inline"><font color="red">*</font> </span>
+                                <span><span class="help-inline"><font color="red">*</font> </span>原价：</span>
+                                <input id="goodsSkuPriceList{{idx}}_basePrice" name="goodsSkuPriceList[{{idx}}].basePrice" type="text" placeholder="请填写规格价格" value="{{row.basePrice}}"  maxlength="10" class="min:0 input-small goodsSkuPriceRequired number"/>
                             </td>
                             <td >
                                 <span>优惠价：</span>
                                 <input id="goodsSkuPriceList{{idx}}_benefitPrice" name="goodsSkuPriceList[{{idx}}].benefitPrice" type="text" value="{{row.benefitPrice}}"  maxlength="10" class="input-small number"/>
                             </td>
                             <td >
-                                <span>库存：</span>
-                                <input id="goodsSkuPriceList{{idx}}_stock" name="goodsSkuPriceList[{{idx}}].stock" type="text" placeholder="请填写规格库存" value="{{row.stock}}" maxlength="9" class="min:0 digits:true input-small required  number stockSum" onblur="stockSum()"/>
-                                <span class="help-inline"><font color="red">*</font> </span>
+                                <span><span class="help-inline"><font color="red">*</font> </span>库存：</span>
+                                <input id="goodsSkuPriceList{{idx}}_stock" name="goodsSkuPriceList[{{idx}}].stock" type="text" placeholder="请填写规格库存" value="{{row.stock}}" maxlength="9" class="min:0 digits:true input-small goodsSkuStockRequired  number stockSum" onblur="stockSum()"/>
                             </td>
                         </tr>//-->
                     </script>

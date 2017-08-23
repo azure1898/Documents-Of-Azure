@@ -43,7 +43,32 @@
 	</head>
 
 	<body>
-		<div id="app">
+		<div id="popup" style="display: none;">
+			<div style="background:#fff;opacity: 0.9;filter:alpha(opacity=90); width:100%; height:100%; position:absolute; z-index:888;"></div>
+			<div class="gongneng">
+				<div class="gongneng_m">
+					<ul>
+						<li>
+							<a href="../operate/speak.html">
+								<img src="../../images/wenzi.png" width="80" height="80">
+								<p>发文字</p>
+							</a>
+						</li>
+						<li>
+							<img src="../../images/jianyi.png">
+							<p>发建议</p>
+						</li>
+						<li>
+							<img src="../../images/baoxiu.png">
+							<p>发报修</p>
+						</li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="gongneng_m2" ><img src="../../images/close2.png" width="84" height="84" onclick="say()"></div>
+			</div>
+		</div>
+		<div id="app" v-cloak>
 			<div class="grey_top">
 				我的消息
 			</div>
@@ -51,7 +76,7 @@
 				<div class="my_message">
 					<a :href="urlList.myspeech">
 						<div class="my_message_left"><img src="../../images/icon01.png" width="80" height="80">
-							<div class="my_message_left_t" v-if="mymessages.countAtMe>0"></div>
+							<div class="my_message_left_t" v-if="count.countAtMe > 0"></div>
 						</div>
 						<div class="my_message_right">
 							<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;@我的
@@ -60,18 +85,20 @@
 					</a>
 				</div>
 				<div class="my_message">
-					<div class="my_message_left"><img src="../../images/icon02.png" width="80" height="80">
-						<div class="my_message_left_t" v-if="mymessages.countComment>0"></div>
-					</div>
-					<div class="my_message_right">
-						<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;评论
-					</div>
-					<div class="clear"></div>
+					<a :href="urlList.commentme">
+						<div class="my_message_left"><img src="../../images/icon02.png" width="80" height="80">
+							<div class="my_message_left_t" v-if="count.countComment>0"></div>
+						</div>
+						<div class="my_message_right">
+							<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;评论
+						</div>
+						<div class="clear"></div>
+					</a>
 				</div>
 				<div class="my_message" style="border-bottom:none;">
 					<a :href="urlList.mypraise">
 						<div class="my_message_left"><img src="../../images/icon03.png" width="80" height="80">
-							<div class="my_message_left_t" v-if="mymessages.countPraise>0"></div>
+							<div class="my_message_left_t" v-if="count.countPraise>0"></div>
 						</div>
 						<div class="my_message_right">
 							<span><img src="../../images/go.png" width="9" height="16"></span> &nbsp;&nbsp;赞
@@ -84,38 +111,38 @@
 			<div class="main_box mt10" style="border-top:solid 1px #ececec; padding:0;">
 				<div class="my_message">
 					<div class="my_message_left"><img src="../../images/icon04.png" width="80" height="80">
-						<div class="my_message_left_t" v-if="mymessages.countOrder>0"></div>
+						<div class="my_message_left_t" v-if="count.countOrder>0"></div>
 					</div>
 					<div class="my_message_right2">
-						<p>&nbsp;&nbsp;<span>06-01</span>
-							<font style="font-size:16px; color:#000;">订单通知</font>
+						<p>&nbsp;&nbsp;<span>{{mymessages.orderMsgTime}}</span>
+							<a :href="urlList.ordermessage"><font style="font-size:16px; color:#000;">订单通知</font></a>
 						</p>
-						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+						<a :href="urlList.ordermessage"><p>&nbsp;&nbsp;{{mymessages.orderMsgConter}}</p></a>
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="my_message">
-					<div class="my_message_left2"><img src="../../images/icon05.png" width="80" height="80">
-					
+				<div class="my_message" v-for="order in mymessages.adminList" v-if="mymessages.adminList.length&&mymessages.adminList.length>0">
+					<div class="my_message_left2"><img :src="order.userHeadUrl" width="80" height="80">
+						<div class="my_message_left_t"></div>
 					</div>
 					<div class="my_message_right2">
-						<p>&nbsp;&nbsp;
-							<font style="font-size:16px; color:#000;">订单通知</font>
+						<p>&nbsp;&nbsp;<span>{{order.createTime}}</span>
+							<a :href="urlList.personalpage + order.id"><font style="font-size:16px; color:#000;">{{order.userName}}</font></a>
 						</p>
-						<p>&nbsp;&nbsp;您有一笔新的交易订单，请查看</p>
+						<p>&nbsp;&nbsp;{{order.content}}</p>
 					</div>
 					<div class="clear"></div>
 				</div>
 				
 
-				<div class="he100"></div>
+				<!--<div class="he100"></div>-->
 				<div class="foot2">
 					<div class="foot2_bg">
 						<ul>
-							<li> <a href="#"><i class="i2_con1"></i><span  style="display:block;">首页</span></a></li>
+							<li> <a :href="urlList.index + unread"><i class="i2_con1"></i><span  style="display:block;">首页</span></a></li>
 							<li><a href="#"><i :class="unread==1?'i2_con2_2':'i2_con2_1'"></i><span class="index_redft" style="display:block;">消息</span></a></li>
 							<li style="width:24%; z-index:1000; margin-top:-0;">
-								<a href="#"><img src="../../images/index2_icon6.png"></a>
+								<a href="#" onclick="say()"><img src="../../images/index2_icon6.png"></a>
 							</li>
 							<li><a href="#"><i class="i2_con3_2"></i><span  style="display:block;">优家</span></a></li>
 							<li><a href="#"><i class="i2_con4_2"></i><span style="display:block;">我家</span></a></li>
@@ -130,6 +157,12 @@
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/mymessage.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			function say(){
+				$("#popup").toggle();
+				$("#app").toggle()
+			}
+		</script>
 	</body>
 
 </html>

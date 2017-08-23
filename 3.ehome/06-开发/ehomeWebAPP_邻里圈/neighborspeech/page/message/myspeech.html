@@ -34,16 +34,16 @@
 			[v-cloak] {
 				display: none;
 			}
-				.collection_btn{
-				display: inline-block;
-			    width: 50px;
-			    height: 24px;
-			    /*background: #C0C0C0;*/
-			   border: 1px solid #df2d1f;
-			    border-radius: 4px;
-			    text-align: center;
-			    line-height: 24px;
-			    color: #df2d1f;
+			.collection_btn{
+			display: inline-block;
+		    width: 50px;
+		    height: 24px;
+		    /*background: #C0C0C0;*/
+		    border: 1px solid #df2d1f;
+		    border-radius: 4px;
+		    text-align: center;
+		    line-height: 24px;
+		    color: #df2d1f;
 			}
     	.bottom_icon6 {
 	    background: url(../../images/bot_icon3.png) left center no-repeat;
@@ -62,11 +62,11 @@
 			<div id="type" style="position:fixed; bottom:0; left:0; z-index:999; width:100%; display:none;">
 				<div class="sort_xiala">
 					<ul>
-						<li @click="cancelAttention()">取消关注</li>
-						<li @click="shield()">屏蔽他的发言</li>
-						<li @click="deleteStatement()">
+						<li @click="cancelAttention(obj)">取消关注</li>
+						<li @click="shield(obj)">屏蔽他的发言</li>
+						<!--<li @click="deleteStatement(obj)">
 							<font class="index_redft">删除</font>
-						</li>
+						</li>-->
 						<li style="height:10px; background:#dddddd">&nbsp;</li>
 						<li @click="closePopups()">取消</li>
 					</ul>
@@ -81,39 +81,60 @@
 			<div class="main_box mb10" v-for="(item,index) in speechLists">
 				<div class="fyxq_main">
 					<div class="fyxq_main_l">
-						<div class="fyxq_main_l_img"><img :src="item.userHeadUrl" width="110" height="110"></div>
+						<div class="fyxq_main_l_img"><a :href="urlList.personalpage + item.userId"><img :src="item.userHeadUrl" width="110" height="110"></a></div>
 						<div class="fyxq_main_l_title">
-							<p>{{item.userName}}</p>
+							<a :href="urlList.personalpage + item.userId"><p>{{item.userName}}</p></a>
 							<p><span>{{item.creatTime}}</span></p>
 						</div>
 					</div>
-					<div class="fyxq_main_r" v-if="item.isFocus==1" ><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(index)"></div>
-					<div class="fyxq_main_r" v-else ><span class="collection_btn" @click="attention(item)">+关注</span>&nbsp;&nbsp;<span @click="shield()">X</span></div>
+					<div class="fyxq_main_r" v-if="item.isFocus==1" ><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(item,index)"></div>
+					<div class="fyxq_main_r" v-else ><span class="collection_btn" @click="attention(item)">+关注</span>&nbsp;&nbsp;<span @click="shield(item)">X</span></div>
 					
 					<div class="clear"></div>
 				</div>
 				<div class="fyxq_main2">
 					<p class="ftc5050">
-						<font class="ftcred" v-for="(subject,index) in item.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
-						{{item.content}}
+						<!--<font class="ftcred" v-for="(subject,index) in item.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>-->
+						<a :href="urlList.speechdetail + item.id"><span v-html="item.content"></span></a>
 						<!--<font class="ftcred">@优米的米</font>-->
 					</p>
 				</div>
 				<div class="fyxq_main3" v-if="item.imgUrls.length>0">
 					<ul>
-						<li v-for="(pic,index) in item.imgUrls" >
-							<img :src="pic.url" width="110" height="110">
+						<li v-for="(pic,index) in item.imgUrls">
+							<a :href="urlList.speechdetail + item.id"><img :src="pic.url" width="110" height="110"></a>
 						</li>
 						<div class="clear"></div>
 					</ul>
 				</div>
+				<!--原发言-->
+				<div v-if="item.isSpeak==0">
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="item.rootSpeak.delFlag==0">
+						<div class="fyxq_main_l2_img">
+							<img :src="item.rootSpeak.images" width="110" height="110">
+						</div>
+						<div class="fyxq_main_l_title2">
+							<p v-if="item.rootSpeak.noticeId!=''">{{item.rootSpeak.title}}</p>
+							<p v-else><a :href="urlList.personalpage + item.rootSpeak.userId" class="ftcred">@{{item.rootSpeak.userName}}</a></p>
+							<a :href="urlList.speechdetail + item.rootSpeak.speakId">
+								<p class="twoLine" v-html="item.rootSpeak.content"></p>
+							</a>
+						</div>
+					</div>
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+						原发言已被删除
+					</div>
+				</div>
+				
+
+				<div class="clear"></div>
 				<div class="personal_main_bottom">
 					<ul>
 						<li>
-							<a :href="urlList.forward" class="bottom_icon1">{{item.countForward}}</a>
+							<a :href="urlList.forward + item.id" class="bottom_icon1">{{item.countForward}}</a>
 						</li>
 						<li>
-							<a :href="urlList.speechdetail" class="bottom_icon2">{{item.countComment}}</a>
+							<a :href="item.countComment>0 ? urlList.speechdetail + item.id : urlList.comments + item.item" class="bottom_icon2">{{item.countComment}}</a>
 						</li>
 						<li style="border-right:none;">
 							<a href="###" :class="item.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(item,1)">{{item.countPraise}}</a>

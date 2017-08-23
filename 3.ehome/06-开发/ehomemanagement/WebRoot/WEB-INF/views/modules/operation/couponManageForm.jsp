@@ -7,6 +7,19 @@
 <script type="text/javascript">
     $(document).ready(function() {
         fillPro(); // 加载全部省市区数据
+        $("#btnExport").click(function() {
+            top.$.jBox.confirm("确认要下载用户数据模板吗？", "系统提示",
+                function(v, h, f) {
+                    if (v == 'ok') {
+                        window.location.href="${ctx}/operation/couponManage/export";
+                        //$("#searchForm").submit();
+                    }
+                },
+                {
+                    buttonsFocus: 1
+                });
+                top.$('.jbox-body .jbox-icon').css('top', '55px');
+            });
         // 在编辑时，对各个字段进行数值回显
         $(function() {
             // 优惠券内容
@@ -97,7 +110,7 @@
         	// var caseElement = jQuery(params[0]).val();
         	var eleVal = $("input[name="+params[0]+"]:checked").val();
             if(eleVal==params[1]){
-            	if(value.length>1) {
+            	if(value.length>=1) {
             		return true
             	} else {
             		return false;
@@ -174,7 +187,7 @@
                 	required:true
                 },
                 fullUseMoney:{ // 满**可用
-                    requiredCase:['useRule','1'],
+                    required:true,
                     number: true,
                     maxlength: 9,
                     min: 0.01
@@ -183,7 +196,7 @@
                 	required:true
                 },
                 limitedNum:{ // 限量 张
-                    requiredCase:['grantType','1'],
+                    required: true,
                     number: true,
                     digits:true,
                     maxlength: 9,
@@ -209,7 +222,7 @@
                     compareDate:'#validityStartTime'
                 },
                 validityDays:{ // 有效天数
-                	requiredCase:['validityType','1'],
+                	required: true,
                     number: true,
                     digits: true,
                     maxlength: 9,
@@ -222,11 +235,10 @@
                 	required: true
                 },
                 giveRule:{ // 赠送规则
-                	//requiredCase: ['#receiveType','1']
                     required:true
                 },
                 fullGiveRule:{ // 满**元，赠送1张
-                    requiredCase: ['giveRule','1'],
+                    required: true,
                     number: true,
                     maxlength: 9,
                     min: 1
@@ -293,7 +305,7 @@
                     required:'请输入使用条件'
                 },
                 fullUseMoney:{ // 满**可用
-                    requiredCase:'满额可用金额必须填写',
+                    required:'满额可用金额必须填写',
                     number: '请填写数字',
                     maxlength: '长度不能超过9个字符',
                     min: '必须大于0.01元'
@@ -302,7 +314,7 @@
                     required:'请输入发放总量'
                 },
                 limitedNum:{ // 限量 张
-                    requiredCase: '限量张数必须填写',
+                    required: '限量张数必须填写',
                     number: '请填写数字',
                     digits: '只能填写整数',
                     maxlength: '长度不能超过9个字符',
@@ -328,7 +340,7 @@
                     compareDate: '开始时间必须小于结束时间'
                 },
                 validityDays:{ // 有效天数
-                    requiredCase: '请输入有效期天数',
+                    required: '请输入有效期天数',
                     number: '请填写数字',
                     digits: '只能填写整数',
                     maxlength: '长度不能超过9个字符',
@@ -341,18 +353,17 @@
                     required: '请选择领取规则'
                 },
                 giveRule:{ //赠送规则
-                    //requiredCase: '请选择赠送规则'
                     required: '请选择赠送规则'
                 },
                 fullGiveRule:{ // 满**元，赠送1张
-                    requiredCase: '请填写满额赠送张数',
+                    required: '请填写满额赠送张数',
                     number: '请填写数字',
                     digits: '只能填写整数',
                     maxlength: '长度不能超过9个字符',
                     min: '必须大于1元'
                 },
                 pushObjType:{ // 推送对象
-                    requiredCase: '请填写推送对象'
+                    required: '请填写推送对象'
                 },
                 timeScope:{ // 时间范围
                 	required:'请填写时间范围'
@@ -466,9 +477,9 @@ input[type="file"]{ width: 285px;} */
             <label class="control-label">优惠券内容：</label>
             <div class="controls">
                 <span><input id="couponType1" name="couponType" onclick="showCouponMoneyUnit()" type="radio" value="0" /> <label for="couponType1">固定金额券</label></span>
-                <input id="couponMoney1" name="couponMoney" class="input-small" type="text" min="0" />
+                <input id="couponMoney1" name="couponMoney" class="input-medium" type="text" min="0" />
                 <label>元</label> <span><input id="couponType2" name="couponType" onclick="showCouponMoneyUnit()" type="radio" value="1" /> <label for="couponType2">折扣券</label></span>
-                <input id="couponMoney2" name="couponMoney" class="input-small " min="0" type="text" />
+                <input id="couponMoney2" name="couponMoney" class="input-medium " min="0" type="text" />
                 <label>%</label> ，优惠上限：
                 <form:input path="upperLimitMoney" htmlEscape="false" class="input-small" />
                 <label>元</label><span class="help-inline">当优惠内容为“固定金额券”时，请输入优惠券减免的金额；当优惠内容为“折扣券”时，请输入折扣（1~99），如：打9折，就输入90；<br /> “折扣券”可设定“优惠上限”，请输入上限金额，不填写，表示无上限。 <font color="red">*</font>
@@ -638,10 +649,9 @@ input[type="file"]{ width: 285px;} */
                     <span class="help-inline">仅支持“xls”或“xlsx”格式文件！<font color="red">*</font></span>
                     <br />
                     <a id="importFile" class="btn btn-primary" href="#" onclick="importUser()"><i class="icon-plus icon-custom"></i> 导入用户数据 </a>
-                </shiro:hasPermission>
-                <shiro:hasPermission name="operation:couponManage:edit">
                     <a class="btn btn-primary" href="#" onclick="viewImportUser()"><i class="icon-eye-open icon-custom"></i> 查看已导入用户</a>
                 </shiro:hasPermission>
+                    <a id="btnExport" class="btn btn-primary" href="#"><i class="icon-plus icon-custom"></i> 用户数据模板 </a>
             </div>
         </div>
         <div class="control-group">

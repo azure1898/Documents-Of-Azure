@@ -57,6 +57,7 @@ public class OrderLesson extends DataEntity<OrderLesson> {
     private String searchFlg; // 检索按钮按下标示
 
     private int pending;// 是否查询待完成标记
+    private int isCancel;//是否取消标记  1=查询所有未取消订单
 
     public OrderLesson() {
         super();
@@ -384,5 +385,13 @@ public class OrderLesson extends DataEntity<OrderLesson> {
     public void setTransactionID(String transactionID) {
         this.transactionID = transactionID;
     }
+
+	public int getIsCancel() {
+		return isCancel;
+	}
+
+	public void setIsCancel(int isCancel) {
+		this.isCancel = isCancel;
+	}
 
 }

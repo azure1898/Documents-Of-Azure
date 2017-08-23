@@ -359,5 +359,21 @@ public class FieldInfoService extends CrudService<FieldInfoDao, FieldInfo> {
 		if(_b){count++;}
 		return count;
 	}
+	
+	
+	/**删除场地信息
+	 * @param fieldInfo
+	 */
+	@Transactional(readOnly = false)
+	public void deleteAll(FieldInfo fieldInfo){
+		//删除场地预约子表-场地分段信息
+		fieldPartitionPriceService.deleteAll(fieldInfo.getId());
+		//删除场地预约子表_分段编辑临时表
+		FieldInfoPrice fieldInfoPrice = new FieldInfoPrice();
+		fieldInfoPrice.setFieldInfoId(fieldInfo.getId());
+		fieldInfoPriceService.deleteAll(fieldInfoPrice, true);
+		//删除场地
+		this.dao.delete(fieldInfo);
+	}
 }
 

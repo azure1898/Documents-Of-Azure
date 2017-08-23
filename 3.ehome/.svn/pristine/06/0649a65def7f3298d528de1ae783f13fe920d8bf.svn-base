@@ -1,0 +1,77 @@
+{
+"code" : 1000,
+"data" : [{
+  "userId":"1",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "creatTime":"1分钟之前",
+"speak":{
+"id":"1",
+"userId":"",
+"userName":"发言人",
+"noticeId":"",
+"title":"123",
+"delFlag":1,
+"summary":"",
+"content":"从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+"imgUrls":  "../../images/pic01.jpg",
+"subjectList":[{
+"id":"",
+"subName":""
+}]
+},
+ "isComment":1,
+"comment":{
+"id":"",
+"userId":"",
+"userName":"评论人",
+"content":"从交房验房，到涉及预算到后期开",
+"imgUrls": [
+		{
+			"url": "../../images/pic01.jpg"
+		}
+	],
+"subjectList":[{
+"id":"",
+"subName":""
+}]
+}
+},{
+  "userId":"1",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "creatTime":"1分钟之前",
+"speak":{
+"id":"1",
+"userId":"",
+"userName":"发言人",
+"noticeId":"",
+"title":"123",
+"delFlag":1,
+"summary":"",
+"content":"从交房验房，到涉及预算到后期开始装修以及装修后的一些处理，这个过程是从交房验房，到涉及预算到后期开始装修以及装修后的一些处理",
+"imgUrls":  "../../images/pic01.jpg",
+"subjectList":[{
+"id":"",
+"subName":""
+}]
+},
+ "isComment":0,
+"comment":{
+"id":"",
+"userId":"",
+"userName":"评论人",
+"content":"从交房验房，到涉及预算到后期开",
+"imgUrls": [
+		{
+			"url": "../../images/pic01.jpg"
+		}
+	],
+"subjectList":[{
+"id":"",
+"subName":""
+}]
+}
+}],
+"message" : ""
+}

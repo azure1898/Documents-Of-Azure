@@ -12,6 +12,8 @@ import java.util.Map;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,8 @@ import com.its.modules.order.dao.WalletDetailDao;
 @Transactional(readOnly = true)
 public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 
+    private static Logger logger = LoggerFactory.getLogger(OrderGoodsService.class);
+    
     /** 退款信息明细表Service */
     @Autowired
     private OrderRefundInfoService orderRefundInfoService;
@@ -137,7 +141,11 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         orderTrack.setHandleMsg("完成服务/送达/已自提");
         orderTrack.setStateMsgPhone("已完成");
         orderTrack.setHandleMsgPhone("感谢您的订购");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrackService.save(orderTrack);
         return result;
 
@@ -168,7 +176,11 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         orderTrack.setHandleMsg("商家已受理，准备配送");
         orderTrack.setStateMsgPhone("已受理");
         orderTrack.setHandleMsgPhone("商家已受理，等待商家服务");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrackService.save(orderTrack);
         return result;
 
@@ -245,6 +257,7 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                     orderRefundInfoService.save(orderRefundInfo);
                 } else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return result;
                 }
                 // 如果是微信的话，直接调用接口进行退款
             } else if ("0".equals(orderGoodsInfo.getPayOrg())) {
@@ -306,9 +319,12 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                 }
                 // 如果是用户钱包支付的话
             } else if ("2".equals(orderGoodsInfo.getPayOrg())) {
+                logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "退款开始");
                 // 取得用户信息,并施加行级锁
                 Account userInfo = accountDao.getForUpdate(orderGoodsInfo.getAccountId());
                 if (userInfo == null) {
+                    logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "，取得不到用户信息");
+                    logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "退款异常结束");
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 }
                 // 根据订单ID取得支付明细（即本金支付多少，赠送金额支付多少）
@@ -327,6 +343,8 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                 result = accountDao.update(userInfo);
                 // 若更新失败则回滚事务
                 if (result == 0) {
+                    logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "，钱包余额修改失败");
+                    logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "退款异常结束");
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return result;
                 }
@@ -352,6 +370,10 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
                 walletDetail.setPayType("0");
                 // 执行插入操作
                 walletDetailDao.insert(walletDetail);
+                logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "，退款金额如下：");
+                logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "，钱包本金：" + payInfo.getWalletPrincipal());
+                logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "，钱包赠送金额：" + payInfo.getWalletPresent());
+                logger.warn("用户钱包退款------------>订单号：" + orderGoodsInfo.getOrderNo() + "退款正常结束");
             }
         }
         // 若更新失败则回滚事务
@@ -424,12 +446,15 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         orderTrack.setHandleMsg("商家取消订单（自动退款）");
         orderTrack.setStateMsgPhone("已取消");
         orderTrack.setHandleMsgPhone("订单已成功取消");
-        orderTrack.setCreateName("商家账号");
-        orderTrack.setRemarks(orderGoodsFromJsp.getCancelRemarks());
-        orderTrackService.save(orderTrack);
-
         // 从SESSION中取得商家信息
         User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
+        orderTrack.setRemarks(orderGoodsFromJsp.getCancelRemarks());
+        // 保存订单跟踪信息
+        orderTrackService.save(orderTrack);
+
         // 向用户推送订单取消信息
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("businessId", user.getBusinessinfoId());
@@ -476,11 +501,15 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
         orderTrack.setHandleMsg("上门/配送/等待自提中");
         orderTrack.setStateMsgPhone("配送中");
         orderTrack.setHandleMsgPhone("商家开始配送，等待送达");
-        orderTrack.setCreateName("商家账号");
-        orderTrackService.save(orderTrack);
-
+        
         // 从SESSION中取得商家信息
         User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
+        // 保存订单跟踪信息
+        orderTrackService.save(orderTrack);
+
         // 向用户推送商品配送信息
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("businessId", user.getBusinessinfoId());

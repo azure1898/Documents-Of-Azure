@@ -18,6 +18,10 @@
                 afterChange : function() {
                     var limitNum = 6500;
                     if (this.count() > limitNum) {
+                        var str=this.html().substring(0, 6400);
+                        this.html(str);
+                    }
+                    if (this.count() > limitNum) {
                         $(".word_message").show();
                     } else {
                         $(".word_message").hide();
@@ -38,10 +42,12 @@
         var prodectLine = 0;
         if ('${adverManage.adverPosition.id}' != '') {
             prodectLine = '${adverManage.adverPosition.id}';
-        }else{
-            $("input[name='adverPosition']").eq(0).prop("checked","checked");
+        } else {
+            $("input[name='adverPosition']").eq(0).prop("checked", "checked");
         }
+        //绑定位置
         bindPosition(prodectLine);
+        
         bindTree(prodectLine);
         hideAdver('${adverManage.adverType}');
         if ('${adverManage.adverType}' == '4') {
@@ -50,6 +56,7 @@
             /* 绑定商品下拉值 */
             changeGoods($("#HidGoodsId").val());
         }
+        getCategory();
         if ($("input[name='displayType']:checked").val() != 1) {
             $("#displayTimeInterval").prop("disabled", true);
         }
@@ -90,6 +97,20 @@
                 return true;
             }
         }, "请上传广告图片");
+        $.validator.addMethod("compareValiTime", function(value, element) {
+            var startTime = $("#starttime").val();
+            var endTime = $("#endTime").val();
+            var reg = new RegExp('-', 'g');
+            startTime = startTime.replace(reg, '/');//正则替换
+            endTime = endTime.replace(reg, '/');
+            startTime = new Date(parseInt(Date.parse(startTime), 10));
+            endTime = new Date(parseInt(Date.parse(endTime), 10));
+            if (startTime > endTime) {
+                return false;
+            } else {
+                return true;
+            }
+        }, "投放结束时间应该大于等于投放结束时间");
         $("#inputForm").validate({
             rules : {
                 starttime : {
@@ -104,6 +125,19 @@
                 checkImg : {
                     checkImg : "params"
                 },
+                skipTime : {
+                    required : true,
+                    min : 1,
+                    digits : true
+                },
+                displayTimeInterval : {
+                    required : true,
+                    min : 1,
+                    digits : true
+                },
+                displayType : {
+                    required : true,
+                }
             },
             messages : {
                 adverPosition : {
@@ -130,6 +164,17 @@
                 checkImg : {
                     checkImg : "请上传广告图片"
                 },
+                skipTime : {
+                    required : "请输入页面跳过时间",
+                    min : "页面跳过时间必须大于0",
+                },
+                displayTimeInterval : {
+                    required : "请输间隔时间",
+                    min : "间隔必须大于0",
+                },
+                displayType : {
+                    required : "请选择用户显示频次",
+                }
             },
             submitHandler : function(form) {
                 if (KindEditor.instances[0].html().length > 6500) {
@@ -156,7 +201,7 @@
         });
         /* 根据产品线显示不同的位置信息*/
         $("input[name='displayType']").click(function() {
-            $("#displayTimeInterval").prop("disabled",false);
+            $("#displayTimeInterval").prop("disabled", false);
             if ($(this).val() == 1) {
                 $("#displayTimeInterval").prop("readonly", "");
             } else {
@@ -168,7 +213,7 @@
         });
         /* 根据广告位置确定是否显示开屏跳过时间 */
         $("input[name='positionId']").click(function() {
-            console.log($(this).val())
+            //console.log($(this).val())
             if ($(this).val() == "") {
                 $("#skipTime").show();
             } else {
@@ -181,7 +226,7 @@
         });
         /* 根据商品分类查询商家列表 */
         $('#categoryId').change(function() {
-            changeBusiness($(this).val());
+            console.log($("#categoryId").find("option:selected").attr("prodType"))
         });
         /* 根据商家信息查询商品列表 */
         $('#businessinfoId').change(function() {
@@ -252,29 +297,29 @@
             async : true, //或false,是否异步
             dataType : 'json', //返回的数据格式：json/xml/html/script/jsonp/text
             success : function(data) {
-                console.log(data)
                 var tree = $.fn.zTree.init($("#tree"), setting, data);
-                // 不选择父节点
-                tree.setting.check.chkboxType = {
-                    "Y" : "ps",
-                    "N" : "s"
-                };
                 // 默认选择节点
                 var ids = "${adverManage.villageIds}".split(",");
                 for (var i = 0; i < ids.length; i++) {
                     var node = tree.getNodeByParam("id", ids[i]);
                     try {
-                        tree.checkNode(node, true, false);
+                        tree.checkNode(node, true, true);
                     } catch (e) {
                     }
                 }
+                // 选择父节点
+                tree.setting.check.chkboxType = {
+                    "Y" : "ps",
+                    "N" : "ps"
+                };
                 // 默认展开全部节点
                 tree.expandAll(true);
             }
         });
     }
     //以select的形式 初始化商家信息列表
-    function changeBusiness(categorydict) {
+    function changeBusiness() {
+        var categorydict=$("#categoryId").val();
         $.ajax({
             type : "POST",
             url : ctx + "/business/businessInfo/bindBusinessList",
@@ -295,9 +340,22 @@
     }
     //以select的形式初始化商品信息列表
     function changeGoods(businessInfoId) {
+        console.log($("#categoryId").find("option:selected").attr("prodType"))
+        var prodType=$("#categoryId").find("option:selected").attr("prodType");
+        var url="";
+        if(prodType=="0"){
+            url=ctx + "/goods/goodsInfo/bindGoodsList"
+        }else if(prodType=="1"){
+            url=ctx + "/adver/adverManage/getServiceInfoList"
+        }else if(prodType=="2"){
+            url=ctx + "/adver/adverManage/getLessonInfoList"
+        }else if(prodType=="3"){
+            url=ctx + "/adver/adverManage/getFieldInfoList"
+        }
+        console.log(url);
         $.ajax({
             type : "POST",
-            url : ctx + "/goods/goodsInfo/bindGoodsList",
+            url : url,
             data : {
                 businessInfoId : businessInfoId,
             },
@@ -325,7 +383,7 @@
             },
             dataType : 'json',
             success : function(data) {
-                console.log(data);
+                //console.log(data);
                 $("#positionId").html('');
                 var domRow = '';
                 for (var i = 0; i < data.length; i++) {
@@ -333,18 +391,21 @@
                     var id = data[i].id;
                     var openScreenFlag = data[i].openScreenFlag;
                     if (positionId == id) {
-                        domRow += '<input class="required"  onclick="showSkip(' + openScreenFlag + ')" checked="ture" type="radio" name="positionId" value="' + id + '" ><label>' + positionName + '</label> &nbsp';
+                        //点击文字也可触发选中事件的html
+                        domRow += '<span onclick="showSkip(' + openScreenFlag + ')">' + '   <input checked="ture" id="positionId'+i+'" name="positionId" class="required" type="radio" value="' + id + '">' + '   <label for="positionId'+i+'">' + positionName + '</label></span>';
+                        //domRow += '<input class="required"  onclick="showSkip(' + openScreenFlag + ')" checked="ture" type="radio" name="positionId" value="' + id + '" ><label>' + positionName + '</label> &nbsp';
                         if (openScreenFlag == 1) {
                             $("#skipTime").show();
                         }
                     } else {
-                        domRow += '<input class="required" onclick="showSkip(' + openScreenFlag + ')"type="radio" name="positionId" value="' + id + '" ><label>' + positionName + '</label> &nbsp';
+                        //点击文字也可触发选中事件的html
+                        domRow += '<span onclick="showSkip(' + openScreenFlag + ')">' + '   <input id="positionId'+i+'" name="positionId" class="required" type="radio" value="' + id + '">' + '   <label for="positionId'+i+'">' + positionName + '</label></span>';
+                        // domRow += '<input class="required" onclick="showSkip(' + openScreenFlag + ')"type="radio" name="positionId" value="' + id + '" ><label>' + positionName + '</label> &nbsp';
                     }
                 }
                 $("#positionId").append($(domRow))
             }
         })
-
     }
     function showSkip(openScreenFlag) {
         if (openScreenFlag == "1") {
@@ -357,22 +418,18 @@
         setImagePreview();
         $("#selectedFile").val($(elem).val());
     }
-    $(function() {
-        $.validator.addMethod("compareValiTime", function(value, element) {
-            var startTime = $("#starttime").val();
-            var endTime = $("#endTime").val();
-            var reg = new RegExp('-', 'g');
-            startTime = startTime.replace(reg, '/');//正则替换
-            endTime = endTime.replace(reg, '/');
-            startTime = new Date(parseInt(Date.parse(startTime), 10));
-            endTime = new Date(parseInt(Date.parse(endTime), 10));
-            if (startTime > endTime) {
-                return false;
-            } else {
-                return true;
-            }
-        }, "投放结束时间应该大于等于投放结束时间");
-    });
+    //初始化商家分类的列表
+    var allCategory=${fns:toJson(allCategory)};
+    function getCategory(){
+        var hidCategoryId=$("#HidCategoryId").val();
+		$("#categoryId").empty();
+		var option = "<option value=''>分类名称</option>";
+		$.each(allCategory,function(indx,item){
+			option += "<option value='"+item.id+"' prodType="+item.prodType+">"+item.categoryName+"</option>";
+		})
+		$("#categoryId").append(option);
+		$("#categoryId").val(hidCategoryId).trigger("change");//修改初始时，带值选中
+    }
 </script>
 </head>
 <body>
@@ -404,7 +461,7 @@
         <div class="control-group">
             <label class="control-label">投放位置：</label>
             <div class="controls">
-                <div id="positionId"></div>
+                <span id="positionId"></span>
                 <span class="help-inline">
                     <font color="red">*</font>
                 </span>
@@ -414,7 +471,7 @@
             <div class="control-group">
                 <div class="controls">
                     <label class="">页面跳过时间</label>
-                    <form:input path="skipTime" htmlEscape="false" maxlength="2" class="input-mini required number" />
+                    <form:input path="skipTime" htmlEscape="false" maxlength="2" class="input-mini required number min:1 digits" />
                 </div>
             </div>
             <div class="control-group">
@@ -513,18 +570,17 @@
 
         <div class="control-group">
             <div class="controls" id="shangjia">
-                <form:select path="categoryId" class="input-medium">
-                    <form:option value="" label="分类名称" />
-                    <form:options items="${allCategory}" itemLabel="categoryName" itemValue="id" htmlEscape="false" />
-                </form:select>
+                <select id="categoryId" name="categoryId" style="width: 170px" onchange="changeBusiness()">
+                <select>
                 <!--广告类型-商家链接  -->
-                <select id="businessinfoId" name="businessinfoId" class="input-medium">
-                    <option value="">商家名称</option>
+                <select id="businessinfoId" name="businessinfoId" style="width: 170px">
+                <option value=''>商家名称</option>
                 </select>
-                <shangpin id="shangpin"> <!-- 广告类型-商品链接  --> <select id="goodsId" name="goodsId" class="input-medium">
-                    <option value="">商品名称</option>
+                <shangpin id="shangpin">
+                 <!-- 广告类型-商品链接  -->
+                <select id="goodsId" name="goodsId" style="width: 170px">
+                <option value=''>商品名称</option>
                 </select> </shangpin>
-
             </div>
         </div>
         <div class="control-group">

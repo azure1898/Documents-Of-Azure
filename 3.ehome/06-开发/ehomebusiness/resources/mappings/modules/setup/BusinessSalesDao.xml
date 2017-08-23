@@ -42,7 +42,7 @@
                 ORDER BY ${page.orderBy}
             </when>
             <otherwise>
-                ORDER BY a.update_date DESC
+                ORDER BY a.money ASC
             </otherwise>
         </choose>
     </select>

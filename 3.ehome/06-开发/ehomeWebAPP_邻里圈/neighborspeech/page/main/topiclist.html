@@ -55,12 +55,13 @@
 		<div id="app" v-cloak>
 
 			<div class="grey_top">
-				<!--<div class="topic_list_top">#装修作业#</div>-->
-				<input class="topic_list_top" placeholder="#装修作业#"  v-model="searchValue">
+				<!--<div class="topic_list_top" placeholder="#装修作业#">#装修作业#</div>-->
+				<input class="topic_list_top"  v-model="searchValue" @keyup="show($event)">
 				
 				<div class="topic_list_top_close"><img src="../../images/close.png" width="15" height="15" @click="searchValue=''"></div>
 				取消
 			</div>
+			
 			<div class="main_box" style="border-top:solid 1px #ececec;" v-for="(releaseDetail,index) in releaseDetails" :class="{ mt10: index!=0 }">
 				<div class="fyxq_main">
 					<div class="fyxq_main_l">
@@ -100,31 +101,6 @@
 				</div>
 			</div>
 
-			<!--<div class="main_box mt10" style="border-top:solid 1px #ececec;">
-				<div class="fyxq_main">
-					<div class="fyxq_main_l">
-						<div class="fyxq_main_l_img"><img src="../../images/pic01.jpg" width="110" height="110"></div>
-						<div class="fyxq_main_l_title">
-							<p>蓝色理想</p>
-							<p><span>昨天 18:30</span></p>
-						</div>
-					</div>
-					<div class="fyxq_main_r"></div>
-					<div class="clear"></div>
-				</div>
-				<div class="fyxq_main2">
-					<p class="ftc5050">
-						<font class="ftcred">#装修作业#</font>从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。
-					</p>
-				</div>
-				<div class="personal_main_bottom">
-					<ul>
-						<li><a href="#" class="bottom_icon1">转发</a></li>
-						<li><a href="#" class="bottom_icon2">评论</a></li>
-						<li style="border-right:none;"><a href="#" class="bottom_icon3">赞</a></li>
-					</ul>
-				</div>
-			</div>-->
 		</div>
 		<script src="../../js/common/jquery.js"></script>
 		<script src="../../js/common/bootstrap.min.js"></script>

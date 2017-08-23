@@ -47,11 +47,13 @@ public class DownloadBillService extends CrudService<DownloadBillDao, DownloadBi
 	 */
 	@Transactional(readOnly = false)
 	public void saveDownloadBillList(List<DownloadBill> downloadBillList) {
+		String dupOutTradeNo = new String();
 		for(DownloadBill downloadBill: downloadBillList){
 			try{
+				dupOutTradeNo = downloadBill.getOutTradeNo();
 				super.save(downloadBill);
 			} catch(DuplicateKeyException e){
-				logger.error("当前记录与库表download_bill中记录重复，将被跳过，处理下面的记录");
+				logger.error("当前记录(商户订单号="+dupOutTradeNo+")与库表download_bill中记录重复，将被跳过，处理下面的记录");
 				//e.printStackTrace();
 			} finally {
 				logger.info("当前记录处理出错，继续处理下条记录");

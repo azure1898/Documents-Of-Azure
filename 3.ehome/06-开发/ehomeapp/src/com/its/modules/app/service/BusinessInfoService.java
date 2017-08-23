@@ -105,6 +105,33 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
 		return this.getCutDownMoney(info.getId(), orderMoney);
 	}
 
+	/*
+	 * 不满活动最低价=最低活动价-商品总价
+	 * 
+	 */
+	public String getLessMoney(String businessInfoID, double orderMoney) {
+		List<BusinessSales> list = this.getBusinessSales(businessInfoID);
+		System.out.println(orderMoney);
+		for (BusinessSales businessSales : list) {
+			if (orderMoney >= businessSales.getMoney()) {
+				continue;
+			} else {
+				double money = ValidateUtil.validateDouble(businessSales.getMoney());
+				double benefitMoney = ValidateUtil.validateDouble(businessSales.getBenefitMoney());
+				double lessMoney = money - orderMoney;
+				return money + "," + benefitMoney + "," + lessMoney;
+			}
+		}
+		if (list.size() != 0) {
+			BusinessSales businessSales = list.get(list.size() - 1);
+			double money = ValidateUtil.validateDouble(businessSales.getMoney());
+			double benefitMoney = ValidateUtil.validateDouble(businessSales.getBenefitMoney());
+			return money + "," + benefitMoney + "," + 0;
+		} else {
+			return "0,0,0";
+		}
+	}
+
 	/**
 	 * 获取一楼盘下一种模式的商家集合
 	 * 
@@ -420,7 +447,6 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
 			for (String string : prodTypes) {
 				Map<String, Object> prodMode = new HashMap<String, Object>();
 				prodMode.put("modeID", string);
-
 				prodModes.add(prodMode);
 			}
 		}

@@ -19,7 +19,6 @@ import com.its.modules.field.dao.FieldPartitionPriceDao;
  * @version 2017-07-03
  */
 @Service
-@Transactional(readOnly = true)
 public class FieldPartitionPriceService extends CrudService<FieldPartitionPriceDao, FieldPartitionPrice> {
 
 	public FieldPartitionPrice get(String id) {
@@ -52,4 +51,14 @@ public class FieldPartitionPriceService extends CrudService<FieldPartitionPriceD
 	public List<FieldPartitionPrice> findListByAppointmentTime(FieldPartitionPrice fieldPartitionPrice) {
 		return dao.findListByAppointmentTime(fieldPartitionPrice);
 	}
+	
+	@Transactional(readOnly = false)
+	public void deleteAll(String findInfoId){
+		this.dao.deleteAll(findInfoId);
+	}
+	@Transactional(readOnly = false)
+	public void taskUpdateState(){
+		this.dao.taskUpdateState();
+	}
+	
 }

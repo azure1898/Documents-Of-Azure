@@ -3,7 +3,6 @@
  */
 package com.its.modules.social.service;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.modules.app.entity.Account;
 import com.its.modules.social.bean.SocialSpeakBean;
 import com.its.modules.social.dao.SocialSpeakDao;
 import com.its.modules.social.entity.SocialSpeak;
@@ -108,8 +108,8 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 	 * @param userId
 	 * @return
 	 */
-	public List<SocialSpeak> getListByUserId(String userid) {
-		return socialSpeakDao.getListByUserId(userid);
+	public List<SocialSpeak> getListByUserId(String userid, int pageIndex, int pageSize) {
+		return socialSpeakDao.getListByUserId(userid, pageIndex, pageSize);
 	}
 	
 	/**
@@ -168,5 +168,27 @@ public class SocialSpeakService extends CrudService<SocialSpeakDao, SocialSpeak>
 	 */
 	public List<SocialSpeakBean> findAdminList(String userId, String villageInfoId){
 		return socialSpeakDao.findAdminList(userId, villageInfoId);
+	}
+	
+	/**
+	 * @Description：根据用户ID查询当前用户是否是管理员
+	 * @Author：刘浩浩
+	 * @Date：2017年8月21日
+	 * @param userId 用户ID
+	 * @return
+	 */
+	public List<Account> getAdminAccount(String userId){
+		return socialSpeakDao.getAdminAccount(userId);
+	}
+
+	/**
+	 * @Description：根据楼盘ID获取该楼盘的所有用户
+	 * @Author：刘浩浩
+	 * @Date：2017年8月21日
+	 * @param villageInfoId
+	 * @return
+	 */
+	public List<Account> getAccountListByVillId(String villageInfoId){
+		return socialSpeakDao.getAccountListByVillId(villageInfoId);
 	}
 }

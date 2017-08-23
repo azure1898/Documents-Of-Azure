@@ -4,7 +4,9 @@
 package com.its.modules.balance.web;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.its.common.config.Global;
@@ -150,11 +153,15 @@ public class BusinessBalanceController extends BaseController {
 	}
 	
 	@RequiresPermissions("balance:businessBalance:edit")
-	@RequestMapping(value = "check")
-	public String check(BusinessBalance businessBalance, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "check", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> check(BusinessBalance businessBalance, RedirectAttributes redirectAttributes) {
+		Map<String,Object> result = new HashMap<String, Object>();
 		businessBalanceService.check(businessBalance);
-		addMessage(redirectAttributes, "勾选结算单核对成功");
-		return "redirect:" + Global.getAdminPath() + "/balance/businessBalance/?repage";
+		result.put("success", Boolean.TRUE);
+		result.put("msg", "结算单核对成功");
+		
+		return result;
 	}
 
 	@RequiresPermissions("balance:businessBalance:view")
@@ -162,11 +169,17 @@ public class BusinessBalanceController extends BaseController {
 	public String export(BusinessBalance businessBalance, HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes redirectAttributes) {
 		try {
+			double sumPayMoney = 0.0;
 			String fileName = "结算申请单" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
 			List<BusinessBalance> businessBalanceList = businessBalanceService.findBalanceApply(businessBalance);
 			Date balanceTimeMin = DateUtils.addYears(new Date(), 1000);
 			Date balanceTimeMax = DateUtils.addYears(new Date(), -1000);
 			for (BusinessBalance bb : businessBalanceList) {
+				// 获取payMoney合计
+				if(bb.getPayMoney()!=null){
+					sumPayMoney += bb.getPayMoney();
+				}
+				
 				if (balanceTimeMin.compareTo(bb.getBalanceStartTime()) > 0) {
 					balanceTimeMin = bb.getBalanceStartTime();
 				}
@@ -175,6 +188,12 @@ public class BusinessBalanceController extends BaseController {
 				}
 
 			}
+			
+			// 设置合计对象
+			BusinessBalance businessBalanceSum = new BusinessBalance();
+			businessBalanceSum.setSerialNum("合计");
+			businessBalanceSum.setPayMoney(sumPayMoney);
+			businessBalanceList.add(businessBalanceSum);
 
 			String title = "结算申请单（" + DateUtils.formatDate(balanceTimeMin, "yyyy.M.d") + "-"
 					+ DateUtils.formatDate(balanceTimeMax, "yyyy.M.d") + "）";

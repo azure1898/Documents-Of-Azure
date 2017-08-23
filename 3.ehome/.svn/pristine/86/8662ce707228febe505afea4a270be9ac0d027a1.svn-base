@@ -1,0 +1,105 @@
+<div id="partialContact">
+	<div class="grey_top">
+		<a href="##" class="fl font12" style="margin-left:10px;" @click="cancel">取消</a>
+		选择联系人
+		<a href="##" @click="selectOK" class="topic_list_btn4">发送</a>
+		<div class="topic_list_btn4_tip">{{selectedCount}}</div>
+	</div>
+	<div class="main_box">
+		<div class="choose_cont" style="height: 100px;">
+			<ul>
+				<li v-for="item in contactList" v-if="item.subDetail.isSelected">
+					<div class="tupian"><img :src="item.headPicSrc" width="110" height="110"></div>
+					<p>{{item.friendName}}</p>
+				</li>
+				<div class="clear"></div>
+			</ul>
+		</div>
+
+	</div>
+	<div v-for="item in contactList">
+		<div class="choose_title" v-if="item.subDetail.length>0">{{item.firstWord}}</div>
+		<div class="main_box" style="padding:0; border-top:1px solid #ececec;" v-if="item.subDetail.length>0">
+			<div class="my_message"  v-for="ren in item.subDetail">
+				<div class="my_message_left4 mr12">
+					<a href="###" @click="choice(ren)">
+						<img :src="ren.isSelected?choiceIco:unchoiceIco" width="32" height="32">
+					</a>
+				</div>
+				<div class="my_message3">
+					<div class="my_message_left"><img :src="ren.headPicSrc" width="80" height="80">
+					</div>
+					<div class="my_message_right">
+						&nbsp;&nbsp;{{ren.friendName}}
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+	
+
+	
+	</div>
+</div>
+<script>
+	$('#partialContact').ready(function() {
+		var contactvue = new Vue({
+			el: "#partialContact",
+			data: {
+				choiceIco: "../../images/gx.png",
+				unchoiceIco: "../../images/gx02.png",
+				selectedCount: 0,
+				contactList: []
+			},
+			mounted: function() {
+				this.$nextTick(function() {
+					this.init();
+				});
+			},
+			methods: {
+				init: function() {
+					this.$http.post(interfaceUrl + "/forward/toUser",{
+					userId:userInfo.userID,
+				},{emulateJSON: true}).then(function(res){
+						var lst = res.data.data;
+						$.each(lst, function(idx, obj) {
+							$.each(obj.subDetail,function(index,obj1){
+								obj1.isSelected = false;
+							})
+														
+						});
+						this.contactList = lst;
+						console.log(this.contactList)
+					});
+				},
+				choice: function(item) {
+					item.isSelected = !item.isSelected
+					if(item.isSelected) {
+						this.selectedCount++
+					} else {
+						this.selectedCount--
+					}
+				},
+				selectOK: function() {
+					vm.atwhos=[];
+					this.contactList.forEach(function(obj, index) {
+						$.each(obj.subDetail,function(index,obj1){
+								if(obj1.isSelected) {
+									vm.atwhos.push(obj1);
+								}
+							})
+						
+					});
+					vm.appendAt()
+					this.cancel()
+				},
+				cancel: function() {
+					vm.showPopup = false
+				}
+			}
+
+		})
+	})
+</script>

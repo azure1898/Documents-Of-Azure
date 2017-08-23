@@ -58,4 +58,13 @@ public interface ServiceInfoDao extends CrudDao<ServiceInfo> {
 	 * @return
 	 */
     Integer findAllListCount(ServiceInfo serviceInfo_where);
+    /**
+     * 通过商家ID获取服务列表 -广告发布
+     * @param buinessInfoId
+     * @return
+     * @return List<LessonInfo>
+     * @author zhujiao   
+     * @date 2017年8月21日 下午5:28:46
+     */
+    List<ServiceInfo> getServiceInfoList(String businessInfoId);
 }

@@ -249,7 +249,7 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
 		// 更新订单主表
 		this.update(orderLesson);
 		// 插入订单追踪
-		orderTrackService.createTrackCancel(OrderGlobal.ORDER_LESSON, orderLesson.getId(), orderLesson.getOrderNo(), cancelType);
+		orderTrackService.createTrackCanceled(OrderGlobal.ORDER_LESSON, orderLesson.getId(), orderLesson.getOrderNo(), cancelType);
 		return true;
 	}
 }

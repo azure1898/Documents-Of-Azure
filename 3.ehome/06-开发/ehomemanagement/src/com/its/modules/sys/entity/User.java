@@ -14,7 +14,6 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
-import com.its.common.config.Global;
 import com.its.common.persistence.DataEntity;
 import com.its.common.supcan.annotation.treelist.cols.SupCol;
 import com.its.common.utils.Collections3;
@@ -57,6 +56,8 @@ public class User extends DataEntity<User> {
     private Role role; // 根据角色查询用户条件
 
     private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+    
+    private String appUserPhone;//PP公号账号
 
     public User() {
         super();
@@ -340,5 +341,13 @@ public class User extends DataEntity<User> {
     public void setVillageInfoIds(String villageInfoIds) {
         this.villageInfoIds = villageInfoIds;
     }
+
+	public String getAppUserPhone() {
+		return appUserPhone;
+	}
+
+	public void setAppUserPhone(String appUserPhone) {
+		this.appUserPhone = appUserPhone;
+	}
 
 }

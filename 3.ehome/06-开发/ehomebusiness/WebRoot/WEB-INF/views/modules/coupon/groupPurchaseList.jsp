@@ -18,8 +18,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/coupon/groupPurchase/">优惠/验券管理</a></li>
-	</ul>
+        <li>
+           <span class="common-breadcrumb"><a href="${ctx}/coupon/groupPurchase/">优惠/验券管理</a></span>
+        </li>
+    </ul>
 	<form:form id="searchForm" modelAttribute="groupPurchase" action="${ctx}/coupon/groupPurchase/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}" />
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}" />
@@ -44,7 +46,7 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="groupPurchase" varStatus="status">
 			<tr>
-			    <td>${status.count}</td>
+			    <td>${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}</td>
 				<td>
 					<img id="preview" src="${groupPurchase.groupPurcPic}" style="width:53px;height:40px;"/>
 				</td>

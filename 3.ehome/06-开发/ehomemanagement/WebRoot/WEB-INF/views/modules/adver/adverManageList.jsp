@@ -125,7 +125,7 @@
         <tbody>
             <c:forEach items="${page.list}" var="adverManage" varStatus="status">
                 <tr onClick="selectElem(this)">
-                    <td>${status.count} <input id="elemId" type="hidden" value="${adverManage.id}" />
+                    <td>${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}<input id="elemId" type="hidden" value="${adverManage.id}" />
                     </td>
                     <td><img id="preview" src="${adverManage.adverPic}" style="width: 45px; height: 45;" /></td>
                     <td>${adverManage.advertTitle}</td>

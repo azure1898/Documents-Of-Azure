@@ -12,6 +12,7 @@
 		a.valid_start AS "validStart",
 		a.valid_end AS "validEnd",
 		a.use_state AS "useState",
+        a.use_order_id AS "userOrderId",
 		a.receive_type AS "receiveType",
 		a.order_type AS "orderType",
 		a.order_id AS "orderId",
@@ -92,6 +93,7 @@
 			valid_start,
 			valid_end,
 			use_state,
+            use_order_id,
 			receive_type,
 			order_type,
 			order_id,
@@ -112,6 +114,7 @@
 			#{validStart},
 			#{validEnd},
 			#{useState},
+            #{useOrderId},
 			#{receiveType},
 			#{orderType},
 			#{orderId},
@@ -135,6 +138,7 @@
 			valid_start = #{validStart},
 			valid_end = #{validEnd},
 			use_state = #{useState},
+            use_order_id = #{useOrderId},
 			receive_type = #{receiveType},
 			order_type = #{orderType},
 			order_id = #{orderId},
@@ -180,24 +184,12 @@
             END AS discountContent,
             d.phone_num AS phoneNum,
             a.obtain_date AS obtainDate,
-            c.order_no AS orderNo,
+            a.use_order_id AS useOrderId,
             a.use_state AS useState,
             a.use_date AS useDate
         FROM member_discount a 
         LEFT JOIN coupon_manage b
                ON a.discount_id = b.id
-        LEFT JOIN (
-            SELECT id,order_no FROM order_goods
-            UNION
-            SELECT id,order_no FROM order_service
-            UNION
-            SELECT id,order_no FROM order_lesson
-            UNION
-            SELECT id,order_no FROM order_field
-            UNION
-            SELECT id,order_no FROM order_group_purc
-        ) c 
-              ON c.id = a.order_id
         LEFT JOIN account d
               ON a.account_id = d.id,
             (select @rownum:=0) r

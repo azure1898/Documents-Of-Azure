@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.recharge.dao.WalletDetailDao">
+    
+	<sql id="walletDetailColumns">
+		a.id AS "id",
+		a.account_id AS "account.Id",
+		a.village_info_id AS "villageInfoId",
+		a.trade_type AS "tradeType",
+		a.trade_date AS "tradeDate",
+		a.wallet_principal AS "walletPrincipal",
+		a.wallet_present AS "walletPresent",
+		a.terminal_source AS "terminalSource",
+		a.mobile_unique_code AS "mobileUniqueCode",
+		a.pay_type AS "payType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountColumns">
+		c.village_info_id AS "account.villageInfoId",
+		c.phone_num AS "account.phoneNum",
+		c.nickname AS "account.nickname",
+		c.pwd AS "account.pwd",
+		c.photo AS "account.photo",
+		c.sex AS "account.sex",
+		c.height AS "account.height",
+		c.birth_year AS "account.birthYear",
+		c.weight AS "account.weight",
+		c.terminal_source AS "account.terminalSource",
+		c.certify_state AS "account.certifyState",
+		c.regist_date AS "account.registDate",
+		c.bind_bracelet_flag AS "account.bindBraceletFlag",
+		c.bracelet_name AS "account.braceletName",
+		c.wallet_balance AS "account.walletBalance",
+		c.bracelet_num AS "account.braceletNum",
+		c.wallet_principal AS "account.walletPrincipal",
+		c.face_recognition_flag AS "account.faceRecognitionFlag",
+		c.create_by AS "account.createBy.id",
+		c.wallet_present AS "account.walletPresent",
+		c.use_state AS "account.useState",
+		c.create_date AS "account.createDate",
+		c.update_by AS "account.updateBy.id",
+		c.update_date AS "account.updateDate",
+		c.remarks AS "account.remarks",
+		c.del_flag AS "account.delFlag"
+	</sql>
+	
+	<sql id="walletDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="WalletDetail">
+		SELECT 
+			<include refid="walletDetailColumns"/>,
+			<include refid="accountColumns"/>
+		FROM wallet_detail a, account c
+		<include refid="walletDetailJoins"/>
+		WHERE a.id = #{id}
+		And a.account_id = c.id
+	</select>
+	
+	<select id="findList" resultType="WalletDetail">
+		SELECT 
+			<include refid="walletDetailColumns"/>,
+			<include refid="accountColumns"/>
+		FROM wallet_detail a, account c
+		<include refid="walletDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.account_id = c.id
+			AND a.trade_type in (
+				'${@com.its.modules.sys.utils.DictUtils@getDictValue("充值", "trade_type", "")}',
+				'${@com.its.modules.sys.utils.DictUtils@getDictValue("充值赠送", "trade_type", "")}',
+				'${@com.its.modules.sys.utils.DictUtils@getDictValue("钱包支付", "trade_type", "")}',
+				'${@com.its.modules.sys.utils.DictUtils@getDictValue("退款", "trade_type", "")}'
+			)
+			<if test="account != null and account.phoneNum != null and account.phoneNum != ''">
+				AND c.phone_num LIKE 
+					<if test="dbName == 'oracle'">'%'||#{account.phoneNum}</if>
+					<if test="dbName == 'mssql'">'%'+#{account.phoneNum}</if>
+					<if test="dbName == 'mysql'">concat('%',#{account.phoneNum})</if>
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				AND a.trade_type = #{tradeType}
+			</if>
+			<if test="beginTradeDate != null and beginTradeDate != ''">
+				AND a.trade_date <![CDATA[>= ]]> #{beginTradeDate}
+			</if>
+			<if test="endTradeDate != null and endTradeDate != ''">
+				AND a.trade_date <![CDATA[<]]> DATE_ADD(#{endTradeDate},INTERVAL 1 DAY)
+			</if>
+			<if test="villageInfoId != null and villageInfoId != ''">
+				AND a.village_info_id = #{villageInfoId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WalletDetail">
+		SELECT 
+			<include refid="walletDetailColumns"/>,
+			<include refid="accountColumns"/>
+		FROM wallet_detail a, account c
+		<include refid="walletDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			And a.account_id = c.id
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wallet_detail(
+			id,
+			account_id,
+			village_info_id,
+			trade_type,
+			trade_date,
+			wallet_principal,
+			wallet_present,
+			terminal_source,
+			mobile_unique_code,
+			pay_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{villageInfoId},
+			#{tradeType},
+			#{tradeDate},
+			#{wallet_principal},
+			#{wallet_present},
+			#{terminalSource},
+			#{mobileUniqueCode},
+			#{payType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wallet_detail SET 	
+			village_info_id = #{villageInfoId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wallet_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

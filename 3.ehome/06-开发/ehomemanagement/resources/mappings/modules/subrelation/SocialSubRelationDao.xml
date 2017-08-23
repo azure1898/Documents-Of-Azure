@@ -6,7 +6,6 @@
 		a.id AS "id",
 		a.subjectid AS "subjectid",
 		a.speakid AS "speakid",
-		a.forwardid AS "forwardid",
 		a.commentid AS "commentid"
 	</sql>
 	
@@ -36,9 +35,6 @@
 			</if>
 			<if test="speakid != null and speakid != ''">
 				AND a.speakid = #{speakid}
-			</if>
-			<if test="forwardid != null and forwardid != ''">
-				AND a.forwardid = #{forwardid}
 			</if>
 			<if test="commentid != null and commentid != ''">
 				AND a.commentid = #{commentid}
@@ -75,13 +71,11 @@
 			id,
 			subjectid,
 			speakid,
-			forwardid,
 			commentid
 		) VALUES (
 			#{id},
 			#{subjectid},
 			#{speakid},
-			#{forwardid},
 			#{commentid}
 		)
 	</insert>
@@ -90,7 +84,6 @@
 		UPDATE social_sub_relation SET 	
 			subjectid = #{subjectid},
 			speakid = #{speakid},
-			forwardid = #{forwardid},
 			commentid = #{commentid}
 		WHERE id = #{id}
 	</update>

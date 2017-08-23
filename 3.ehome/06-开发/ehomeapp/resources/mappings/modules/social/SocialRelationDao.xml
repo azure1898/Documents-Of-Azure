@@ -187,4 +187,11 @@
 	    FROM social_relation a 
 	    WHERE a.userid = #{userId} and subuserid = #{subUserId}
 	</select>
+	
+	<!-- 根据用户id设置为屏蔽Ta的发言 -->
+	<update id="updateBlack">
+		UPDATE social_relation SET 	
+			isblack = 1
+		WHERE id = #{id}
+	</update>
 </mapper>

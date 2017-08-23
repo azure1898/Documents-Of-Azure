@@ -1,7 +1,10 @@
 package com.its.modules.app.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
+
 import com.its.modules.app.entity.VillageLine;
 
 /**
@@ -22,4 +25,11 @@ public interface VillageLineDao extends CrudDao<VillageLine> {
 	 * @return VillageLine
 	 */
 	public VillageLine getByVillageInfoId(String villageInfoId);
+
+	/**
+	 * 根据TYPE和VALUE查询字典表
+	 * 
+	 * @return 标签LABEL
+	 */
+	public String findSysDict(@Param("type") String type, @Param("value") String value);
 }

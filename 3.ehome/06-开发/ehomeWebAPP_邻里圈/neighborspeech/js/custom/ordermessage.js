@@ -1,7 +1,16 @@
 var vm=new Vue({
 	el:"#app",
 	data:{
-		ordermessages:[]
+		ordermessages:[],
+		urlList: {
+			speechdetail: "../main/speechdetails.html?id=",
+			commentdetail: "../main/commentdetails.html?id=",
+			comments:"../main/comment.html?id=",
+			forward:"../main/forward.html?id=",
+			myspeech:"myspeech.html?id=",
+			mypraise:"mypraise.html?id=",
+			personalpage:"../main/personalpage.html?id="
+		}
 	},
 	mounted:function(){
 		this.$nextTick(function(){
@@ -15,7 +24,7 @@ var vm=new Vue({
 //				_this.ordermessages = res.data.data;
 //			});	
 			this.$http.post(interfaceUrl + "/message/orderMsg",{
-				userID:1,  //用户id
+				userID:userInfo.userID,  //用户id
 				pageIndex:0
 			},{emulateJSON: true}).then(function(res){
 				_this.praiseDetail = res.data;

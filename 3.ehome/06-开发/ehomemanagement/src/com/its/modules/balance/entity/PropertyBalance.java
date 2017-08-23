@@ -35,7 +35,7 @@ public class PropertyBalance extends DataEntity<PropertyBalance> {
 	private String ids; // 页面的checkbox复选结果
 	
 	// 打印和导出用到的结算单成员
-	private int  serialNum; // 序号
+	private String  serialNum; // 序号
 	private String accountName; // 开户名称
 	private String depositBank; // 开户银行
 	private String bankAccount; // 银行账号
@@ -172,11 +172,11 @@ public class PropertyBalance extends DataEntity<PropertyBalance> {
 	}
 
 	@ExcelField(title = "序号", type = 1, align = 2, sort = 1)
-	public int getSerialNum() {
+	public String getSerialNum() {
 		return serialNum;
 	}
 
-	public void setSerialNum(int serialNum) {
+	public void setSerialNum(String serialNum) {
 		this.serialNum = serialNum;
 	}
 

@@ -38,7 +38,7 @@
                 themeType : 'simple',
                 allowImageUpload:true,//允许上传图片
                 afterChange : function() {
-                    var limitNum = 65000;
+                    var limitNum = 50000;
                     if(this.count() > limitNum) {
                         $(".word_message").show();
                     } else {
@@ -198,7 +198,7 @@
                 }
             },
             submitHandler : function(form) {
-                if (KindEditor.instances[0].html().length > 65000) {
+                if (KindEditor.instances[0].html().length > 50000) {
 	                    $(".word_message").show();
 	                    return;
 	            }
@@ -301,7 +301,12 @@
             getTimeList(30);
         });
         /* 根据配送方式 判断是否显示配送时段*/
-        $("#peisong").hide();
+        console.log($("#HidDistributeModel").val());
+        if($("#HidDistributeModel").val()=="0"){
+            $("#peisong").show();
+        }else{
+            $("#peisong").hide();
+        }
         $("input[name='distributeModel']").click(function() {
            if($(this).val()=="0"){
                $("#peisong").show();
@@ -671,6 +676,7 @@
         <input id="categoryIds" type="hidden" value="${businessInfo.categoryIdList}" />
         <input id="collectFees" type="hidden" name="collectFees" value="${businessInfo.collectFees}" />
         <input id="balanceModel" type="hidden" value="${businessInfo.balanceModel}" />
+        <input id="HidDistributeModel" type="hidden" value="${businessInfo.distributeModel}" />
         <c:choose>
             <c:when test="${not empty businessInfo.id}">
                 <form:hidden path="useState" />

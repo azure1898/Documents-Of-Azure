@@ -90,6 +90,9 @@
               <if test="pending == 1">
                 AND a.order_state != 2 AND a.order_state != 3
             </if>
+             <if test="isCancel == 1">
+                AND a.order_state != 3
+            </if>
         </where>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">

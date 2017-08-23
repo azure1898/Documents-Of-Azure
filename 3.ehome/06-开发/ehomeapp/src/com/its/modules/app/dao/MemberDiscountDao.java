@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
+
 import com.its.modules.app.entity.MemberDiscount;
 
 /**
@@ -41,4 +42,18 @@ public interface MemberDiscountDao extends CrudDao<MemberDiscount> {
 	 * @return 某用户某楼盘下的某种优惠券当天领取的数量
 	 */
 	public int getTodayReceiveCount(@Param("villageInfoId") String villageInfoId, @Param("accountId") String accountId, @Param("couponId") String couponId);
+
+	/**
+	 * 下单赠送优惠券时判断优惠券是否已赠送
+	 * 
+	 * @param villageInfoId
+	 *            楼盘ID
+	 * @param accountId
+	 *            用户ID
+	 * @param couponId
+	 *            优惠券ID
+	 * @return MemberDiscount
+	 */
+	public MemberDiscount judgeMemberDiscount(@Param("villageInfoId") String villageInfoId, @Param("accountId") String accountId, @Param("couponId") String couponId);
+
 }

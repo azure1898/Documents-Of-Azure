@@ -19,6 +19,7 @@
   {"url":"../../images/pic01.jpg"},
   {"url":"../../images/pic01.jpg"}
   ],
+  "isPraise":1,
 "rootSpeak":{
   "id":"",
   "noticeId":"",
@@ -51,6 +52,7 @@
   {"url":"../../images/pic01.jpg"},
   {"url":"../../images/pic01.jpg"}
   ],
+  "isPraise":0,
 "rootSpeak":{
   "id":"",
   "noticeId":"",

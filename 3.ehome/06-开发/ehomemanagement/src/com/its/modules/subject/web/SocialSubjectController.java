@@ -25,9 +25,14 @@ import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.web.BaseController;
 import com.its.common.utils.StringUtils;
+import com.its.modules.account.entity.Account;
+import com.its.modules.account.service.AccountService;
+import com.its.modules.speak.entity.SocialSpeak;
 import com.its.modules.subject.entity.SocialSubject;
 import com.its.modules.subject.service.SocialSubjectService;
 import com.its.modules.sys.utils.UserUtils;
+import com.its.modules.village.entity.VillageInfo;
+import com.its.modules.village.service.VillageInfoService;
 
 /**
  * 话题管理Controller
@@ -40,6 +45,10 @@ public class SocialSubjectController extends BaseController {
 
 	@Autowired
 	private SocialSubjectService socialSubjectService;
+	@Autowired
+	private AccountService accountService;
+	@Autowired
+	private VillageInfoService villageInfoService;
 	
 	@ModelAttribute
 	public SocialSubject get(@RequestParam(required=false) String id) {
@@ -57,6 +66,23 @@ public class SocialSubjectController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SocialSubject socialSubject, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SocialSubject> page = socialSubjectService.findPage(new Page<SocialSubject>(request, response), socialSubject); 
+		for(SocialSubject ss : page.getList()) {
+			String villageName = "";
+			String villageInfoIds = ss.getVillageInfoId();
+			if(!StringUtils.isEmpty(villageInfoIds)) {
+				String[] villageIds = villageInfoIds.split(",");
+				for(int i=0; i<villageIds.length; i++) {
+					String villageId = villageIds[i];
+					VillageInfo villageInfo = villageInfoService.get(villageId);
+					if(i == (villageIds.length-1)) {
+						villageName+=villageInfo.getVillageName();
+					} else {
+						villageName+=(villageInfo.getVillageName()+",");
+					}
+				}
+				ss.setVillageInfoName(villageName);
+			}
+		}
 		model.addAttribute("page", page);
 		model.addAttribute("proId", request.getParameter("addrpro"));
 		model.addAttribute("cityId", request.getParameter("addrcity"));
@@ -68,6 +94,9 @@ public class SocialSubjectController extends BaseController {
 	@RequiresPermissions("subject:socialSubject:view")
 	@RequestMapping(value = "form")
 	public String form(SocialSubject socialSubject, Model model) {
+		if(socialSubject.getIsrecommend() == "" || socialSubject.getIsrecommend() == null) {
+			socialSubject.setIsrecommend("1");
+		}
 		model.addAttribute("socialSubject", socialSubject);
 		return "modules/subject/socialSubjectForm";
 	}
@@ -75,15 +104,16 @@ public class SocialSubjectController extends BaseController {
 	@RequiresPermissions("subject:socialSubject:edit")
 	@RequestMapping(value = "save")
 	public String save(SocialSubject socialSubject, Model model, RedirectAttributes redirectAttributes) {
-//		if (!beanValidator(model, socialSubject)){
-//			return form(socialSubject, model);
-//		}
 		if(CommonUtils.isEmpty(socialSubject.getId())) {
-			socialSubject.setCreaterid(UserUtils.getUser().getId());
-			socialSubject.setCreatername(UserUtils.getUser().getName());
+			
+			String userId = UserUtils.getUser().getId();
+			Account account = accountService.findBySysUserId(userId);
+			socialSubject.setCreaterid(account.getId());
+			socialSubject.setCreatername(account.getNickname());
 			socialSubject.setCreatetime(new Date());
 			socialSubject.setOrdernum("0");
 		}
+		socialSubject.setSubname("#"+socialSubject.getSubname()+"#");
 		socialSubjectService.save(socialSubject);
 		addMessage(redirectAttributes, "保存话题成功");
 		return "redirect:"+Global.getAdminPath()+"/subject/socialSubject/?repage";

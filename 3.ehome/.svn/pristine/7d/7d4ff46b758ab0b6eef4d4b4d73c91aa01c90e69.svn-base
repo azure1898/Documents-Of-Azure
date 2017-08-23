@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.balance.dao.BusinessBalanceDao">
+    
+	<sql id="businessBalanceColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.balance_cycle AS "balanceCycle",
+		a.balance_start_time AS "balanceStartTime",
+		a.balance_end_time AS "balanceEndTime",
+		a.balance_model AS "balanceModel",
+		a.balance_state AS "balanceState",
+		a.order_money AS "orderMoney",
+		a.coupon_money AS "couponMoney",
+		a.deduction_money AS "deductionMoney",
+		a.pay_money AS "payMoney",
+		a.check_state AS "checkState",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="businessBalanceJoins">
+	   LEFT JOIN business_info b ON b.id = a.business_info_id
+	</sql>
+    
+	<select id="get" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="businessInfoId != null and businessInfoId != ''">
+				AND a.business_info_id = #{businessInfoId}
+			</if>
+			<if test="balanceCycle != null and balanceCycle != ''">
+				AND a.balance_cycle = #{balanceCycle}
+			</if>
+			
+            <if test="balanceStartTime != null and balanceStartTime != ''">
+                AND a.balance_start_time &gt;= #{balanceStartTime}
+            </if>
+            <if test="balanceEndTime != null and balanceEndTime != ''">
+                AND a.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+			<if test="balanceState != null and balanceState != ''">
+				AND a.balance_state = #{balanceState}
+			</if>
+			<if test="checkState != null and checkState != ''">
+				AND a.check_state = #{checkState}
+			</if>
+			<if test="businessName != null and businessName != ''">
+                AND b.business_name like 
+                    <if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+            </if>
+            <if test="addrPro != null and addrPro != ''">
+                AND b.addr_pro = #{addrPro}
+            </if>
+            <if test="addrCity != null and addrCity != ''">
+                AND b.addr_city = #{addrCity}
+            </if>
+            <if test="villageInfoId != null and villageInfoId != ''">
+                AND EXISTS( 
+                    SELECT 1 FROM Business_Servicescope bs 
+                     WHERE bs.Village_Info_ID = #{villageInfoId}
+                       AND bs.BusinessInfo_ID = a.Business_Info_ID
+                )
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+            <if test="balanceCycle != null and balanceCycle != ''">
+                AND a.balance_cycle = #{balanceCycle}
+            </if>
+            
+            <if test="balanceStartTime != null and balanceStartTime != ''">
+                AND a.balance_start_time &gt;= #{balanceStartTime}
+            </if>
+            <if test="balanceEndTime != null and balanceEndTime != ''">
+                AND a.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+            <if test="balanceState != null and balanceState != ''">
+                AND a.balance_state = #{balanceState}
+            </if>
+            <if test="checkState != null and checkState != ''">
+                AND a.check_state = #{checkState}
+            </if>
+            <if test="businessName != null and businessName != ''">
+                AND b.business_name like 
+                    <if test="dbName == 'oracle'">'%'||#{businessName}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{businessName}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{businessName},'%')</if>
+            </if>
+            <if test="addrPro != null and addrPro != ''">
+                AND b.addr_pro = #{addrPro}
+            </if>
+            <if test="addrCity != null and addrCity != ''">
+                AND b.addr_city = #{addrCity}
+            </if>
+            <if test="villageInfoId != null and villageInfoId != ''">
+                AND EXISTS( 
+                    SELECT 1 FROM Business_Servicescope bs 
+                     WHERE bs.Village_Info_ID = #{villageInfoId}
+                       AND bs.BusinessInfo_ID = a.Business_Info_ID
+                )
+            </if>
+        </where>	
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_balance(
+			id,
+			business_info_id,
+			balance_cycle,
+			balance_start_time,
+			balance_end_time,
+			balance_model,
+			balance_state,
+			order_money,
+			coupon_money,
+			deduction_money,
+			pay_money,
+			check_state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{balanceCycle},
+			#{balanceStartTime},
+			#{balanceEndTime},
+			#{balanceModel},
+			#{balanceState},
+			#{orderMoney},
+			#{couponMoney},
+			#{deductionMoney},
+			#{payMoney},
+			#{checkState},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_balance SET 	
+			business_info_id = #{businessInfoId},
+			balance_cycle = #{balanceCycle},
+			balance_start_time = #{balanceStartTime},
+			balance_end_time = #{balanceEndTime},
+			balance_model = #{balanceModel},
+			balance_state = #{balanceState},
+			order_money = #{orderMoney},
+			coupon_money = #{couponMoney},
+			deduction_money = #{deductionMoney},
+			pay_money = #{payMoney},
+			check_state = #{checkState},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE business_balance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+    <select id="findListByOrderGoods" resultType="BusinessBalance">
+       SELECT
+            o.business_info_id as businessInfoId,
+            bi.balance_cycle as balanceCycle,
+            <!-- 根据商家表的结算周期获取当前结算周期的开始、结束时间，group by里面的分组语句也用这里的时间进行分组统计 -->
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.over_time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END AS balanceStartTime,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END AS balanceEndTime,
+         bi.balance_model as balanceModel,
+         o.check_state AS balanceState,
+         sum(o.Pay_Money) AS orderMoney,
+         sum(o.coupon_money) AS couponMoney,
+         sum(
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+        ) AS deductionMoney,
+         sum(
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+         ) AS payMoney,
+         o.check_state as checkState
+        FROM
+            order_goods o,
+            business_info bi
+        WHERE
+            o.check_state = '0'
+        AND o.business_info_id = bi.id
+        AND o.Pay_State = '1'
+        AND IFNULL(o.Pay_Type,'0') = '0'
+        and o.order_state = '3'
+        AND o.over_time &lt;= CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            o.over_time
+        END
+        GROUP BY
+            o.business_info_id,
+            bi.balance_cycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.over_time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END,
+         bi.balance_model,
+         o.check_state;
+    </select>
+	
+    <select id="findListByOrderService" resultType="BusinessBalance">
+       SELECT
+            o.business_info_id as businessInfoId,
+            bi.balance_cycle as balanceCycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.over_time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END AS balanceStartTime,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END AS balanceEndTime,
+         bi.balance_model as balanceModel,
+         o.check_state AS balanceState,
+         sum(o.Pay_Money) AS orderMoney,
+         sum(o.coupon_money) AS couponMoney,
+         sum(
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+        ) AS deductionMoney,
+         sum(
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+         ) AS payMoney,
+         o.check_state as checkState
+        FROM
+            order_service o,
+            business_info bi
+        WHERE
+            o.check_state = '0'
+        AND o.business_info_id = bi.id
+        AND o.Pay_State = '1'
+        AND IFNULL(o.Pay_Type,'0') = '0'
+        and o.order_state = '2'
+        AND o.over_time &lt;= CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            o.over_time
+        END
+        GROUP BY
+            o.business_info_id,
+            bi.balance_cycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.over_time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.over_time,
+                    INTERVAL DAYOFWEEK(o.over_time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.over_time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.over_time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END,
+         bi.balance_model,
+         o.check_state;
+    </select>
+	
+    <select id="findListByOrderLesson" resultType="BusinessBalance">
+       SELECT
+            o.business_info_id as businessInfoId,
+            bi.balance_cycle as balanceCycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.Pay_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END AS balanceStartTime,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END AS balanceEndTime,
+         bi.balance_model as balanceModel,
+         o.check_state AS balanceState,
+         sum(o.Pay_Money) AS orderMoney,
+         sum(o.coupon_money) AS couponMoney,
+         sum(
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+        ) AS deductionMoney,
+         sum(
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+         ) AS payMoney,
+         o.check_state as checkState
+        FROM
+            order_lesson o,
+            business_info bi
+        WHERE
+            o.check_state = '0'
+        AND o.business_info_id = bi.id
+        AND o.Pay_State = '1'
+        AND IFNULL(o.Pay_Type,'0') = '0'
+        and o.order_state = '1'
+        AND o.Pay_Time &lt;= CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            o.Pay_Time
+        END
+        GROUP BY
+            o.business_info_id,
+            bi.balance_cycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.Pay_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END,
+         bi.balance_model,
+         o.check_state;
+    </select>
+    
+    <select id="findListByOrderField" resultType="BusinessBalance">
+       SELECT
+            o.business_info_id as businessInfoId,
+            bi.balance_cycle as balanceCycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.Pay_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END AS balanceStartTime,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END AS balanceEndTime,
+         bi.balance_model as balanceModel,
+         o.check_state AS balanceState,
+         sum(o.Pay_Money) AS orderMoney,
+         sum(o.coupon_money) AS couponMoney,
+         sum(
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+        ) AS deductionMoney,
+         sum(
+            o.Pay_Money+o.Coupon_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  (o.Pay_Money+o.Coupon_Money)*bi.Collect_fees/100 
+                ELSE  bi.Collect_Fees 
+            END
+         ) AS payMoney,
+         o.check_state as checkState
+        FROM
+            order_field o,
+            business_info bi
+        WHERE
+            o.check_state = '0'
+        AND o.business_info_id = bi.id
+        AND o.Pay_State = '1'
+        AND IFNULL(o.Pay_Type,'0') = '0'
+        and o.order_state = '1'
+        AND o.Pay_Time &lt;= CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            o.Pay_Time
+        END
+        GROUP BY
+            o.business_info_id,
+            bi.balance_cycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(o.Pay_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    o.Pay_Time,
+                    INTERVAL DAYOFWEEK(o.Pay_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                o.Pay_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                o.Pay_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END,
+         bi.balance_model,
+         o.check_state;
+    </select>
+    
+    <select id="findListByOrderGroupPurc" resultType="BusinessBalance">
+       SELECT
+            o.business_info_id as businessInfoId,
+            bi.balance_cycle as balanceCycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    ol.Consume_Time,
+                    INTERVAL DAYOFWEEK(ol.Consume_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(ol.Consume_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                ol.Consume_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END AS balanceStartTime,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    ol.Consume_Time,
+                    INTERVAL DAYOFWEEK(ol.Consume_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                ol.Consume_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                ol.Consume_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END AS balanceEndTime,
+         bi.balance_model as balanceModel,
+         o.check_state AS balanceState,
+         sum(ol.Pay_Sum_Money) AS orderMoney,
+         sum(o.coupon_money) AS couponMoney,
+         sum(
+            CASE 
+                WHEN bi.balance_model='0' THEN  ol.Pay_Sum_Money*bi.Collect_fees/100 
+                ELSE bi.Collect_Fees 
+            END
+        ) AS deductionMoney,
+         sum(
+            ol.Pay_Sum_Money-
+            CASE 
+                WHEN bi.balance_model='0' THEN  ol.Pay_Sum_Money*bi.Collect_fees/100 
+                ELSE bi.Collect_Fees 
+            END
+         ) AS payMoney,
+         o.check_state as checkState
+        FROM
+            order_group_purc o,
+            order_group_purc_list ol,
+            business_info bi
+        WHERE
+            o.check_state = '0'
+        AND o.business_info_id = bi.id
+        AND o.id = ol.Order_Group_Purc_ID
+        AND o.Pay_State = '1'
+        AND IFNULL(o.Pay_Type,'0') = '0'
+        AND o.order_state = '1'
+        AND ol.Group_Purc_State = '1'
+        AND ol.Consume_Time &lt;= CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    ol.Consume_Time,
+                    INTERVAL DAYOFWEEK(ol.Consume_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                ol.Consume_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                ol.Consume_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            ol.Consume_Time
+        END
+        GROUP BY
+            o.business_info_id,
+            bi.balance_cycle,
+            CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    ol.Consume_Time,
+                    INTERVAL DAYOFWEEK(ol.Consume_Time) - 2 DAY
+                ),
+                '%Y-%m-%d 00:00:00'
+            )
+        WHEN balance_cycle = '1' THEN
+            STR_TO_DATE(
+                concat(
+                    DATE_FORMAT(ol.Consume_Time, '%Y%m'),
+                    '01'
+                ),
+                '%Y%m%d %H:%i:%s'
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                ol.Consume_Time,
+                '%Y-%m-%d 00:00:00'
+            )
+        ELSE
+            NULL
+        END,
+         CASE
+        WHEN balance_cycle = '0' THEN
+            DATE_FORMAT(
+                date_sub(
+                    ol.Consume_Time,
+                    INTERVAL DAYOFWEEK(ol.Consume_Time) - 8 DAY
+                ),
+                '%Y-%m-%d 23:59:59'
+            )
+        WHEN balance_cycle = '1' THEN
+            date_add(
+                STR_TO_DATE(
+                    concat(
+                        DATE_FORMAT(
+                            date_add(
+                                ol.Consume_Time,
+                                INTERVAL 1 MONTH
+                            ),
+                            '%Y%m'
+                        ),
+                        '01'
+                    ),
+                    '%Y%m%d'
+                ),
+                INTERVAL - 1 SECOND
+            )
+        WHEN balance_cycle = '2' THEN
+            DATE_FORMAT(
+                ol.Consume_Time,
+                '%Y-%m-%d 23:59:59'
+            )
+        ELSE
+            NULL
+        END,
+         bi.balance_model,
+         o.check_state;
+    </select>
+    
+    <!-- 批量结算 ，修改待结算为已结算 -->
+    <update id="batchBalance">
+        UPDATE business_balance SET     
+            balance_state = '1'
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 结算单核对 ，修改未核对或者异常为已核对 -->
+    <update id="check">
+        UPDATE business_balance SET     
+            check_state = '1'
+        WHERE id = #{id}
+    </update>
+	
+	<!-- 获取结算单申请单 -->
+	<select id="findBalanceApply" resultType="BusinessBalance">
+	   SELECT
+            @rownum := @rownum + 1 AS serialNum,
+            bi.Business_Name AS businessName,
+            bi.account_name AS accountName,
+            bi.Deposit_Bank AS depositBank,
+            bi.bank_account AS bankAccount,
+            a. NAME AS cityName,
+            sum(bb.Pay_Money) AS payMoney,
+            bb.remarks AS remark,
+            min(bb.balance_start_time) as balanceStartTime,
+            max(bb.balance_end_time) as balanceEndTime
+        FROM
+            (SELECT @rownum := 0) r,
+            business_balance bb,
+            business_info bi,
+            sys_area a
+        <where>
+            bb.business_info_id = bi.id
+            AND bi.Addr_City = a.id
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND bb.business_info_id = #{businessInfoId}
+            </if>
+            
+            <if test="balanceStartTime != null and balanceStartTime != ''">
+                AND bb.balance_start_time &gt;= #{balanceStartTime}
+            </if>
+            <if test="balanceEndTime != null and balanceEndTime != ''">
+                AND bb.balance_end_time &lt; date_add(#{balanceEndTime}, interval 1 DAY)
+            </if>
+            <if test="balanceState != null and balanceState != ''">
+                AND bb.balance_state = #{balanceState}
+            </if>
+            <if test="checkState != null and checkState != ''">
+                AND bb.check_state = #{checkState}
+            </if>
+            <if test="addrPro != null and addrPro != ''">
+                AND bi.addr_pro = #{addrPro}
+            </if>
+            <if test="addrCity != null and addrCity != ''">
+                AND bi.addr_city = #{addrCity}
+            </if>
+            <if test="villageInfoId != null and villageInfoId != ''">
+                AND EXISTS( 
+                    SELECT 1 FROM Business_Servicescope bs 
+                     WHERE bs.Village_Info_ID = #{villageInfoId}
+                       AND bs.BusinessInfo_ID = bb.Business_Info_ID
+                )
+            </if>
+        </where>
+        GROUP BY
+            bi.Business_Name,
+            bi.account_name,
+            bi.Deposit_Bank,
+            bi.bank_account,
+            bi.Addr_City
+	</select>
+</mapper>

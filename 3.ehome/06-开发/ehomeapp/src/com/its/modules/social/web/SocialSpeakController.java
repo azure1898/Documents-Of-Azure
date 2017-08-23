@@ -3,6 +3,7 @@
  */
 package com.its.modules.social.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -341,6 +342,7 @@ public class SocialSpeakController extends BaseController {
 			String createTime = DateUtil.getDaysBeforeNow(socialSpeakBean.getCreatetime());
 			toJson.put("createTime", createTime);//发言时间
 			toJson.put("spContent", socialSpeakBean.getContent());//发言内容
+			toJson.put("isSpeak", socialSpeakBean.getIsspeak());//是否发言
 			
 			//是否点赞
 			SocialPraise socialPraise = new SocialPraise();
@@ -374,6 +376,28 @@ public class SocialSpeakController extends BaseController {
 				}
 			}
 			toJson.put("releasePictures", imgMap);
+			
+			//获取root发言
+			String rootId = socialSpeakBean.getRootid();
+			SocialSpeak rootSpeak = socialSpeakService.get(rootId);
+			Map<String, Object> rootMap = new HashMap<String, Object>();
+			if(rootSpeak!=null){
+				rootMap.put("id", rootSpeak.getId());
+				rootMap.put("noticeId", rootSpeak.getNoticeid());
+				rootMap.put("rootUserId", rootSpeak.getUserid());
+				rootMap.put("title", rootSpeak.getTitle());
+				rootMap.put("summary", rootSpeak.getSummary());
+				rootMap.put("content", rootSpeak.getContent());
+				String rootImages = rootSpeak.getImages();
+				if(StringUtils.isEmpty(rootImages)){
+					rootMap.put("image", "");
+				}else{
+					rootMap.put("imgUrl", MyFDFSClientUtils.get_fdfs_file_url(request, rootImages.split(",")[0]));
+				}
+			}
+			
+			toJson.put("rootSpeak", rootMap);
+			
 			
 			//发言相关属性
 			toJson.put("spCountFwd", socialSpeakBean.getCountForward());//转发数量
@@ -439,6 +463,7 @@ public class SocialSpeakController extends BaseController {
 		socialSpeak.setVisrange(visible);
 		socialSpeak.setIsspeak(SocialGlobal.SPEAK_IS_SPEAK_YES);
 		socialSpeak.setCreatetime(new Date());
+		socialSpeak.setDelflag(SocialGlobal.SPEAK_DEL_FLAG_NO);
 		
 		//处理图片附件
 		ServletContext servletContext = request.getSession().getServletContext();
@@ -448,6 +473,7 @@ public class SocialSpeakController extends BaseController {
 		String images = "";
 		if (resolver.isMultipart(request)) {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			File file = (File)multipartRequest.getAttribute("file");
 			// 获取文件名称迭代器
 			Iterator<String> it = multipartRequest.getFileNames();
 			while (it.hasNext()) {
@@ -498,6 +524,11 @@ public class SocialSpeakController extends BaseController {
 		}
 		
 		//保存提醒
+		String path = request.getContextPath(); 
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
+		String url = basePath + "/app/message/myMsg?userId=" + userId;
+		Account account = accountService.get(userId);
+		String nickname = account.getNickname();
 		if(!StringUtils.isEmpty(toUsersIds)){
 			String[] atUserIds = toUsersIds.split(",");
 			for(String atUserId : atUserIds){
@@ -511,13 +542,12 @@ public class SocialSpeakController extends BaseController {
 			
 			//发送消息
 			try {
-				Account account = accountService.get(userId);
-				String nickname = account.getNickname();
 				String msgContent = "@" + nickname + "\n提到你：" + content;
-				String msgExtra = "{\"sendType\":1,"
+				String msgExtra = "{\"sendType\":4.1,"
 						+ "\"fromUserId\":\""+userId+"\","
 						+ "\"toUserId\":\""+atUserIds+"\","
-						+ "\"msgContent\":\""+msgContent+"\""
+						+ "\"msgContent\":\""+msgContent+"\","
+						+ "\"url\":\""+url+"\""
 						+"}";
 				RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
 				TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
@@ -535,14 +565,50 @@ public class SocialSpeakController extends BaseController {
 					socialMsg.setSectype(RongGlobal.MSG_SECTYPE_ATWD);
 					socialMsg.setIsread(RongGlobal.MSG_IS_READ_NO);
 					socialMsg.setNoticetime(new Date());
+					socialMsg.setRemark(msgExtra);
 					socialMsgService.save(socialMsg);
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		}
 		
+		//判断当前用户是否是管理员，如果是管理员，给当前楼盘下所有用户发送消息
+		List<Account> adminList = socialSpeakService.getAdminAccount(userId);
+		if(adminList!=null && adminList.size()>0){//说明是管理员
+			//查询该楼盘下所有的用户
+			List<Account> accountList = socialSpeakService.getAccountListByVillId(villageInfoId);
+			if(accountList!=null && accountList.size()>0){
+				for(Account ac : accountList){
+					String msgContent = "@" + nickname + "\n提到你：" + content;
+					String msgExtra = "{\"sendType\":4.1,"
+							+ "\"fromUserId\":\""+userId+"\","
+							+ "\"toUserId\":\""+ac.getId()+"\","
+							+ "\"msgContent\":\""+msgContent+"\","
+							+ "\"url\":\""+url+"\""
+							+"}";
+					RongCloud rongCloud = RongCloud.getInstance(RongGlobal.APP_KEY, RongGlobal.APP_SECRET);
+					TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
+					rongCloud.message.PublishSystem(userId, new String[]{ac.getId()}, messagePublishSystemTxtMessage, "", "", 1, 1);
+					
+					SocialMsg socialMsg = new SocialMsg();
+					socialMsg.setUserid(userId);
+					socialMsg.setUsername(ac.getNickname());
+					socialMsg.setTouserid(ac.getId());
+					socialMsg.setContent(msgContent);
+					socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
+					socialMsg.setNoticetime(new Date());
+					socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_SOCIAL);
+					socialMsg.setSectype(RongGlobal.MSG_SECTYPE_ATWD);
+					socialMsg.setIsread(RongGlobal.MSG_IS_READ_NO);
+					socialMsg.setNoticetime(new Date());
+					socialMsg.setRemark(msgExtra);
+					socialMsgService.save(socialMsg);
+				}
+			}
+		}
 		resultMap.put("code", Global.CODE_SUCCESS);
 		resultMap.put("message", "保存发言成功");
 		return resultMap;

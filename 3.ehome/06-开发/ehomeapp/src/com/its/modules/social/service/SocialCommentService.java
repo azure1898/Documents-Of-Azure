@@ -117,8 +117,8 @@ public class SocialCommentService extends CrudService<SocialCommentDao, SocialCo
 	 * @param socialComment
 	 * @return
 	 */
-	public List<SocialComment> findListByUserId(String userId) {
-		return socialCommentDao.findListByUserId(userId);
+	public List<SocialComment> findListByUserId(String userId, int pageIndex, int pageSize) {
+		return socialCommentDao.findListByUserId(userId, pageIndex, pageSize);
 	}
 	
 	@Transactional(readOnly = false)

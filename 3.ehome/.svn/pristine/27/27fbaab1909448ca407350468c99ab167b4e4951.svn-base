@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>商品详情</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/swiper-3.4.2.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cursom/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- page -->
+    <link href="../../css/cursom/business.css" rel="stylesheet">
+    <style type="text/css">
+        .nomargintop {
+            margin-top: 0px;
+        }
+
+        .swiper-container {
+            height: 285px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="gwcView">
+            <div id="gwc2" v-on:click="closeShoppingCart" style="background-color:#000;opacity: 0.5;filter:alpha(opacity=50); width:100%; height:100%; position:absolute; z-index:888;"></div>
+            <div style="position:fixed; bottom:0; left:0; z-index:999; width:100%;">
+                <div class="choice_goods">
+                    <div class="choicegoods_title">
+                        <div class="title_name">已选商品<span class="grey">已选{{shoppingcart.totalNumber}}件</span></div>
+                        <div class="delete_btn" v-if="shoppingcart.totalNumber > 0" v-on:click="clearShoppingCart">清空</div>
+                    </div>
+                    <div class="plr10">
+                        <div class="goods_list" v-for="shopCommodity in shoppingcart.commodities">
+                            <div class="goods_pic"><img v-bind:src="shopCommodity.commodityImage"></div>
+                            <div class="goods_right">
+                                <div class="goods_name">{{shopCommodity.commodityName}}</div>
+                                <div class="">
+                                    <div class="fl">
+                                        <div class="font_orange" v-if="shopCommodity.discountedPrice > 0">{{shopCommodity.discountedPrice | formatDecimal}}</div>
+                                        <div class="font_orange" v-else>{{shopCommodity.originalPrice | formatDecimal}}</div>
+                                        <div class="font14" v-if="commodity.discountedPrice > 0"><del>{{shopCommodity.originalPrice | formatDecimal}}</del></div>
+                                    </div>
+                                    <div class="goods_num fr" v-if="commodity.isNormal==1">
+                                        <a href="#" class="num_jian2" v-if="shopCommodity.commodityNumber > 0" v-on:click="reduceShoppingCart(2,shopCommodity)"></a>
+                                        <span class="goods_shuzi" v-if="shopCommodity.commodityNumber > 0">{{shopCommodity.commodityNumber}}</span>
+                                        <a href="#" class="num_zeng" v-on:click="addShoppingCart(2,shopCommodity)"></a>
+                                    </div>
+                                    <div class="goods_num fr" v-else>
+                                        <a href="#" class="num_jian"></a>
+                                        <span class="goods_shuzi">{{shopCommodity.commodityNumber}}</span>
+                                        <a href="#" class="num_zeng1"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ts_txt" v-if="shoppingcart.isActivity == 1">满{{shoppingcart.fullMoney}}减{{shoppingcart.giftMoney}}，还差{{shoppingcart.lessMoney}}元</div>
+                    <div class="choicegoods_bottom">
+                        <div class="total_amount">{{shoppingcart.totalMoney | formatDecimal}}</div>
+                        <div class="business_zbtn" v-if="commodity.isNormal==1">
+                            <a href="#" class="font_grey" v-if="shoppingcart.lessSendMoney > 0">还差 {{shoppingcart.lessSendMoney | formatDecimal}} 起送</a>
+                            <a v-bind:href="urlList.order + commodity.businessID" v-else>去结算</a>
+                        </div>
+                        <div class="business_zbtn" v-else>
+                            <a href="#" class="font_grey">去结算</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="details_top">
+            <div class="container-fluid top">
+                <div class="h20"></div>
+                <div class="topbtn_region">
+                    <div class="fl">
+                        <span class="back_btn" onclick="javascript :history.go(-1)"></span>
+                    </div>
+                    <div class="fr">
+                        <span v-bind:class="commodity.isCollection==0?'collection_btn':'collection_btn2'" v-on:click="collection(commodity)"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(image,index) in commodity.commodityImage"><img v-bind:src="image.url"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="bussinessbreak" v-if="!commodity.isNormal">商家休息中</div>
+        <div class="details_title_box" style="height:auto;padding-bottom:8px;">
+            <div class="plr10">
+                <div class="details_title"><span style="float:left;width:80%;" v-html="commodity.commodityName"></span><span class="goods_label fr" v-if="commodity.isMoreSpe == 1" data-toggle="modal" data-target="#moreSpeModal" v-on:click="openMoreSpe">多规格</span></div>
+                <div class="clear"></div>
+                <div class="mt4 clearfix">
+                    <div class="fl">
+                        <div class="font_orange font18 fl" v-if="commodity.discountedPrice > 0">{{commodity.discountedPrice | formatDecimal}}</div>
+                        <div class="font_orange font18 fl" v-else>{{commodity.originalPrice | formatDecimal}}</div>
+                        <div class="font14 fl ml10 mt4" v-if="commodity.discountedPrice > 0"><del>{{commodity.originalPrice | formatDecimal}}</del></div>
+                    </div>
+                    <div class="goods_num fr nomargintop" v-if="commodity.isNormal==1">
+                        <a href="#" class="num_jian2" v-if="commodity.commodityNumber>0" v-on:click="reduceShoppingCart(1,commodity)"></a>
+                        <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
+                        <a href="#" class="num_zeng" v-on:click="addShoppingCart(1,commodity)"></a>
+                    </div>
+                    <div class="goods_num fr" v-else>
+                         <a href="#" class="num_jian" v-if="commodity.commodityNumber>0"></a>
+                        <span class="goods_shuzi" v-if="commodity.commodityNumber>0">{{commodity.commodityNumber}}</span>
+                        <a href="#" class="num_zeng1" ></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="details_title_box mt10" v-if="commodity.activities && commodity.activities.length > 0">
+            <div class="plr10">
+                <div class="fl mt10">活动</div>
+                <div class="activity">
+                    <div class="full_cut clearfix" v-for="activity in commodity.activities">
+                        <span class="orange_bg20 fl">满减</span>
+                        <span class="fl ml10">{{activity.desc}}</span>
+                    </div>
+                    <div class="full_cut clearfix" v-for="activity in commodity.activities">
+                        <span class="orange_bg20 fl">满减</span>
+                        <span class="fl ml10">{{activity.desc}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="details_title_box mt10">
+            <div class="plr10 clearfix">
+                <div class="shop_name">
+
+                    <img v-bind:src="urlList.business">{{commodity.businessName}}
+                </div>
+                <div class="shop_call">
+                    <a href="#" v-on:click="callPhone(commodity.businessPhone)">
+                        <img v-bind:src="urlList.contactbusiness">
+                    </a>联系商家
+                </div>
+            </div>
+            <div class="detail_twobtn">
+                <a href="#" class="sc_business">收藏商家</a>
+                <a v-bind:href="urlList.index + commodity.businessID" class="in_business">进入商家</a>
+            </div>
+        </div>
+        <div class="xq_jstitle" v-if="commodity.commodityDesc && commodity.commodityDesc.length>0">商品详情</div>
+        <div class="xq_box" v-if="commodity.commodityDesc && commodity.commodityDesc.length>0" v-html="commodity.commodityDesc">
+        </div>
+        <div class="business_bottom">
+            <div style="position:relative; float:left;">
+                <div class="shopping_chart_tb ml10 cursor" v-if="shoppingcart.totalNumber > 0" v-on:click="openShoppingCart">
+                    <img v-bind:src="urlList.shoppingcarticon">
+                </div>
+                <div class="shopping_chart_tb ml10 cursor bggrey" v-if="shoppingcart.totalNumber == 0">
+                    <img v-bind:src="urlList.shoppingcarticon">
+                </div>
+                <span class="cartgoods_num" v-if="shoppingcart.totalNumber > 0">{{shoppingcart.totalNumber}}</span>
+            </div>
+            <div class="total_amount" v-if="shoppingcart.totalNumber > 0">{{shoppingcart.totalMoney | formatDecimal}}</div>
+            <div class="total_amount nocommodity" v-else>未选购商品</div>
+            <div class="business_zbtn" v-if="commodity.isNormal==1">
+                <a href="#" class="font_grey" v-if="shoppingcart.totalNumber > 0 && shoppingcart.lessSendMoney > 0">还差 {{shoppingcart.lessSendMoney | formatDecimal}} 起送</a>
+                <a v-bind:href="urlList.order + commodity.businessID" v-if="shoppingcart.totalNumber > 0 && shoppingcart.lessSendMoney == 0">去结算</a>
+                <a href="#" class="font_grey" v-if="shoppingcart.totalNumber == 0">去结算</a>
+            </div>
+            <div class="business_zbtn" v-else>
+                <a href="#" class="font_grey">去结算</a>
+            </div>
+        </div>
+        <div id="moreSpeModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog moreSpeModal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title fontcenter">{{commodity.commodityName}}</h4>
+                    </div>
+                    <div class="modal-body spepadding">
+                        <div class="tanchukuang_title2">{{commodity.speCategory}}</div>
+                        <div class="tanchukuang_fenlei">
+                            <a href="#" class="cursor" v-for="(specification,index) in commodity.specifications">
+                                <span v-on:click="changeSpecification(specification)">{{specification.specificationName}}</span>
+                            </a>
+                        </div>
+                        <div class="tanchukuang_bottom">
+                            <div class="tanchukuang_bottom_but cursor" v-on:click="confirmSpecification">确定</div>
+                            <div class="tanchukuang_bottom_left">
+                                <span class="font_orange ft14" v-if="currentSpecification.specificationdisPrice>0">{{currentSpecification.specificationdisPrice | formatDecimal}}</span>
+                                <span class="font_orange ft14" v-else>{{currentSpecification.specificationPrice | formatDecimal}}</span>
+                                <span class="font22 ft12" v-if="currentSpecification.specificationdisPrice>0"><del>{{currentSpecification.specificationPrice | formatDecimal}}</del></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/static/jquery.js"></script>
+    <script src="../../js/static/swiper-3.4.2.jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/static/bootstrap.min.js"></script>
+    <script src="../../js/static/vue.js"></script>
+    <script src="../../js/static/vue-resource.js"></script>
+    <script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/cursom/common/common.js" type="text/javascript"></script>
+    <script src="../../js/cursom/business/commoditydetail.js"></script>
+</body>
+</html>

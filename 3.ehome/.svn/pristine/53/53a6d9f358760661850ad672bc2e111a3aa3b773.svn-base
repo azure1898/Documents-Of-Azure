@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.AccountDao">
+    
+	<sql id="accountColumns">
+		a.id AS "id",
+		a.village_info_id AS "villageInfoId",
+		a.phone_num AS "phoneNum",
+		a.nickname AS "nickname",
+		a.pwd AS "pwd",
+		a.photo AS "photo",
+		a.sex AS "sex",
+		a.height AS "height",
+		a.birth_year AS "birthYear",
+		a.weight AS "weight",
+		a.terminal_source AS "terminalSource",
+		a.certify_state AS "certifyState",
+		a.regist_date AS "registDate",
+		a.bind_bracelet_flag AS "bindBraceletFlag",
+		a.bracelet_name AS "braceletName",
+		a.wallet_balance AS "walletBalance",
+		a.bracelet_num AS "braceletNum",
+		a.wallet_principal AS "walletPrincipal",
+		a.face_recognition_flag AS "faceRecognitionFlag",
+		a.create_by AS "createBy.id",
+		a.wallet_present AS "walletPresent",
+		a.use_state AS "useState",
+		a.first_login_time AS "firstLoginTime",
+		a.create_date AS "createDate",
+		a.last_login_time AS "lastLoginTime",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accountJoins">
+	</sql>
+    
+	<select id="get" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="nickname != null and nickname != ''">
+				AND a.nickname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{nickname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{nickname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{nickname},'%')</if>
+			</if>
+			<if test="terminalSource != null and terminalSource != ''">
+				AND a.terminal_source = #{terminalSource}
+			</if>
+			<if test="certifyState != null and certifyState != ''">
+				AND a.certify_state = #{certifyState}
+			</if>
+			<if test="beginRegistDate != null and endRegistDate != null and beginRegistDate != '' and endRegistDate != ''">
+				AND a.regist_date BETWEEN #{beginRegistDate} AND #{endRegistDate}
+			</if>
+			<if test="bindBraceletFlag != null and bindBraceletFlag != ''">
+				AND a.bind_bracelet_flag = #{bindBraceletFlag}
+			</if>
+			<if test="faceRecognitionFlag != null and faceRecognitionFlag != ''">
+				AND a.face_recognition_flag = #{faceRecognitionFlag}
+			</if>
+			<if test="useState != null and useState != ''">
+				AND a.use_state = #{useState}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListByVillage" resultType="Account">
+		SELECT DISTINCT A.*
+		FROM account A INNER JOIN room_certify B ON A.ID = B.Account_Id 
+		WHERE B.Village_Info_ID = #{villageId}
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO account(
+			id,
+			village_info_id,
+			phone_num,
+			nickname,
+			pwd,
+			photo,
+			sex,
+			height,
+			birth_year,
+			weight,
+			terminal_source,
+			certify_state,
+			regist_date,
+			use_state,
+			bind_bracelet_flag,
+			wallet_balance,
+			bracelet_num,
+			wallet_principal,
+			bracelet_name,
+			create_by,
+			wallet_present,
+			face_recognition_flag,
+			first_login_time,
+			last_login_time,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageInfoId},
+			#{phoneNum},
+			#{nickname},
+			#{pwd},
+			#{photo},
+			#{sex},
+			#{height},
+			#{birthYear},
+			#{weight},
+			#{terminalSource},
+			#{certifyState},
+			#{registDate},
+			#{useState},
+			#{bindBraceletFlag},
+			#{walletBalance},
+			#{braceletNum},
+			#{walletPrincipal},
+			#{braceletName},
+			#{createBy.id},
+			#{walletPresent},
+			#{faceRecognitionFlag},
+			#{firstLoginTime},
+			#{lastLoginTime},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE account SET 	
+			id = #{id},
+			village_info_id = #{villageInfoId},
+			phone_num = #{phoneNum},
+			nickname = #{nickname},
+			pwd = #{pwd},
+			photo = #{photo},
+			sex = #{sex},
+			height = #{height},
+			birth_year = #{birthYear},
+			weight = #{weight},
+			terminal_source = #{terminalSource},
+			certify_state = #{certifyState},
+			regist_date = #{registDate},
+			bind_bracelet_flag = #{bindBraceletFlag},
+			bracelet_name = #{braceletName},
+			wallet_balance = #{walletBalance},
+			bracelet_num = #{braceletNum},
+			wallet_principal = #{walletPrincipal},
+			face_recognition_flag = #{faceRecognitionFlag},
+			create_by = #{createBy.id},
+			wallet_present = #{walletPresent},
+			use_state = #{useState},
+			first_login_time = #{firstLoginTime},
+			create_date = #{createDate},
+			last_login_time = #{lastLoginTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- ============================================== -->	
+	<select id="isExist" resultType="boolean">
+		SELECT count(id) FROM account
+		<where>
+			phone_num=#{phoneNum}
+		</where>
+	</select>
+	
+	<select id="getByPhoneNum" resultType="Account">
+		SELECT 
+			<include refid="accountColumns"/>
+		FROM account a
+		<include refid="accountJoins"/>
+		WHERE a.phone_num = #{phoneNum}
+	</select>
+	
+	<update id="saveAccountVillageID">
+		UPDATE account SET 
+			village_info_id = #{1} 
+		WHERE id = #{0}
+	</update>
+	
+</mapper>

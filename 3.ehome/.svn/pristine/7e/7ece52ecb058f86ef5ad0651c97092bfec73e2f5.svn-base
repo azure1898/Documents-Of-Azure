@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.social.dao.SocialTipsDao">
+    
+	<sql id="socialTipsColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.isnotice AS "isnotice",
+		a.noticetime AS "noticetime",
+		a.type AS "type",
+		a.fkid AS "fkid",
+		a.isread AS "isread"
+	</sql>
+	
+	<sql id="socialTipsJoins">
+	</sql>
+    
+	<select id="get" resultType="SocialTips">
+		SELECT 
+			<include refid="socialTipsColumns"/>
+		FROM social_tips a
+		<include refid="socialTipsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 根据用户id和提醒类型查询所有数据 -->
+	<select id="getListByUserIdAndType" resultType="SocialTips">
+		SELECT 
+			<include refid="socialTipsColumns"/>
+		FROM social_tips a
+		<include refid="socialTipsJoins"/>
+		<where>
+			a.userId = #{userId} and a.type = #{type} 
+		</where>		
+		ORDER BY a.noticetime DESC limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<select id="findList" resultType="SocialTips">
+		SELECT 
+			<include refid="socialTipsColumns"/>
+		FROM social_tips a
+		<include refid="socialTipsJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SocialTips">
+		SELECT 
+			<include refid="socialTipsColumns"/>
+		FROM social_tips a
+		<include refid="socialTipsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO social_tips(
+			id,
+			userid,
+			isnotice,
+			noticetime,
+			type,
+			fkid,
+			isread
+		) VALUES (
+			#{id},
+			#{userid},
+			#{isnotice},
+			#{noticetime},
+			#{type},
+			#{fkid},
+			#{isread}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE social_tips SET 	
+			userid = #{userid},
+			isnotice = #{isnotice},
+			noticetime = #{noticetime},
+			type = #{type},
+			fkid = #{fkid},
+			isread = #{isread}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM social_tips
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

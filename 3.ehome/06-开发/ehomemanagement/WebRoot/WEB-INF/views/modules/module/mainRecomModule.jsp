@@ -128,7 +128,7 @@
             <a href="${ctx}/module/villageLine/lifeRecomFrom?id=${villageLine.id}">生活推荐</a>
         </li>
     </ul>
-    <form:form id="inputForm" modelAttribute="villageLine" action="${ctx}/module/villageLine/updateMaintRecomModule" method="post" class="form-horizontal">
+    <form:form id="inputForm" enctype="multipart/form-data" modelAttribute="villageLine" action="${ctx}/module/villageLine/updateMaintRecomModule" method="post" class="form-horizontal">
         <form:hidden path="id" />
         <input id="maintRecomModule" type="hidden" name="maintRecomModule" value="${villageLine.maintRecomModule}">
         <input id="maintRecomModuleSort" type="hidden" name="maintRecomModuleSort" value="${villageLine.maintRecomModuleSort}">
@@ -150,7 +150,7 @@
                         </c:when>
                         <c:otherwise>
                             <font color="red">没有可选择的模块，请在"模块管理"-"设置管理" 进行楼盘模块设置 </font>
-                            <form:input path="maintRecomModuleIds" style="width: 0px; height: 0px; border: 0px;opacity: 0;"  class="required" />
+                            <form:input path="maintRecomModuleIds" style="width: 0px; height: 0px; border: 0px;opacity: 0;" class="required" />
                         </c:otherwise>
                     </c:choose>
                     <span class="help-inline">
@@ -171,18 +171,33 @@
         <script src="${ctxStatic}/common/layer.js"></script>
         <script type="text/javascript">
             function showPage(){
-                layer.open({
-                    type: 2,
-                    title:'首页推荐预览',
-                    area: ['414px', '736px'],
-                    scrollbar: true,
-                    maxmin: true,
-                    content: '//218.28.28.186:9088/ehomeweb/page/index.html',
-                    zIndex: layer.zIndex, //重点1
-                    success: function(layero){
-                        layer.setTop(layero); //重点2
-                    },
-                });
+                var formdata=new FormData($("#inputForm")[0]);
+                console.log(formdata);
+                $.ajax({
+                    type : "POST",
+                    url : ctx + "/module/villageLine/mainPreview",
+                    data : formdata,
+                    dataType : "JSON",
+                    processData: false,
+                    contentType: false,
+                    success : function(data) {
+                        console.log(data);
+                        layer.open({
+                            type: 2,
+                            title:'首页推荐预览',
+                            area: ['414px', '736px'],
+                            scrollbar: true,
+                            maxmin: true,
+                            content: '${contextPath}/moblie/page/index.html',
+                            zIndex: layer.zIndex, //重点1
+                            success: function(layero){
+                                
+                                layer.setTop(layero); //重点2
+                            },
+                        });  
+                    }
+                })
+                
             }
         </script>
     </form:form>

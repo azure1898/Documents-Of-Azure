@@ -39,7 +39,7 @@
 			
 			.bottom {
 				width: 100%;
-				height: 50px;
+				/*height: 50px;*/
 				line-height: 50px;
 				background: #EEEEEE;
 				position: fixed;
@@ -72,7 +72,12 @@
 				content: none;
 			}
 			.atlink {
-				color: #337ab7;
+				/*color: #337ab7;*/
+				color:#df2d1f!important;
+			}
+			.atlinkobj{
+				/*color: #337ab7;*/
+				color:#df2d1f!important;
 			}
 		</style>
 	</head>
@@ -80,10 +85,13 @@
 	<body>
 		<div id="app" v-cloak>
 			<!--speak第一页-->
+			<div id="results" style="display:none">
+				
+			</div>
 			<div id="topPage" :class="{hide:showPopup}">
 				<div class="grey_top">
-					<a href="#" class="fl font12" style="margin-left:10px;">取消</a> 发言
-					<a href="#" class="topic_list_btn2"  @click="sendOut">发送</a>
+					<a href="#" class="fl font12" style="margin-left:10px;" onclick="javascript :history.go(-1);">取消</a> 发言
+					<a href="#" class="topic_list_btn"  @click="sendOut">发送</a>
 				</div>
 				<div class="main_box">
 
@@ -117,13 +125,18 @@
 					</table>
 					<div class="bottom">
 						<ul>
+							<!--multiple-->
 							<input type="file" value="上传文件" onchange="getImgURL(this)" style="display:none" name="" id="">  
 							<li><img src="../../images/photo.png" @click="img()"/></li>
 							<li><img src="../../images/icon.png"  @click="seltopic()" /></li>
 							<li><img src="../../images/icon2.png" @click="selwho()"/></li>
-							<li><img src="../../images/xiaolian.png" /></li>
+							<li><img src="../../images/xiaolian.png" @click="faceidshow"/></li>
 							<li><span v-text="textnum"></span></li>
 						</ul>
+						<div class="clear">
+							
+						</div>
+						<div  id="faceid" style="display: none;"></div>
 					</div>
 				</div>
 			</div>
@@ -131,6 +144,12 @@
 		</div>
 		<script src="../../js/common/jquery.js"></script>
 		<script src="../../js/common/bootstrap.min.js"></script>
+				<!--引用emoji.js-->
+		<script src="../../js/common/emoji-list-with-image.js"></script>
+        <script src="../../js/common/emoji.js"></script>         
+        <script src="../../js/common/punycode.js"></script>
+        <script src="../../js/common/punycode.min.js"></script>
+        
 		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VillageLineRecomSpecialDao">
+    
+	<sql id="villageLineRecomSpecialColumns">
+		a.id AS "id",
+		a.village_line_id AS "villageLineId",
+		a.recom_position AS "recomPosition",
+		a.special_name AS "specialName",
+		a.sort_num AS "sortNum",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageLineRecomSpecialJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageLineRecomSpecial">
+		SELECT 
+			<include refid="villageLineRecomSpecialColumns"/>
+		FROM village_linerecomspecial a
+		<include refid="villageLineRecomSpecialJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageLineRecomSpecial">
+		SELECT 
+			<include refid="villageLineRecomSpecialColumns"/>
+		FROM village_linerecomspecial a
+		<include refid="villageLineRecomSpecialJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageLineRecomSpecial">
+		SELECT 
+			<include refid="villageLineRecomSpecialColumns"/>
+		FROM village_linerecomspecial a
+		<include refid="villageLineRecomSpecialJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_linerecomspecial(
+			id,
+			village_line_id,
+			recom_position,
+			special_name,
+			sort_num,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageLineId},
+			#{recomPosition},
+			#{specialName},
+			#{sortNum},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_linerecomspecial SET 	
+			village_line_id = #{villageLineId},
+			recom_position = #{recomPosition},
+			special_name = #{specialName},
+			sort_num = #{sortNum},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_linerecomspecial SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某楼盘APP产品线下某位置的专题推荐列表 -->
+	<select id="getVillageLineRecomSpecialList" resultType="VillageLineRecomSpecial">
+		SELECT
+			<include refid="villageLineRecomSpecialColumns"/>
+		FROM
+			Village_LineRecomSpecial a
+		WHERE
+			a.del_flag = '0'
+		AND a.Recom_Position = #{recommendPosition}
+		AND a.Village_Line_ID = (
+			SELECT
+				b.ID
+			FROM
+				Village_Line b
+			WHERE
+				b.del_flag = '0'
+			AND b.Village_Info_ID = #{villageInfoId}
+			AND b.Product_Line = '0'
+		)
+		ORDER BY
+			a.Sort_Num
+	</select>
+	
+</mapper>

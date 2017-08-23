@@ -18,7 +18,7 @@
 			        themeType : 'simple',
 			        allowImageUpload:true,//允许上传图片
 			        afterChange : function() {
-			            var limitNum = 65000;
+			            var limitNum = 20000;
 			            var minLength = 0;
 			            if(this.count() > limitNum) {
 			                $(".word_message").show();
@@ -52,7 +52,7 @@
 			$("#inputForm").validate({
    				onkeyup : false,
 				submitHandler: function(form){
-				    if (KindEditor.instances[0].html().length > 65000) {
+				    if (KindEditor.instances[0].html().length > 20000) {
 				        $(".word_message").show();
 				        return;
 				    }

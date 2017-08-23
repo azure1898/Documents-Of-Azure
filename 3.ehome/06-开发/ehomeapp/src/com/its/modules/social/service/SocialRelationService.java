@@ -167,5 +167,17 @@ public class SocialRelationService extends CrudService<SocialRelationDao, Social
 	public int isFocus(String userId, String subUserId) {
 		return socialRelationDao.isFocus(userId, subUserId);
 	}
+
+	/**
+	 * 
+	 * @Description：根据用户id设置为屏蔽Ta的发言
+	 * @Author：邵德才
+	 * @Date：2017年8月22日
+	 * @param id
+	 */
+	@Transactional(readOnly = false)
+	public void updateBlack(String id) {
+		socialRelationDao.updateBlack(id);
+	}
 	
 }

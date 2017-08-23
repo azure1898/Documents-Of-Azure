@@ -87,28 +87,16 @@ public class GoodsInfoController extends BaseController {
 				List<GoodsSkuBean> gsbList = goodsInfoService.getGoodsSkuList(g.getId());
 				map.put("isMoreSpe", gsbList.size() > 0 ? 1 : 0);
 				map.put("speCategory", gsbList.size() > 0 ? gsbList.get(0).getSkuKeyName() : "");
-				map.put("currentSpeID", gsbList.size() > 0 ? gsbList.get(0).getId() : "");
-				if (gsbList.size() > 0) {
-					map.put("originalPrice", gsbList.get(0).getBasePrice() != null ? gsbList.get(0).getBasePrice() : 0);
-					map.put("discountedPrice", gsbList.get(0).getBenefitPrice() != null ? gsbList.get(0).getBenefitPrice() : 0);
-					int cartNum = 0;// 该商品加入购物车的数量
-					for (ShoppingCart cart : cartList) {
-						if (g.getId().equals(cart.getGoodsInfoId()) && gsbList.get(0).getId().equals(cart.getGoodsSkuPriceId())) {
-							cartNum += cart.getNumber();
-						}
+				map.put("currentSpeID", "");
+				map.put("originalPrice", ValidateUtil.validateDouble(g.getBasePrice()));
+				map.put("discountedPrice", ValidateUtil.validateDouble(g.getBenefitPrice()));
+				int cartNum = 0;// 该商品加入购物车的数量
+				for (ShoppingCart cart : cartList) {
+					if (g.getId().equals(cart.getGoodsInfoId())) {
+						cartNum += cart.getNumber();
 					}
-					map.put("commodityNumber", cartNum);
-				} else {
-					map.put("originalPrice", g.getBasePrice() != null ? g.getBasePrice() : 0);
-					map.put("discountedPrice", g.getBenefitPrice() != null ? g.getBenefitPrice() : 0);
-					int cartNum = 0;// 该商品加入购物车的数量
-					for (ShoppingCart cart : cartList) {
-						if (g.getId().equals(cart.getGoodsInfoId())) {
-							cartNum += cart.getNumber();
-						}
-					}
-					map.put("commodityNumber", cartNum);
 				}
+				map.put("commodityNumber", cartNum);
 				List<Map<String, Object>> specifications = new ArrayList<Map<String, Object>>();
 				for (GoodsSkuBean bean : gsbList) {
 					Map<String, Object> beanMap = new HashMap<>();
@@ -137,7 +125,9 @@ public class GoodsInfoController extends BaseController {
 			json.put("data", data);
 			json.put("message", "成功");
 			return JSONObject.fromObject(json).toString();
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 			if (Global.isDebug()) {
 				return "{\"code\":" + Global.CODE_ERROR + ",\"message\":\"" + e.getMessage() + "\"}";
@@ -181,8 +171,8 @@ public class GoodsInfoController extends BaseController {
 		data.put("commodityID", goods.getId());
 		data.put("commodityName", goodsInfoService.getGoodsInfoName(goods));
 		data.put("commodityImage", goodsInfoService.getAllGoodsPicUrlMap(goods, request));
-		data.put("originalPrice", goods.getBasePrice() != null ? goods.getBasePrice() : 0);
-		data.put("discountedPrice", goods.getBenefitPrice() != null ? goods.getBenefitPrice() : 0);
+		data.put("originalPrice", ValidateUtil.validateDouble(goods.getBasePrice()));
+		data.put("discountedPrice", ValidateUtil.validateDouble(goods.getBenefitPrice()));
 		data.put("businessID", business.getId());
 		data.put("businessName", business.getBusinessName());
 		data.put("businessPhone", business.getPhoneNum());
@@ -215,7 +205,7 @@ public class GoodsInfoController extends BaseController {
 		List<GoodsSkuBean> gsbList = goodsInfoService.getGoodsSkuList(goods.getId());
 		data.put("isMoreSpe", gsbList.size() > 0 ? 1 : 0);
 		data.put("speCategory", gsbList.size() > 0 ? gsbList.get(0).getSkuKeyName() : "");
-		data.put("currentSpeID", gsbList.size() > 0 ? gsbList.get(0).getId() : "");
+		data.put("currentSpeID", "");
 		List<Map<String, Object>> specifications = new ArrayList<Map<String, Object>>();
 		for (GoodsSkuBean bean : gsbList) {
 			Map<String, Object> beanMap = new HashMap<>();

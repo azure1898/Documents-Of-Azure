@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection"/>
+    <title>退款帮助说明</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css"/>
+    <!--<link rel="stylesheet" href="css/iconfont/iconfont.css">-->
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+</head>
+
+<body>
+<div class="page">
+    <header>
+        <p>
+            <span id="demo"></span>
+            <span>退款帮助</span>
+        </p>
+    </header>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__bd">
+                <p class="oneLevelTitle">1、什么是支付平台？</p>
+                <p class="oneLevelContent">
+                    • 支付平台是指与哈奇（Hachi）合作，为您提供支付服务的第三方支付公司（如支付宝、微信）。
+                    当发生退款时需经过第三方支付公司处理，再退回您的支付宝/微信。
+                </p>
+            </div>
+            <!--<div class="weui-cell__ft">-->
+            <!--</div>-->
+        </a>
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__bd">
+                <p class="oneLevelTitle">2、如何查询退款？</p>
+                <p class="oneLevelContent">
+                    • 如您选择原路退回，请您登录支付宝/微信的网站查询账单明细，或致电支付宝/微信的客服查询。
+                </p>
+            </div>
+            <!--<div class="weui-cell__ft">-->
+            <!--</div>-->
+        </a>
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__bd">
+                <p class="oneLevelTitle">3、退款是否有到账通知短信？</p>
+                <p class="oneLevelContent">
+                    • 原路退，目前暂无到账通知短信，请您谅解。
+                </p>
+            </div>
+            <!--<div class="weui-cell__ft">-->
+            <!--</div>-->
+        </a>
+        <a class="weui-cell weui-cell_access" href="#">
+            <div class="weui-cell__bd">
+                <p class="oneLevelTitle">4、退款金额跟订单金额为何不一样？</p>
+                <p class="oneLevelContent">
+                    • 可能由以下情况导致：您的订单中有多张团购券，您只退了部分团购券。
+                </p>
+            </div>
+            <!--<div class="weui-cell__ft">-->
+            <!--</div>-->
+        </a>
+    </div>
+</div>
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

@@ -2,12 +2,14 @@ package com.its.common.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import org.activiti.engine.impl.util.json.JSONObject;
 
@@ -82,6 +84,20 @@ public class HttpUtils {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+        Properties props = new Properties();
+        // 加载配置信息
+        InputStream ins = null;
+        ins = WXUtils.class.getClassLoader().getResourceAsStream("itssite.properties");
+        try {
+            props.load(ins);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if (StringUtils.equals("0", props.getProperty("orderMsgSend"))) {
+            JSONObject normal = new JSONObject();
+            normal.put("code", 1000);
+            return normal;
         }
         if (StringUtils.isBlank(result)) {
             return new JSONObject();

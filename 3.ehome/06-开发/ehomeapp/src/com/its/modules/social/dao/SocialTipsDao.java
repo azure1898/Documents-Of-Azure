@@ -28,5 +28,5 @@ public interface SocialTipsDao extends CrudDao<SocialTips> {
 	 * @param type
 	 * @return
 	 */
-	public List<SocialTips> getListByUserIdAndType(@Param("userId")String userId, @Param("type")int type);
+	public List<SocialTips> getListByUserIdAndType(@Param("userId")String userId, @Param("type")int type, @Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize);
 }

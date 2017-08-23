@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.rabbitmq.dao.UserDetailDao">
+    
+   <insert id="insert">
+		INSERT INTO wsbank_user_detail(
+			id,
+			Member_Id,
+			Customer_Id ,
+			Customer_Name ,
+			Phone_Number ,
+			Card_Code ,
+			Bank_Card ,
+			create_by ,
+			create_date ,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{memberId},
+			#{customerId} ,
+			#{customerName} ,
+			#{phoneNumber} ,
+			#{cardCode} ,
+			#{bankCard} ,
+			#{createBy.id} ,
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+</mapper>

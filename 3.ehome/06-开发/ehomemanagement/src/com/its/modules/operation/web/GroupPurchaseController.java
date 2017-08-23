@@ -5,6 +5,7 @@ package com.its.modules.operation.web;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +198,18 @@ public class GroupPurchaseController extends BaseController {
 	@RequestMapping(value = "save")
 	public String save(GroupPurchase groupPurchase, Model model,  @RequestParam(value = "file", required = false) MultipartFile file, 
 			HttpServletRequest request, RedirectAttributes redirectAttributes) throws ParseException{
+		
+
+		//团购券有效期（由于精确到小时，所以通过bean取不到值）
+		String validityStartTime = request.getParameter("validityStartTime");
+		String validityEndTime = request.getParameter("validityEndTime");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+		if(StringUtils.isNotBlank(validityStartTime)){
+			groupPurchase.setValidityStartTime(sdf.parse(validityStartTime));
+		}
+		if(StringUtils.isNotBlank(validityEndTime)){
+			groupPurchase.setValidityEndTime(sdf.parse(validityEndTime));
+		}
 		
 		//实体类验证
 		if (!beanValidator(model, groupPurchase)){

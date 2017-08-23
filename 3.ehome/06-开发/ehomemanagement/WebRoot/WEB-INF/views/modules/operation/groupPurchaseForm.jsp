@@ -146,6 +146,92 @@
             	return value!=""  &&  value!=0;                
     	    }, "请输入库存量");
             
+            //团购开始时间应早于团购结束时间
+            $.validator.addMethod("startTimeBeforeEndTime", function(value, element) {
+            	 var name = element.name;
+             	 var endname=name.split('.')[0]+".endTime";
+           		 var startTime = value; 
+           		 var endTime = $("input[name='"+endname+"']").val();
+           		 var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+           		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+
+           		var index=name.split('[')[1];
+           		index=index.split(']')[0];
+           		 if(end<start){
+           			$("#startTime"+index).hide();
+           			return false;
+        	     }
+           		 return true;
+            }, "团购开始时间应早于团购结束时间");
+          
+            //团购开始时间应晚于上一段团购结束时间
+            $.validator.addMethod("startTimeAfterLastEndTime", function(value, element) {
+            	 var name = element.name;
+             	 var endname=name.split('.')[0]+".endTime";
+           		 var startTime = value; 
+           		 var endTime = $("input[name='"+endname+"']").val();
+           		 var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+           		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+
+           		 var index=name.split('[')[1];
+           		 index=index.split(']')[0];
+           		 if(index > 0){
+           			 var count = index;
+           			 index = index -1;
+           			 var endTimePre=$("input[name='groupPurchasetimeList["+index+"].endTime']").val(); 
+           			 var endPre=new Date(endTimePre.replace("-", "/").replace("-", "/"));
+           			 if(start < endPre){
+           				$("#startTime"+count).hide();
+           				 return false;
+           			 }
+           		 }
+           		 return true;
+            }, "团购开始时间应晚于上一段团购结束时间");
+            
+            //团购结束时间应晚于团购开始时间
+            $.validator.addMethod("endTimeAfterStartTime", function(value, element) {
+           		 var name = element.name;
+	       		 var startname=name.split('.')[0]+".startTime";
+	       		 var endTime = value; 
+	       		 var startTime = $("input[name='"+startname+"']").val();
+	       		 var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+	       		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+	       		 
+	       		 var index=name.split('[')[1];
+	    		 index=index.split(']')[0];
+           		 if(end<start){ 
+           			$("#endTime"+index).hide();
+           			return false;
+        	     }
+           		 return true;
+            }, "团购结束时间应晚于团购开始时间");
+          
+            //团购结束时间应早于下一段团购开始时间
+            $.validator.addMethod("endTimeBeforeLastStartTime", function(value, element) {
+            	 var name = element.name;
+	       		 var startname=name.split('.')[0]+".startTime";
+	       		 var endTime = value; 
+	       		 var startTime = $("input[name='"+startname+"']").val();
+	       		 var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+	       		 var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+
+	       		 var index=name.split('[')[1];
+	    		 index=index.split(']')[0];
+	    		 var count = index;
+	    		 if($("input[name='groupPurchasetimeList["+index+"].startTime']").val() !='undefined'){			 
+	    			 index++;
+	    			 var startTimeNext=$("input[name='groupPurchasetimeList["+index+"].startTime']").val();
+	    			 if(startTimeNext !='' && startTimeNext !=null && startTimeNext!='undefined'){
+	    				 var startNext=new Date(startTimeNext.replace("-", "/").replace("-", "/"));
+	    				 if(end > startNext){
+	    					 $("#endTime"+count).hide();
+	    					 return false;
+	    				 }
+	    			 }
+	    		 }
+           		 return true;
+            }, "团购结束时间应早于下一段团购开始时间");
+         
 			$("#inputForm").validate({
 				rules : {
 			        businessinfoId : {
@@ -279,15 +365,16 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/operation/groupPurchase/">团购管理列表</a></li>
-		<li class="active"><a href="${ctx}/operation/groupPurchase/form?id=${groupPurchase.id}">团购管理<shiro:hasPermission name="operation:groupPurchase:edit">${not empty groupPurchase.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="operation:groupPurchase:edit">查看</shiro:lacksPermission></a></li>
+    <ul class="nav nav-tabs">
+        <li>
+	      <span class="common-breadcrumb">运营管理 &nbsp;>&nbsp;<a href="${ctx}/operation/groupPurchase/">团购管理 &nbsp;>&nbsp;</a>${not empty groupPurchase.id?'编辑':'添加'}团购</span>
+	    </li>
 	</ul>
 	<form:form id="inputForm" modelAttribute="groupPurchase" action="${ctx}/operation/groupPurchase/save" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">*所属商家：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>所属商家：</label>
 			<div class="controls">
 			   <select id="moduleId" name="moduleId" class="input-medium">
 					<c:forEach items="${lifeModuleList}" var="module">
@@ -303,14 +390,14 @@
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label">*团购名称：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购名称：</label>
 			<div class="controls">
 				<form:input path="groupPurcName" htmlEscape="false" maxlength="15" class="input-xlarge"/>
 				<span>（建议标题在15个字以内）</span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*团购图片：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购图片：</label>
 			<div id="localImag">
 				<div class="controls">
 					<div class="img-box full" id="imgArea">
@@ -338,18 +425,19 @@
 					</aside>
 					<input id="checkImg" name="checkImg" value="" style="width: 0px;height: 0px;border: 0px;">
 				</div>
-			</div>
+				<span  style="float:right;margin-top:-100px;margin-right:830px;">（建议图片尺寸**像素，图片小于2M）</span>
+			</div>			
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label">*市场价：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>市场价：</label>
 			<div class="controls">
 				<form:input path="marketMoney" id="marketMoney" htmlEscape="false" maxlength="10" class="input-medium number"/>&nbsp;元
 				<input id="checkMarketMoney" name="checkMarketMoney" value="" style="width: 0px;height: 0px;border: 0px;">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*团购价：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购价：</label>
 			<div class="controls">
 				<form:input path="groupPurcMoney" id ="groupPurcMoney" htmlEscape="false" maxlength="10" class="input-medium number"/>&nbsp;元
 				<input id="checkGroupPurcMoney" name="checkGroupPurcMoney" value="" style="width: 0px;height: 0px;border: 0px;">
@@ -359,19 +447,19 @@
 		<div id="timeList">
 			<div class="control-group" id="time0">
 				<div class="control" id="item">
-				    <label class="control-label">*团购开始时间：</label>
-					<input name="groupPurchasetimeList[0].startTime" id="groupPurchasetimeList[0].startTime" type="text" readonly="readonly" maxlength="20" class="startTimesClass input-medium Wdate" style="margin-left: 20px;"
+				    <label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购开始时间：</label>
+					<input name="groupPurchasetimeList[0].startTime" id="groupPurchasetimeList[0].startTime" type="text" readonly="readonly" maxlength="20" class="startTimesClass input-medium Wdate startTimeBeforeEndTime startTimeAfterLastEndTime" style="margin-left: 20px;"
 						value="<fmt:formatDate value="${groupPurchase.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,onpicking:function(dp){checkStartTime(dp,this);}});"/>&nbsp;&nbsp;
 						<label id="startTime0" class="startErrorClass error startTime_message" style="display:none;"></label>
 	
-					&nbsp;&nbsp;&nbsp;*团购结束时间：&nbsp;&nbsp;
-					<input name="groupPurchasetimeList[0].endTime" id="groupPurchasetimeList[0].endTime" type="text" readonly="readonly" maxlength="20" class="endTimesClass input-medium Wdate"
+					&nbsp;&nbsp;&nbsp;<span class="help-inline"><font color="red">*</font></span>团购结束时间：&nbsp;&nbsp;
+					<input name="groupPurchasetimeList[0].endTime" id="groupPurchasetimeList[0].endTime" type="text" readonly="readonly" maxlength="20" class="endTimesClass input-medium Wdate endTimeAfterStartTime endTimeBeforeLastStartTime"
 						value="<fmt:formatDate value="${groupPurchase.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 						onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,onpicking:function(dp){checkEndTime(dp,this);}});" />&nbsp;&nbsp;
 					<label id="endTime0" class="endErrorClass error endTime_message" style="display:none;"></label>
 				
-					&nbsp;&nbsp;&nbsp;*库存量：&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;<span class="help-inline"><font color="red">*</font></span>库存量：&nbsp;&nbsp;
 					<input name="groupPurchasetimeList[0].stockNum" id="groupPurchasetimeList[0].stockNum" value="${groupPurchase.stockNums}" maxlength="9" type="text" class="stockNumClass input-mini digits"/>&nbsp;件
 					
 					&nbsp;&nbsp;&nbsp;<a id="addRow" class="btn btn-default" onclick="addRow()"><i class="icon-plus"></i></a>
@@ -392,7 +480,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*团购详情：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购详情：</label>
 			<div class="controls">
 				<form:textarea id="groupPurcDetail" path="groupPurcDetail" rows="4" style="width:1000px;height:300px" />
                 <label for="groupPurcDetail" class="error word_message"  style="display:none;">超出最大长度，请适当缩减内容</label>
@@ -400,24 +488,24 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*团购券有效期：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>团购券有效期：</label>
 			<div class="controls" >
-				<input name="validityStartTime" id="validityStartTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
-					value="<fmt:formatDate value="${groupPurchase.validityStartTime}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,maxDate:'#F{$dp.$D(\'validityEndTime\')}'});"/>&nbsp;至&nbsp;
-				<input name="validityEndTime" id="validityEndTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
-					value="<fmt:formatDate value="${groupPurchase.validityEndTime}" pattern="yyyy-MM-dd"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,minDate:'#F{$dp.$D(\'validityStartTime\')}'});"/>
+				<input name="validityStartTime" id="validityStartTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					value="<fmt:formatDate value="${groupPurchase.validityStartTime}" pattern="yyyy-MM-dd HH"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH',isShowClear:false,maxDate:'#F{$dp.$D(\'validityEndTime\')}'});"/>&nbsp;至&nbsp;
+				<input name="validityEndTime" id="validityEndTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					value="<fmt:formatDate value="${groupPurchase.validityEndTime}" pattern="yyyy-MM-dd HH"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH',isShowClear:false,minDate:'#F{$dp.$D(\'validityStartTime\')}'});"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*使用时间：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>使用时间：</label>
 			<div class="controls">
 				<form:input path="useTime" id="useTime" htmlEscape="false" maxlength="60" class="input-xlarge"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">*使用规则：</label>
+			<label class="control-label"><span class="help-inline"><font color="red">*</font></span>使用规则：</label>
 			<div class="controls">
 				<form:textarea id="useRule" path="useRule" rows="4" style="width:1000px;height:300px"/>
 				<label for="useRule" class="error word_message1" style="display:none;">超出最大长度，请适当缩减内容</label>
@@ -541,7 +629,7 @@
 
 	//团购开始时间的check
 	function checkStartTime(dp,obj) {		
-		 var name = $(obj).attr('name');		
+		 var name = $(obj).attr('name');
 		 var endname=name.split('.')[0]+".endTime";
 		 var startTime = dp.cal.getNewDateStr(); 
 		 var endTime = $("input[name='"+endname+"']").val();
@@ -568,9 +656,9 @@
  		 
 		 if(end<start){  			 
 			 //top.$.jBox.tip("团购开始时间应早于团购结束时间",'error');
+			 //dp.cal.setNewDateStr(null);
 			 $("#startTime"+index).text("团购开始时间应早于团购结束时间");
 			 $("#startTime"+index).show();
-			 dp.cal.setNewDateStr(null);
 	     }else{
 			 $("#startTime"+index).text("");
 			 $("#startTime"+index).hide();

@@ -168,7 +168,7 @@
         <tbody>
             <c:forEach items="${page.list}" var="businessInfo" varStatus="status">
                 <tr onClick="selectElem2(this)">
-                    <td>${status.count} 
+                    <td> ${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}
                     <input id="elemId" type="hidden" value="${businessInfo.id}" />
                     <input id="oldFrozen" type="hidden" value="${businessInfo.useState}"/>
                     <input id="HidProdType" type="hidden" value="${businessInfo.businessCategorydict.prodType}"/>

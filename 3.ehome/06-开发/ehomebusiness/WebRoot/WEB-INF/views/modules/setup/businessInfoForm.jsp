@@ -19,7 +19,8 @@
                 themeType : 'simple',
                 allowImageUpload : true,//允许上传图片
                 afterChange : function() {
-                    var limitNum = 65000;
+                    var limitNum = 50000;
+                    console.log(this.count());
                     if (this.count() > limitNum) {
                         $(".word_message").show();
                     } else {
@@ -56,6 +57,14 @@
                 return this.optional(element) || (length == 11 && mobile.test(value));
             }
         }, "请正确填写您的联系电话");
+        jQuery.validator.addMethod("checkImg", function(value, element,params) {
+            var imgArea = $("#imgArea").children().find(".up-section").val();
+            if(imgArea != ''){
+                return false;
+            }else{
+                return true;
+            }
+	    }, "请上传商家图片");
         $("#inputForm").validate({
             rules : {
                 phoneNum : {
@@ -67,6 +76,12 @@
                     required : true,
                     checkBusinessLabel : true,
                     maxlength : 128
+                },
+                checkVillage:{
+                    checkVillage:"params"
+                },
+                checkImg:{
+                    checkImg:"params"
                 },
             },
             messages : {
@@ -83,13 +98,19 @@
                 businessHours : {
                     required : "请填写营业时间"
                 },
+                checkImg:{
+                    checkImg:"请上传商家图片"
+                },
             },
             submitHandler : function(form) {
                 var villageIdList = '';
-                if (KindEditor.instances[0].html().length > 65000) {
+                
+                if (KindEditor.instances[0].html().length > 50000) {
                     $(".word_message").show();
                     return;
                 }
+                console.log(KindEditor.instances[0].html().length)
+                console.log(KindEditor.instances[0].count())
                 loading('正在提交，请稍等...');
                 form.submit();
             },
@@ -127,7 +148,7 @@
     <ul class="nav nav-tabs">
         <li>
             <span>
-                <a href="${ctx}/setup/businessInfo/">商家设置 ></a>商家资料
+                <a href="${ctx}/setup/businessInfo/">商家设置 ></a>商家资料设置
             </span>
         </li>
     </ul>
@@ -183,6 +204,10 @@
                         </p>
                     </div>
                 </aside>
+                <input id="checkImg" name="checkImg" value="" style="width: 0px; height: 0px; border: 0px;">
+                <span class="help-inline">
+                    <font color="red">*</font>
+                </span>
             </div>
         </div>
         <div class="control-group">

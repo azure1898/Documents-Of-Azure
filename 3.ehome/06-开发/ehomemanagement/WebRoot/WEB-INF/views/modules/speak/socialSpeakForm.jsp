@@ -5,12 +5,110 @@
     <title>发言管理</title>
     <meta name="decorator" content="default" />
     <link rel="stylesheet" href="${ctxStatic}/common/multiplefileUpload.css" type="text/css" />
+    <%@include file="/WEB-INF/views/include/treeview.jsp"%>
     <script type="text/javascript">
-        fillPro(); // 加载全部省市区数据
+		var setting = {
+	        check : {
+	            enable : true,
+	            nocheckInherit : true
+	        },
+	        view : {
+	            selectedMulti : false
+	        },
+	        data : {
+	            key : {
+	                name : "villageName"
+	            },
+	            simpleData : {
+	                enable : true
+	            }
+	        },
+	        view : {
+	            showIcon : false,
+	            showLine : false
+	        },
+	        callback : {
+	            beforeClick : function(id, node) {
+	                tree.checkNode(node, !node.checked, true, true);
+	                return false;
+	            }
+	        }
+	    };
+		
+		function openNode(event, treeId, treeNode) {
+	        var treeObj = $.fn.zTree.getZTreeObj("tree");
+	        var isOpen = treeNode.open;
+	        if (isOpen) {
+	            treeObj.expandNode(treeNode, false, false, false);
+	        } else {
+	            treeObj.expandNode(treeNode, true, false, false);
+	        }
+	    };
+	    
+	    $.ajax({
+	        url : '${ctx }/village/villageInfo/getUserVillageTree',
+	        type : 'GET', //GET
+	        async : true, //或false,是否异步
+	        dataType : 'json', //返回的数据格式：json/xml/html/script/jsonp/text
+	        success : function(data) {
+	            console.log(data)
+	            var tree = $.fn.zTree.init($("#tree"), setting, data);
+	            // 不选择父节点
+	            tree.setting.check.chkboxType = {
+	                "Y" : "ps",
+	                "N" : "s"
+	            };
+	            // 默认选择节点
+	            console.log('${user.villageInfoIds}');
+	            var ids = "${user.villageInfoIds}".split(",");
+	            for (var i = 0; i < ids.length; i++) {
+	                var node = tree.getNodeByParam("id", ids[i]);
+	                try {
+	                    tree.checkNode(node, true, false);
+	                } catch (e) {
+	                }
+	            }
+	            // 默认展开全部节点
+	            tree.expandAll(true);
+	        }
+	    });
+		
         fillSubject(); // 加载全部话题
         $(document).ready(function() {
-            //$("#name").focus();
+        	$.validator.addMethod("checkVillage", function(value, element, params) {
+                var treeObj = $.fn.zTree.getZTreeObj("tree");
+                var nodes = treeObj.getCheckedNodes(true);
+                var ids = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].isParent != true) {
+                        ids.push(nodes[i].id);
+                    }
+                }
+                console.log(ids);
+                if (ids.length == 0) {
+                    return false;
+                } else {
+                    $("#villageinfoid").val(ids);
+                    return true;
+                }
+            }, "请选择楼盘");
             $("#inputForm").validate({
+            	rules : {
+            		content : {
+            			required : true
+            		},
+            		villageinfoid : {
+                        checkVillage : "param",
+                    }
+            	},
+            	message : {
+            		content : {
+            			required : "请输入发言内容"
+            		},
+            		villageInfoIds : {
+                        checkVillage : "请选择楼盘",
+                    }
+            	},
                 submitHandler: function(form) {
                     loading('正在提交，请稍等...');
                     form.submit();
@@ -98,8 +196,8 @@
         <div class="control-group">
             <label class="control-label">公号名称：</label>
             <div class="controls">
-                <form:hidden path="auserid" value="${auserid }" />
-                ${ausername }
+                <form:hidden path="auserid" value="${auserid}" />
+                ${ausername}
             </div>
         </div>
         <div class="control-group">
@@ -108,7 +206,7 @@
                 <form:select path="subjectid" id="subjectId" name="subjectId" style="width: 120px" onchange="changeSubject();">
                     <option value="">选择话题</option>
                 </form:select>
-                <form:input id="tag" path="tag" htmlEscape="false" maxlength="200" class="input-xlarge required" /> <span class="help-inline"><font color="red">*</font> </span>
+                <form:input id="tag" path="tag" htmlEscape="false" maxlength="200" class="input-xlarge required" />
             </div>
         </div>
         <div class="control-group">
@@ -123,9 +221,9 @@
                 <form:hidden path="delImgName" />
                 <section class=" img-section">
                     <div class="z_photo upimg-div clear">
-                        <section class="z_file fl" <c:if test="${fn:length(imgUrls) gt 4}">style="display: none;"</c:if>>
+                        <section class="z_file fl" <c:if test="${fn:length(imgUrls) gt 9}">style="display: none;"</c:if>>
                             <img src="${ctxStatic}/images/a11.png" class="add-img">
-                            <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="multiple" />
+                            <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="multiple" style="font-size:12px;" />
                         </section>
                     </div>
                 </section>
@@ -142,8 +240,9 @@
             <label class="control-label">可见范围：</label>
             <div class="controls">
                 <form:select path="visrange" class="input-small">
-                    <form:option value="" label="可见范围" />
-                    <form:options items="${fns:getDictList('visRange')}" itemLabel="label" itemValue="value" htmlEscape="false" /></form:select>
+                	<form:options items="${fns:getDictList('visRange')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+                </form:select>
+                <font color="red">*</font>
             </div>
         </div>
         <div class="control-group">
@@ -165,22 +264,9 @@
         <div class="control-group">
             <label class="control-label">发布楼盘：</label>
             <div class="controls">
-                <select id="addrpro" name="addrPro" style="width: 120px" onchange="changeCity()">
-                    <option value="">全部省份</option>
-                </select>
-                <select id="addrcity" name="addrCity" style="width: 120px" onchange="changeVillage()">
-                    <option value="">全部城市</option>
-                </select>
-                <select id="addrarea" name="addrArea" style="display: none;">
-                    <option value="">全部区域</option>
-                </select>
-                <form:select path="villageinfoid" id="addrVillage" name="villageInfoId" class="required" style="width: 120px">
-                    <option value="">全部楼盘</option>
-                </form:select>
-                <input type="text" class="hide" id="hidProId" value="">
-                <input type="text" class="hide" id="hidCityId" value="">
-                <input type="text" class="hide" id="hidAreaId" value="">
-                <input type="text" class="hide" id="hidVillageId" value="${couponManage.villageInfoId}">
+            	<ul id="tree" class="ztree" style="border: 1px solid #ccc; padding: 10px; width: 200px;" ></ul>
+            	<form:input path="villageinfoid" style="width: 0px; height: 0px; border: 0px"/>
+            	<span class="help-inline"><font color="red">*</font> </span>
             </div>
         </div>
         <div class="form-actions">

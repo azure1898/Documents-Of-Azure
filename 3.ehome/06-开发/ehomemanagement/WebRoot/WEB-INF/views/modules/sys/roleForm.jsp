@@ -102,13 +102,10 @@
 </head>
 <body>
     <ul class="nav nav-tabs">
-        <li>
-            <span>
-                系统管理 > <a href="${ctx}/sys/role/list">角色管理> </a>${not empty user.id?'修改':'添加'}角色
-            </span>
-        </li>
+      <li>
+         <span class="common-breadcrumb">系统管理 &nbsp;>&nbsp;<a href="${ctx}/sys/role/list">角色管理  &nbsp;> &nbsp;</a>${not empty role.id?'编辑':'添加'}角色</span>
+      </li>
     </ul>
-    <br />
     <form:form id="inputForm" modelAttribute="role" action="${ctx}/sys/role/save" method="post" class="form-horizontal">
         <form:hidden path="id" />
         <sys:message content="${message}" />
@@ -129,23 +126,19 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">角色名:</label>
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>角色名:</label>
             <div class="controls">
                 <input id="oldName" name="oldName" type="hidden" value="${role.name}">
                 <form:input path="name" htmlEscape="false" maxlength="50" class="required" />
-                <span class="help-inline">
-                    <font color="red">*</font>
-                </span>
+                
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">角色描述:</label>
+            <label class="control-label"><span class="help-inline"><font color="red">*</font></span>角色描述:</label>
             <div class="controls">
                 <input id="oldName" name="oldName" type="hidden" value="${role.remarks}">
                 <form:input path="remarks" htmlEscape="false" maxlength="50" class="required" />
-                <span class="help-inline">
-                    <font color="red">*</font>
-                </span>
+               
             </div>
         </div>
         <div class="control-group">

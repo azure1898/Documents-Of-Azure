@@ -9,6 +9,9 @@ import com.its.modules.field.entity.FieldPartitionPrice;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Update;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * 场地预约子表-场地分段信息DAO接口
  * @author xzc
@@ -44,4 +47,8 @@ public interface FieldPartitionPriceDao extends CrudDao<FieldPartitionPrice> {
     FieldPartitionPrice getForUpdate(String id);
     
     List<FieldPartitionPrice> getAll(String ymd);//查询某天所有场地 用于取得已约满场地个数
+    
+    void deleteAll(String findInfoId);
+    
+    void taskUpdateState();
 }

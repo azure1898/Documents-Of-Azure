@@ -108,8 +108,9 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	<!-- 获取某楼盘APP产品线下某位置的专题推荐 -->
-	<select id="getVillageLineRecomSpecial" resultType="VillageLineRecomSpecial">
+	
+	<!-- 获取某楼盘APP产品线下某位置的专题推荐列表 -->
+	<select id="getVillageLineRecomSpecialList" resultType="VillageLineRecomSpecial">
 		SELECT
 			<include refid="villageLineRecomSpecialColumns"/>
 		FROM
@@ -127,5 +128,8 @@
 			AND b.Village_Info_ID = #{villageInfoId}
 			AND b.Product_Line = '0'
 		)
+		ORDER BY
+			a.Sort_Num
 	</select>
+	
 </mapper>

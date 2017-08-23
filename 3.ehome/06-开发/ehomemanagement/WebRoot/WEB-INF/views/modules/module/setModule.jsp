@@ -142,6 +142,13 @@
             $("#addLifeModule").append($(domRow));
         }
         //---------------生活模块相关  --------结束
+        //绑定主导航数据
+         var mainNavigation=$("#mainNavigation").val();
+         $("input[name='mainNavigationIds']").each(function(i,dom){
+            if(mainNavigation.indexOf($(this).val())>=0){
+                $(this).attr("checked","checked");
+            }
+        });
         //获取以选取的最大值
         function getMaxNum(obj){
             var maxNum=0;
@@ -177,7 +184,9 @@
             <div class="controls">
                 <label>首页【1】 <input type="hidden" value="0">
                 </label>
-                <form:checkboxes items="${fns:getDictList('mainNavigation')}" path="mainNavigationIds" itemLabel="label" itemValue="value" />
+                <c:forEach items="${fns:getDictList('mainNavigation')}" var="dict" varStatus="status">
+                    <input name="mainNavigationIds" type="checkbox" value="${dict.value}">${dict.label}【${status.count+1}】</input>
+                </c:forEach>
                 <input class="maiSize" style="width: 0px; height: 0px; border: 0px">
                 <span class="help-inline">
                     <font color="red">*勾选数量只能为2个</font>

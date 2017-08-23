@@ -160,15 +160,22 @@
 		<result column="Base_Price" property="basePrice"/>
 		<result column="Is_Child" property="isChild"/>
 		<result column="State" property="state"/>
+		<result column="del_flag" property="delFlag"/>
 		<result column="Create_State" property="createState"/>
 		<result column="Sell_Count" property="sellCount"/>
 		<association property="fieldPartitionPriceList" column="{id=id,appointmentTime=appointmentTime,startTime=startTime,endTime=endTime}" select="getFieldPartitionPriceList"/>
 	 </resultMap>
 	 <select id="findList" parameterType="FieldInfo" resultMap="FieldInfoMap">
 	 	select a.*,TO_DAYS(#{partitionPrice.appointmentTime}) appointmentTime,TO_DAYS(#{partitionPrice.startTime}) startTime ,TO_DAYS(#{partitionPrice.endTime}) endTime   from field_info a 
-	 	where a.del_flag ='0' and a.Business_Info_ID ='${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+	 	where a.del_flag !='1' 
+	 	<if test="@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId != null and @com.its.modules.sys.utils.UserUtils@getUser().businessinfoId != ''">
+	    	and a.Business_Info_ID ='${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+	   </if>
 	 	<if test="id != null and id != ''">
 	    	AND a.id = #{id}
+	   </if>
+	   <if test="df != null and df != ''">
+	    	AND a.del_flag = '3'
 	   </if>
 	 	order by Serial_Numbers
 	 </select>
@@ -188,7 +195,7 @@
 	 	select a.*,(a.end_time>now()) AS "outTimeState" from field_partition_price a 
 	 	where a.Field_Info_ID=#{id} and a.Del_Flag=0 
 	 		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-				and  TO_DAYS(a.appointment_time) >=#{endTime} and TO_DAYS(a.appointment_time)<![CDATA[<=]]>#{startTime}
+				and  TO_DAYS(a.appointment_time) >=#{startTime} and TO_DAYS(a.appointment_time)<![CDATA[<=]]>#{endTime}
 			</if>
 	 		<if test="startTime == null or startTime == '' or endTime == null or endTime == ''">
 				and  TO_DAYS(a.appointment_time)=#{appointmentTime}
@@ -321,7 +328,8 @@
 			state = #{state},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
-			remarks = #{remarks}
+			remarks = #{remarks},
+			del_flag=#{delFlag}
 		WHERE id = #{id}
 	</update>
 	

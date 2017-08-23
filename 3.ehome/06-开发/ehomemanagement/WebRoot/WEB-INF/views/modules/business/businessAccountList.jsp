@@ -17,7 +17,7 @@
             $("#pageNo").val(n);
         if (s)
             $("#pageSize").val(s);
-        $("#searchForm").attr("action", "${ctx}/business/businessAccount/list?businessinfoId=<%=businessinfoId%>");
+        $("#searchForm").attr("action", "${ctx}/business/businessAccount/list?businessinfoId=<%=businessinfoId%>&prodType=<%=prodType%>");
         $("#searchForm").submit();
         return false;
     }
@@ -69,7 +69,7 @@
         <tbody>
             <c:forEach items="${page.list}" var="user" varStatus="status">
                 <tr onClick="selectElem(this)">
-                    <td>${status.index+1}<c:if test="${user.loginFlag==1}">
+                    <td> ${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}<c:if test="${user.loginFlag==1}">
                             <!-- 正常 -->
                             <input id="oldFrozen" type="hidden" value="0" />
                       </c:if> <c:if test="${user.loginFlag==0}">

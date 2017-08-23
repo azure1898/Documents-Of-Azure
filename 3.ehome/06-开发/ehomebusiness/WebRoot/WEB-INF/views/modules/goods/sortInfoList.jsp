@@ -110,6 +110,9 @@
 </head>
 <body>
     <sys:message content="${message}"/>
+        <div>
+            <p><span class="common-breadcrumb">商品管理&nbsp;>&nbsp;商品分类</span></p>
+        </div>
         <div id="left" style="float:left ;  width:40%;  height:100%;">
             <div>
                 <p><span>分类列表</span></p>
@@ -149,19 +152,19 @@
     <form:form id="inputForm" modelAttribute="sortInfo" action="${ctx}/goods/sortInfo/save" method="post" class="form-horizontal">
         <form:hidden path="id"/>
         <div class="control-group">
-            <label class="control-label" style="width:60px">名称：</label>
+            <label class="control-label" style="width:60px"><span class="help-inline"><font color="red">*</font> </span>名称：</label>
             <div class="controls" style="margin-left:80px">
                 <form:input path="name" placeholder="请输入分类名称" htmlEscape="false" maxlength="6" class="input-xlarge"/>
-                <span class="help-inline"><font color="red">*</font> </span><br/>
+                <br/>
                 <span>分类名称可以是中文、英文或数字，不超过6个字。
                 </span>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label"  style="width:60px">排序：</label>
+            <label class="control-label"  style="width:60px"><span class="help-inline"><font color="red">*</font> </span>排序：</label>
             <div class="controls"  style="margin-left:80px">
                 <form:input path="sortOrder" placeholder="请输入排序号" htmlEscape="false" maxlength="3" class="input-xlarge number"/>
-                <span class="help-inline"><font color="red">*</font> </span><br/>
+                <br/>
                 <span>排序号应为0~999的自然数若两个分类排序号相同，则按照分类建立时间排序。
                 </span>
             </div>

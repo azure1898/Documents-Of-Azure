@@ -91,14 +91,11 @@
 	</script>
 </head>
 <body>
-	
-	<ul class="nav nav-tabs">
-        <li style="height:30px"><span><a href="${ctx}/coupon/groupPurchase/">优惠/验券管理 </a>
-        > 团购详情
-        </span>
+   <ul class="nav nav-tabs">
+        <li>
+           <span class="common-breadcrumb"><a href="${ctx}/coupon/groupPurchase/">优惠/验券管理</a>&nbsp;>&nbsp;团购详情</span>
         </li>
     </ul>
-
 	<form:form id="inputForm" modelAttribute="groupPurchase" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>	

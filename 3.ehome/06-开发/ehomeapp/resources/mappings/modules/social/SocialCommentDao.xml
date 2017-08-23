@@ -204,15 +204,9 @@
 			</if>
 			<!-- <if test="delflag != null and delflag != ''">
 				AND a.delflag = #{delflag}
-			</if>
- -->		</where>
-		<!-- <choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-			</otherwise>
-		</choose> -->
+			</if> -->
+		</where>
+		ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize}
 	</select>
 	
 	<!-- 根据发言id得到评论数量 -->

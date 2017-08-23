@@ -32,8 +32,8 @@
 				<div class="Boutique_buy_title_left"><a href="#" v-on:click=changeActivity("second")>即将开始</a></div>
 			</div>
 			<div class="Boutique_buy">
-				<div class="Boutique_buy_main" v-for="group in groups" v-if="groups&&groups.length>0">
-					<div class="Boutique_buy_main_tupian">
+				<div class="Boutique_buy_main"  style="height:auto;" v-for="group in groups" v-if="groups&&groups.length>0">
+					<div class="Boutique_buy_main_tupian" style="position: relative">
 						<a v-bind:href="urlList.detail+group.groupBuyID">
 							<img v-bind:src="group.groupBuyImage">
 							<div class="Boutique_buy_main_qianggou3" v-if="group.groupBuyStatus==1" style="color:white;"><a href="#">即将开始</a></div>
@@ -41,9 +41,9 @@
 							<div class="Boutique_buy_main_qianggou2" v-if="group.groupBuyStatus==3" style="color:white;"><a href="#">已抢光</a></div>
 						</a>
 					</div>
-					<div class="details_title_box" style="border-bottom:none;">
+					<div class="details_title_box" style="border-bottom:none;height:auto; width:100%;position:absolute;bottom: 0px;">
 						<div class="plr10">
-							<div class="details_title">{{group.groupBuyName}}</div>
+							<div class="details_title" >{{group.groupBuyName}}</div>
 							<div class="mt4 clearfix">
 								<div class="fl">
 									<div class="font_orange font18 fl">{{group.groupBuyPrice|formatDecimal}}</div>

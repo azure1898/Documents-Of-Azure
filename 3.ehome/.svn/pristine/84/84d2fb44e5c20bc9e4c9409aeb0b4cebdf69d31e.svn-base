@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>转发</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			a:link {
+				text-decoration: none;
+			}
+			
+			a:visited {
+				text-decoration: none;
+			}
+			
+			a:hover {
+				text-decoration: none;
+			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+		   #faceid{
+				border-top: 1px solid black;
+			}
+			
+			.bottom {
+				width: 100%;
+				
+				line-height: 50px;
+				background: #EEEEEE;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				padding: 0 10px;
+			}
+			
+			.bottom li {
+				float: left;
+				padding: 10px;
+			}
+			
+			.bottom li:last-child {
+				float: right;
+				font-size: 22px;
+				padding: 0;
+			}
+			
+			.bottom li img {
+				float: left;
+				width: 30px;
+				height: 30px;
+			}
+			
+			.pholder:empty:before {
+				content: attr(data-placeholder);
+				color: #bbb;
+			}
+			
+			.pholder:focus:before {
+				content: none;
+			}
+			
+			.fyxq_main_l2 {
+				margin-bottom: 10px;
+				margin-top: 15px;
+			}
+			
+			.speak_main {
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.atlink {
+				/*插入a标签的颜色*/
+				/*color: #337ab7;*/
+				color: #df2d1f!important;
+			}
+			
+			.atlinkobj {
+				/*color: #337ab7;*/
+				color: #df2d1f!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div id="results" style="display: none;"></div>
+			<div id="topPage" :class="{hide:showPopup}">
+				<div class="grey_top">
+					<a href="#" class="fl font12" style="margin-left:10px;" onclick="javascript :history.go(-1);">取消</a> 转发
+					<a href="#" class="topic_list_btn2" @click="sendOut">发送</a>
+				</div>
+				<div class="main_box">
+
+					<div class="fyxq_main2">
+						<!--<textarea name="" cols="" rows="" class="fyxq2" v-model="forwardingReason" placeholder="说说您转发的理由吧!"></textarea>-->
+						<div id="editable" class="fyxq pholder" contentEditable="true" :data-placeholder="prompt" v-html="forwardingReason" @input="calculation()"></div>
+					</div>
+					<div class="speak_main" v-if="uploadImageNum!=0">
+						<ul>
+							<li v-for="(image,index) in speakData" v-if="image.selected==1">
+								<div class="tupian"><img :src="image.url" width="110" height="110"></div>
+								<div class="close"><img src="../../images/close3.png" width="30" height="30" @click="deleteImg(image)"></div>
+							</li>
+							<li>
+								<div class="wetianjia" @click="openUploading()"></div>
+							</li>
+						</ul>
+					</div>
+					<!--原发言-->
+					<div class="fyxq_main_l2">
+						<div class="fyxq_main_l2_img"><img :src="forwardData.imgUrl" width="110" height="110"></div>
+						<div class="fyxq_main_l_title2">
+							<p v-if="forwardData.noticeId ==''"><a :href="urlList.personalpage+forwardData.speakUserid" class="ftcred">@{{forwardData.userName}}</a></p>
+							<p v-else>{{forwardData.title}}</p>
+							<p><span v-html="forwardData.speakContent"></span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r"></div>
+					<div class="clear"></div>
+
+					<table width="100%" border="0" style="margin-left:10px;">
+						<tr>
+							<td width="6%"><img :src="isComment==0?commentIcon:commentIcon2" width="15" height="15" @click="meanwhile()"></td>
+							<td width="67%">同时评论</td>
+							<td width="27%">
+								<div class="topic_list_btn3" @click="openRange">{{rangeValue.name}}</div>
+							</td>
+						</tr>
+					</table>
+
+				</div>
+				<div class="bottom">
+					<ul>
+						<li><img src="../../images/photo.png" @click="openUploading()" /></li>
+						<li><img src="../../images/icon.png" @click="seltopic()" /></li>
+						<li><img src="../../images/icon2.png" @click="selwho()" /></li>
+						<li><img src="../../images/xiaolian.png" @click="faceidshow" /></li>
+						<li><span v-text="textnum"></span></li>
+					</ul>
+					<div class="clear">
+
+					</div>
+					<div  id="faceid" style="display: none;"></div>
+				</div>
+			</div>
+
+			<div id="popupPage" :class="{hide:!showPopup}"></div>
+
+		</div>
+
+		<script src="../../js/common/jquery.js"></script>
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<!--引用emoji.js-->
+		<script src="../../js/common/emoji-list-with-image.js"></script>
+		<script src="../../js/common/emoji.js"></script>
+		<script src="../../js/common/punycode.js"></script>
+		<script src="../../js/common/punycode.min.js"></script>
+
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/forward.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

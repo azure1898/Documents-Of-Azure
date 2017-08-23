@@ -1468,7 +1468,9 @@ input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:fo
 .help-inline {
 	display: inline-block;
 	*display: inline;
-	padding-left: 5px;
+	/*liuhl 修正 必填项文字应靠右边文字5像素
+	padding-left: 5px;*/
+	padding-right: 5px;
 	vertical-align: middle;
 	*zoom: 1
 }

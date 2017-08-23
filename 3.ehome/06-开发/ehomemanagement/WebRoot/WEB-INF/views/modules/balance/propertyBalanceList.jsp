@@ -29,6 +29,10 @@
 		        });
 		        top.$('.jbox-body .jbox-icon').css('top', '55px');
 		    });
+            $("#btnSubmit").click(function() {
+                $("#searchForm").prop("action", "${ctx}/balance/propertyBalance/");
+                $("#searchForm").submit();
+            });
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -66,6 +70,18 @@
 		        }
 		    }
 		}
+		function saveCheckState(balanceId) {
+		    $("#searchForm").ajaxSubmit({
+		        type : 'post',
+		        url : "${ctx}/balance/propertyBalance/check?id="+balanceId,
+		        success : function(data) {
+		            if (data.success) {
+		                $("#"+balanceId).html("已核对");
+		                alertx(data.msg, closed);
+		            }
+		        }
+		    });
+		}
 	</script>
 <style type="text/css">
 .div-inline {
@@ -80,6 +96,7 @@
         <li class="active"><a href="${ctx}/balance/propertyBalance/">物业结算信息列表</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="propertyBalance" action="${ctx}/balance/propertyBalance/" method="post" class="breadcrumb form-search">
+        <input type="hidden" id="checkedId" />
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
@@ -96,7 +113,7 @@
 			<li>
 				<form:select path="propertyCompanyId" class="input-medium">
 					<form:option value="" label="全部物业"/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${propertyCompanyList}" itemLabel="companyName" itemValue="id" htmlEscape="false"/>
 				</form:select>
 			</li>
             <li>
@@ -108,13 +125,13 @@
             <li>
                 <form:select path="balanceState" class="input-medium">
                     <form:option value="" label="结算状态"/>
-                    <form:options items="${fns:getDictList('balance_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+                    <form:options items="${fns:getDictList('check_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
                 </form:select>
             </li>
             <li>
                 <form:input path="companyName" placeholder="物业名称" htmlEscape="false" maxlength="64" class="input-medium"/>
             </li>
-			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="button" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
 		<!-- 操作按钮 start -->
@@ -207,10 +224,10 @@
 				</td>
 				</shiro:hasPermission>
                 <shiro:hasPermission name="balance:propertyBalance:edit">
-                <td>
+                <td id="${propertyBalance.id}">
                 <c:choose>
                     <c:when test="${propertyBalance.checkState==0 }">
-	                    <a href="${ctx}/balance/propertyBalance/check?id=${propertyBalance.id}">
+	                    <a href="#" onclick="saveCheckState('${propertyBalance.id}')">
 	                        ${fns:getDictLabel(propertyBalance.checkState, 'checkState', '')}
 	                    </a>
                     </c:when>

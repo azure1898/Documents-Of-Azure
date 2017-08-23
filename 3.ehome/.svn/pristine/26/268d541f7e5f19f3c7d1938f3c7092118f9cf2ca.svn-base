@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta content="telephone=no" name="format-detection"/>
+    <title>优惠券使用说明</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css"/>
+    <!--<link rel="stylesheet" href="css/iconfont/iconfont.css">-->
+    <link rel="stylesheet" href="css/jquery-weui.min.css">
+    <link rel="stylesheet" href="css/nstructions.css">
+</head>
+
+<body>
+<header>
+    <p>
+        <span id="demo"></span>
+        <span>使用说明</span>
+    </p>
+</header>
+<div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q1：优惠券是什么？</p>
+            <p class="oneLevelContent">
+                • 优惠券是哈奇（Hachi）平台对外发行和认可的现金抵用券，在哈奇（Hachi） APP中用于在线下单支付时使用，满足使用条件方可抵扣相应金额。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q2：优惠券有哪些种类型？</p>
+            <p class="oneLevelContent">
+                • 哈奇（Hachi）平台发放的优惠券有以下几种类型：平台通用券，服务品类专享券，商家专享券。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q3：优惠券如何使用？</p>
+            <p class="oneLevelContent">
+                • 在哈奇（Hachi） APP中在线下单支付时，使用领取的优惠券。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q4：优惠券如何获得？</p>
+            <p class="oneLevelContent">
+                • 哈奇（Hachi）会不定期发放优惠券，用户可以在APP中领取获得。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q5：优惠券的使用条件是什么？</p>
+            <p class="oneLevelContent">
+                • 优惠券仅限领取账号使用；<br/>
+                • 优惠券仅限在线支付下单使用；<br/>
+                • 优惠券如有品类、商家、时段或金额限制，则订单需满足条件后才可使用；<br/>
+                • 每个订单只能使用一张优惠券，且优惠券只能使用一次。<br/>
+
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+    <a class="weui-cell weui-cell_access" href="#">
+        <div class="weui-cell__bd">
+            <p class="oneLevelTitle">Q6：钱包余额扣款说明</p>
+            <p class="oneLevelContent">
+                • 钱包余额不足时，不可以选择余额支付。
+            </p>
+        </div>
+        <!--<div class="weui-cell__ft">-->
+        <!--</div>-->
+    </a>
+</div>
+</div>
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+</body>
+
+</html>

@@ -29,12 +29,27 @@
         console.log(roleIdList);
         $("#roleIdList").val(roleIdList);
         $("#no").focus();
+        jQuery.validator.addMethod("isPhone", function(value, element) {
+            var length = value.length;
+            var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+            var tel = /^\d{3,4}-?\d{7,9}$/;
+            if (/-/.test(value)) {
+                return this.optional(element) || tel.test(value);
+            } else {
+                return this.optional(element) || (length == 11 && mobile.test(value));
+            }
+        }, "请正确填写您的联系电话");
         $("#inputForm").validate({
             rules : {
                 loginName : {
                     required : true,
                     remote : "${ctx}/sys/user/checkLoginName2?oldLoginName="+ encodeURIComponent('${user.loginName}')
                 },
+                mobile:{
+                    required: true,
+                    minlength : 11,
+                    isPhone : true
+                }
                 
             },
             messages : {
@@ -53,7 +68,8 @@
                     required : "请输入姓名"
                 },
                 mobile : {
-                    required : "请输入联系电话"
+                    required : "请输入联系电话",
+                    isPhone:"请正确填写您的联系电话"
                 }
             },
             submitHandler : function(form) {

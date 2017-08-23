@@ -310,8 +310,6 @@
                         dataType: "json"
 
                     });
-
-
         }
 
 
@@ -323,10 +321,10 @@
             });
 
             var date= $("#appointmentTime").val();
-            date = date.replace(/-0/,"-");
-            if (addDate(date,0)==getMaxDate()){
-                $("span.time_right").removeAttr("onclick");
-            }
+            //date = date.replace(/-0/,"-");
+            //if (addDate(date,0)==getMaxDate()){
+             //  $("span.time_right").removeAttr("onclick");
+            //}
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -439,10 +437,10 @@
 		<p style="font-weight:bold;font-size:15px;"><img src="${ctxStatic}/images/s0.png" >&nbsp;&nbsp;产品统计</p>
 		<ul class="ul">
 			<c:if test="${ptlist.indexOf('0')>-1 }">
-				<li><span>商&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;品：</span>${goodsCount}<c:if test="${businessInfo.stockWarn=='1'}">（库存不足：<a onclick="openedit('商品管理','/goods/goodsInfo?warnNum=${warnNum}')">${goodsbzCount}</a>）</c:if></li>
+				<li><span>商&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;品：</span>${goodsCount}<c:if test="${goodsbzCount>0}">（库存不足：<a onclick="openedit('商品管理','/goods/goodsInfo?warnNum=${warnNum}')">${goodsbzCount}</a>）</c:if></li>
 			</c:if>
 		 	<c:if test="${ptlist.indexOf('1')>-1 }">
-				<li><span>服&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</span>${serviceCount}<c:if test="${businessInfo.stockWarn=='1'}">（库存不足：<a onclick="openedit('服务管理','/service/serviceInfo?warnNum=${warnNum}')">${servicesbzCount}</a>）</c:if></li>
+				<li><span>服&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</span>${serviceCount}<c:if test="${servicesbzCount>0}">（库存不足：<a onclick="openedit('服务管理','/service/serviceInfo?warnNum=${warnNum}')">${servicesbzCount}</a>）</c:if></li>
 			</c:if>
 			<c:if test="${ptlist.indexOf('2')>-1 }">
 				<li><span>课程培训：</span>${lessonCount} <c:if test="${lessonbzCount>0}">（约满：<a onclick="openedit('课程培训管理','/lesson/lessonInfo?isfull=1')">${lessonbzCount}</a>）</c:if></li>
@@ -456,16 +454,16 @@
 		<p style="font-weight:bold;font-size:15px;"><img src="${ctxStatic}/images/s1.png" >&nbsp;&nbsp;本周订单</p>
 		<ul class="ul">
 			 <c:if test="${ptlist.indexOf('0')>-1 }">
-				<li><span>商品订单：</span><a onclick="openedit('商品订单','/order/orderGoods?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }')">${orderGoodsCount}</a></li>
+				<li><span>商品订单：</span><a onclick="openedit('商品订单','/order/orderGoods?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }&orderState=3')">${orderGoodsCount}</a></li>
 			 </c:if>
 		 	 <c:if test="${ptlist.indexOf('1')>-1 }">
-				<li><span>服务订单：</span><a onclick="openedit('服务订单','/order/orderService?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }')">${orderServiceCount}</a></li>
+				<li><span>服务订单：</span><a onclick="openedit('服务订单','/order/orderService?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }&orderState=2')">${orderServiceCount}</a></li>
 			 </c:if>
 			 <c:if test="${ptlist.indexOf('2')>-1 }"> 
-				<li><span>课程培训：</span><a onclick="openedit('课程培训订单','/order/orderLessonInfo?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }')">${orderLessonCount}</a></li>
+				<li><span>课程培训：</span><a onclick="openedit('课程培训订单','/order/orderLesson?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }&orderState=1')">${orderLessonCount}</a></li>
 			 </c:if>
 			 <c:if test="${ptlist.indexOf('3')>-1 }">
-				<li><span>场地预约：</span><a onclick="openedit('场地预约订单','/order/orderField?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }')">${orderFieldCount}</a></li>
+				<li><span>场地预约：</span><a onclick="openedit('场地预约订单','/order/orderField?beginCreateDate=${beginCreateDate}&endCreateDate=${endCreateDate }&orderState=1')">${orderFieldCount}</a></li>
 			 </c:if>
 		</ul>
 	</div>
@@ -473,16 +471,16 @@
 		<p style="font-weight:bold;font-size:15px;"><img src="${ctxStatic}/images/s2.png" >&nbsp;&nbsp;本周收入</p>
 		<ul class="ul">
 			<c:if test="${ptlist.indexOf('0')>-1 }">
-				<li><span>商品订单：</span>￥${goodsInclu}</li>
+				<li><span>商品订单：</span>￥${fns:doubleFormat(goodsInclu)}</li>
 			</c:if>
 		 	<c:if test="${ptlist.indexOf('1')>-1 }">
-				<li><span>服务订单：</span>￥${serviceInclu}</li>
+				<li><span>服务订单：</span>￥${fns:doubleFormat(serviceInclu)}</li>
 			</c:if>
 			<c:if test="${ptlist.indexOf('2')>-1 }">
-				<li><span>课程培训：</span>￥${lessonInclu}</li>
+				<li><span>课程培训：</span>￥${fns:doubleFormat(lessonInclu)}</li>
 			</c:if> 
 			<c:if test="${ptlist.indexOf('3')>-1 }">
-				<li><span>场地预约：</span>￥${fieldInclu}</li>
+				<li><span>场地预约：</span>￥${fns:doubleFormat(fieldInclu)}</li>
 			</c:if>
 		</ul>
 	</div>
@@ -602,7 +600,7 @@
         </tbody>
     </table>
     <%--<div class="pagination" style="margin-left: 5%;width: 94%;">${page}</div>--%>
-<c:if test="${businessInfo.stockWarn=='1'}">
+<c:if test="${goodsbzCount>0}">
     <ul class="nav nav-tabs" style="width: 94%;border-bottom-style: none;">
         <li><p style="font-weight:bold;font-size:14px;">库存紧张商品</p></li>
     </ul>
@@ -654,8 +652,8 @@
                 </td>
                 <td>
                     <c:forEach items="${goodsInfo.imageUrls}" var="imgUrl">
-                        <img src="${imgUrl}"/>
-                    </c:forEach>
+		                    <img src="${imgUrl}" style="width:53px;height:40px;"/>
+		           </c:forEach>
                 </td>
                 <td>
                     <c:if test="${goodsInfo.recommend == null || goodsInfo.recommend == '0'}">
@@ -799,7 +797,7 @@
         </c:forEach>
         </tbody>
     </table>
-<c:if test="${businessInfo.stockWarn=='1'}">
+<c:if test="${servicesbzCount>0}">
     <ul class="nav nav-tabs" style="width: 100%;border-bottom-style: none;">
         <li><p style="font-weight:bold;font-size:14px;">库存紧张服务</p></li>
     </ul>
@@ -855,7 +853,7 @@
                 </td>
                 <td>
                     <c:forEach items="${serviceInfo.imageUrls}" var="imgUrl">
-                        <img src="${imgUrl}"/>
+                        <img src="${imgUrl}" style="width:53px;height:40px;"/>
                     </c:forEach>
                 </td>
                 <td>
@@ -893,7 +891,7 @@
     <li><p style="font-weight:bold;font-size:14px;">课程预约订单</p></li>
     <li style="width: 100%;">
         <div style="float: left;width: 180px;">待付款课程预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderLesson?payState=0&pending=1')" style="color: #60C1F7;">${pendingPayLesson}</a></div>
-        <div style="float: left;width: 180px;">待预约课程预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderLesson?orderState=0&pending=1')" style="color: #60C1F7;">${pendingHandleLesson}</a></div>
+        <%-- <div style="float: left;width: 180px;">待预约课程预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderLesson?orderState=0&pending=1')" style="color: #60C1F7;">${pendingHandleLesson}</a></div> --%>
     </li>
 </ul>
  <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width: 99%;">
@@ -972,7 +970,7 @@
             </c:forEach>
         </tbody>
     </table>
-    <c:if test="${lessonbzCount>0}">
+<c:if test="${lessonbzCount>0}">
      <ul class="nav nav-tabs" style="width: 100%;border-bottom-style: none;">
         <li><p style="font-weight:bold;font-size:14px;">约满</p></li>
     </ul>
@@ -1054,30 +1052,28 @@
     <li><p style="font-weight:bold;font-size:14px;">场地预约订单</p></li>
     <li style="width: 100%;">
         <div style="float: left;width: 180px;">待付款场地预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderField?payState=0&pending=1')" style="color: #60C1F7;">${pendingPayField}</a></div>
-        <div style="float: left;width: 180px;">待预约场地预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderField?orderState=0&pending=1')" style="color: #60C1F7;">${pendingHandleField}</a></div>
+        <%-- <div style="float: left;width: 180px;">待预约场地预约订单：<a href="" onclick="openedit('课程预约订单','/order/orderField?orderState=0&pending=1')" style="color: #60C1F7;">${pendingHandleField}</a></div> --%>
     </li>
 </ul>
  <table id="contentTable" class="table table-striped table-bordered table-condensed" style="width:99%">
-        <thead>
+         <thead>
             <tr>
-                <th >订单号</th>
-                <th >姓名</th>
-                <th >电话</th>
-                <th >预约场地</th>
-                <th >金额</th>
-                <th >终端类型</th>
-                <th >支付状态</th>
-                <th >订单状态</th>
-                <th >时间</th>
-                <shiro:hasPermission name="order:orderField:edit">
-                    <th width="100px;">操作</th>
-                </shiro:hasPermission>
+                <th style="width:13%;">订单号</th>
+                <th style="width:11.5%;">姓名</th>
+                <th style="width:13%;">电话</th>
+                <th style="width:13%;">预约场地</th>
+                <th style="width:6%;">金额</th>
+                <th style="width:6.5%;">终端类型</th>
+                <th style="width:6.5%;">支付状态</th>
+                <th style="width:6.5%;">订单状态</th>
+                <th style="width:15%;">时间</th>
+                <th style="width:9%;">操作</th>
             </tr>
         </thead>
         <tbody>
         <c:forEach items="${newOrderFieldList}" var="orderField" varStatus="status">
             <tr>
-                <td><a href="${ctx}/order/orderField/form?id=${orderField.id}">
+                <td><a href="${ctx}/order/orderField/form?id=${orderField.id}&backurl=/sys/index">
                     ${orderField.orderNo}
                 </a></td>
                 <td>
@@ -1088,11 +1084,13 @@
                 </td>
                 <td>
                     ${orderField.name}
-                    <c:if test="${orderField.orderFieldList != null}">
+                    <c:if test="${orderField.orderFieldList != null && fn:length(orderField.orderFieldList) gt 0}">
                         <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.appointmentTime}" pattern="yyyy年M月d日"/>
-                        <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderField.orderFieldList.endTime}" pattern="HH:mm"/>
+                        <fmt:formatDate value="${orderField.orderFieldList[0].appointmentTime}" pattern="yyyy年M月d日"/>
+                        <c:forEach items="${orderField.orderFieldList}" var="orderFieldList" varStatus="status1">
+                            <br/>
+                            <fmt:formatDate value="${orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderFieldList.endTime}" pattern="HH:mm"/>
+                        </c:forEach>
                     </c:if>
                 </td>
                 <td>
@@ -1132,10 +1130,10 @@
                         <c:when test="${orderField.orderState == '2'}">
                         </c:when>
                         <c:otherwise>
-                            <input id="btuElemCancel" type="button" class="commonsmallbtn" value="取消" style="width:40px;" data-toggle="modal" data-target="#myModalfield${status.index}">
+                            <input id="btuElemCancel" type="button" class="commonsmallbtn" value="取消" style="width:40px;" data-toggle="modal" data-target="#myModal${status.index}">
                         </c:otherwise>
                     </c:choose>
-    <div class="modal fade" id="myModalfield${status.index}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  style="display: none;">
+    <div class="modal fade" id="myModal${status.index}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  style="display: none;">
         <div class="modal-dialog"  style="text-align:left;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1154,11 +1152,9 @@
                     </select>
                     <br/>
                     <br/>
-                     <input type="hidden" value="/sys/index/?repage" name="redirectUrl">
-                    <input type="hidden" value="${orderField.id}" name="id">
-                     <input type="hidden" value="${orderField.orderNo}" name="orderNo">
-                      <input type="hidden" value="${orderField.updateDateString}" name="updateDateString">
-                      
+                    <input type="hidden" name="id" value="${orderField.id}">
+                    <input type="hidden" name="orderNo" value="${orderField.orderNo}">
+                    <input type="hidden" name="updateDateString" value="${orderField.updateDateString}">
                     <input id="cancelRemarks${status.index}" name="cancelRemarks" style="width:200px;display:none;" placeholder="请填写取消原因" class="input-xlarge required" value="" maxlength="81" type="text">
                     <p>订单取消后系统将自动退款。</p>
                 </div>

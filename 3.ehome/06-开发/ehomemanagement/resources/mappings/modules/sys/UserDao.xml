@@ -31,6 +31,7 @@
     a.update_by AS "updateBy.id",
     a.update_date,
     a.del_flag,
+    a.app_user_phone AS "appUserPhone",
     c.name AS "company.name",
     c.parent_id AS "company.parent.id",
     c.parent_ids AS "company.parentIds",
@@ -92,13 +93,13 @@
     WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL} AND a.user_type=2
   </select>
 
-  <!-- 分页查询用户信息 -->
+  <!-- 角色管理：管理用户分页查询用户信息 ；用户管理分页查询用户信息-->
   <select id="findList" resultType="User">
     SELECT
     <include refid="userColumns" />
     FROM sys_user a
     <include refid="userJoins" />
-    <if test="role != null and role.enname != null and role.enname != ''">
+    <if test="role != null and role.id != null and role.id != ''">
       JOIN sys_user_role ur ON ur.user_id = a.id AND a.user_type=1
     </if>
     WHERE a.del_flag = #{DEL_FLAG_NORMAL}
@@ -124,8 +125,8 @@
     <if test="!currentUser.admin">
       AND a.id != '1'
     </if>
-    <if test="role != null and role.enname != null and role.enname != ''">
-      AND ur.role_id = #{role.enname} 
+    <if test="role != null and role.id != null and role.id != ''">
+      AND ur.role_id = #{role.id} 
     </if>
     <if test="loginFlag!=null and loginFlag!=''">
       AND a.login_flag =#{loginFlag}
@@ -147,11 +148,69 @@
         ORDER BY ${page.orderBy}
       </when>
       <otherwise>
-        ORDER BY a.create_date desc
+        ORDER BY a.update_date desc
       </otherwise>
     </choose>
   </select>
 
+  <!-- 角色管理：管理用户分页查询用户信息 ；用户管理分页查询用户信息-->
+  <select id="findHomeUserList" resultType="User">
+    SELECT
+    <include refid="userColumns" />
+    FROM sys_user a
+    <include refid="userJoins" />
+    <if test="role != null and role.id != null and role.id != ''">
+      JOIN sys_user_role ur ON ur.user_id = a.id AND a.user_type=1
+    </if>
+    WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+    <!-- 所属商家过滤 -->
+    <if test="businessinfoId == null">
+      and a.user_type=1
+    </if>
+    <if test="company != null and company.id != null and company.id != ''">
+      AND (c.id = #{company.id} OR c.parent_ids LIKE
+      <if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>
+      <if test="dbName == 'mysql'">CONCAT('%,', #{company.id}, ',%'))</if>
+    </if>
+    <if test="office != null and office.id != null and office.id != ''">
+      AND (o.id = #{office.id} OR o.parent_ids LIKE
+      <if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+      <if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+    </if>
+    <!-- 所属商家过滤 -->
+    <if test="businessinfoId != null and businessinfoId != ''">
+      AND a.businessinfo_id = #{businessinfoId}
+    </if>
+    <!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+    <if test="!currentUser.admin">
+      AND a.id != '1'
+    </if>
+    <if test="role != null and role.id != null and role.id != ''">
+      AND ur.role_id = #{role.id} 
+    </if>
+    <if test="loginFlag!=null and loginFlag!=''">
+      AND a.login_flag =#{loginFlag}
+    </if>
+    <if test="loginName != null and loginName != ''">
+      AND a.login_name like
+      <if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+      <if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+    </if>
+    <if test="name != null and name != ''">
+      AND a.name like
+      <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+      <if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+    </if>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date desc
+      </otherwise>
+    </choose>
+  </select>
+  
   <!-- 根据OfficeId获取用户（树查询用户时用） -->
   <select id="findUserByOfficeId" resultType="User" useCache="true">
     SELECT
@@ -204,7 +263,8 @@
     photo,
     del_flag,
     businessinfo_id,
-    village_info_ids
+    village_info_ids,
+    app_user_phone
     ) VALUES (
     #{id},
     #{company.id},
@@ -226,7 +286,8 @@
     #{photo},
     #{delFlag},
     #{businessinfoId},
-    #{villageInfoIds}
+    #{villageInfoIds},
+    #{appUserPhone}
     )
   </insert>
 
@@ -248,13 +309,17 @@
     remarks = #{remarks},
     login_flag = #{loginFlag},
     photo = #{photo},
-    village_info_ids = #{villageInfoIds}
+    village_info_ids = #{villageInfoIds},
+    app_user_phone = #{appUserPhone}
     WHERE id = #{id}
   </update>
 
   <!-- 删除用户和角色关联表数据 -->
   <delete id="deleteUserRole">
     DELETE FROM sys_user_role WHERE user_id = #{id}
+  </delete>
+  <delete id="deleteRoleUser">
+    DELETE FROM sys_user_role WHERE role_id = #{role.id} AND user_id = #{id}
   </delete>
 
   <!-- 插入用户和角色关联表数据 -->

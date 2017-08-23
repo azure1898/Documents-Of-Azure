@@ -28,6 +28,7 @@
 <script type="text/javascript" charset="utf-8" src="${ctxStatic}/kindeditor-all.js"></script>
 <script type="text/javascript" charset="utf-8" src="${ctxStatic}/lang/zh-CN.js"></script>
 <script type="text/javascript" charset="utf-8" src="${ctxStatic}/plugins/code/prettify.js"></script>
+<script src="${ctxStatic}/common/commonUtils.js" type="text/javascript"></script>
 <link href="${ctxStatic}/common/common.css" type="text/css" rel="stylesheet" />
 <!--可以在地址栏中显示出图标-->
 <link rel="icon" href="${ctxStatic}/images/favicon.ico" type="image/x-icon" />

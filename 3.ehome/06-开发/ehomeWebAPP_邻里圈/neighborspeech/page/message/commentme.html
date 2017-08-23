@@ -10,6 +10,7 @@
 
 		<!-- Bootstrap -->
 		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 		<link href="../../css/main.css" rel="stylesheet">
 		<link href="../../css/common.css" rel="stylesheet">
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -19,14 +20,8 @@
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 		<style type="text/css">
-			.topBorder{
-				border-top:solid 1px #ececec;
-			}
-			a:link{text-decoration: none;}
-			a:visited{text-decoration: none;}
-			a:hover{text-decoration: none;}
-			[v-cloak] {
-			  display: none;
+			.topBorder {
+				border-top: solid 1px #ececec;
 			}
 		</style>
 	</head>
@@ -43,33 +38,46 @@
 			<div class="main_box" v-for="(commentme,index) in commentmes">
 				<div class="fyxq_main">
 					<div class="fyxq_main_l">
-						<div class="fyxq_main_l_img"><img :src="commentme.commontList[0].userHeadUrl" width="110" height="110"></div>
+						<div class="fyxq_main_l_img"><a :href="urlList.personalpage + commentme.commontList[0].userId"><img :src="commentme.commontList[0].userHeadUrl" width="110" height="110"></a></div>
 						<div class="fyxq_main_l_title">
-							<p>{{commentme.commontList[0].userName}}</p>
+							<a :href="urlList.personalpage + commentme.commontList[0].userId"><p>{{commentme.commontList[0].userName}}</p></a>
 							<p><span>{{commentme.commontList[0].time}}</span></p>
 						</div>
 					</div>
 					<div class="fyxq_main_r" v-if="type==0"><a href="#" class="topic_list_btn2" @click="reply(commentme)">回复</a></div>
-					<div class="fyxq_main_r" v-else><a href="#" class="topic_list_btn2" @click="deleteComments(index)">删除</a></div>
+					<div class="fyxq_main_r" v-else><a href="#" class="topic_list_btn2" @click="deleteComments(commentme,index)">删除</a></div>
 					<div class="clear"></div>
 				</div>
 				<div class="fyxq_main2" v-if="commentme.commontList.length==1">
-					<p class="ftc5050">{{commentme.commontList[0].content}}</p>
+					<!--他的评论带图-->
+					<p class="ftc5050"><a :href="urlList.commentdetail + commentme.commontList[0].id">{{commentme.commontList[0].content}}</a><a v-bind:src="commentme.commontList[0].images[0].imageUrl" v-if="commentme.commontList.images&&commentme.commontList.images.length>0">查看原图</a></p>
 				</div>
 				<!--v-for="(obj,index) in commentme.commontList"-->
 				<div class="fyxq_main2" v-else>
-					<div><p class="ftc5050">回复<a href="##">@{{commentme.commontList[1].userName}}</a>{{commentme.commontList[0].content}}</p></div>
-					<div v-if="commentme.commontList[1].delFlag==1" ><p class="ftc5050" ><a href="##">@{{commentme.commontList[1].userName}}</a>{{commentme.commontList[1].content}}</p></div>
-					<div v-else><p class="ftc5050" style="background:#f5f5f5; padding:7px;">该评论已被删除</p></div>
+					<!--他的评论带图-->
+					<div>
+						<p class="ftc5050">回复<a :href="urlList.personalpage + commentme.commontList[1].userId" class="ftcred">@{{commentme.commontList[1].userName}}</a><a :href="urlList.commentdetail + commentme.commontList[0].id">{{commentme.commontList[0].content}}</a><a v-bind:src="commentme.commontList[0].images[0].imageUrl"v-if="commentme.commontList.images&&commentme.commontList.images.length>0">查看原图</a></p>
+					</div>
+					<!--我的评论带图没删除-->
+					<div v-if="commentme.commontList[1].delFlag==1">
+						<p class="ftc5050"><a :href="urlList.personalpage + commentme.commontList[1].userId" class="ftcred">@{{commentme.commontList[1].userName}}</a> <a :href="urlList.commentdetail + commentme.commontList[1].id"></a> {{commentme.commontList[1].content}} <a v-bind:src="commentme.commontList[1].images[0].imageUrl" v-if="commentme.commontList.images&&commentme.commontList.images.length>0"> 查看原图 </a>							</p>
+					</div>
+					<div v-else>
+						<p class="ftc5050" style="background:#f5f5f5; padding:7px;">该评论已被删除</p>
+					</div>
 				</div>
-				
+
 				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="commentme.speak.delFlag==1">
 					<div class="fyxq_main_l2_img">
 						<img :src="commentme.speak.images" width="110" height="110">
 					</div>
 					<div class="fyxq_main_l_title2">
-						<p>@{{commentme.speak.userName}}</p>
-						<p><span><font class="ftcred" v-for="lable in commentme.speak.subjectList">{{lable.subName}}</font>{{commentme.speak.content}}</span></p>
+						<p v-if="commentme.speak.noticeId!=''">{{commentme.speak.title}}</p>
+						<p v-else><a :href="urlList.personalpage + commentme.speak.userId" class="ftcred">@{{commentme.speak.userName}}</a></p>
+						<!--<font class="ftcred" v-for="lable in commentme.speak.subjectList">{{lable.subName}}</font>-->
+						<a :href="urlList.speechdetail + commentme.speak.id">
+							<p class="twoLine" v-html="commentme.speak.content"></p>
+						</a>
 					</div>
 				</div>
 				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>

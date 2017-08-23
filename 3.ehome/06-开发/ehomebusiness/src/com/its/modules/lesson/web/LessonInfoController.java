@@ -180,20 +180,15 @@ public class LessonInfoController extends BaseController {
 		}
 		// 课程介绍
 		if (StringUtils.isNotBlank(lessonInfo.getContent())) {
+			// 特殊字符转义
+			lessonInfo.setContent(StringEscapeUtils.unescapeHtml4(lessonInfo.getContent()));
+			// "&"等特殊字符转义
 			lessonInfo.setContent(StringEscapeUtils.unescapeHtml4(lessonInfo.getContent()));
 		}
 		
 		// 商家ID设定为当前登录的商家的ID
 		lessonInfo.setBusinessInfoId(UserUtils.getUser().getBusinessinfoId());
 		
-		// 图片校验
-		// 本身没有图片，且画面上没有添加
-		if (StringUtils.isBlank(lessonInfo.getImgs())
-				&& (lessonInfo.getPicList() == null || lessonInfo.getPicList().size() == 0)) {
-			addMessage(model, "未选择任何图片");
-			model.addAttribute("type", MSG_TYPE_ERROR);
-			return form(lessonInfo, lessonInfo.getSortItem(), lessonInfo.getSort(), request, model);
-		}
 		// 删除后的图片名称
 		String imgUrlsForUpdate = lessonInfo.getImgs();
 		if (StringUtils.isNotBlank(lessonInfo.getDelImageName())) {
@@ -203,13 +198,6 @@ public class LessonInfoController extends BaseController {
 				// 避免该文件在最后一个
 				imgUrlsForUpdate = imgUrlsForUpdate.replace(imgName, "");
 			}
-		}
-		// 本身有图片，但全部删除场合
-		if (StringUtils.isBlank(imgUrlsForUpdate)
-				&& (lessonInfo.getPicList() == null || lessonInfo.getPicList().size() == 0)) {
-			addMessage(model, "未选择任何图片");
-			model.addAttribute("type", MSG_TYPE_ERROR);
-			return form(lessonInfo, lessonInfo.getSortItem(), lessonInfo.getSort(), request, model);
 		}
 		
 		// 字段校验

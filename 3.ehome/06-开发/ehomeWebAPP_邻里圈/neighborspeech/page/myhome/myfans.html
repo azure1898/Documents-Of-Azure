@@ -20,9 +20,9 @@
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 		<style type="text/css">
-		 	a:link{text-decoration: none;}
-			a:visited{text-decoration: none;}
-			a:hover{text-decoration: none;}
+		 	a:link{text-decoration: none;color: #808080;}
+			a:visited{text-decoration: none;color: #808080;}
+			a:hover{text-decoration: none;color: #808080;}
 			[v-cloak] {
 				  display: none;
 				}
@@ -40,16 +40,23 @@
 			</div>
 			<div class="main_box" style="border-top:solid 1px #ececec; padding:0;">
 				<div class="my_message" v-for="fans in myfansData">
-					<div class="my_message_left"><img :src="fans.userHeadUrl" width="80" height="80">
+					<div class="my_message_left">
+						<a :href="urlList.personalpage + fans.subUserId">
+							<img :src="fans.userHeadUrl" width="80" height="80">
+						</a>
 					</div>
 					<div class="my_message_right3">
 						<p v-if="fans.relation==2">&nbsp;&nbsp;<span class="myfans_but" @click="follow(fans)"><i class="glyphicon glyphicon-ok" style="margin-right:5px;"></i>已关注</span>
-							<font style="font-size:16px; color:#000;">{{fans.userName}}</font>
+							<a :href="urlList.personalpage + fans.subUserId">
+								<font style="font-size:16px; color:#000;">{{fans.userName}}</font>
+							</a>
 						</p>
 						<p v-else>&nbsp;&nbsp;<span class="myfans_but2" @click="follow(fans)">+关注</span>
-							<font style="font-size:16px; color:#000;">{{fans.userName}}</font>
+							<a :href="urlList.personalpage + fans.subUserId">
+								<font style="font-size:16px; color:#000;">{{fans.userName}}</font>
+							</a>
 						</p>
-						<p>&nbsp;&nbsp;{{fans.content}}</p>
+						<p>&nbsp;&nbsp;<a :href="urlList.personalpage + fans.subUserId">{{fans.content}}</a></p>
 					</div>
 					<div class="clear"></div>
 				</div>

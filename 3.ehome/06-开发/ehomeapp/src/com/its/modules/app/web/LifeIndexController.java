@@ -326,58 +326,63 @@ public class LifeIndexController extends BaseController {
 		if (ValidateUtil.validateParams(toJson, buildingID)) {
 			return toJson;
 		}
-		VillageLineRecomSpecial villageLineRecomSpecial = villageLineRecomSpecialService.getVillageLineRecomSpecial(CommonGlobal.RECOMMEND_LIFE, buildingID);
-		if (villageLineRecomSpecial == null) {
+		List<VillageLineRecomSpecial> villageLineRecomSpecials = villageLineRecomSpecialService.getVillageLineRecomSpecialList(CommonGlobal.RECOMMEND_LIFE, buildingID);
+		if (villageLineRecomSpecials == null || villageLineRecomSpecials.size() == 0) {
 			toJson.put("code", Global.CODE_SUCCESS);
 			toJson.put("message", "暂无专题推荐");
 			return toJson;
 		}
-		List<VillageLineRecomSpecialDetail> villageLinerecomspecialdetails = villageLineRecomSpecialDetailService.getRecomSpecialDetailList(villageLineRecomSpecial.getId());
 
 		/* Data数据开始 */
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("topicName", villageLineRecomSpecial.getSpecialName());
+		List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
+		for (VillageLineRecomSpecial villageLineRecomSpecial : villageLineRecomSpecials) {
+			List<VillageLineRecomSpecialDetail> villageLinerecomspecialdetails = villageLineRecomSpecialDetailService.getRecomSpecialDetailList(villageLineRecomSpecial.getId());
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("topicName", villageLineRecomSpecial.getSpecialName());
 
-		/* 专题推荐明细开始 */
-		List<Map<String, Object>> topicDatas = new ArrayList<Map<String, Object>>();
-		for (VillageLineRecomSpecialDetail villageLineRecomSpecialDetail : villageLinerecomspecialdetails) {
-			Map<String, Object> topicData = new HashMap<String, Object>();
-			if (CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType())) {
-				// 推荐商家
-				String recomBusinessId = villageLineRecomSpecialDetail.getRecomBusinessId();
-				String businessCategoryDictID=villageLineRecomSpecialDetail.getBusinessCategoryDictId();
-				if (recomBusinessId != null && businessCategoryDictID!=null) {
-					topicData.put("recommendID", recomBusinessId);
-					BusinessInfo businessInfo = businessInfoService.get(recomBusinessId);
-					topicData.put("recommendName", businessInfo == null ? "" : businessInfo.getBusinessName());
-					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
-					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
-					//产品类型
-					topicData.put("recommendMode", businessInfoService.getProdTypeByCategoryDictId(businessCategoryDictID));
+			/* 专题推荐明细开始 */
+			List<Map<String, Object>> topicDatas = new ArrayList<Map<String, Object>>();
+			for (VillageLineRecomSpecialDetail villageLineRecomSpecialDetail : villageLinerecomspecialdetails) {
+				Map<String, Object> topicData = new HashMap<String, Object>();
+				if (CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType())) {
+					// 推荐商家
+					String recomBusinessId = villageLineRecomSpecialDetail.getRecomBusinessId();
+					String businessCategoryDictID = villageLineRecomSpecialDetail.getBusinessCategoryDictId();
+					if (recomBusinessId != null && businessCategoryDictID != null) {
+						topicData.put("recommendID", recomBusinessId);
+						BusinessInfo businessInfo = businessInfoService.get(recomBusinessId);
+						topicData.put("recommendName", businessInfo == null ? "" : businessInfo.getBusinessName());
+						topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
+						topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+						// 产品类型
+						topicData.put("recommendMode", businessInfoService.getProdTypeByCategoryDictId(businessCategoryDictID));
+					}
+				} else {
+					// 推荐模块
+					String recomModuleId = villageLineRecomSpecialDetail.getRecomModuleId();
+					if (recomModuleId != null) {
+						topicData.put("recommendID", recomModuleId);
+						ModuleManage moduleManage = moduleManageService.get(recomModuleId);
+						topicData.put("recommendName", moduleManage == null ? "" : moduleManage.getModuleName());
+						topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
+						topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
+						// 产品类型
+						topicData.put("recommendMode", moduleManageService.getProdType(recomModuleId));
+					}
 				}
-			} else {
-				// 推荐模块
-				String recomModuleId = villageLineRecomSpecialDetail.getRecomModuleId();
-				if (recomModuleId != null) {
-					topicData.put("recommendID", recomModuleId);
-					ModuleManage moduleManage = moduleManageService.get(recomModuleId);
-					topicData.put("recommendName", moduleManage == null ? "" : moduleManage.getModuleName());
-					topicData.put("recommendImage", ValidateUtil.getImageUrl(villageLineRecomSpecialDetail.getPicUrl(), ValidateUtil.ZERO, request));
-					topicData.put("recommendType", CommonGlobal.RECOMMEND_TYPE_BUSINESS.equals(villageLineRecomSpecialDetail.getRecomType()) ? 2 : 1);
-					//产品类型
-					topicData.put("recommendMode", moduleManageService.getProdType(recomModuleId));
-				}
+
+				topicDatas.add(topicData);
 			}
+			data.put("topicData", topicDatas);
 
-			topicDatas.add(topicData);
+			datas.add(data);
 		}
-		data.put("topicData", topicDatas);
 		/* 专题推荐明细结束 */
 
 		/* Data数据结束 */
 
 		toJson.put("code", Global.CODE_SUCCESS);
-		toJson.put("data", data);
+		toJson.put("data", datas);
 		toJson.put("message", "信息已获取");
 		return toJson;
 	}

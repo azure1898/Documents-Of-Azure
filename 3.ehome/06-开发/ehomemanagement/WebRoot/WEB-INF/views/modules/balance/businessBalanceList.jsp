@@ -36,6 +36,10 @@ $(document).ready(function() {
         var url = "${ctx}/balance/businessBalance/print?balanceStartTime=<fmt:formatDate value='${businessBalance.balanceStartTime}' pattern='yyyy-MM-dd'/>&balanceEndTime=<fmt:formatDate value='${businessBalance.balanceEndTime}' pattern='yyyy-MM-dd'/>&checkState=${businessBalance.checkState}&balanceState=${businessBalance.balanceState}&businessName=${businessBalance.businessName}";
         windowOpen(url, "结算单打印", "800", "350")
     });
+    $("#btnSubmit").click(function() {
+        $("#searchForm").prop("action", "${ctx}/balance/businessBalance/");
+        $("#searchForm").submit();
+    });
 });
 function page(n, s) {
     $("#pageNo").val(n);
@@ -72,6 +76,18 @@ function itemCheck(obj) {
             $("#checkedId").val(checkedId);
         }
     }
+}
+function saveCheckState(businessBalanceId) {
+	$("#searchForm").ajaxSubmit({
+        type : 'post',
+        url : "${ctx}/balance/businessBalance/check?id="+businessBalanceId,
+        success : function(data) {
+            if (data.success) {
+            	$("#"+businessBalanceId).html("已核对");
+                alertx(data.msg, closed);
+            }
+        }
+    });
 }
 </script>
 <style type="text/css">
@@ -117,7 +133,7 @@ function itemCheck(obj) {
 				type="text" class="hide" id="hidCityId" value="${businessBalance.addrCity}"> <input
 				type="text" class="hide" id="hidAreaId" value=""> <input
 				type="text" class="hide" id="hidVillageId"
-				value="${couponManage.villageInfoId}"></li>
+				value="${businessBalance.villageInfoId}"></li>
 			<li><form:select path="checkState" class="input-medium">
 					<form:option value="" label="核对状态" />
 					<form:options items="${fns:getDictList('checkState')}"
@@ -131,7 +147,7 @@ function itemCheck(obj) {
 			<li><form:input path="businessName" placeholder="商家名称"
 					htmlEscape="false" maxlength="64" class="input-medium" /></li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary"
-				type="submit" value="查询" /></li>
+				type="button" value="查询" /></li>
 			<li class="clearfix"></li>
 		</ul>
 		<!-- 操作按钮 start -->
@@ -221,8 +237,8 @@ function itemCheck(obj) {
 						<td id="${businessBalance.id}">
 						<c:choose>
 						  <c:when test="${businessBalance.checkState==0 }">
-	                        <a
-	                            href="${ctx}/balance/businessBalance/check?id=${businessBalance.id}">
+	                        <a onclick="saveCheckState('${businessBalance.id}')"
+	                            href="#">
 	                                ${fns:getDictLabel(businessBalance.checkState, 'checkState', '')}
 	                        </a>
 						  </c:when>

@@ -14,6 +14,7 @@ import com.its.common.config.Global;
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
 import com.its.common.utils.StringUtils;
+
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.GoodsInfoBean;
 import com.its.modules.app.bean.OrderGoodsBean;
@@ -24,6 +25,7 @@ import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.dao.OrderGoodsDao;
 import com.its.modules.app.dao.ShoppingCartDao;
 import com.its.modules.app.entity.BusinessInfo;
+import com.its.modules.app.entity.GoodsSkuPrice;
 import com.its.modules.app.entity.OrderGoods;
 import com.its.modules.app.entity.OrderGoodsList;
 import com.its.modules.sys.service.SysCodeMaxService;
@@ -128,19 +130,6 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 		List<OrderGoodsList> orderGoodsList = new ArrayList<OrderGoodsList>();
 		double totalMoney = 0;// 订单金额
 		for (GoodsInfoBean bean : list) {
-			double price = 0;
-			if (StringUtils.isNotBlank(bean.getGoodsSkuPriceID())) {// 与确认订单时的计算保持一致
-				price = bean.getSkuBasePrice();
-				if (bean.getSkuBenefitPrice() != null && bean.getSkuBenefitPrice() != 0) {
-					price = bean.getSkuBenefitPrice();
-				}
-			} else {
-				price = bean.getBasePrice();
-				if (bean.getBenefitPrice() != null && bean.getBenefitPrice() != 0) {
-					price = bean.getBenefitPrice();
-				}
-			}
-			totalMoney += price * bean.getCartNumber();
 			OrderGoodsList goods = new OrderGoodsList();
 			goods.setBusinessInfoId(business.getId());
 			goods.setGoodsInfoId(bean.getId());
@@ -148,16 +137,27 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 			goods.setName(bean.getName());
 			goods.setImgs(bean.getImgs());
 			goods.setContent(bean.getContent());
-			goods.setSkuKeyId(bean.getSkuKeyID());
-			goods.setSkuValueId(bean.getSkuValueID());
-			goods.setGoodsSkuPriceId(bean.getGoodsSkuPriceID());
-			if (StringUtils.isNotBlank(bean.getGoodsSkuPriceID())) {
-				goods.setBasePrice(bean.getSkuBasePrice());
-				goods.setBenefitPrice(bean.getSkuBenefitPrice());
+			double price = 0;
+			if (StringUtils.isNotBlank(bean.getGoodsSkuPriceID())) {// 与确认订单时的计算保持一致
+				GoodsSkuPrice goodsSkuPrice = goodsSkuPriceService.get(bean.getGoodsSkuPriceID());
+				price = ValidateUtil.validateDouble(goodsSkuPrice.getBasePrice());
+				if (goodsSkuPrice.getBenefitPrice() != null) {
+					price = ValidateUtil.validateDouble(goodsSkuPrice.getBenefitPrice());
+				}
+				goods.setSkuKeyId(goodsSkuPrice.getSkuKeyId());
+				goods.setSkuValueId(goodsSkuPrice.getSkuValueId());
+				goods.setBasePrice(goodsSkuPrice.getBasePrice());
+				goods.setBenefitPrice(goodsSkuPrice.getBenefitPrice());
 			} else {
+				price = ValidateUtil.validateDouble(bean.getBasePrice());
+				if (bean.getBenefitPrice() != null) {
+					price = ValidateUtil.validateDouble(bean.getBenefitPrice());
+				}
 				goods.setBasePrice(bean.getBasePrice());
 				goods.setBenefitPrice(bean.getBenefitPrice());
 			}
+			totalMoney += price * bean.getCartNumber();
+			goods.setGoodsSkuPriceId(bean.getGoodsSkuPriceID());
 			goods.setGoodsSum(bean.getCartNumber());
 			goods.setPaySumMoney(price * bean.getCartNumber());
 			orderGoodsList.add(goods);
@@ -291,12 +291,12 @@ public class OrderGoodsService extends CrudService<OrderGoodsDao, OrderGoods> {
 				}
 			}
 			// 插入订单追踪
-			orderTrackService.createTrackCancel(OrderGlobal.ORDER_GOODS, orderGoods.getId(), orderGoods.getOrderNo(), cancelType);
+			orderTrackService.createTrackCanceled(OrderGlobal.ORDER_GOODS, orderGoods.getId(), orderGoods.getOrderNo(), cancelType);
 		} else {
 			// 订单状态"待受理"——用户取消订单——订单状态"退款中"
 			orderGoods.setPayState(OrderGlobal.ORDER_PAY_STATE_REFUNDING);
 			// 插入订单追踪
-			orderTrackService.createTrackRefund(OrderGlobal.ORDER_GOODS, orderGoods.getId(), orderGoods.getOrderNo());
+			orderTrackService.createTrackRefunding(OrderGlobal.ORDER_GOODS, orderGoods.getId(), orderGoods.getOrderNo());
 		}
 
 		// 更新订单状态

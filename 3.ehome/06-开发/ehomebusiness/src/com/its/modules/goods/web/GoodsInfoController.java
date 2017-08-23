@@ -250,14 +250,6 @@ public class GoodsInfoController extends BaseController {
         // 商家ID设定
         goodsInfo.setBusinessInfoId(user.getBusinessinfoId());
 
-        // 如果本身没有图片，且画面上没有添加
-        if (StringUtils.isBlank(goodsInfo.getImgs())
-                && (goodsInfo.getPicList() == null || goodsInfo.getPicList().size() == 0)) {
-            addMessage(model, "未选择任何图片");
-            model.addAttribute("type", "error");
-            return form(goodsInfo, goodsInfo.getSortItem(), goodsInfo.getSort(), null, request, model);
-
-        }
         // 删除后的图片名称
         String imgUrlsForUpdate = goodsInfo.getImgs();
         if (StringUtils.isNotBlank(goodsInfo.getDelImageName())) {
@@ -267,13 +259,6 @@ public class GoodsInfoController extends BaseController {
                 // 避免该文件在最后一个
                 imgUrlsForUpdate = imgUrlsForUpdate.replace(imgName, "");
             }
-        }
-        // 本身有图片，但全部删除场合
-        if (StringUtils.isBlank(imgUrlsForUpdate)
-                && (goodsInfo.getPicList() == null || goodsInfo.getPicList().size() == 0)) {
-            addMessage(model, "未选择任何图片");
-            model.addAttribute("type", "error");
-            return form(goodsInfo, goodsInfo.getSortItem(), goodsInfo.getSort(), null, request, model);
         }
 
         if (!beanValidator(model, goodsInfo)) {
@@ -309,14 +294,19 @@ public class GoodsInfoController extends BaseController {
             goodsInfo.setBenefitPrice(null);
             goodsInfo.setStock(allStock);
         }
+        
         // 判断是否上架
         // 新增商品后若总库存等于0为下架状态,且库存默认为0
         if (goodsInfo.getStock() == null || goodsInfo.getStock().intValue() == 0) {
             goodsInfo.setState("0");
             goodsInfo.setStock(NumberUtils.INTEGER_ZERO);
         } else {
-            // 新增商品后若总库存大于0为上架状态
-            goodsInfo.setState("1");
+            // 判断是否为新增状态
+            if (StringUtils.isBlank(goodsInfo.getId())) {
+                // 若是新增商品且总库存大于0则设为上架状态
+                goodsInfo.setState("1");
+            }
+
         }
         goodsInfoService.save(goodsInfo);
 
@@ -344,7 +334,6 @@ public class GoodsInfoController extends BaseController {
         // 图片上传
         List<String> img_file_id_list = new ArrayList<String>();
         if (goodsInfo.getPicList() != null) {
-
             for (GoodsInfoPic goodsInfoPic : goodsInfo.getPicList()) {
                 if (StringUtils.isEmpty(goodsInfoPic.getImgBase64())) {
                     continue;

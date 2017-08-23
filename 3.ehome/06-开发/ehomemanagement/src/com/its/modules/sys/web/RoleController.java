@@ -6,6 +6,7 @@ package com.its.modules.sys.web;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.Logical;
@@ -60,9 +61,11 @@ public class RoleController extends BaseController {
 
     @RequiresPermissions("sys:role:view")
     @RequestMapping(value = { "list", "" })
-    public String list(Role role, Model model) {
-        List<Role> list = systemService.findAllListM(role);
-        model.addAttribute("list", list);
+    public String list(Role role,HttpServletRequest request, HttpServletResponse response, Model model) {
+        //List<Role> list = systemService.findAllListM(role);
+        //model.addAttribute("list", list);
+        Page<Role> page = systemService.findAllRoleList(new Page<Role>(request, response),role);
+        model.addAttribute("page", page);
         return "modules/sys/roleList";
     }
 
@@ -122,7 +125,7 @@ public class RoleController extends BaseController {
         // if (Role.isAdmin(id)){
         // addMessage(redirectAttributes, "删除角色失败, 不允许内置角色或编号空");
         //// }
-        int count =systemService.findRole(role).size();
+        int count =systemService.countRoleNum(role);
         if (UserUtils.getUser().getRoleIdList().contains(role.getId())) {
             redirectAttributes.addFlashAttribute("msgType", "error");
             addMessage(redirectAttributes, "删除角色失败, 不能删除当前用户所在角色");

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.common.utils.StringUtils;
 import com.its.modules.setup.entity.BusinessInfo;
 import com.its.modules.setup.entity.BusinessSales;
 import com.its.modules.setup.entity.BusinessServicetime;
@@ -69,9 +70,14 @@ public class BusinessUnitService extends CrudService<BusinessUnitDao, BusinessUn
         BusinessUnit businessUnit = new BusinessUnit();
         String[] unitNames = businessInfo.getUnitName().split(",");
         for (int i = 0; i < unitNames.length; i++) {
+        	if (StringUtils.isBlank(unitNames[i])) {
+        		continue;
+        	}
             businessUnit = new BusinessUnit();
             businessUnit.setBusinessInfoId(businessInfo.getId());
             businessUnit.setName(unitNames[i]);
+            // 保存序号
+            businessUnit.setRemarks(String.valueOf(i));
             super.save(businessUnit);
         }
     }

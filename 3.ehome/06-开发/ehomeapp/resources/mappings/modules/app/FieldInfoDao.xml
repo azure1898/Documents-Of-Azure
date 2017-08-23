@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.FieldInfoDao">
+    
+	<sql id="fieldInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.monday AS "monday",
+		a.tuesday AS "tuesday",
+		a.wednesday AS "wednesday",
+		a.thursday AS "thursday",
+		a.friday AS "friday",
+		a.saturday AS "saturday",
+		a.sunday AS "sunday",
+		a.short_time AS "shortTime",
+		a.start_open_time AS "startOpenTime",
+		a.end_open_time AS "endOpenTime",
+		a.base_price AS "basePrice",
+		a.is_child AS "isChild",
+		a.state AS "state",
+		a.create_state AS "createState",
+		a.sell_count AS "sellCount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="fieldInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FieldInfo">
+		SELECT 
+			<include refid="fieldInfoColumns"/>
+		FROM field_info a
+		<include refid="fieldInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="FieldInfo">
+		SELECT 
+			<include refid="fieldInfoColumns"/>
+		FROM field_info a
+		<include refid="fieldInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FieldInfo">
+		SELECT 
+			<include refid="fieldInfoColumns"/>
+		FROM field_info a
+		<include refid="fieldInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO field_info(
+			id,
+			business_info_id,
+			serial_numbers,
+			name,
+			monday,
+			tuesday,
+			wednesday,
+			thursday,
+			friday,
+			saturday,
+			sunday,
+			short_time,
+			start_open_time,
+			end_open_time,
+			base_price,
+			is_child,
+			state,
+			create_state,
+			sell_count,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{businessInfoId},
+			#{serialNumbers},
+			#{name},
+			#{monday},
+			#{tuesday},
+			#{wednesday},
+			#{thursday},
+			#{friday},
+			#{saturday},
+			#{sunday},
+			#{shortTime},
+			#{startOpenTime},
+			#{endOpenTime},
+			#{basePrice},
+			#{isChild},
+			#{state},
+			#{createState},
+			#{sellCount},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE field_info SET 	
+			business_info_id = #{businessInfoId},
+			serial_numbers = #{serialNumbers},
+			name = #{name},
+			monday = #{monday},
+			tuesday = #{tuesday},
+			wednesday = #{wednesday},
+			thursday = #{thursday},
+			friday = #{friday},
+			saturday = #{saturday},
+			sunday = #{sunday},
+			short_time = #{shortTime},
+			start_open_time = #{startOpenTime},
+			end_open_time = #{endOpenTime},
+			base_price = #{basePrice},
+			is_child = #{isChild},
+			state = #{state},
+			create_state = #{createState},
+			sell_count = #{sellCount},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE field_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

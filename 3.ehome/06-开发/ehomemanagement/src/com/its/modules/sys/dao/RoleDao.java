@@ -41,4 +41,17 @@ public interface RoleDao extends CrudDao<Role> {
 	
 	public List<Role> getRoleListByType();
 
+	/**
+	 * 用户管理：获取【所有角色】下拉框取值
+	 * @param role
+	 * @return
+	 */
+	public List<Role> getAllRoleList(Role role);
+	
+	/**
+	 * 角色管理：关联用户的角色数
+	 * @param role
+	 * @return
+	 */
+	public int countRoleNum(Role role);
 }

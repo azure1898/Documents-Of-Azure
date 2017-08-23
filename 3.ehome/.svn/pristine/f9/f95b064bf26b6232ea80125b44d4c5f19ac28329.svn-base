@@ -1,0 +1,124 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<html>
+<head>
+	<title>房间认证管理</title>
+	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			fillPro();
+		});
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			if ($("#registDateEnd").val() != null && $("#registDateEnd").val() != "" 
+				    && $("#registDateStart").val() != null && $("#registDateStart").val() != "" 
+				    && $("#registDateEnd").val() < $("#registDateStart").val()) {
+    			alertx("您输入的开始时间在结束时间之后，请重新输入！");
+			} else {
+				$("#searchForm").submit();
+			}
+        	return false;
+        }
+	</script>
+</head>
+<body>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="${ctx}/account/roomCertify/">房间认证列表</a></li>
+	</ul>
+	<form:form id="searchForm" modelAttribute="roomCertify" action="${ctx}/account/roomCertify/" method="post" class="breadcrumb form-search">
+		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<input type="text" class="hide" id="hidProId"  value="${roomCertify.villageInfo.addrPro}">
+		<input type="text" class="hide" id="hidCityId" value="${roomCertify.villageInfo.addrCity}">
+		<input type="text" class="hide" id="hidAreaId" value="">
+		<input type="text" class="hide" id="hidVillageId" value="${roomCertify.villageInfo.id}">
+		<ul class="ul-form">
+			 <li>
+				<input id="registDateStart" name="registDateStart" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+					value="<fmt:formatDate value="${roomCertify.registDateStart}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+				-
+				<input id="registDateEnd" name="registDateEnd" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+					value="<fmt:formatDate value="${roomCertify.registDateEnd}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+			</li>
+			<li class="btns">
+				<select id="addrpro" name="villageInfo.addrPro" style="width: 120px" onchange="changeCity()">
+						<option value="">全部省份</option>
+				</select>
+			</li>
+			<li class="btns">
+				<select id="addrcity" name="villageInfo.addrCity" style="width: 120px" onchange="changeVillage()">
+						<option value="">全部城市</option>
+				</select>
+			</li>
+			<li class="btns" style="display: none;">
+				<select id="addrarea" name="addrArea" style="width: 120px; display: none;">
+						<option value="">全部区域</option>
+				</select>
+			</li>
+			<li class="btns">
+				<select id="addrVillage" name="villageInfo.id" style="width: 120px">
+						<option value="">全部楼盘</option>
+				</select>
+			</li>
+			<li class="btns">
+				<form:select path="customerType" class="input-medium">
+					<form:option value="" label="客户类别"/>
+					<form:options items="${fns:getDictList('room_customer_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+			</li>
+			<li class="btns">
+				<form:input path="customerName" placeholder="请输入客户名称、注册手机号、房间号" htmlEscape="false" maxlength="64" class="input-xlarge"/>
+			</li>
+			<li class="btns">
+				<a onclick="return page();" class="btn btn-success"><i class="icon-search icon-white"></i> 查询</a>		
+			</li>
+			<li class="clearfix"></li>
+		</ul>
+	</form:form>
+	<sys:message content="${message}"/>
+	<table id="contentTable" class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>楼盘名称</th>
+				<th>楼栋</th>
+				<th>房间号</th>
+				<th>客户姓名</th>
+				<th>客户类别</th>
+				<th>账号/手机号</th>
+			</tr>
+		</thead>
+		<tbody>
+		<c:forEach items="${page.list}" var="roomCertify" varStatus="status">
+			<tr>
+				<td>
+					${(page.pageNo - 1) * page.pageSize + status.count}
+				</td>
+				<td>
+					${roomCertify.villageInfo.villageName}
+				</td>
+				<td>
+					${roomCertify.buildingName}
+				</td>
+				<td>
+					${roomCertify.roomName}
+				</td>
+				<td>
+					${roomCertify.customerName}
+				</td>
+				<td>
+					${fns:getDictLabel(roomCertify.customerType, 'room_customer_type', '')}
+				</td>
+				<td>
+					${roomCertify.phoneNum}
+				</td>
+			</tr>
+		</c:forEach>
+		</tbody>
+	</table>
+	<div class="pagination">${page}</div>
+</body>
+</html>

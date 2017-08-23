@@ -157,19 +157,23 @@
 			ORDER BY a.start_time
 		</where>
 	</select>
-	<!-- 根据用户选择的时段ID查询相关数据 -->
+	<!-- 更新场地时段的预约状态 -->
+	<update id="updateFieldPartitionState">
+		UPDATE field_partition_price a SET a.state=#{newState} WHERE a.id=#{id} AND a.state=#{oldState}
+	</update>
+	<!-- 根据用户选择的时段ID查询相关数据 且确保该预约活动不是暂停状态 -->
 	<select id="findSelectedFieldPartition" resultType="FieldPartitionBean">
 		SELECT  DISTINCT <include refid="fieldPartitionPriceColumns"/>,b.name AS fieldName
 		FROM field_partition_price a,field_info b
 		<where>
-			a.Field_Info_ID=b.ID AND a.id in 
+			a.Del_Flag='0'
+			AND b.Del_Flag='0'
+			AND a.Field_Info_ID=b.ID 
+			AND b.State='0'
+			AND a.id in 
 			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
 			  	#{item}
 			</foreach> 
 		</where>
 	</select>
-	<!-- 更新场地时段的预约状态 -->
-	<update id="updateFieldPartitionState">
-		UPDATE field_partition_price a SET a.state=#{newState} WHERE a.id=#{id} AND a.state=#{oldState}
-	</update>
 </mapper>

@@ -86,7 +86,7 @@ public class OrderLessonController extends BaseController {
 			toJson.put("message", "用户不存在");
 			return toJson;
 		}
-		LessonInfo lessonInfo = lessonInfoService.get(courseID);
+		LessonInfo lessonInfo = lessonInfoService.getValidateById(courseID);
 		if (lessonInfo == null) {
 			toJson.put("code", Global.CODE_PROMOT);
 			toJson.put("message", "课程不存在");

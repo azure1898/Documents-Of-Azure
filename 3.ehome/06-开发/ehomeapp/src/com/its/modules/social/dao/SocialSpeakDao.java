@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
+import com.its.modules.app.entity.Account;
 import com.its.modules.social.bean.SocialSpeakBean;
 import com.its.modules.social.entity.SocialSpeak;
 
@@ -74,7 +75,7 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @param userId
 	 * @return
 	 */
-	public List<SocialSpeak> getListByUserId(@Param("userid")String userid);
+	public List<SocialSpeak> getListByUserId(@Param("userid")String userid, @Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize);
 	
 	/**
 	 * 
@@ -124,5 +125,23 @@ public interface SocialSpeakDao extends CrudDao<SocialSpeak> {
 	 * @return
 	 */
 	public List<SocialSpeakBean> findAdminList(@Param("userId") String userId, @Param("villageInfoId") String villageInfoId);
+	
+	/**
+	 * @Description：根据用户ID查询当前用户是否是管理员
+	 * @Author：刘浩浩
+	 * @Date：2017年8月21日
+	 * @param userId 用户ID
+	 * @return
+	 */
+	public List<Account> getAdminAccount(@Param("userId") String userId);
+	
+	/**
+	 * @Description：根据楼盘ID获取该楼盘的所有用户
+	 * @Author：刘浩浩
+	 * @Date：2017年8月21日
+	 * @param villageInfoId
+	 * @return
+	 */
+	public List<Account> getAccountListByVillId(@Param("villageInfoId") String villageInfoId);
 
 }

@@ -13,6 +13,14 @@ public class CommonGlobal {
 	/** 女 */
 	public static final String WOMAN = "1";
 
+	/* <=============================场地预约状态=============================> */
+	/** 场地预约状态：可预约 */
+	public static final String FIELD_APPOINTMENT_STATE_WAITING = "0";
+	/** 场地预约状态：已预约 */
+	public static final String FIELD_APPOINTMENT_STATE_ALREADY = "1";
+	/** 场地预约状态：已消费 */
+	public static final String FIELD_APPOINTMENT_STATE_PAYED = "2";
+
 	/* <============================钱包明细交易类型============================> */
 	/** 钱包明细交易类型：0-充值 */
 	public static final String WALLET_TRADE_TYPE_RECHARGE = "0";
@@ -89,15 +97,9 @@ public class CommonGlobal {
 	/** 模块类型：生活 */
 	public static final String MODULE_TYPE_LIFE = "2";
 
-	/* <==============================楼盘的主导航==============================> */
-	/** 主导航：首页 */
-	public static final String MAIN_NAVIGATION_MAINT = "0";
-	/** 主导航：社区 */
-	public static final String MAIN_NAVIGATION_COMMUNITY = "1";
-	/** 主导航：生活 */
-	public static final String MAIN_NAVIGATION_LIFE = "2";
-	/** 主导航：邻里圈 */
-	public static final String MAIN_NAVIGATION_NEIGHBOR = "3";
+	/* <==============================字典表TYPE==============================> */
+	/** 字典表TYPE：mainNavigation */
+	public static final String MAIN_NAVIGATION = "mainNavigation";
 
 	/* <==============================地址管理类型==============================> */
 	/** 地址类型：按楼栋选择地址 */
@@ -154,6 +156,12 @@ public class CommonGlobal {
 	public static final String COUPON_VALIDITY_TYPE_START_END = "0";
 	/** 优惠券有效期类型：天 */
 	public static final String COUPON_VALIDITY_TYPE_DAYS = "1";
+
+	/* <=============================优惠券下单赠送规则=============================> */
+	/** 优惠券下单赠送规则：下单即送 */
+	public static final String COUPON_GIVE_RULE_UNLIMIT = "0";
+	/** 优惠券下单赠送规则：满额送 */
+	public static final String COUPON_GIVE_RULE_LIMITED = "1";
 
 	/* <==============================优惠券领取规则==============================> */
 	/** 优惠券领取规则：无限制 */

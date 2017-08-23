@@ -161,10 +161,10 @@
             <li>
                 <input id="beginCreatetime" name="beginCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                     value="<fmt:formatDate value="${socialSpeak.beginCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
+                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false, maxDate: '#F{$dp.$D(\'endCreatetime\')}'});"/> - 
                 <input id="endCreatetime" name="endCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                     value="<fmt:formatDate value="${socialSpeak.endCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false, minDate: '#F{$dp.$D(\'beginCreatetime\')}'});"/>
             </li>
             <li class="btns">
                 <select id="addrpro" name="addrpro" style="width: 120px" onchange="changeCity()">
@@ -215,16 +215,16 @@
     <table id="contentTable" class="table table-bordered table-condensed">
         <thead>
             <tr>
-                <th>序号</th>
-                <th>楼盘名称</th>
-                <th>发言内容</th>
-                <th>图片</th>
-                <th>可见范围</th>
-                <th>阅/评/转</th>
-                <th>来源</th>
-                <th>发布人</th>
-                <th>发言状态</th>
-                <th>发布时间</th>
+                <th width="5%">序号</th>
+                <th width="13%">楼盘名称</th>
+                <th width="27%">发言内容</th>
+                <th width="12%">图片</th>
+                <th width="6%">可见范围</th>
+                <th width="6%">阅/评/转</th>
+                <th width="6%">来源</th>
+                <th width="6%">发布人</th>
+                <th width="6%">发言状态</th>
+                <th width="10%">发布时间</th>
             </tr>
         </thead>
         <tbody>
@@ -242,12 +242,17 @@
                             </c:if>
                             <c:if test="${socialSpeak.subList != '' && socialSpeak.subList != null}">
                                 <c:forEach items="${socialSpeak.subList}" var="subList">
-                                    <font color="blue">#${subList.subname}#</font>
+                                    <font color="blue">${subList.subname}</font>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${socialSpeak.tag != '' && socialSpeak.tag != null}">
-                                <font color="blue">#${socialSpeak.tag}#</font>
-                            </c:if> <font color="black">${socialSpeak.content}</font>
+                            <font color="black" title="${socialSpeak.content}">
+                            	<c:if test="${fn:length(socialSpeak.content) > 50}">  
+							       ${fn:substring(socialSpeak.content, 0, 50)} ......"
+							    </c:if> 
+							    <c:if test="${fn:length(socialSpeak.content) <= 50}">  
+							       ${socialSpeak.content}
+							    </c:if> 
+                            </font>
                         </a>
                     </td>
                     <td>
@@ -263,7 +268,7 @@
                         </c:if>
                         <%-- <img id="preview" src="${socialSpeak.images}" style="width:45px; height:45;" />--%></td>
                     <td>${fns:getDictLabel(socialSpeak.visrange, 'visRange', '')}</td>
-                    <td>${socialSpeak.readnum}/${socialSpeak.sumcomment}/${socialSpeak.sumforward}</td>
+                    <td>${(socialSpeak.readnum==null) ? 0 : socialSpeak.readnum}/${socialSpeak.sumcomment}/${socialSpeak.sumforward}</td>
                     <td>
                     	<c:if test="${socialSpeak.source > 0}">
                     		公号

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.impl.util.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -162,10 +163,13 @@ public class OrderLessonService extends CrudService<OrderLessonDao, OrderLesson>
         orderTrack.setStateMsgPhone("已取消");
         orderTrack.setHandleMsgPhone("订单已成功取消");
         orderTrack.setRemarks(orderLesson.getCancelRemarks());
-        orderTrackService.save(orderTrack);
-
         // 从SESSION中取得商家信息
         User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
+        orderTrackService.save(orderTrack);
+
         // 向用户推送订单取消信息
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("businessId", user.getBusinessinfoId());

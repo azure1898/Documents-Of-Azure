@@ -239,7 +239,7 @@
 			<include refid="socialSpeakColumns"/>
 		FROM social_speak a 
 		where a.userid = #{userid}
-		<!-- ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize} -->
+		ORDER BY a.createTime DESC limit #{pageIndex},#{pageSize}
 	</select>
 	
 	<!-- 根据speakid查询转发数量 -->
@@ -314,6 +314,25 @@
 		  AND m.isNotice = 1 
 		  AND a.ID = #{userId}
 		  AND <![CDATA[ FIND_IN_SET(#{villageInfoId}, u.village_info_ids) ]]>
+	</select>
+
+	<!-- 根据用户ID查询当前用户是否是管理员 -->
+	<select id="getAdminAccount" resultType="com.its.modules.app.entity.Account">
+		SELECT 
+		  a.* 
+		FROM
+		  account a, sys_user u  
+		WHERE u.app_user_phone = a.Phone_Num 
+		  AND a.ID = #{userId}
+	</select>
+
+	<!-- 根据用户ID查询当前用户是否是管理员 -->
+	<select id="getAccountListByVillId" resultType="com.its.modules.app.entity.Account">
+		SELECT 
+		  a.* 
+		FROM
+		  account a 
+		WHERE a.Village_Info_ID = #{villageInfoId}
 	</select>
 	
 </mapper>

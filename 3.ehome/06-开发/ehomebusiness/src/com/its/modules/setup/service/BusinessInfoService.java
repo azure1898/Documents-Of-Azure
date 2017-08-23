@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
-import com.its.common.service.ServiceException;
 import com.its.common.utils.StringUtils;
 import com.its.modules.setup.dao.BusinessCategorydictDao;
 import com.its.modules.setup.dao.BusinessInfoDao;
@@ -39,6 +38,8 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
     private BusinessUnitService businessUnitService;
     @Autowired
     private BusinessSalesService businessSalesService;
+    /** FLAG：TRUE */
+    private static final String FLAG_TRUE = "1";
 
     public BusinessInfo get(String id) {
         BusinessInfo businessInfo = businessInfoDao.get(id);
@@ -74,6 +75,9 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
     @Transactional(readOnly = false)
     public void updateBaseInfo(BusinessInfo businessInfo) {
         if (StringUtils.isNotBlank(businessInfo.getBusinessIntroduce())) {
+        	// 特殊字符转义
+            businessInfo.setBusinessIntroduce(StringEscapeUtils.unescapeHtml4(businessInfo.getBusinessIntroduce()));
+            // "&"等特殊字符转义
             businessInfo.setBusinessIntroduce(StringEscapeUtils.unescapeHtml4(businessInfo.getBusinessIntroduce()));
         }
         businessInfoDao.updateBaseInfo(businessInfo);
@@ -119,19 +123,26 @@ public class BusinessInfoService extends CrudService<BusinessInfoDao, BusinessIn
         if (businessInfo.getsHours() != null) {
             businessServicetimeService.saveService(businessInfo);
         }
-        // 删除活动信息
-        businessSalesService.deleteSale(businessInfo);
-        // 添加活动信息
-        if (businessInfo.getMoney() != null) {
-            businessSalesService.saveSale(businessInfo);
+        
+        // 启用满减活动时更新满减金额表
+        if (FLAG_TRUE.equals(businessInfo.getPromotionFlag())) {
+        	// 删除活动信息
+        	businessSalesService.deleteSale(businessInfo);
+        	// 添加活动信息
+        	if (businessInfo.getMoney() != null) {
+        		businessSalesService.saveSale(businessInfo);
+        	}
         }
-        // 删除单位信息
-        businessUnitService.deleteUnit(businessInfo);
-        // 添加单位信息
-        if (businessInfo.getUnitName() != null) {
-            businessUnitService.saveUnit(businessInfo);
+        
+        // 启用自定义单位时更新自定义单位表
+        if (FLAG_TRUE.equals(businessInfo.getCustomUnitFlag())) {
+        	// 删除单位信息
+        	businessUnitService.deleteUnit(businessInfo);
+        	// 添加单位信息
+        	if (businessInfo.getUnitName() != null) {
+        		businessUnitService.saveUnit(businessInfo);
+        	}
         }
-
     }
 
     /**

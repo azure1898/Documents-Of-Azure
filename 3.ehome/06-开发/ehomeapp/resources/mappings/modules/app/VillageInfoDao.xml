@@ -157,11 +157,12 @@
 		a.create_date AS "createDate", a.update_by AS "updateBy.id", a.update_date AS "updateDate", 
 		a.remarks AS "remarks", a.del_flag AS "delFlag", a.is_open AS "isOpen" 
 	</sql>
+	
 	<select id="findCities" resultType="SysArea">
 		SELECT DISTINCT a.id,a.name
 		 FROM sys_area a,village_info v
 		<where>
- 			a.id=v.Addr_City and a.type=2 and v.State=0
+ 			a.id=v.Addr_City and a.type=3 and v.State=0
  		</where>
  		ORDER BY a.create_date DESC
 	</select>
@@ -176,6 +177,7 @@
 		</where>
 				ORDER BY a.update_date DESC
 	</select>
+	
 	<!-- 获取用户上次选择楼盘所在的城市 -->
 	<select id="getAccountCityID" resultType="String">
 		SELECT v.Addr_City from village_info v,account a 
@@ -183,4 +185,5 @@
 			v.id=a.village_info_id AND a.ID=#{accountID}
 		</where>
 	</select>
+	
 </mapper>

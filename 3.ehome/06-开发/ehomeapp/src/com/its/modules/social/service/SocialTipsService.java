@@ -57,8 +57,8 @@ public class SocialTipsService extends CrudService<SocialTipsDao, SocialTips> {
 	 * @param type
 	 * @return
 	 */
-	public List<SocialTips> getListByUserIdAndType(String userId, int type) {
-		return socialTipsDao.getListByUserIdAndType(userId, type);
+	public List<SocialTips> getListByUserIdAndType(String userId, int type, int pageIndex, int pageSize) {
+		return socialTipsDao.getListByUserIdAndType(userId, type, pageIndex, pageSize);
 	}
 	
 }

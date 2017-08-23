@@ -19,6 +19,7 @@ import com.its.modules.sys.service.LogService;
 
 import io.rong.RongCloud;
 import io.rong.messages.TxtMessage;
+import io.rong.models.CodeSuccessResult;
 
 @Service @Lazy(false)
 public class RongCloudTask {
@@ -64,7 +65,7 @@ public class RongCloudTask {
 							+ "\"msgContent\":\""+msgContent+"\""
 							+"}";
 					TxtMessage messagePublishSystemTxtMessage = new TxtMessage(msgContent,msgExtra);
-					rongCloud.message.PublishSystem(order.getBusinessinfoId(), ToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
+					CodeSuccessResult csr = rongCloud.message.PublishSystem(order.getBusinessinfoId(), ToUserId, messagePublishSystemTxtMessage, msgExtra, msgExtra, 1, 1);
 					
 					SocialMsg socialMsg = new SocialMsg();
 					socialMsg.setIsNewRecord(true);
@@ -72,7 +73,8 @@ public class RongCloudTask {
 					socialMsg.setUserid(order.getBusinessinfoId());
 					socialMsg.setUsername("");
 					socialMsg.setTouserid(ToUserId[0]);
-					socialMsg.setContent(msgExtra);
+					socialMsg.setContent(msgContent);
+					socialMsg.setRemark("{\"Code\":\""+csr.getCode()+"\",\"ErrorMessage\":\""+csr.getErrorMessage()+"\",\"msgExtra\":\""+msgExtra+"\"}");
 					socialMsg.setIsnotice(RongGlobal.MSG_IS_NOTICE_YES);
 					socialMsg.setNoticetime(new Date());
 					socialMsg.setFirtype(RongGlobal.MSG_FIRTYPE_ORDER);

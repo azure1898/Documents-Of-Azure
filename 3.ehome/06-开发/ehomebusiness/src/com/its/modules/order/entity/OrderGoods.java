@@ -61,7 +61,7 @@ public class OrderGoods extends DataEntity<OrderGoods> {
     private String searchFlg; // 检索按钮按下标示
 
     private int pending;// 是否查询待处理标记
-
+    private int isCancel;//是否取消标记  1=查询所有未取消订单
     public OrderGoods() {
         super();
     }
@@ -410,5 +410,13 @@ public class OrderGoods extends DataEntity<OrderGoods> {
     public void setAccountMsg(String accountMsg) {
         this.accountMsg = accountMsg;
     }
+
+	public int getIsCancel() {
+		return isCancel;
+	}
+
+	public void setIsCancel(int isCancel) {
+		this.isCancel = isCancel;
+	}
 
 }

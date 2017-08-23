@@ -56,6 +56,16 @@ public class SortInfoController extends BaseController {
         return entity;
     }
 
+    /**
+     * 显示分类信息列表
+     * 
+     * @param sortInfo
+     *            画面JAVABEAN
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
     @RequestMapping(value = { "list", "" })
     public String list(SortInfo sortInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
         // 从SESSION中取得商家信息
@@ -69,6 +79,15 @@ public class SortInfoController extends BaseController {
         return "modules/goods/sortInfoList";
     }
 
+    /**
+     * 保存分类信息
+     * 
+     * @param sortInfo
+     *            画面中的值
+     * @param model
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "save")
     public String save(SortInfo sortInfo, Model model, RedirectAttributes redirectAttributes) {
 
@@ -96,6 +115,14 @@ public class SortInfoController extends BaseController {
         return "redirect:" + Global.getAdminPath() + "/goods/sortInfo/?repage";
     }
 
+    /**
+     * 删除分类信息
+     * 
+     * @param sortInfo
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "delete")
     public String delete(SortInfo sortInfo, RedirectAttributes redirectAttributes, Model model) {
         // 根据商品分类ID来取得商品信息
@@ -126,12 +153,12 @@ public class SortInfoController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "sortNameCheck")
-    public String sortNameCheck(String sortName,String id) {
+    public String sortNameCheck(String sortName, String id) {
         if (StringUtils.isBlank(sortName)) {
             return "true";
         } else {
             // 传入参数
-            List<SortInfo> result = sortInfoService.findListBySortName(sortName,id, "0");
+            List<SortInfo> result = sortInfoService.findListBySortName(sortName, id, "0");
             if (result == null || result.size() == 0) {
                 return "true";
             } else {

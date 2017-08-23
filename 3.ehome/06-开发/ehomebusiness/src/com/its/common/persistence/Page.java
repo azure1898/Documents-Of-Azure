@@ -195,8 +195,10 @@ public class Page<T> {
 		StringBuilder sb = new StringBuilder();
 		
 		if (pageNo == first) {// 如果是首页
+		    sb.append("<li class=\"disabled\"><a href=\"javascript:\">&lt;&minus; 首页</a></li>\n");
 			sb.append("<li class=\"disabled\"><a href=\"javascript:\">&#171; 上一页</a></li>\n");
 		} else {
+		    sb.append("<li><a href=\"javascript:\" onclick=\""+funcName+"("+first+","+pageSize+",'"+funcParam+"');\">&lt;&minus; 首页</a></li>\n");
 			sb.append("<li><a href=\"javascript:\" onclick=\""+funcName+"("+prev+","+pageSize+",'"+funcParam+"');\">&#171; 上一页</a></li>\n");
 		}
 
@@ -249,9 +251,12 @@ public class Page<T> {
 
 		if (pageNo == last) {
 			sb.append("<li class=\"disabled\"><a href=\"javascript:\">下一页 &#187;</a></li>\n");
+			sb.append("<li class=\"disabled\"><a href=\"javascript:\">尾页 &minus;&gt;</a></li>\n");
 		} else {
-			sb.append("<li><a href=\"javascript:\" onclick=\""+funcName+"("+next+","+pageSize+",'"+funcParam+"');\">"
-					+ "下一页 &#187;</a></li>\n");
+		    sb.append("<li><a href=\"javascript:\" onclick=\""+funcName+"("+next+","+pageSize+",'"+funcParam+"');\">"
+                    + "下一页 &#187;</a></li>\n");
+			sb.append("<li><a href=\"javascript:\" onclick=\""+funcName+"("+last+","+pageSize+",'"+funcParam+"');\">"
+					+ "尾页 &minus;&gt;</a></li>\n");
 		}
 
 		sb.append("<li class=\"disabled controls\"><a href=\"javascript:\">当前 ");

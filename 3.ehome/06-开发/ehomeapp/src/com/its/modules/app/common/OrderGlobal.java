@@ -180,80 +180,38 @@ public class OrderGlobal {
 	public static final String FRONT_REFUNDING_DESC = "订单开始退款，等待退款";
 
 	/** 前台文案描述-已退款 */
-	public static final String FRONT_REFUNDED = "订单退款完成";
+	public static final String FRONT_REFUNDED = "已退款";
+	public static final String FRONT_REFUNDED_DESC = "订单退款完成";
 
 	/* <=========================后台订单状态对应的文案描述=========================> */
-	
-							/* *******商品类订单******** */
 	/** 后台文案描述-提交订单 */
-	public static final String ORDER_GOODS_BACK_UNPAY = "提交订单";
-	public static final String ORDER_GOODS_BACK_UNPAY_DESC = "订单提交成功，等待付款";
+	public static final String BACK_UNPAY = "提交订单";
+	public static final String BACK_UNPAY_DESC = "订单提交成功，等待付款";
+
 	/** 后台文案描述-已付款 */
-	public static final String ORDER_GOODS_BACK_UNCHECK = "已付款";
-	public static final String ORDER_GOODS_BACK_UNCHECK_DESC = "已成功付款，等待商家受理";
-	/** 后台文案描述-已取消（超时取消） */
-	public static final String ORDER_GOODS_BACK_OVERTIME_CANCELED = "已取消";
-	public static final String ORDER_GOODS_BACK_OVERTIME_CANCELED_DESC = "30分钟未付款，自动取消";
+	public static final String BACK_UNCHECK = "已付款";
+	public static final String BACK_UNCHECK_DESC = "已成功付款，等待商家受理";
+	public static final String BACK_PAYED_DESC = "已成功付款";
+
+	/** 后台文案描述-预约成功 */
+	public static final String BACK_APPOINTED = "预约成功";
+	public static final String BACK_LESSON_APPOINTED_DESC = "课程预约成功（自动）";
+	public static final String BACK_FIELD_APPOINTED_DESC = "场地预约成功（自动）";
+
 	/** 后台文案描述-已取消（买家取消） */
-	public static final String ORDER_GOODS_BACK_ACCOUNT_CANCELED = "已取消";
-	public static final String ORDER_GOODS_BACK_ACCOUNT_CANCELED_DESC = "买家取消订单";
+	public static final String BACK__CANCELED = "已取消";
+	public static final String BACK_OVERTIME_THIRTY_CANCELED_DESC = "30分钟未付款，自动取消";
+	public static final String BACK_OVERTIME_TEN_CANCELED_DESC = "10分钟未付款，自动取消";
+	public static final String BACK_ACCOUNT_CANCELED_DESC = "买家取消订单";
+
 	/** 后台文案描述-退款中 */
-	public static final String ORDER_GOODS_BACK_REFUNDING = "退款中";
+	public static final String BACK_REFUNDING = "退款中";
 	/** 后台文案描述-退款中文案描述 */
-	public static final String ORDER_GOODS_BACK_REFUNDING_DESC = "买家取消订单（自动退款）";
+	public static final String BACK_REFUNDING_DESC = "买家取消订单（自动退款）";
+
 	/** 后台文案描述-已退款 */
-	public static final String ORDER_GOODS_BACK_REFUNDED = "已退款";
-	public static final String ORDER_GOODS_BACK_REFUNDED_DESC = "自动退款";
-							/* *******服务类订单******** */
-	/** 后台文案描述-提交订单 */
-	public static final String ORDER_SERVICE_BACK_UNPAY = "提交订单";
-	public static final String ORDER_SERVICE_BACK_UNPAY_DESC = "订单提交成功，等待付款";
-	/** 后台文案描述-已付款 */
-	public static final String ORDER_SERVICE_BACK_UNCHECK = "已付款";
-	public static final String ORDER_SERVICE_BACK_UNCHECK_DESC = "已成功付款，等待商家受理";
-	/** 后台文案描述-已取消（超时取消） */
-	public static final String ORDER_SERVICE_BACK_OVERTIME_CANCELED = "已取消";
-	public static final String ORDER_SERVICE_BACK_OVERTIME_CANCELED_DESC = "30分钟未付款，自动取消";
-	/** 后台文案描述-已取消（买家取消） */
-	public static final String ORDER_SERVICE_BACK_ACCOUNT_CANCELED = "已取消";
-	public static final String ORDER_SERVICE_BACK_ACCOUNT_CANCELED_DESC = "买家取消订单";
-	/** 后台文案描述-已退款 */
-	public static final String ORDER_SERVICE_BACK_REFUNDED = "已退款";
-	public static final String ORDER_SERVICE_BACK_REFUNDED_DESC = "自动退款";
-							/* *******课程类订单******** */
-	/** 后台文案描述-提交订单 */
-	public static final String ORDER_LESSON_BACK_UNPAY = "提交订单";
-	public static final String ORDER_LESSON_BACK_UNPAY_DESC = "订单提交成功，等待付款";
-	/** 后台文案描述-已付款 */
-	public static final String ORDER_LESSON_BACK_UNCHECK = "已付款";
-	public static final String ORDER_LESSON_BACK_UNCHECK_DESC = "已成功付款";
-	/** 后台文案描述-预约成功 */
-	public static final String ORDER_LESSON_BACK_UNCHECK_APPOINTED = "预约成功";
-	public static final String ORDER_LESSON_BACK_UNCHECK_APPOINTED_DESC = "课程预约成功（自动）";
-	/** 后台文案描述-已取消（超时取消） */
-	public static final String ORDER_LESSON_BACK_OVERTIME_CANCELED = "已取消";
-	public static final String ORDER_LESSON_BACK_OVERTIME_CANCELED_DESC = "30分钟未付款，自动取消";
-	/** 后台文案描述-已取消（商家取消） */
-	public static final String ORDER_LESSON_BACK_BUSINESS_CANCELED = "已取消";
-	public static final String ORDER_LESSON_BACK_BUSINESS_CANCELED_DESC = "买家取消订单";
-							/* *******场地类订单******** */
-	/** 后台文案描述-提交订单 */
-	public static final String ORDER_FIELD_BACK_UNPAY = "提交订单";
-	public static final String ORDER_FIELD_BACK_UNPAY_DESC = "订单提交成功，等待付款";
-	/** 后台文案描述-已付款 */
-	public static final String ORDER_FIELD_BACK_UNCHECK = "已付款";
-	public static final String ORDER_FIELD_BACK_UNCHECK_DESC = "已成功付款";
-	/** 后台文案描述-预约成功 */
-	public static final String ORDER_FIELD_BACK_UNCHECK_APPOINTED = "预约成功";
-	public static final String ORDER_FIELD_BACK_UNCHECK_APPOINTED_DESC = "场地预约成功（自动）";
-	/** 后台文案描述-已取消（超时取消） */
-	public static final String ORDER_FIELD_BACK_OVERTIME_CANCELED = "已取消";
-	public static final String ORDER_FIELD_BACK_OVERTIME_CANCELED_DESC = "10分钟未付款，自动取消";
-	/** 后台文案描述-已取消（商家取消） */
-	public static final String ORDER_FIELD_BACK_BUSINESS_CANCELED = "已取消";
-	public static final String ORDER_FIELD_BACK_BUSINESS_CANCELED_DESC = "买家取消订单";
-	
-	/* <=========================后台订单状态对应的文案描述=========================> */
+	public static final String BACK_REFUNDED = "已退款";
+	public static final String BACK_REFUNDED_DESC = "自动退款";
 
 	/* <===========================订单状态跟踪操作账号===========================> */
 	/** 订单状态跟踪操作账号-用户 */

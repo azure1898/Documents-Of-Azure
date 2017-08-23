@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>社区影院_确认订单</title>
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<link href="../../css/style.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/cursom/model.css" />
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+		<style type="text/css">
+			input {
+				border-radius: 2px;
+				border: none;
+				width: 93%;
+			}
+			
+			input:focus {
+				outline: none;
+				border-color: none;
+				box-shadow: none;
+				border-radius: 1px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<div class="grey_top">
+				<a href="#" class="green_back" onclick="javascript:history.go(-1)"></a>确认订单
+			</div>
+			<div style="height:44px; line-height:44px; padding-left:10px;">联系人信息</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">联系人</div>
+						<div style="margin-left:27px;float:left;">
+							<input type="text" class="name input" v-model:placeholder="items.contactPerson">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">联系电话</div>
+						<div style="margin-left:15px; float:left;">
+							<input type="text" class="phone input" v-model:placeholder="items.contactPhone">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="line_ec mt10"></div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl" v-bind:data-id="items.businessID"><strong>{{items.businessName}}</strong></div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl" v-bind:data-id="items.siteID">房间名称</div>
+						<div class="fr oneLine" style="width: calc(100% - 71px );text-align:right;">{{items.siteName}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">预约时间</div>
+						<div class="fr">{{items.reservationDate}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">预约时段/价格</div><br>
+						<div v-for="item1 in items.detail">
+							<div class="fl"><span class="font14">{{item1.timePeriod}}</span></div>
+							<div class="fr" style="clear: both;"><span class="font14">{{item1.price|formatDecimal}}</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="line_ec mt10"></div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div class="fl">优惠券</div>
+						 <div v-if="isOK">
+                       <div class="list_inbtn fr"></div>
+                       <div class="fr font_orange" >无可用优惠券</div>
+                    </div>
+                    <div v-else>
+                       <div class="list_inbtn fr" data-toggle="modal" data-target="#couponModal" v-if="!isOK"></div>
+                       <div class="fr font_orange" v-if="couponDiscounted>0">-{{couponDiscounted | formatDecimal}}</div>          
+                       <div class="fr font_orange" v-else>{{num}}张优惠券可用</div>                  	
+                    </div>
+					</div>
+				</div>
+			</div>
+			<div class="order_whitebox">
+				<div class="plr10">
+					<div class="goods_receipt clearfix">
+						<div>
+							<div class="fl">您的留言：</div><input type="text" class="input" v-model="leaveMessage"></div>
+						<div class="fr font_orange"></div>
+					</div>
+				</div>
+			</div>
+			<div class="business_bottom">
+				<span class=" ft14" style="line-height:44px;">待支付：<font class="font_orange">{{(items.totalMoney-couponDiscounted)|formatDecimal}}</font></span>&nbsp;&nbsp;&nbsp;
+				<span class="ft12" v-if="couponDiscounted>0">优惠：<font class="font_orange">{{couponDiscounted|formatDecimal}}</font></span>
+				<div class="business_zbtn"><a href="#" @click="affirm()">提交订单</a></div>
+			</div>
+			<!--选择优惠卷-->
+			<div id="couponModal" class="modal modal_c" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-dialog_c" role="document">
+					<div class="modal-content modal-content_c">
+						<div class="modal-header modal-header_coupon">
+							<h4 class="modal-title center_c "><span class="glyphicon glyphicon-menu-left line_c font_c" data-dismiss="modal" aria-label="Close"></span>选择优惠券</h4>
+						</div>
+						<div class="modal-body  modal-body_c bg_de">
+							<div class="details_spgm" style="background:white;">
+								<div class="details_spgm_right_2" v-on:click="changeCoupon()">
+									<img v-bind:src="couponDiscounted==0?urlList.checkedicon:urlList.checkicon">
+								</div>
+								<div class="details_spgm_left_2 center_c" id="title_cou">不使用优惠券</div>
+								<div class="clear"></div>
+							</div>
+							<div class="choose_coup_title"><a href="#" style="color:red;">优惠券使用说明</a></div>
+							<div class="choose_coup_main" v-for="(coup,index) in items3" v-bind:data-id="coup.couponID">
+								<div class="choose_coup_main_left">
+									<p  v-if="coup.couponType == '0'">
+										<font class="font_orange">{{coup.couponMoney|formatDecimal}}</font><br>
+										<span>{{coup.couponCondition}}</span>
+									</p>
+									<p v-else>
+                                    <font class="font_orange">{{coup.couponMoney/10}}折</font><br>
+                                    <span>{{coup.couponCondition}}</span>
+                                </p>
+								</div>
+								<div class="choose_coup_main_m"><img src="../../images/03.png" width="12" height="100"></div>
+								<div class="choose_coup_main_right">
+									<span v-on:click="changeCoupon(coup)"><img v-bind:src="coup.isSelected==0?urlList.checkicon:urlList.checkedicon" width="24" height="24"></span>
+									<p>
+										<font style="font-size:18px;">{{coup.couponName}}</font>
+									</p>
+									<p>
+										<font class="font14">限{{coup.limitUser}}用户使用</font>
+									</p>
+									<p>
+										<font class="font14">限{{coup.couponStart}}至{{coup.couponEnd}}</font>
+									</p>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/static/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/static/bootstrap.min.js"></script>
+		<script src="../../js/static/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/static/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/cursom/site/siteorder.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

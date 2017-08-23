@@ -34,6 +34,14 @@
             var patrn=/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
             return patrn.test(value);
         }, "请输入中文，英文或数字");
+        // 规格项必输CHECK
+        $.validator.addMethod("skuKeyNameRequired", function(value) {
+            if (value == "") {
+            	return false;
+            } else {
+            	return true;
+            }
+        }, "请输入规格");
         // 名称重复检测
         $.validator.addMethod("skuvaluenamecheck", function(value) {
         	var flg = true;
@@ -43,7 +51,7 @@
         	temp_value = new Array();
             $(".skuvaluenamecheck").each(function(index){
             	if (this.value != "") {
-                    if (temp_value.indexOf(this.value) != -1) {
+                    if (temp_value.indexOf(this.value) != -1 && (this.value == value)) {
                         flg = false;
                     } else {
                         temp_value.push(this.value);
@@ -176,6 +184,9 @@
 </head>
 <body>
 	<sys:message content="${message}"/>
+	<div>
+        <p><span class="common-breadcrumb">商品管理&nbsp;>&nbsp;商品规格</span></p>
+    </div>
 	<div id="left" style="float:left;width:60%; overflow-x:auto;height:100%;">
             <div>
                 <p><span>商品规格</span></p>
@@ -221,15 +232,15 @@
                     <form:form id="inputForm" modelAttribute="skuKey" action="${ctx}/goods/skuKey/save" method="post" class="form-horizontal">
         <form:hidden path="id"/>
         <div class="control-group">
-            <label class="control-label"  style="width:90px">规格名称</label>
+            <label class="control-label"  style="width:90px"><span class="help-inline"><font color="red">*</font></span>规格名称</label>
             <div class="controls"  style="margin-left:100px">
                 <form:input path="name" htmlEscape="false" maxlength="12" placeholder="请输入规格名称" class="input-xlarge"/>
-                <span class="help-inline"><font color="red">*</font></span><br/>
+                <br/>
                 <span>规格名称可以是中文、英文或数字，不超过12个字符。</span>
             </div>
         </div>
             <div class="control-group">
-                <label class="control-label"  style="width:90px">规格列表</label>
+                <label class="control-label"  style="width:90px"><span class="help-inline"><font color="red">*</font></span>规格列表</label>
                 <div class="controls"  style="margin-left:80px">
                     <table id="contentTable" class="table table-striped table-bordered table-condensed"  style="width:308px">
                         <tbody id="skuValueList">
@@ -246,8 +257,7 @@
                                 <input id="skuValueList{{idx}}_sortOrder" name="skuValueList[{{idx}}].sortOrder" type="hidden" value="{{idx}}"/>
                             </td>
                             <td>
-                                <input id="skuValueList{{idx}}_name" name="skuValueList[{{idx}}].name" type="text" value="{{row.name}}" placeholder="请输入规格" maxlength="6" class="input-small required skuKeyName skuvaluenamecheck"/>
-                                <span class="help-inline"><font color="red">*</font></span>
+                                <input id="skuValueList{{idx}}_name" name="skuValueList[{{idx}}].name" type="text" value="{{row.name}}" placeholder="请输入规格" maxlength="6" class="input-small skuKeyNameRequired skuKeyName skuvaluenamecheck"/>
                                 <span id="msg_skuValueList{{idx}}_name"></span>
                             </td>
                             <td class="text-center" style="width:70px">

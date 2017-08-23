@@ -5,16 +5,15 @@ package com.its.modules.setup.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.its.common.persistence.Page;
 import com.its.common.service.CrudService;
+import com.its.modules.setup.dao.BusinessSalesDao;
 import com.its.modules.setup.entity.BusinessInfo;
 import com.its.modules.setup.entity.BusinessSales;
-import com.its.modules.setup.entity.BusinessServicetime;
-import com.its.modules.setup.entity.BusinessUnit;
-import com.its.modules.setup.dao.BusinessSalesDao;
 
 /**
  * 商家促销Service
@@ -69,6 +68,10 @@ public class BusinessSalesService extends CrudService<BusinessSalesDao, Business
         String[] benefitMoneys= businessInfo.getBenefitMoney().split(",");
         
         for (int i = 0; i < moneys.length; i++) {
+        	// 如勾选启用满减活动，但并未在两个文本框内填写金额数字，则保存后满减不生效
+        	if (StringUtils.isBlank(moneys[i]) || StringUtils.isBlank(benefitMoneys[i])) {
+        		continue;
+        	}
             businessSales = new BusinessSales();
             businessSales.setBusinessInfoId(businessInfo.getId());
             businessSales.setMoney(Double.parseDouble(moneys[i]));

@@ -105,7 +105,7 @@
         <tbody>
             <c:forEach items="${page.list}" var="villageLine" varStatus="status">
                 <tr onClick="selectElem(this)">
-                    <td>${status.count}<input id="elemId" type="hidden" value="${villageLine.id}" />
+                    <td> ${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}<input id="elemId" type="hidden" value="${villageLine.id}" />
                     </td>
                     <td>${villageLine.villageInfo.propertyCompanyName }</td>
                     <td>${villageLine.villageInfo.villageName}</td>

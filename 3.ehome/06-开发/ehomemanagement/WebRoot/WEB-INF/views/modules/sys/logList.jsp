@@ -64,7 +64,7 @@
         <thead>
             <tr>
                 <th>序号</th>
-                <th>账号名</th>
+                <th>用户名</th>
                 <th>操作日期</th>
                 <th>操作记录</th>
             </tr>
@@ -76,7 +76,7 @@
             %>
             <c:forEach items="${page.list}" var="log" varStatus="status">
                 <tr>
-                    <td>${status.index+1}</td>
+                    <td>${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}</td>
                     <td>${log.createBy.loginName}</td>
                     <td><fmt:formatDate value="${log.createDate}" type="both" /></td>
                     <td>${log.title}</td>

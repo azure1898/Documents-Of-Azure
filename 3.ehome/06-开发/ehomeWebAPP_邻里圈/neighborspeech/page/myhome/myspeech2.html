@@ -90,6 +90,7 @@
 					</div>
 					<div class="clear"></div>
 				</div>
+				<!--发言的内容-->
 				<div class="fyxq_main2">
 					<p class="ftc5050">
 						<!--<font class="ftcred" v-for="(subject,index) in speech.subjectList" :key="index">#{{subject.subName}}#</font>-->
@@ -103,6 +104,8 @@
 						<div class="clear"></div>
 					</ul>
 				</div>
+				
+				<!--原发言或公告-->
 				<div class="fyxq_main_l2 mt10" style="margin-bottom:6px;" v-if="speech.isSpeak==0" >
 					<div class="fyxq_main_l2_img">
 						<!--<img v-bind:src="item.speak.imgUrls[0].url" v-if="item.speak.imgUrls.length>0" width="110" height="110">
@@ -124,7 +127,7 @@
 					<ul>
 						<li><a :href="urlList.forward + speech.speakId" class="bottom_icon1">{{speech.countForward}}</a></li>
 						<li><a :href="speech.countComment>0?urlList.speechdetail + speech.speakId:urlList.comments + speech.speakId" class="bottom_icon2">{{speech.countComment}}</a></li>
-						<li style="border-right:none;"><a href="#" :class="speech.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(speech)">{{speech.countPraise}}</a></li>
+						<li style="border-right:none;"><a href="#" :class="speech.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(speech,1)">{{speech.countPraise}}</a></li>
 					</ul>
 				</div>
 			</div>
@@ -134,6 +137,7 @@
 		<script src="../../js/common/bootstrap.min.js"></script>
 		<script src="../../js/common/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/custom/myspeech2.js" type="text/javascript" charset="utf-8"></script>
 	</body>

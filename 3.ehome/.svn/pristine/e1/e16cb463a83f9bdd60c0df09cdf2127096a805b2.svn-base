@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.app.dao.VillageLineRecomSpecialDetailDao">
+    
+	<sql id="villageLineRecomSpecialDetailColumns">
+		a.id AS "id",
+		a.village_line_recom_special_id AS "villageLineRecomSpecialId",
+		a.recom_type AS "recomType",
+		a.sort_num AS "sortNum",
+		a.recom_module_id AS "recomModuleId",
+		a.business_category_dict_id AS "businessCategoryDictId",
+		a.recom_business_id AS "recomBusinessId",
+		a.describes AS "describes",
+		a.pic_url AS "picUrl",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="villageLineRecomSpecialDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="VillageLineRecomSpecialDetail">
+		SELECT 
+			<include refid="villageLineRecomSpecialDetailColumns"/>
+		FROM village_linerecomspecialdetail a
+		<include refid="villageLineRecomSpecialDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="VillageLineRecomSpecialDetail">
+		SELECT 
+			<include refid="villageLineRecomSpecialDetailColumns"/>
+		FROM village_linerecomspecialdetail a
+		<include refid="villageLineRecomSpecialDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VillageLineRecomSpecialDetail">
+		SELECT 
+			<include refid="villageLineRecomSpecialDetailColumns"/>
+		FROM village_linerecomspecialdetail a
+		<include refid="villageLineRecomSpecialDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO village_linerecomspecialdetail(
+			id,
+			village_line_recom_special_id,
+			recom_type,
+			sort_num,
+			recom_module_id,
+			business_category_dict_id,
+			recom_business_id,
+			describes,
+			pic_url,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{villageLineRecomSpecialId},
+			#{recomType},
+			#{sortNum},
+			#{recomModuleId},
+			#{businessCategoryDictId},
+			#{recomBusinessId},
+			#{describes},
+			#{picUrl},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE village_linerecomspecialdetail SET 	
+			village_line_recom_special_id = #{villageLineRecomSpecialId},
+			recom_type = #{recomType},
+			sort_num = #{sortNum},
+			recom_module_id = #{recomModuleId},
+			business_category_dict_id = #{businessCategoryDictId},
+			recom_business_id = #{recomBusinessId},
+			describes = #{describes},
+			pic_url = #{picUrl},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE village_linerecomspecialdetail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取某专题推荐的明细列表 -->
+	<select id="getRecomSpecialDetailList" resultType="VillageLineRecomSpecialDetail">
+		SELECT
+			<include refid="villageLineRecomSpecialDetailColumns"/>
+		FROM
+			Village_LineRecomSpecialDetail a
+		WHERE
+			a.del_flag = '0'
+		AND a.Village_Line_Recom_Special_ID = #{specialId}
+		AND a.Recom_Type IS NOT NULL
+	</select>
+	
+</mapper>

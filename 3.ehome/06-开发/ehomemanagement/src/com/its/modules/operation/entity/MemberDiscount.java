@@ -44,6 +44,7 @@ public class MemberDiscount extends DataEntity<MemberDiscount> {
 	private Date validStart; // 有效起始
 	private Date validEnd; // 有效结束
 	private String useState; // 使用状态
+	private String useOrderId; // 使用的订单ID
 	private String receiveType; // 领取方式
 	private String orderType; // 赠送的订单类型：0-商品；1服务；2课程；3场地
 	private String orderId; // 哪个订单赠送的优惠券
@@ -139,6 +140,16 @@ public class MemberDiscount extends DataEntity<MemberDiscount> {
 		this.useState = useState;
 	}
 
+	@Length(min = 0, max = 64, message = "使用的订单ID长度必须介于 0 和 64 之间")
+	@ExcelField(title = "订单号", type = 1, align = 2, sort = 7)
+	public String getUseOrderId() {
+		return useOrderId;
+	}
+
+	public void setUseOrderId(String useOrderId) {
+		this.useOrderId = useOrderId;
+	}
+
 	@Length(min = 0, max = 1, message = "领取方式长度必须介于 0 和 1 之间")
 	public String getReceiveType() {
 		return receiveType;
@@ -210,8 +221,7 @@ public class MemberDiscount extends DataEntity<MemberDiscount> {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-
-	@ExcelField(title = "订单号", type = 1, align = 2, sort = 7)
+	
 	public String getOrderNo() {
 		return orderNo;
 	}

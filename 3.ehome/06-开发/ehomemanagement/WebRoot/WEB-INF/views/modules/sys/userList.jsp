@@ -63,9 +63,9 @@
     <ul class="nav nav-tabs">
         <li>
             <%if (roleId == null) { %>
-            <span>系统管理 > <a href="${ctx}/sys/user/list">用户管理</a></span>
+            <span class="common-breadcrumb">系统管理&nbsp;>&nbsp;<a href="${ctx}/sys/user/list">用户管理</a></span>
             <% } else {%>
-            <span>系统管理 > <a href="${ctx}/sys/role/list">角色管理 > </a>查看用户 </span>
+            <span class="common-breadcrumb">系统管理&nbsp;>&nbsp;<a href="${ctx}/sys/role/list">角色管理&nbsp;>&nbsp;</a>查看用户 </span>
             <%}%>
         </li>
     </ul>
@@ -74,10 +74,18 @@
         <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}" />
         <sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();" />
         <ul class="ul-form">
-            <li>
+            <li class="btns">
                 <form:select path="loginFlag" class="input-medium">
                     <form:options items="${fns:getDictList('userstate')}" itemLabel="label" itemValue="value" htmlEscape="false" />
                 </form:select>
+            </li>
+            <li class="btns">
+                <select id="roleId" name="role.id" class="input-medium" >
+					            <option value="">所有角色</option>
+							<c:forEach items="${roleList}" var="roleData">
+								<option value="${roleData.id}" ${user.role.id eq roleData.id ? 'selected="selected"' : ''}>${roleData.name}</option>
+							</c:forEach>
+			    </select>
             </li>
             <li class="btns">
                 <form:input path="loginName" placeholder="请输入用户名" htmlEscape="false" maxlength="50" class="input-small" />
@@ -127,7 +135,7 @@
         <tbody>
             <c:forEach items="${page.list}" var="user" varStatus="status">
                 <tr onClick="selectElem(this)">
-                    <td>${status.index+1}<!--使用elemFrozen方法预处理 -->
+                    <td>${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}<!--使用elemFrozen方法预处理 -->
                      <c:if test="${user.loginFlag==1}">
                             <!-- 正常 -->
                             <input id="oldFrozen" type="hidden" value="0" />

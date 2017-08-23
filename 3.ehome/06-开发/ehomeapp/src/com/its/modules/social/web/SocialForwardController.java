@@ -78,6 +78,7 @@ public class SocialForwardController extends BaseController {
 		}
 		toJson.put("speakId", speakId);
 		toJson.put("noticeId", socialSpeakBean.getNoticeid());
+		toJson.put("speakUserid", socialSpeakBean.getUserid());
 		toJson.put("userName", socialSpeakBean.getNickName());
 		toJson.put("speakContent", socialSpeakBean.getContent());
 		toJson.put("title", socialSpeakBean.getTitle());

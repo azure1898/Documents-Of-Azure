@@ -55,11 +55,12 @@
 	
 	<select id="findList" resultType="OrderGroupPurc">
 		SELECT 
-			<include refid="OrderGroupPurcColumns"/>
-		FROM order_group_purc a
+			<include refid="OrderGroupPurcColumns"/>,max(b.Consume_Time) consumeTime
+		FROM order_group_purc a left join order_group_purc_list b on(a.id=b.Order_Group_Purc_ID)
 		<include refid="OrderGroupPurcJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
 			<if test="orderNo != null and orderNo != ''">
 				AND a.order_no = #{orderNo}
 			</if>
@@ -79,6 +80,8 @@
 				AND a.order_state = #{orderState}
 			</if>
 		</where>
+		
+		group by a.order_no 
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -96,6 +99,7 @@
 		<include refid="OrderGroupPurcJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

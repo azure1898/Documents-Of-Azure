@@ -207,4 +207,15 @@
 		AND a.Sell_Count <![CDATA[>=]]> #{count}
 	</update>
 	
+	<!-- 根据服务ID获取商家服务项目 -->
+	<select id="getValidateById" resultType="ServiceInfo">
+		SELECT DISTINCT
+			<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<where>
+			a.state = '1' AND a.del_flag = '0'
+			AND a.ID = #{id}
+		</where>
+		ORDER BY a.recommend desc, a.create_date desc
+	</select>
 </mapper>

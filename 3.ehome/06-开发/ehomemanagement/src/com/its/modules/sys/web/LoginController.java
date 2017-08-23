@@ -52,7 +52,7 @@ public class LoginController extends BaseController{
 		// 默认页签模式 0 为关闭 1为打开
 		String tabmode = CookieUtils.getCookie(request, "tabmode");
 		if (tabmode == null){
-			CookieUtils.setCookie(response, "tabmode", "1");
+			CookieUtils.setCookie(response, "tabmode", "0");
 		}
 		
 		if (logger.isDebugEnabled()){

@@ -98,7 +98,7 @@
 		
 		function isRecommend() {
 			if (!$("#selectElemId").val()) {
-				alertx("请选择要编辑的话题");
+				alertx("请选择要推荐的话题信息");
 				return false;
 			} else {
 				
@@ -135,14 +135,14 @@
 		
 		function notRecommend() {
 			if (!$("#selectElemId").val()) {
-				alertx("请选择要编辑的话题");
+				alertx("请选择要取消推荐的话题信息");
 				return false;
 			} else {
 				
 				var editFlag = $(selectedElem).children().find("#isrecommend").val();
 				//团购活动：待开始之外的状态
 				if(editFlag == '0'){
-					alertx("该话题已设置为不推荐不能编辑");
+					alertx("只能对推荐的话题进行取消推荐");
 					return false;
 				}
 				var elemId = $("#selectElemId").val();
@@ -188,10 +188,10 @@
 			<li>
 				<input id="beginCreatetime" name="beginCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${socialSubject.beginCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/> - 
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false, maxDate: '#F{$dp.$D(\'endCreatetime\')}'});"/> - 
 				<input id="endCreatetime" name="endCreatetime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${socialSubject.endCreatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false,  minDate: '#F{$dp.$D(\'beginCreatetime\')}'});"/>
 			</li>
 			<li class="btns">
 				<select id="addrpro" name="addrpro" style="width: 120px" onchange="changeCity()">
@@ -215,7 +215,7 @@
 			</li>
 			<li class="btns">
 				<form:select path="isrecommend" class="input-small">
-					<form:option value="" label="是否推荐"/>
+					<form:option value="" label="推荐状态"/>
 					<form:options items="${fns:getDictList('Quota')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
@@ -230,8 +230,8 @@
 		<li style="list-style-type:none;">
 			<shiro:hasPermission name="subject:socialSubject:edit">
 				<a id="btuElemAdd" href="${ctx}/subject/socialSubject/form?id=" class="btn btn-primary"><i class="icon-plus icon-custom"></i>添加</a>
-				<a id="btuElemEdit" href="${ctx}/subject/socialSubject/form?id=" class="btn btn-primary" onclick="return elemEdit()"><i class="icon-edit icon-custom"></i>编辑</a>
-				<a id="btuElemDelete" href="${ctx}/subject/socialSubject/delete?id=" class="btn btn-primary" onclick="return elemDelete()"><i class="icon-trash icon-custom"></i>删除</a>
+				<a id="btuElemEdit" href="${ctx}/subject/socialSubject/form?id=" class="btn btn-primary" onclick="return elemEdit('话题')"><i class="icon-edit icon-custom"></i>编辑</a>
+				<a id="btuElemDelete" href="${ctx}/subject/socialSubject/delete?id=" class="btn btn-primary" onclick="return elemDelete('话题信息')"><i class="icon-trash icon-custom"></i>删除</a>
 				<a id="isRecommend" class="btn btn-primary" onclick="isRecommend()">推荐</a>
 				<a id="notRecommend" class="btn btn-primary" onclick="notRecommend()">取消推荐</a>
 				<a id="btuElemSort" href="javacript:void(0);" onclick="elemSort()" class="btn btn-primary">保存顺序</a>
@@ -260,7 +260,14 @@
 					<input type="text" id="elemId" value="${socialSubject.id }" style="display:none"/>
 				</td>
 				<td>
-					${socialSubject.subname}
+					<span title="${socialSubject.subname}">
+						<c:if test="${fn:length(socialSubject.subname) > 50}">  
+					       ${fn:substring(socialSubject.subname, 0, 50)} ......"
+					    </c:if> 
+					    <c:if test="${fn:length(socialSubject.subname) <= 50}">  
+					       ${socialSubject.subname}
+					    </c:if>
+					</span>
 				</td>
 				<td>
 					${socialSubject.villageInfoName}

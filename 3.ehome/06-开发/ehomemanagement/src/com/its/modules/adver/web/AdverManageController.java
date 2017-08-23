@@ -29,12 +29,15 @@ import com.its.common.utils.MyFDFSClientUtils;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.adver.entity.AdverManage;
-import com.its.modules.adver.entity.AdverPosition;
 import com.its.modules.adver.service.AdverManageService;
-import com.its.modules.adver.service.AdverPositionService;
-import com.its.modules.business.entity.BusinessInfo;
 import com.its.modules.business.service.BusinessCategorydictService;
+import com.its.modules.field.dao.FieldInfoDao;
+import com.its.modules.field.entity.FieldInfo;
+import com.its.modules.lesson.dao.LessonInfoDao;
+import com.its.modules.lesson.entity.LessonInfo;
 import com.its.modules.module.service.ModuleManageService;
+import com.its.modules.service.dao.ServiceInfoDao;
+import com.its.modules.service.entity.ServiceInfo;
 
 /**
  * 广告管理-发布管理Controller
@@ -52,6 +55,12 @@ public class AdverManageController extends BaseController {
     private ModuleManageService moduleManageService;
     @Autowired
     private BusinessCategorydictService businessCategorydictService;
+    @Autowired
+    private FieldInfoDao fieldInfoDao;
+    @Autowired
+    private LessonInfoDao lessonInfoDao;
+    @Autowired
+    private ServiceInfoDao serviceInfoDao;
 
     @ModelAttribute
     public AdverManage get(@RequestParam(required = false) String id) {
@@ -146,6 +155,50 @@ public class AdverManageController extends BaseController {
             return "true";
         }
         return "false";
+    }
+    
+
+    /**
+     * 通过商家ID获取场地列表
+     * @param buinessInfoId
+     * @return
+     * @return List<FieldInfo>
+     * @author zhujiao
+     * @date 2017年8月21日 下午4:46:17
+     */
+    @ResponseBody
+    @RequestMapping(value ="getFieldInfoList")
+    public List<FieldInfo> getFieldInfoList(String businessInfoId) {
+        List<FieldInfo> list = fieldInfoDao.getFieldInfoList(businessInfoId);
+        return list;
+    }
+    /**
+     * 通过商家ID获取课程列表
+     * @param buinessInfoId
+     * @return
+     * @return List<FieldInfo>
+     * @author zhujiao
+     * @date 2017年8月21日 下午4:46:17
+     */
+    @ResponseBody
+    @RequestMapping(value ="getLessonInfoList")
+    public  List<LessonInfo> getLessonInfoList(String businessInfoId){
+        List<LessonInfo> list = lessonInfoDao.getLessonInfoList(businessInfoId);
+        return list;
+    }
+    /**
+     * 通过商家ID获取服务列表
+     * @param buinessInfoId
+     * @return
+     * @return List<FieldInfo>
+     * @author zhujiao
+     * @date 2017年8月21日 下午4:46:17
+     */
+    @ResponseBody
+    @RequestMapping(value ="getServiceInfoList")
+    public  List<ServiceInfo> getServiceInfoList(String businessInfoId){
+        List<ServiceInfo> list = serviceInfoDao.getServiceInfoList(businessInfoId);
+        return list;
     }
 
 }

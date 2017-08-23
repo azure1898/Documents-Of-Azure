@@ -86,7 +86,14 @@
     </if>
     <!-- 数据范围过滤 -->
     ${sqlMap.dsf}
-    ORDER BY o.code, a.name
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date desc
+      </otherwise>
+    </choose>
   </select>
 
   <select id="findAllList" resultType="Role">
@@ -112,9 +119,39 @@
       <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
       <if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
     </if>
-    ORDER BY o.code, a.name
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY ${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY a.update_date desc
+      </otherwise>
+    </choose>
   </select>
 
+  <!-- 用户管理：获取【所有角色】下拉框取值 -->
+  <select id="getAllRoleList" resultType="Role">
+    SELECT
+       a.id,
+       a.name
+    FROM sys_role a
+    WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+      AND a.type_flag=1
+    ORDER BY a.create_date desc
+  </select>
+  
+  <!-- 角色管理：关联用户的角色数 -->
+  <select id="countRoleNum" resultType="java.lang.Integer">
+    SELECT 
+		count(role_id)
+    FROM sys_user_role a
+    <where> 
+      <if test="id != null and id != ''">
+        AND a.role_id=#{id}
+      </if>
+     </where>
+  </select>
+  
   <insert id="insert">
     INSERT INTO sys_role(
     id,

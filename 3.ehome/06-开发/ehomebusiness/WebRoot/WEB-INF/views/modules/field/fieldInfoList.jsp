@@ -57,6 +57,7 @@
 		}
 		.closeField{
 			background-color: red;
+			
 		}
 
 	</style>
@@ -71,21 +72,21 @@
 		        return false;
 			}
             var msg="将预约<span style='color:red;'>"+name+"——"+year+hour+"</span>的时段，该时段价格为<span style='color:red;'>"+price+"元/小时</span>。请收到款后，点击“<span style='color:red;'>确定</span>”进行预约。";
-			var html = "<div style='padding-left:12px;'>"+msg+"</div><div style='padding-left:12px;'>顾客姓名：<input maxlength='10' type='text' style='width: 80px;' placeholder=\"请输入姓名\" id='u_name' name='u_name' />" +
-				"&nbsp;&nbsp;&nbsp;&nbsp;价格：<input type='text' style='width: 40px;' id='y_price'  placeholder=\"价格\" value='"+price+"' name='y_price' />元/小时</div>" +
+			var html = "<div style='padding-left:12px;'>"+msg+"</div><div style='padding-left:12px;'>顾客姓名：<input class=\"required\" maxlength='10' type='text' style='width: 80px;' placeholder=\"请输入姓名\" id='u_name' name='u_name' />" +
+				"&nbsp;&nbsp;&nbsp;&nbsp;价格：<input class=\"required\" maxlength=\"9\"  type='text' style='width: 40px;' id='y_price'  placeholder=\"价格\" value='"+price+"' name='y_price' />元/小时</div>" +
 				"<div style='padding-left:12px;'>联系方式：<input type='text'  placeholder=\"请输入联系方式\" id='u_phone' name='u_phone' /></div>";
 			var submit = function (v, h, f) {
                 if (v == false) {
                     top.$.jBox.close();
                     return true;
                 } else {
-
-                    if (f.u_name == '') {
-					top.$.jBox.tip("请输入顾客姓名。", 'error', { focusId: "u_name" }); // 关闭设置 yourname 为焦点
+						
+                    if (f.u_name == '' || f.u_name.indexOf(" ")>-1) {
+					top.$.jBox.tip("请正确输入顾客姓名。", 'error', { focusId: "u_name" }); // 关闭设置 yourname 为焦点
 					return false;
 					}
-					if (f.y_price == '') {
-						top.$.jBox.tip("请输入价格。", 'error', { focusId: "y_price" }); // 关闭设置 yourname 为焦点
+					if (f.y_price == '' || f.y_price.indexOf(" ")>-1 || isNaN(f.y_price)) {
+						top.$.jBox.tip("请正确输入价格。", 'error', { focusId: "y_price" }); // 关闭设置 yourname 为焦点
 						return false;
 					}
 					if (f.u_phone == '') {
@@ -398,6 +399,8 @@
 
 				</td>
 				<td <c:if test="${fieldInfo.state=='1'}">style="background-color:#C5E7F5;" </c:if>>
+				 <c:if test="${fieldInfo.delFlag=='3'}">将在已预约场地消费后自动删除</c:if> 
+				<c:if test="${fieldInfo.delFlag!=3}">
 					<shiro:hasPermission name="field:fieldInfo:edit">
 					
 						<a href="${ctx}/field/fieldInfo/form?id=${fieldInfo.id}<c:if test="${not empty fieldInfo.fieldPartitionPriceList}">&tag=0</c:if>">编辑场地</a>
@@ -423,6 +426,7 @@
 							<a href="${ctx}/field/fieldInfo/delete?id=${fieldInfo.id}" onclick="return confirmx1('确认删除<span style=\'color:red;\'>“${fieldInfo.name}”</span>？场地将在已成功预约的预约场次完成后，从场地预约列表删除。', this.href,'','删除预约')">删除预约</a>
 								<br />
 						</shiro:hasPermission>
+					</c:if>
 					</c:if>
 				</td>
 

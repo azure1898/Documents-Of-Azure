@@ -198,7 +198,7 @@
                    	 ${fns:getDictLabel(businessDeal.orderState, 'order_field_state', "")}
                    </c:if>
                    <c:if test="${businessDeal.prodType == 4 }">
-                   	 ${fns:getDictLabel(businessDeal.orderState, 'order_grouppurc_state', "")}
+                   	 ${fns:getDictLabel(businessDeal.orderState, 'ordergrouppurcstate', "")}
                    </c:if>
                    </td>
                     <td> ${fns:getDictLabel(businessDeal.type, 'order_type', "")}</td>

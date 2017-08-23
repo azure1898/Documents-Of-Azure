@@ -79,6 +79,17 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 
 	/**
+     * 根据用户,获取用户权限
+     * 
+     * @param id
+     * @return 取不到返回null
+     */
+    public List<Role> getUserRole(User user) {
+           
+        return roleDao.findList(new Role(user));
+    }
+    
+	/**
 	 * 根据登录名获取用户
 	 * @param loginName
 	 * @return
@@ -105,6 +116,19 @@ public class SystemService extends BaseService implements InitializingBean {
 		return page;
 	}
 	
+	/**
+	 * 查找当前系统下的用户
+	 * @param page
+	 * @param user
+	 * @return
+	 */
+	public Page<User> findHomeUser(Page<User> page, User user) {
+		// 设置分页参数
+		user.setPage(page);
+		// 执行分页查询
+		page.setList(userDao.findHomeUserList(user));
+		return page;
+	}
 	/**
 	 * 无分页查询人员列表
 	 * @param user
@@ -178,6 +202,10 @@ public class SystemService extends BaseService implements InitializingBean {
 	
 	@Transactional(readOnly = false)
 	public void deleteUser(User user) {
+		if (StringUtils.isNotBlank(user.getId())){
+			// 更新用户与角色关联
+			userDao.deleteUserRole(user);
+		}
 		userDao.delete(user);
 		// 同步到Activiti
 		deleteActivitiUser(user);
@@ -185,6 +213,16 @@ public class SystemService extends BaseService implements InitializingBean {
 		UserUtils.clearCache(user);
 //		// 清除权限缓存
 //		systemRealm.clearAllCachedAuthorizationInfo();
+	}
+	
+	/**
+	 * 依据角色，删除用户角色关联数据
+	 * @param user
+	 * @return
+	 */
+	@Transactional(readOnly = false)
+	public void deleteRoleUser(User user) {
+		userDao.deleteRoleUser(user);
 	}
 	
 	@Transactional(readOnly = false)
@@ -270,6 +308,25 @@ public class SystemService extends BaseService implements InitializingBean {
 	public List<Role> findAllRole(){
 		return UserUtils.getRoleList();
 	}
+	
+	/**
+	 * 用户管理：获取【所有角色】下拉框取值
+	 * @param role
+	 * @return
+	 */
+	public List<Role> getAllRoleList(Role role){
+		return roleDao.getAllRoleList(role);
+	}
+	
+	/**
+	 * 角色管理：关联用户的角色数
+	 * @param role
+	 * @return
+	 */
+	public int countRoleNum(Role role){
+		return roleDao.countRoleNum(role);
+	}
+	
 	/**
 	 * 获取后台的所有角色
 	* @return
@@ -279,6 +336,19 @@ public class SystemService extends BaseService implements InitializingBean {
 	 */
 	public List<Role> findAllListM(Role role){
 	    return UserUtils.findAllListM(role);
+	}
+	
+	/**
+	 * 获取后台的所有角色列表页
+	* @return
+	* @return List<Role>
+	* @author zhujiao
+	 */
+	public Page<Role> findAllRoleList(Page<Role> page,Role role){
+		role.setPage(page);
+		// 执行分页查询
+		page.setList(UserUtils.findAllListM(role));
+	    return page;
 	}
 	
 	@Transactional(readOnly = false)

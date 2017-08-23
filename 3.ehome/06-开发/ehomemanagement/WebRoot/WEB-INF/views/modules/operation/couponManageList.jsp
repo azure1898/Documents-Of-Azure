@@ -172,7 +172,7 @@
 					<td>${couponManage.couponName}</td>
 					<td><c:choose>
 							<c:when test="${couponManage.couponType==0}">
-					           ${couponManage.couponMoney}元券
+					           <fmt:formatNumber type="number">${couponManage.couponMoney}</fmt:formatNumber>元券
 					       </c:when>
 							<c:otherwise>
 					           ${couponManage.couponMoney/10}折券<br />
@@ -191,7 +191,7 @@
 								${fns:getDictLabel(couponManage.grantType, 'grant_type', '')}
 							</c:when>
 							<c:otherwise>
-								${couponManage.limitedNum}&nbsp;张
+								<fmt:formatNumber type="number">${couponManage.limitedNum}</fmt:formatNumber>&nbsp;张
 							</c:otherwise>
 						</c:choose></td>
 					<td>${couponManage.receiveCount}</td>

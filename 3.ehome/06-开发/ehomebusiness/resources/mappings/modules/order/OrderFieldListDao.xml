@@ -10,9 +10,6 @@
 		a.order_field_id AS "orderField.id",
 		a.order_no AS "orderNo",
 		a.name AS "name",
-		a.appointment_time AS "appointmentTime",
-		a.start_time AS "startTime",
-		a.end_time AS "endTime",
 		a.base_price AS "basePrice",
 		a.benefit_price AS "benefitPrice",
 		a.sum_money AS "sumMoney",
@@ -22,8 +19,11 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
-
+		a.del_flag AS "delFlag",
+        str_to_date(a.appointment_time,'%Y-%m-%d %H:%i') AS "appointmentTime",
+        str_to_date(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        str_to_date(a.end_time,'%Y-%m-%d %H:%i') AS "endTime",
+        (a.end_time <![CDATA[ <= ]]> now()) AS "outTimeState"
 
 	</sql>
 
@@ -175,7 +175,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.create_date ASC
+				ORDER BY a.start_time ASC, a.create_date DESC
 			</otherwise>
 		</choose>
 	</select>

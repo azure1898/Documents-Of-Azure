@@ -1,0 +1,541 @@
+/**/var _selJobs = [];
+var getLocalArray = function(ids, dataSet) {
+    var idArray = ids.split(",");
+    return dataSet.map(function(item) {
+        return item[item.id]
+    }).reduce(function(prev, curr) {
+        return prev.concat(curr)
+    }).filter(function(item) {
+        return idArray.indexOf(item.id) > -1
+    }).sort(function(item) {
+        return idArray.indexOf(item.id)
+    })
+};
+var getJobArray = function(ids, dataObj) {
+    var dataArray = [];
+    var idArray = ids.split(",");
+    for (var attr in dataObj) {
+        dataArray = dataArray.concat(dataObj[attr])
+    }
+    return dataArray.filter(
+	function(item) {
+        return idArray.indexOf(item.id.toString()) > -1
+    })
+	.sort(function(item) {
+        return idArray.indexOf(item.id.toString())
+    })
+};
+try {
+    _selJobs = getJobArray(jq("#items").val() || "", datasrc);
+    createList("top", _selJobs, jq(".itemsPopupWin .selectArea ul"), "job")
+}
+catch(err) {
+
+}
+jq(function() {
+
+jq("#chakan").bind("click",
+    function() {
+       jq(".itemsPopupWin .pro_mes").text("最多选择1个类别");
+      isShowProMes("job");
+        if (!jq(".itemsPopupWin .conLeft li").length) {
+            createList("left", sTarget.second, jq(".itemsPopupWin .conLeft ul"), "job");
+            conSwipe.doSwipe({
+                list: jq(".itemsPopupWin .conLeft ul"),
+                parent: jq(".itemsPopupWin .conLeft")
+            });
+            conSwipe.doSwipe({
+                list: jq(".itemsPopupWin .conRight ul"),
+                parent: jq(".itemsPopupWin .conRight")
+            })
+        }
+       jq(".itemsPopupWin").removeClass("hide");
+       ListMove.touch(".itemsPopupWin .selectArea ul");
+    });
+    bindListEven("job"); 
+});
+
+var _disId = 0,_workType = 0;
+var conSwipe = {
+    doSwipe: function(obj) {
+        var jqul = obj["list"];
+        jqul.on("touchstart",
+        function(e) {
+            this.startY = e.targetTouches[0].screenY;
+            this.startTop = this.y || 0;
+            this.startTime = event.timeStamp;
+            this.moved = false;
+            this.scrollerHeight = this.offsetHeight;
+            this.maxScrollY = obj["parent"][0].offsetHeight - this.scrollerHeight + 1;
+            this._height = this._height || jq(this).parent().height() - jq(this).find("li").height() * jq(this).find("li").length + 1;
+            if (this.isInTransition) {
+                var matrix = window.getComputedStyle(this, null);
+                matrix = matrix["webkitTransform"].split(")")[0].split(", ");
+                this.y = matrix[13] || matrix[5];
+                this.y = Math.round(this.y);
+                this.startTop = Math.round(this.y);
+                jq(this).css({
+                    "-webkit-transform": "translate3d(0," + this.y + "px, 0)",
+                    "-webkit-transition-duration": "0"
+                });
+                this.isInTransition = false
+            }
+        });
+        jqul.on("touchmove",
+        function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.moved = true;
+            this.y = e.targetTouches[0].screenY - this.startY + this.startTop;
+            if (this.y > 0 || this.y < this.maxScrollY) {
+                var newY = this.y - (e.targetTouches[0].screenY - this.startY) * 2 / 3;
+                this.y = this.y > 0 ? 0 : this.maxScrollY;
+                if (newY > 0 || newY < this.maxScrollY) {
+                    this.y = newY
+                }
+            }
+            jq(this).css({
+                "-webkit-transform": "translate3d(0," + this.y + "px, 0)",
+                "-webkit-transition-duration": "0"
+            });
+            this.isInTransition = false;
+            var timeStamp = event.timeStamp;
+            if (timeStamp - this.startTime > 300) {
+                this.startTime = timeStamp;
+                this.startY = e.targetTouches[0].screenY;
+                this.startTop = this.y
+            }
+        });
+        jqul.on("touchend",
+        function(e) {
+            var dist = e.changedTouches[0].screenY - this.startY;
+            this.endTime = event.timeStamp;
+            var duration = this.endTime - this.startTime;
+            if (this.moved) {
+                e.preventDefault();
+                e.stopPropagation();
+                var newY = Math.round(e.changedTouches[0].screenY);
+                this.isInTransition = true;
+                if (this.y > 0 || this.y < this.maxScrollY) {
+                    conSwipe.scrollTo(this, this.y, this.maxScrollY, 600);
+                    return
+                }
+                if (duration < 300) {
+                    var move = conSwipe.calculateMoment(this.y, this.startTop, duration, this.maxScrollY, this.wrapH);
+                    this.y = move.destination;
+                    var time = move.duration;
+                    jq(this).css({
+                        "-webkit-transform": "translate3d(0, " + this.y + "px, 0)",
+                        "transition-timing-function": "cubic-bezier(0.1, 0.3, 0.5, 1)",
+                        "-webkit-transition-duration": time + "ms"
+                    })
+                }
+                return
+            }
+        })
+    },
+    scrollTo: function(obj, y, maxY, time) {
+        if (y > 0 || maxY > 0) {
+            y = 0
+        } else if (y < maxY) {
+            y = maxY
+        }
+        obj.isInTransition = true;
+        jq(obj).css({
+            "-webkit-transform": "translate3d(0, " + y + "px, 0)",
+            "transition-timing-function": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+            "-webkit-transition-duration": time + "ms"
+        })
+    },
+    calculateMoment: function(current, start, time, lowerMargin, wrapperSize) {
+        var distance = current - start,
+        speed = Math.abs(distance) / time,
+        destination,
+        duration;
+        deceleration = 6e-4;
+        destination = current + speed * speed / (2 * deceleration) * (distance < 0 ? -1 : 1);
+        duration = speed / deceleration;
+        if (destination < lowerMargin) {
+            destination = wrapperSize ? lowerMargin - wrapperSize / 2.5 * (speed / 8) : lowerMargin;
+            distance = Math.abs(destination - current);
+            duration = distance / speed
+        } else if (destination > 0) {
+            destination = wrapperSize ? wrapperSize / 2.5 * (speed / 8) : 0;
+            distance = Math.abs(current) + destination;
+            duration = distance / speed
+        }
+        return {
+            destination: Math.round(destination),
+            duration: duration
+        }
+    }
+};
+function createList(dataType, data, listLocation, winType, value) {
+    var obj = jq(listLocation);
+    var list = "";
+    var flag = true;
+    var htmlStr = "";
+    var isSelect = false;
+    var value = "";
+    if (dataType == "left") {
+        for (var i = 0,l = data.length; i < l; i++) {
+            value = data[i].id;
+            if (i == 0) {
+                htmlStr += "<li value='" + value + "' class='selected'>" + data[i].name + "</li>"
+            } else {
+                htmlStr += "<li value='" + value + "'>" + data[i].name + "</li>"
+            }
+        }
+    } else if (dataType == "right") {
+        for (var i = 0,l = data.length; i < l; i++) {
+            if (winType === "job") {
+                isSelect = handleArrE(_selJobs, data[i].id, "find");
+            } else {
+                flag = false;
+                isSelect = handleArrE(_selJG, data[i].id, "find")
+            }
+            if (flag) {
+                if (isSelect) {
+                    htmlStr += "<li value='" + data[i].id + "' class ='select'><span class='checkItem'><i class='icon'></i></span><span class='checkTxt'>" + data[i].name + "</span><span>444</span></li>"
+                } else {
+                    htmlStr += "<li value='" + data[i].id + "'><span class='checkItem'><i class='icon'></i></span><span class='checkTxt'>" + data[i].name + "</span><span class='checkPrice'>" + data[i].price + "</span> <span class='checkDesc'>" + data[i].desc + "</span></li>"
+                }
+            } else {
+                if (isSelect) {
+                    htmlStr += "<li value='" + data[i].id + "' class ='select'><span class='checkTxt'>" + data[i].name + "</span><span>222</span></li>"
+                } else {
+                    htmlStr += "<li value='" + data[i].id + "'><span class='checkTxt'>" + data[i].name + "</span><span>333</span></li>"
+                }
+            }
+        }
+    } else {
+        var _selArr = [];
+        if (winType === "job") {
+            _selArr = _selJobs
+        } 
+        htmlStr = "";
+        for (var i = 0,l = _selArr.length; i < l; i++) {
+            htmlStr += "<li value='" + _selArr[i].id + "'><span>" + _selArr[i].name + "<i class='delBtn'></i></span></li>"
+        }
+		
+    }
+    obj.css({
+        "-webkit-transform": "translate3d(0, 0, 0)",
+        "-webkit-transition-duration": "0"
+    });
+    obj.html(htmlStr)
+}
+
+var ListCilick = function(obj, locType, winType, rightData, winClass) {
+    var dataId = "";
+    var dataName = "";
+    var htmlStr = "";
+    var selObj = {
+        id: "",
+        name: "",
+		price:"",
+		desc:""
+		
+    };
+    if (locType === "right_list") {
+        dataId = jq(obj).closest("li").attr("value");
+        dataName = jq(obj).closest("li").find(".checkTxt").text();
+		dataPrice = jq(obj).closest("li").find(".checkPrice").text();
+		dataDesc = jq(obj).closest("li").find(".checkDesc").text();
+		
+        if (jq(obj).closest("li").attr("class") == "select"){
+            jq(obj).closest("li").removeClass("select");
+            jq(winClass + " .selectArea ul").find("[value='" + dataId + "']").remove();
+            if (winType === "job"){
+                handleArrE(_selJobs, dataId, "delete");
+                isShowProMes("job");
+                ListMove.initPos(winClass + " .selectArea ul")
+            } else if (winType === "city") {
+                handleArrE(_selCitys, dataId, "delete");
+                isShowProMes("city");
+                ListMove.initPos(winClass + " .selectArea ul")
+            } else if (winType === "nowHome") {
+                handleArrE(_selNH, dataId, "delete")
+            } else {
+                handleArrE(_selJG, dataId, "delete")
+            }
+        }
+		else{
+            if (winType === "job") {
+                if (_selJobs.length < 1){
+                    jq(obj).closest("li").addClass("select");
+                    htmlStr = "<li value='" + dataId + "'><span>" + dataName+"&nbsp;<em style='color:#999'>"+dataPrice+ "<em><i class='delBtn'></i></span></li>";
+                    jq(winClass + " .selectArea ul").append(htmlStr);
+                    selObj.id = dataId;
+					selObj.name = dataName;
+					selObj.price = dataPrice;
+					selObj.desc = dataDesc;
+                    _selJobs.push(selObj);
+                    isShowProMes("job");
+                    ListMove.initPos(winClass + " .selectArea ul", "end");
+                }
+				else{
+                    showWranMes(winClass + " .popupCon", "最多选择1个类别哦！")
+                }
+            }
+			else{
+                jq(winClass + " .conRight .select").removeClass("select");
+                selObj.id = dataId;
+                selObj.name = dataName;
+				selObj.dataPrice = dataPrice;
+				selObj.dataDesc = dataDesc;
+                _selJG.splice(0, 1, selObj);
+                jq(obj).closest("li").addClass("select")
+            }
+      }
+    }
+	else if (locType === "left_list") {
+        dataId = jq(obj).attr("value");
+        jq(winClass + " .selected").removeClass("selected");
+        jq(obj).addClass("selected");
+        jq(winClass + " .conLeft").addClass("showRight");
+        jq(winClass + " .conRight").removeClass("hide");
+        createList("right", rightData[dataId], jq(winClass + " .conRight ul"), winType)
+    }
+	// right_list  left_list 以外的类型
+	else {
+        dataId = jq(obj).closest("li").attr("value");
+        jq(obj).closest("li").remove();
+        jq(winClass + " .conRight ul").find("[value='" + dataId + "']").removeClass("select");
+        if (winType === "job") {
+            handleArrE(_selJobs, dataId, "delete");
+            isShowProMes("job")
+        } else {
+            handleArrE(_selCitys, dataId, "delete");
+            isShowProMes("city")
+        }
+        ListMove.initPos(winClass + " .selectArea ul")
+    }
+};
+
+function handleArrE(arr, popId, type) {
+    var flag = false;
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id == popId) {
+            if (type == "delete") {
+                arr.splice(i, 1)
+            } else if (type == "find") {
+                flag = true
+            }
+            break
+        }
+    }
+    return flag
+}
+var ListMove = {
+    moveX: 0,
+    touch: function(id) {
+        var obj = jq(id);
+        var startX, x = 0;
+        var moveX = 0;
+        var beforeLeft = obj.offset().left;
+        obj.bind("touchstart",
+        function(event) {
+            var touch = event.targetTouches[0];
+            startX = touch.pageX;
+            var transform = jq(this).css("-webkit-transform");
+            var translateX = parseInt(transform.split(/[(]|[,]|[)]/)[2]);
+            x = translateX || ListMove.moveX
+        });
+        obj.bind("touchmove",
+        function(event) {
+            event.preventDefault();
+            var touch = event.targetTouches[0];
+            ListMove.moveX = touch.pageX - startX + x;
+            obj.css({
+                "-webkit-transition-duration": "0",
+                "-webkit-transform": "translate3d(" + ListMove.moveX + "px,0, 0)"
+            })
+        });
+        obj.bind("touchend",
+        function(event) {
+            ListMove.initPos(obj)
+        })
+    },
+    initPos: function(id, type) {
+        var obj = jq(id);
+        var afterLeft = obj.offset().left;
+        var afterRight = obj.offset().right;
+        var parentW = obj.parent().width();
+        var thisW = obj.width();
+        type = type || null;
+        if (thisW > parentW) {
+            if (afterLeft > 0) {
+                ListMove.moveX = 0
+            } else if (afterRight < parentW || type == "end") {
+                ListMove.moveX = -(thisW - parentW) - 10
+            }
+        } else {
+            ListMove.moveX = 0
+        }
+        obj.css({
+            "-webkit-transition-duration": "300ms",
+            "-webkit-transform": "translate3d(" + ListMove.moveX + "px,0, 0)"
+        })
+    }
+};
+var matchCate = function(cateId) {
+    if (!cateId) {
+        jq("#chrTxt").hide();
+        jq("#chrTxt").attr("isHidden", true);
+        return false
+    }
+    var url = "http://jianli.58.com/chr/ajax/matchcate?callback=?&t=m&cateids=" + cateId;
+    jq.ajax({
+        type: "get",
+        dataType: "jsonp",
+        url: url,
+        success: function(data) {
+            if (data.isSuccess) {
+                jq("#chrTxt").show();
+                jq("#chrTxt").attr("isHidden", false)
+            } else {
+                jq("#chrTxt").hide();
+                jq("#chrTxt").attr("isHidden", true)
+            }
+        }
+    })
+};
+var pushResource = function(rid) {
+    var isHidden = jq("#chrTxt").is(":hidden");
+    if (!isHidden) {
+        var chrSendPush = 0;
+        if (jq("#chrTxt i").hasClass("checked")) {
+            chrSendPush = 1;
+            var url = "http://jianli.58.com/chr/ajax/pushresource?callback=?&rid=" + rid;
+            jq.ajax({
+                type: "get",
+                dataType: "jsonp",
+                url: url,
+                success: function(data) {
+                    var entity = data.entity;
+                    var poptype = 1;
+                    if (entity.bindWx) {
+                        poptype = 1
+                    } else {
+                        poptype = 2
+                    }
+                }
+            })
+        }
+    }
+};
+var bindListEven = function(type) {
+    if (type === "job") {
+        jq(".itemsPopupWin .conLeft ul").bind("click",
+        function(e) {
+            var obj = e.target;
+            ListCilick(obj, "left_list", type, datasrc, ".itemsPopupWin")
+        });
+        jq(".itemsPopupWin .conRight ul").bind("click",
+        function(e) {
+            var obj = e.target;
+            ListCilick(obj, "right_list", type, "", ".itemsPopupWin")
+        });
+        jq(".itemsPopupWin .selectArea ul").bind("click",
+        function(e) {
+            var obj = e.target;
+            ListCilick(obj, "sel_list", type, "", ".itemsPopupWin")
+        });
+        jq("#finJob,.itemsPopupWin .popupBg").bind("click",
+        function() {
+            var name = "";
+			var price = "";
+			var id = "";
+			var repobj={};
+			var desc = "";
+            for (var i = 0,l = _selJobs.length; i < l; i++) {
+                name += _selJobs[i].name + "  ";
+				price = _selJobs[i].price + " ";
+				desc = _selJobs[i].desc + " ";
+            }		
+			jq("#repairPro").addClass("items_input2").removeClass("line");
+			jq(".items_input3,.items_input4").removeClass("hide");
+			jq(".items_input3 span").text(price);
+			jq(".items_input4 span").text(desc);
+            jq(".items_input .fl").val(name).addClass("black");
+			jq("#items").attr("value", getIds(_selJobs));
+            matchCate(jq("#items").attr("value"));
+            jq(".popupWin").addClass("hide");
+			if(!name){
+				jq(".items_input3,.items_input4").addClass("hide");
+				jq("#repairPro").removeClass("items_input2").addClass("line");
+			}
+        })
+    } 
+};
+function isShowProMes(type) {
+    if (type == "job") {
+        if (_selJobs.length == 0) {
+            jq(".itemsPopupWin .pro_mes").removeClass("hide")
+        } else {
+            jq(".itemsPopupWin .pro_mes").addClass("hide")
+        }
+    } else {
+        if (_selCitys.length == 0) {
+            jq(".cityPopupWin .pro_mes").removeClass("hide")
+        } else {
+            jq(".cityPopupWin .pro_mes").addClass("hide")
+        }
+    }
+}
+function showWranMes(obj, mes) {
+    var jqthis = jq(obj);
+    var htmlStr = "";
+    if (jqthis.find(".wran_mes")[0]) {
+        jq(obj + " .wran_mes").removeClass("hide")
+    } else {
+        htmlStr = "<div class='wran_mes'>" + mes + "</div>";
+        jqthis.append(htmlStr)
+    }
+    setTimeout(function() {
+        jqthis.find(obj + " .wran_mes").addClass("fade");
+        setTimeout(function() {
+            jqthis.find(obj + " .wran_mes").addClass("hide").removeClass("fade")
+        },
+        500)
+    },
+    500)
+}
+function getIds(arr) {
+    var ids = "";
+    for (var i = 0,l = arr.length; i < l; i++) {
+        if (l === 1 || i === arr.length - 1) {
+            ids += arr[i].id
+        } else {
+            ids += arr[i].id + ","
+        }
+    }
+    return ids
+}
+function isEmail(str) {
+    var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    return reg.test(str)
+}
+if (!location.href.match("m_updateresumeinfo")) {
+    window.onbeforeunload = function checkLeave(e) {
+        var evt = e ? e: window.event ? window.event: null;
+        if (!jq(".itemsPopupWin").hasClass("hide") || !jq(".cityPopupWin").hasClass("hide")) {
+            evt.returnValue = "选好了？请点右上角「完成」"
+        }
+    };
+    window.addEventListener("pagehide",
+    function() {
+        var evt = e ? e: window.event ? window.event: null;
+        if (!jq(".itemsPopupWin").hasClass("hide") || !jq(".cityPopupWin").hasClass("hide")) {
+            evt.returnValue = "选好了？请点右上角「完成」"
+        }
+    },
+    false);
+    document.pagehide = function checkLeave(e) {
+        var evt = e ? e: window.event ? window.event: null;
+        if (!jq(".itemsPopupWin").hasClass("hide") || !jq(".cityPopupWin").hasClass("hide")) {
+            evt.returnValue = "选好了？请点右上角「完成」"
+        }
+    }
+}

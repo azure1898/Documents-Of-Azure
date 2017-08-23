@@ -32,6 +32,11 @@
 			.ordertime ul li.active {
 				padding: 10px 23px;
 			}
+			.ts_txt{
+				position:fixed;
+				bottom:45px;
+				width:100%;
+			}
 		</style>
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -83,7 +88,9 @@
 					</ul>
 				</div>
 				<div class="business_goods_box">
-					<div class="businessmenu_choice2">选择可预约时段<span class="font14">（可预约{{num}}小时）</span></div>
+					<div class="businessmenu_choice2" v-if="siteReservation.length>0">选择可预约时段<span class="font14">（可预约  {{num}}小时）</span></div>
+					<div class="businessmenu_choice2" v-else>暂无数据</div>
+					
 					<div class="plr10">
 						<div class="ordertime">
 							<ul>
@@ -95,10 +102,20 @@
 				</div>
 			</div>
 			<div class="ts_txt">注：只能预约连续时段</div>
-			<div class="height44"></div>
+		
 			<div class="business_bottom">
-				<div id="appointment" v-bind:class="place.isNormal? 'ser_zbtn':'ser_zbtn2'" v-if="place.isNormal==1"><a v-bind:href="submitUrl==''? '###':urlList.siteorder + submitUrl + '&businessID='+place.businessID" v-on:click="Submit(siteReservation)">立即预约</a></div>
-			<div class="ser_zbtn2" v-else><a href="#">立即预约</a></div>
+				<div class="ser_zbtn" id="appointment">
+					<a v-bind:href="isOK?urlList.siteorder + submitUrl + '&businessID='+place.businessID:'#'" v-on:click="Submit(siteReservation)"></a>
+				</div>
+				
+				
+				<!--<div id="appointment" v-bind:class="place.isNormal? 'ser_zbtn':'ser_zbtn2'" v-if="place.isNormal==1 && siteReservation.length > 0"><a v-bind:href="isOK? '###':urlList.siteorder + submitUrl + '&businessID='+place.businessID" v-on:click="Submit(siteReservation)">立即预约</a></div>
+			<div class="ser_zbtn2" v-else><a href="#">立即预约</a></div>-->
+			
+			<!--<div class="ser_zbtn" id="change_site" @click="change_Status()">
+					<a v-bind:href="submitUrl==''? urlList.siteorder + submitUrl + '&businessID='+place.businessID:'#'"></a>
+				</div>
+			-->
 			</div>
 		</div>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

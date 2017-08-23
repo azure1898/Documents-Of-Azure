@@ -9,11 +9,13 @@ var vm = new Vue({
 		praiseIcon2:"../../images/zan_02.png",
 		praiseInformation:"",
 		urlList: {
+			speechdetail: "../main/speechdetails.html?id=",
 			commentdetail: "../main/commentdetails.html?id=",
 			comments:"../main/comment.html?id=",
 			forward:"../main/forward.html?id=",
 			myspeech:"myspeech.html?id=",
-			mypraise:"mypraise.html?id="
+			mypraise:"mypraise.html?id=",
+			personalpage:"../main/personalpage.html?id="
 		}
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
@@ -25,17 +27,17 @@ var vm = new Vue({
 		// 渲染页面
 		cartView:function(){
 			var _this = this;
-			//interfaceUrl + "/speak/speakDetail" 
+			//interfaceUrl + "/speak/speakDetail" 调话题详情
 			this.$http.post(interfaceUrl + "/speak/speakDetail",{
-				userID:1,
-				speakId:1,
+				userID:userInfo.userID,
+				speakId:getQueryString("id"),   // getQueryString("id") 来自上一个页面的话题id
 			},{emulateJSON: true}).then(function(res){
 				_this.customer = res.data;
 			});
-			//interfaceUrl + "/comment/commentList" 
+			//interfaceUrl + "/comment/commentList" 调评论
 			this.$http.post(interfaceUrl + "/comment/commentList",{
 				userID:userInfo.userID,
-				speakId:userInfo.speakId,
+				speakId:getQueryString("id"),     // getQueryString("id") 来自上一个页面的话题id
 				pageIndex:0
 				
 			},{emulateJSON: true}).then(function(res){
@@ -56,7 +58,7 @@ var vm = new Vue({
 			 $("#forwarding").show();
 			//interfaceUrl + "/speak/forwardList" 
    	         this.$http.post(interfaceUrl + "/speak/forwardList",{
-				speakId:userInfo.speakId,
+				speakId:getQueryString("id"), // getQueryString("id") 来自上一个页面的话题id
 				pageIndex:0
 				
    	         },{emulateJSON: true}).then(function(res){
@@ -73,8 +75,8 @@ var vm = new Vue({
 			 $("#forwarding").hide();
 			//interfaceUrl + "/comment/commentList" 
 			this.$http.post(interfaceUrl + "/comment/commentList",{
-				userID:'25fd4706224a4b5a987544f7e1c03c02',
-				speakId:userInfo.speakId,
+				userId:userInfo.userID,
+				speakId:getQueryString("id"),  // getQueryString("id") 来自上一个页面的话题id
 				pageIndex:0
 				
 			},{emulateJSON: true}).then(function(res){
@@ -91,7 +93,7 @@ var vm = new Vue({
 			 $("#forwarding").hide();
 			//interfaceUrl + "/praise/praiseList" 
 			 this.$http.post(interfaceUrl + "/praise/praiseList",{
-				speakId:userInfo.speakId,
+				speakId:getQueryString("id"), // getQueryString("id") 来自上一个页面的话题id
 				pageIndex:0
 				
 			 },{emulateJSON: true}).then(function(res){
@@ -111,7 +113,7 @@ var vm = new Vue({
 					 	pid:comment.id,
 					 	type:type,
 					 	userId:userInfo.userID,
-					 	toUserId:123,//这个接口那缺少
+					 	toUserId:comment.userId,  //这个接口那缺少
 					 	state:0
 					 },{emulateJSON: true}).then(function(res){
 							_this.praiseInformation = res.data.data;		
@@ -124,7 +126,7 @@ var vm = new Vue({
 					 	pid:comment.id,
 					 	type:type,
 					 	userId:userInfo.userID,
-					 	toUserId:123,
+					 	toUserId:comment.userId,
 					 	state:1
 					 },{emulateJSON: true}).then(function(res){
 							_this.praiseInformation = res.data.data;		
@@ -138,7 +140,7 @@ var vm = new Vue({
 					 	pid:comment.cmtId,
 					 	type:type,
 					 	userId:userInfo.userID,
-					 	toUserId:123,//这个接口那缺少
+					 	toUserId:comment.userId,
 					 	state:0
 					 },{emulateJSON: true}).then(function(res){
 							_this.praiseInformation = res.data.data;		
@@ -150,7 +152,7 @@ var vm = new Vue({
 					 	pid:comment.cmtId,
 					 	type:type,
 					 	userId:userInfo.userID,
-					 	toUserId:123,//这个接口那缺少
+					 	toUserId:comment.userId,
 					 	state:1
 					 },{emulateJSON: true}).then(function(res){
 							_this.praiseInformation = res.data.data;		
@@ -192,20 +194,25 @@ var vm = new Vue({
 	  	
 	  },
 	  //屏蔽他的发言
-	  shield:function(){
+	  shield:function(obj){
+		var _this = this;
 	  	layer.open({
 		    content: '您确定要屏蔽TA发言吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(index){
-//		    	this.$http.post(interfaceUrl + "/speak/speakDetail",{
-//					userID:1,
-//					speakId:1,
-//				},{emulateJSON: true}).then(function(res){
-//					_this.customer = res.data;
-//				});
-//		    	
-		      layer.close(index);
-		      vm.closePopups();
+			_this.$http.post(interfaceUrl + "/message/black",{
+				userId:userInfo.userID,
+				subUserId:obj.userId      //_this.indexdata[_this.speechIndex].speakUserId
+			},{emulateJSON: true}).then(function(res){
+				if(res.data.code==1000){
+					layer.close(index);
+		     		 vm.closePopups();
+				}
+					
+			});
+		    	
+//		      layer.close(index);
+//		      vm.closePopups();
 		    },
 		    no: function(index){
 				layer.close(index);
@@ -213,6 +220,8 @@ var vm = new Vue({
 				}    
 		  });
 	  },
+	  
+	  
 	  reply:function(obj){//对评论 评论
 			var _this=this;
 			window.location.href=_this.urlList.comments+obj.cmtId+"&name="+escape( obj.userName);

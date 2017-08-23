@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.its.common.utils.AlipayUtils;
 import com.its.common.utils.DateUtils;
 import com.its.common.utils.HttpUtils;
 import com.its.common.utils.NumberUtil;
@@ -106,9 +107,7 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
     public OrderField get(String id) {
         OrderField orderField = super.get(id);
         List<OrderFieldList> orderFieldList = orderFieldListDao.findList(new OrderFieldList(orderField));
-        if (orderFieldList != null && orderFieldList.size() > 0) {
-            orderField.setOrderFieldList(orderFieldList.get(0));
-        }
+        orderField.setOrderFieldList(orderFieldList);
         return orderField;
     }
 
@@ -119,6 +118,10 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
      * @return
      */
     public List<OrderField> findList(OrderField orderField) {
+        List<OrderField> result = super.findList(orderField);
+        for (OrderField orderField_temp : result) {
+            orderField_temp.setOrderFieldList(orderFieldListDao.findList(new OrderFieldList(orderField_temp)));
+        }
         return super.findList(orderField);
     }
 
@@ -132,6 +135,10 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
      */
     public Page<OrderField> findPage(Page<OrderField> page, OrderField orderField) {
         page.setOrderBy("a.create_date desc,a.order_no desc");
+        Page<OrderField> result = super.findPage(page, orderField);
+        for (OrderField orderField_temp : result.getList()) {
+            orderField_temp.setOrderFieldList(orderFieldListDao.findList(new OrderFieldList(orderField_temp)));
+        }
         return super.findPage(page, orderField);
     }
 
@@ -199,7 +206,11 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
         orderTrack.setHandleMsg("场地预约成功（商家后台预约）");
         orderTrack.setStateMsgPhone("预约成功");
         orderTrack.setHandleMsgPhone("付款成功，等待消费");
-        orderTrack.setCreateName("商家账号");
+        // 从SESSION中取得商家信息
+        User user = UserUtils.getUser();
+        if (StringUtils.isNotBlank(user.getId())){
+            orderTrack.setCreateName(user.getId());
+        }
         orderTrackService.save(orderTrack);
     }
 
@@ -293,6 +304,26 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
                 return 0;
             }
 
+         // 添加订单跟踪信息
+            // 跟踪表要插入信息
+            OrderTrack orderTrack = new OrderTrack();
+            orderTrack.setOrderNo(orderField.getOrderNo());
+            orderTrack.setBusinessInfoId(orderField.getBusinessInfoId());
+            orderTrack.setOrderId(orderField.getId());
+            orderTrack.setOrderType(orderField.getProdType());
+            orderTrack.setStateMsg("已取消");
+            orderTrack.setHandleMsg("商家取消预订（自动退款）");
+            orderTrack.setStateMsgPhone("已取消");
+            orderTrack.setHandleMsgPhone("订单已成功取消");
+            // 从SESSION中取得商家信息
+            User user = UserUtils.getUser();
+            if (StringUtils.isNotBlank(user.getId())){
+                orderTrack.setCreateName(user.getId());
+            }
+            orderTrack.setRemarks(orderFieldFromJSP.getCancelRemarks());
+            // 保存
+            orderTrackService.save(orderTrack);
+            
             for (OrderFieldList orderFieldListTemp : orderFieldLists) {
                 // 场地预约子表-场地分段信息状态更新
                 // 取得场地分段信息并添加行级锁
@@ -313,44 +344,59 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
 
             // 如果订单支付状态为1：已支付且是用户在线支付的话，执行退款处理
             if ("0".equals(orderField.getPayType()) && "1".equals(orderField.getPayState())) {
-                // 如果是支付宝的话，生成退款信息，交由总后台进行退款
+                
+                // 如果是支付宝的话
                 if ("1".equals(orderField.getPayOrg())) {
-                    // 订单状态更新（订单状态变更为：已取消，支付状态变为：退款中）
-                    // 订单状态变更为：已取消
-                    orderField.setOrderState("2");
-                    // 支付状态变为：退款中
-                    orderField.setPayState("2");
+                    // 更新订单表
                     orderField.preUpdate();
+                    // 将该订单的支付状态改为2：退款中
+                    orderField.setPayState("2");
+                    super.save(orderField);
 
-                    // 执行更新处理，并返回影响条数
-                    result = this.dao.update(orderField);
+                    // 执行支付宝退款
+                    JSONObject refundResult = AlipayUtils.alipayRefundRequest(orderField.getOrderNo(),
+                            String.valueOf(orderField.getPayMoney()), orderFieldFromJSP.getCancelRemarks());
+                    if (refundResult != null && "10000".equals(refundResult.get("code"))) {
+                        // 更新订单表
+                        orderField.preUpdate();
+                        // 将该订单的支付状态改为3：已退款
+                        orderField.setPayState("3");
+                        super.save(orderField);
+                        OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
+                        orderRefundInfo.setOrderId(orderField.getId());
+                        orderRefundInfo.setOrderNo(orderField.getOrderNo());
+                        // 支付宝交易号
+                        orderRefundInfo.setTransactionId(orderField.getTransactionID());
+                        // 因为是商品订单发生退款，所以固定为3：场地预约
+                        orderRefundInfo.setOrderType("3");
+                        orderRefundInfo.setPayType(orderField.getPayType());
+                        orderRefundInfo.setOrderMoney(orderField.getPayMoney());
+                        // 终端类型固定为商家后台
+                        orderRefundInfo.setType("2");
+                        orderRefundInfo.setModuleManageId(orderField.getModuleManageId());
+                        // 产品模式固定为3：场地预约
+                        orderRefundInfo.setProdType("3");
+                        orderRefundInfo.setRefundMoney(orderField.getPayMoney());
 
-                    // 若影响条数不是1
-                    if (1 != result) {
-                        // 手动回滚，并终止操作
+                        orderRefundInfo.setRefundNo(orderField.getOrderNo());
+                        // 微信退款单号
+                        orderRefundInfo.setRefundTransactionId(refundResult.get("out_trade_no").toString());
+                        orderRefundInfo.setRefundType(orderField.getPayOrg());
+
+                        // 退款状态：退款成功
+                        orderRefundInfo.setRefundState("2");
+
+                        // 退款完成时间
+                        orderRefundInfo.setRefundOverTime(new Date());
+
+                        // 退款原因
+                        orderRefundInfo.setRefundReason(orderField.getCancelRemarks());
+
+                        orderRefundInfoService.save(orderRefundInfo);
+                    } else {
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                        return 0;
+                        return result;
                     }
-
-                    OrderRefundInfo orderRefundInfo = new OrderRefundInfo();
-                    orderRefundInfo.setOrderId(orderField.getId());
-                    orderRefundInfo.setOrderNo(orderField.getOrderNo());
-                    // 支付宝交易号
-                    orderRefundInfo.setTransactionId(orderField.getTransactionID());
-                    // 因为是商品订单发生退款，所以固定为3：场地类
-                    orderRefundInfo.setOrderType("3");
-                    orderRefundInfo.setPayType(orderField.getPayType());
-                    orderRefundInfo.setOrderMoney(orderField.getPayMoney());
-                    // 终端类型固定为商家后台
-                    orderRefundInfo.setType("2");
-                    orderRefundInfo.setModuleManageId(orderField.getModuleManageId());
-                    // 产品模式固定为3:场地预约
-                    orderRefundInfo.setProdType("3");
-                    orderRefundInfo.setRefundMoney(orderField.getPayMoney());
-                    orderRefundInfo.setRefundType(orderField.getPayOrg());
-                    // 退款状态：待退款
-                    orderRefundInfo.setRefundState("0");
-                    orderRefundInfoService.save(orderRefundInfo);
                     // 如果是微信的话，直接调用接口进行退款
                 } else if ("0".equals(orderField.getPayOrg())) {
                     // 以订单号为退款号
@@ -417,9 +463,12 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
                     }
                     // 如果是用户钱包支付的话
                 } else if ("2".equals(orderField.getPayOrg())) {
+                    logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "退款开始");
                     // 取得用户信息,并施加行级锁
                     Account userInfo = accountDao.getForUpdate(orderField.getAccountId());
                     if (userInfo == null) {
+                        logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "，取得不到用户信息");
+                        logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "退款异常结束");
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     }
                     // 根据订单ID取得支付明细（即本金支付多少，赠送金额支付多少）
@@ -438,6 +487,8 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
                     result = accountDao.update(userInfo);
                     // 若更新失败则回滚事务
                     if (result == 0) {
+                        logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "，钱包余额修改失败");
+                        logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "退款异常结束");
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                         return result;
                     }
@@ -463,7 +514,20 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
                     walletDetail.setPayType("0");
                     // 执行插入操作
                     walletDetailDao.insert(walletDetail);
+                    logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "，退款金额如下：");
+                    logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "，钱包本金：" + payInfo.getWalletPrincipal());
+                    logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "，钱包赠送金额：" + payInfo.getWalletPresent());
+                    logger.warn("用户钱包退款------------>订单号：" + orderField.getOrderNo() + "退款正常结束");
                 }
+                orderTrack = new OrderTrack();
+                orderTrack.setOrderNo(orderField.getOrderNo());
+                orderTrack.setBusinessInfoId(orderField.getBusinessInfoId());
+                orderTrack.setOrderId(orderField.getId());
+                orderTrack.setOrderType(orderField.getProdType());
+                orderTrack.setStateMsgPhone("已退款");
+                orderTrack.setHandleMsgPhone("自动退款");
+                orderTrack.setCreateName("系统");
+                orderTrackService.save(orderTrack);
             } else {
                 // 订单状态更新（订单状态变更为：已取消，支付状态变为：退款中）
                 // 订单状态变更为：已取消
@@ -485,33 +549,6 @@ public class OrderFieldService extends CrudService<OrderFieldDao, OrderField> {
                 }
             }
 
-            // 添加订单跟踪信息
-            // 跟踪表要插入信息
-            OrderTrack orderTrack = new OrderTrack();
-            orderTrack.setOrderNo(orderField.getOrderNo());
-            orderTrack.setBusinessInfoId(orderField.getBusinessInfoId());
-            orderTrack.setOrderId(orderField.getId());
-            orderTrack.setOrderType(orderField.getProdType());
-            orderTrack.setStateMsg("已取消");
-            orderTrack.setHandleMsg("商家取消预订（自动退款）");
-            orderTrack.setStateMsgPhone("已取消");
-            orderTrack.setHandleMsgPhone("订单已成功取消");
-            orderTrack.setCreateName("商家账号");
-            orderTrack.setRemarks(orderFieldFromJSP.getCancelRemarks());
-            orderTrackService.save(orderTrack);
-
-            orderTrack = new OrderTrack();
-            orderTrack.setOrderNo(orderField.getOrderNo());
-            orderTrack.setBusinessInfoId(orderField.getBusinessInfoId());
-            orderTrack.setOrderId(orderField.getId());
-            orderTrack.setOrderType(orderField.getProdType());
-            orderTrack.setStateMsgPhone("退款中");
-            orderTrack.setHandleMsgPhone("订单开始退款，等待退款");
-            orderTrack.setCreateName("商家账号");
-            orderTrackService.save(orderTrack);
-            
-            // 从SESSION中取得商家信息
-            User user = UserUtils.getUser();
             // 向用户推送订单取消信息
             Map<String, String> paramMap = new HashMap<String, String>();
             paramMap.put("businessId", user.getBusinessinfoId());

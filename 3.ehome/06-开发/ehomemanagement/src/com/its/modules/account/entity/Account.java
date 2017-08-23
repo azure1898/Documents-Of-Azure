@@ -10,6 +10,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.its.common.persistence.DataEntity;
+import com.its.common.utils.excel.annotation.ExcelField;
 
 /**
  * 用户注册Entity
@@ -69,6 +70,7 @@ public class Account extends DataEntity<Account> {
 	}
 	
 	@Length(min=0, max=11, message="账号/手机号长度必须介于 0 和 11 之间")
+	@ExcelField(title = "手机号", type = 1, align = 2, sort = 1)
 	public String getPhoneNum() {
 		return phoneNum;
 	}
@@ -159,6 +161,7 @@ public class Account extends DataEntity<Account> {
 	}
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@ExcelField(title = "注册时间", type = 1, align = 2, sort = 2)
 	public Date getRegistDate() {
 		return registDate;
 	}

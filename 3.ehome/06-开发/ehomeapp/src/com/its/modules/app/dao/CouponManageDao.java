@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.its.common.persistence.CrudDao;
 import com.its.common.persistence.annotation.MyBatisDao;
-
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.entity.CouponManage;
 
@@ -43,13 +42,15 @@ public interface CouponManageDao extends CrudDao<CouponManage> {
 	public List<CouponManageBean> getInvalidCoupons(@Param("villageInfoId") String villageInfoId, @Param("accountId") String accountId);
 
 	/**
-	 * 获取某楼盘下买家可领取的优惠券
+	 * 获取某楼盘下某种领取方式的优惠券
 	 * 
+	 * @param receiveType
+	 *            领取方式：0买家领取 1下单赠送 2平台推送
 	 * @param villageInfoId
 	 *            楼盘ID
 	 * @return List<CouponManage>
 	 */
-	public List<CouponManage> getCanReceiveCoupons(String villageInfoId);
+	public List<CouponManage> getCouponsOfReceiveType(@Param("receiveType") String receiveType, @Param("villageInfoId") String villageInfoId);
 
 	/**
 	 * 根据优惠券ID修改优惠券领取总量

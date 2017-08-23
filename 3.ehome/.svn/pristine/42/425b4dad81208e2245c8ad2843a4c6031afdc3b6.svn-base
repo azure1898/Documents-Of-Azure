@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>评论详情</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    	.hfpl_input{
+    		padding: 6px;
+    	}
+    </style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="grey_top">
+				<a href="#" class="black_back" onclick="javascript :history.go(-1)"></a>
+				评论详情
+			</div>
+			<div class="main_box">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img">
+							<img v-bind:src="commentDetail.headPicSrc" width="110" height="110">
+						</div>
+						<div class="fyxq_main_l_title">
+							<a :href="urlList.personalpage + commentDetail.userId"><p>{{commentDetail.userName}}</p></a>
+							<p><span>{{commentDetail.createTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r">
+						<table width="30" border="0">
+							<tr>
+								<td width="15">
+									<a href="#" v-on:click="praiseOne(commentDetail,2)">
+										<img v-if="commentDetail.isPraise==1" src="../../images/zan_02.png" width="14" height="13">
+										<img v-else src="../../images/zan_01.png" width="14" height="13">
+									</a>
+								</td>
+								<td width="15" v-bind:class="{ftcred:commentDetail.isPraise==1}" style="padding-top:5px;">{{commentDetail.countPraise}}</td>
+							</tr>
+						</table>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2_2" style="border-bottom:none;">
+					<p class="ftc5050">{{commentDetail.content}}</p>
+				</div>
+				<div class="fyxq_main2_2" style="border-bottom:none;">
+					<p class="ftcred">
+						<!--<a href="speechdetails.html">查看原发言</a>-->
+						<a  onclick="javascript :history.go(-1)">查看原发言</a>
+					</p>
+				</div>
+			</div>
+			<div class="mt10">
+				<div class="main_box" style="border-bottom:none;" v-for="(item, index) in commentList">
+					<div class="fyxq_main">
+						<div class="fyxq_main_l">
+							<div class="fyxq_main_l_img"><img v-bind:src="item.headPicSrc" width="110" height="110"></div>
+							<div class="fyxq_main_l_title">
+								<a :href="urlList.personalpage + item.userId"></a><p>{{item.userName}}</p>
+								<p><span>{{item.createTime}}</span></p>
+							</div>
+						</div>
+						<div class="fyxq_main_r">
+							<table width="30" border="0">
+								<tr>
+									<td width="15">
+										<a v-on:click="praiseOne(item,2)">
+											<img v-if="item.isPraise===1" src="../../images/zan_02.png" width="14" height="13">
+											<img v-else src="../../images/zan_01.png" width="14" height="13">
+										</a>
+									</td>
+									<td width="15" style="padding-top:5px;">
+										<font v-bind:class="{ftcred:item.isPraise===1}">{{item.countPraise}}</font>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="fyxq_main2_2">
+						<p class="ftc5050">{{item.content}}</p>
+					</div>
+				</div>
+			</div>
+			<div class="business_bottom">
+				<div name="" type="text" class="hfpl_input" value="" placeholder="回复评论" style="width:93%;" @click="reply(commentDetail)">回复  @{{commentDetail.userName}}</div>
+			</div>
+		</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/reviewdetail.js"></script>
+	</body>
+</html>

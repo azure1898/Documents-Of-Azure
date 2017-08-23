@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>我的发言</title>
+
+		<!-- Bootstrap -->
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/main.css" rel="stylesheet">
+		<link href="../../css/common.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+    	a:link {
+				text-decoration: none;
+				color: #505050;
+			}
+			a:visited {
+				text-decoration: none;
+				color: #505050;
+			}
+			a:hover {
+				text-decoration: none;
+				color: #505050;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.collection_btn{
+			display: inline-block;
+		    width: 50px;
+		    height: 24px;
+		    /*background: #C0C0C0;*/
+		    border: 1px solid #df2d1f;
+		    border-radius: 4px;
+		    text-align: center;
+		    line-height: 24px;
+		    color: #df2d1f;
+			}
+    	.bottom_icon6 {
+	    background: url(../../images/bot_icon3.png) left center no-repeat;
+	    padding-left: 25px;
+	    }
+	    .fyxq_main3 ul li:nth-child(3n+1){
+				margin-left: 3%;
+			}
+    </style>
+	</head>
+
+	<body>
+		<div id="app" v-cloak>
+			<!--弹窗层-->
+			<div id="bg" @click="closePopups()" style="background-color:#000;opacity: 0.5;filter:alpha(opacity=50); width:100%; height:100%; position:absolute; z-index:888; display:none;"></div>
+			<div id="type" style="position:fixed; bottom:0; left:0; z-index:999; width:100%; display:none;">
+				<div class="sort_xiala">
+					<ul>
+						<li @click="cancelAttention(obj)">取消关注</li>
+						<li @click="shield(obj)">屏蔽他的发言</li>
+						<!--<li @click="deleteStatement(obj)">
+							<font class="index_redft">删除</font>
+						</li>-->
+						<li style="height:10px; background:#dddddd">&nbsp;</li>
+						<li @click="closePopups()">取消</li>
+					</ul>
+				</div>
+			</div>
+			
+			
+			<div class="grey_top">
+				<a href="#" class="black_back" onclick="javascript :history.go(-1);"></a>
+				@我的发言
+			</div>
+			<div class="main_box mb10" v-for="(item,index) in speechLists">
+				<div class="fyxq_main">
+					<div class="fyxq_main_l">
+						<div class="fyxq_main_l_img"><a :href="urlList.personalpage + item.userId"><img :src="item.userHeadUrl" width="110" height="110"></a></div>
+						<div class="fyxq_main_l_title">
+							<a :href="urlList.personalpage + item.userId"><p>{{item.userName}}</p></a>
+							<p><span>{{item.creatTime}}</span></p>
+						</div>
+					</div>
+					<div class="fyxq_main_r" v-if="item.isFocus==1" ><img src="../../images/xl_icon.png" width="12" height="7" @click="selective(item,index)"></div>
+					<div class="fyxq_main_r" v-else ><span class="collection_btn" @click="attention(item)">+关注</span>&nbsp;&nbsp;<span @click="shield(item)">X</span></div>
+					
+					<div class="clear"></div>
+				</div>
+				<div class="fyxq_main2">
+					<p class="ftc5050">
+						<!--<font class="ftcred" v-for="(subject,index) in item.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>-->
+						<a :href="urlList.speechdetail + item.id"><span v-html="item.content"></span></a>
+						<!--<font class="ftcred">@优米的米</font>-->
+					</p>
+				</div>
+				<div class="fyxq_main3" v-if="item.imgUrls.length>0">
+					<ul>
+						<li v-for="(pic,index) in item.imgUrls">
+							<a :href="urlList.speechdetail + item.id"><img :src="pic.url" width="110" height="110"></a>
+						</li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<!--原发言-->
+				<div v-if="item.isSpeak==0">
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;" v-if="item.rootSpeak.delFlag==0">
+						<div class="fyxq_main_l2_img">
+							<img :src="item.rootSpeak.images" width="110" height="110">
+						</div>
+						<div class="fyxq_main_l_title2">
+							<p v-if="item.rootSpeak.noticeId!=''">{{item.rootSpeak.title}}</p>
+							<p v-else><a :href="urlList.personalpage + item.rootSpeak.userId" class="ftcred">@{{item.rootSpeak.userName}}</a></p>
+							<a :href="urlList.speechdetail + item.rootSpeak.speakId">
+								<p class="twoLine" v-html="item.rootSpeak.content"></p>
+							</a>
+						</div>
+					</div>
+					<div class="fyxq_main_l2 mt10" style="margin-bottom:10px; height:80px; text-align:center; line-height:80px;" v-else>
+						原发言已被删除
+					</div>
+				</div>
+				
+
+				<div class="clear"></div>
+				<div class="personal_main_bottom">
+					<ul>
+						<li>
+							<a :href="urlList.forward + item.id" class="bottom_icon1">{{item.countForward}}</a>
+						</li>
+						<li>
+							<a :href="item.countComment>0 ? urlList.speechdetail + item.id : urlList.comments + item.item" class="bottom_icon2">{{item.countComment}}</a>
+						</li>
+						<li style="border-right:none;">
+							<a href="###" :class="item.isPraise==1?'bottom_icon6':'bottom_icon3'" @click="praiseOne(item,1)">{{item.countPraise}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="../../js/common/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="../../js/common/bootstrap.min.js"></script>
+		<script src="../../js/common/vue.js"></script>
+		<script src="../../js/common/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/custom/myspeech.js"></script>
+	</body>
+
+</html>

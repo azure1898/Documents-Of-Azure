@@ -46,4 +46,13 @@ public interface ServiceInfoDao extends CrudDao<ServiceInfo> {
 	 * @return 操作的行数
 	 */
 	public int updateSellCount(@Param("count") int count, @Param("serviceInfoId") String serviceInfoId);
+	
+	/**
+	 * 根据服务ID获取商家服务项目
+	 * @param id
+	 * 			服务id
+	 * @return serviceInfo
+	 * 			服务信息
+	 */
+	public ServiceInfo getValidateById(@Param("id")String id);
 }

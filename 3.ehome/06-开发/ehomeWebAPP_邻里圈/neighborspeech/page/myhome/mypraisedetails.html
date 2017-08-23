@@ -19,9 +19,9 @@
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
-    	a:link{text-decoration: none;}
-			a:visited{text-decoration: none;}
-			a:hover{text-decoration: none;}
+    		a:link{text-decoration: none;color: #808080;}
+			a:visited{text-decoration: none;color: #808080;}
+			a:hover{text-decoration: none;color: #808080;}
 			[v-cloak] {
 				  display: none;
 				}
@@ -64,12 +64,15 @@
 				</div>
 				<div class="fyxq_main2" v-if="item.isComment===1">
 					<p class="ftc5050">
-						<font class="ftcred">@{{item.comment.userName}}</font>：
+						<a :href="urlList.personalpage + item.speak.userId"><font class="ftcred">@{{item.comment.userName}}</font></a>
 						<font class="ftcred" v-for="(subject,index) in item.comment.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
 						{{item.comment.content}}
 					</p>
+						<!--<a v-bind:src="item.comment.imgUrls[0].url" v-if="item.comment.imgUrls.length>0">查看原图</a>-->
+						<!--*******************************************************-->
 						<a v-bind:src="item.comment.imgUrls[0].url" v-if="item.comment.imgUrls.length>0">查看原图</a>
 				</div>
+				<!--公告或原发言-->
 				<div class="fyxq_main_l2 mt10" style="margin-bottom:10px;">
 					<!--<div class="fyxq_main_l_title2">
 						<p>公告摘要</p>
@@ -80,12 +83,12 @@
 						<img :src="item.imgUrls"/>
 					</div>
 					<div class="fyxq_main_l_title2">
-						<p v-if="item.speak.noticeId ==''">@{{item.speak.userName}}</p>
+						<p v-if="item.speak.noticeId ==''"><a :href="urlList.personalpage + item.speak.userId" class="ftcred">@{{item.speak.userName}}</a></p>
 						<p v-else>{{item.speak.title}}</p>
 						<!--<p><span>
 							<font class="ftcred" v-for="(subject,index) in item.speak.subjectList" :key="index">#{{subject.subName}}#&nbsp;</font>
 							{{item.speak.content.length>35?(item.speak.content.substring(0,30)+"..."):item.speak.content}}</span></p>-->
-					    <p class="twoLine" v-html="item.speak.content"><img src="../../images/baoxiu.png"/></p>
+					    <a :href="urlList.speechdetail + item.speak.id"><p class="twoLine" v-html="item.speak.content"></p></a>
 					</div>
 				</div>
 				<div class="clear"></div>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.setup.dao.BusinessUnitDao">
+    
+    <sql id="businessUnitColumns">
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.name AS "name",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+    
+    <sql id="businessUnitJoins">
+    </sql>
+    
+    <select id="get" resultType="BusinessUnit">
+        SELECT 
+            <include refid="businessUnitColumns"/>
+        FROM business_unit a
+        <include refid="businessUnitJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="BusinessUnit">
+        SELECT 
+            <include refid="businessUnitColumns"/>
+        FROM business_unit a
+        <include refid="businessUnitJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="businessInfoId != null and businessInfoId != ''">
+                AND a.business_info_id = #{businessInfoId}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE 
+                    <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.remarks ASC	
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="findAllList" resultType="BusinessUnit">
+        SELECT 
+            <include refid="businessUnitColumns"/>
+        FROM business_unit a
+        <include refid="businessUnitJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>        
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO business_unit(
+            id,
+            business_info_id,
+            name,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{businessInfoId},
+            #{name},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+    
+    <update id="update">
+        UPDATE business_unit SET     
+            business_info_id = #{businessInfoId},
+            name = #{name},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+    <!--通过商家Id删除信息  -->
+    <update id="delete">
+        DELETE FROM business_unit WHERE business_info_id = #{businessInfoId}
+    </update>
+</mapper>

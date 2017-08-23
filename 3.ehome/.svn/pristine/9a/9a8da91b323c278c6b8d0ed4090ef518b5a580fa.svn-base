@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.service.dao.ServiceInfoDao">
+
+	<sql id="serviceInfoColumns">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.sort_info_id AS
+		"sortInfoId",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.base_unit AS
+		"baseUnit",
+		a.is_base AS "isBase",
+		a.content AS "content",
+		a.quota AS
+		"quota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.state
+		AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks
+		AS "remarks",
+		a.del_flag AS "delFlag",
+		b.name AS "sortInfoName",
+		b.sort_order AS "sortInfoOrder"
+	</sql>
+	
+	<sql id="serviceInfoColumnsNoJoin">
+		a.id AS "id",
+		a.business_info_id AS "businessInfoId",
+		a.serial_numbers AS "serialNumbers",
+		a.name AS "name",
+		a.sort_info_id AS
+		"sortInfoId",
+		a.imgs AS "imgs",
+		a.base_price AS "basePrice",
+		a.benefit_price AS "benefitPrice",
+		a.stock AS "stock",
+		a.base_unit AS
+		"baseUnit",
+		a.is_base AS "isBase",
+		a.content AS "content",
+		a.quota AS
+		"quota",
+		a.quota_num AS "quotaNum",
+		a.recommend AS "recommend",
+		a.state
+		AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks
+		AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="serviceInfoJoins">
+		LEFT JOIN sort_info b ON b.id = a.sort_info_id
+	</sql>
+
+	<select id="get" resultType="ServiceInfo">
+		SELECT
+		<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<include refid="serviceInfoJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="ServiceInfo">
+		SELECT
+		<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<include refid="serviceInfoJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+			<if test="sortInfoId != null and sortInfoId != ''">
+				AND a.sort_info_id = #{sortInfoId}
+			</if>
+			<if test="recommend != null and recommend != ''">
+				AND a.recommend = #{recommend}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+			<if test="stock != null and stock != ''">
+				AND a.stock &lt;= #{stock}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ServiceInfo">
+		SELECT
+		<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<include refid="serviceInfoJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllListCount" resultType="Integer">
+		SELECT
+		 count(1)
+		FROM service_info a
+		<include refid="serviceInfoJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.business_info_id = '${@com.its.modules.sys.utils.UserUtils@getUser().businessinfoId}'
+
+			<if test="sortInfoId != null and sortInfoId != ''">
+				AND a.sort_info_id = #{sortInfoId}
+			</if>
+			<if test="recommend != null and recommend != ''">
+				AND a.recommend = #{recommend}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+			<if test="stock != null and stock != ''">
+				AND a.stock &lt;= #{stock}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<insert id="insert">
+		INSERT INTO service_info(
+		id,
+		business_info_id,
+		serial_numbers,
+		name,
+		sort_info_id,
+		imgs,
+		base_price,
+		<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price,
+		</if>
+		stock,
+		base_unit,
+		is_base,
+		content,
+		quota,
+		<if test="quotaNum != null and quotaNum != ''">
+			quota_num,
+		</if>
+		recommend,
+		state,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{id},
+		#{businessInfoId},
+		#{serialNumbers},
+		#{name},
+		#{sortInfoId},
+		#{imgs},
+		#{basePrice},
+		<if test="benefitPrice != null and benefitPrice != ''">
+			#{benefitPrice},
+		</if>
+		#{stock},
+		#{baseUnit},
+		#{isBase},
+		#{content},
+		#{quota},
+		<if test="quotaNum != null and quotaNum != ''">
+			#{quotaNum},
+		</if>
+		#{recommend},
+		#{state},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE service_info SET
+		business_info_id = #{businessInfoId},
+		serial_numbers = #{serialNumbers},
+		name = #{name},
+		sort_info_id = #{sortInfoId},
+		imgs = #{imgs},
+		base_price = #{basePrice},
+		<if test="benefitPrice != null and benefitPrice != ''">
+			benefit_price = #{benefitPrice},
+		</if>
+		<if test="benefitPrice == null">
+            benefit_price = null,
+        </if>
+		stock = #{stock},
+		base_unit = #{baseUnit},
+		is_base = #{isBase},
+		content = #{content},
+		quota = #{quota},
+		<if test="quotaNum != null and quotaNum != ''">
+			quota_num = #{quotaNum},
+		</if>
+         <if test="quotaNum == null">
+            quota_num = null,
+         </if>
+		recommend = #{recommend},
+		state = #{state},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE service_info SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="groundingByServiceId">
+		UPDATE service_info SET
+		state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("上架",
+		"service_state", "1")}'
+		WHERE id = #{serviceId}
+	</update>
+
+	<update id="undercarriageByServiceId">
+		UPDATE service_info SET
+		state = '${@com.its.modules.sys.utils.DictUtils@getDictValue("下架",
+		"service_state", "0")}'
+		WHERE id = #{serviceId}
+	</update>
+
+	<select id="selectZeroStockService" resultType="ServiceInfo">
+		SELECT
+		<include refid="serviceInfoColumns" />
+		FROM service_info a
+		<include refid="serviceInfoJoins" />
+		<where>
+			IFNULL(a.stock,0) = 0
+			AND a.id = #{serviceId}
+		</where>
+	</select>
+
+	<update id="imgNameUpdate">
+		UPDATE service_info SET
+		Imgs = #{imgUrl}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findServiceInfoListForUpdate" resultType="ServiceInfo">
+		SELECT
+		<include refid="serviceInfoColumnsNoJoin" />
+		FROM service_info a
+		<where>
+			a.del_flag = "0"
+			AND a.id in
+			<foreach collection="list" item="serviceIds" index="index"
+				open="(" close=")" separator=",">
+				#{serviceIds}
+			</foreach>
+			FOR UPDATE
+		</where>
+	</select>
+    <!-- 通过商家ID获取服务列表（广告发布）add zhujiao -->
+    <select id="getServiceInfoList" resultType="ServiceInfo">
+      SELECT
+        a.id AS "id",
+        a.business_info_id AS "businessInfoId",
+        a.name AS "name"
+      FROM service_info a
+      WHERE a.business_info_id = #{businessInfoId} and a.del_flag='0'
+    </select>
+
+</mapper>

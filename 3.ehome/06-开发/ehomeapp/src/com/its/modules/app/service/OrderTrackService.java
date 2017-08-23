@@ -166,11 +166,43 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 		orderTrack.setOrderId(orderId);
 		orderTrack.setOrderNo(orderNo);
 		orderTrack.setOrderType(orderType);
-		orderTrack.setStateMsg(null);
-		orderTrack.setHandleMsg(null);
+		orderTrack.setStateMsg(OrderGlobal.BACK_UNPAY);
+		orderTrack.setHandleMsg(OrderGlobal.BACK_UNPAY_DESC);
 		orderTrack.setStateMsgPhone(OrderGlobal.FRONT_UNPAY);
 		orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_UNPAY_DESC);
 		orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
+		this.save(orderTrack);
+	}
+	
+	/**
+	 * 订单已付款插入订单跟踪状态
+	 * 
+	 * @param orderType
+	 *            订单类型:0商品类 1服务类 2 课程培训类 3场地预约类 4团购类
+	 * @param orderId
+	 *            订单ID
+	 * @param orderNo
+	 *            订单号
+	 */
+	@Transactional(readOnly = false)
+	public void createTrackPayed(String orderType, String orderId, String orderNo) {
+		OrderTrack orderTrack = new OrderTrack();
+		orderTrack.setOrderId(orderId);
+		orderTrack.setOrderNo(orderNo);
+		orderTrack.setOrderType(orderType);
+		if (OrderGlobal.ORDER_GOODS.equals(orderType) || OrderGlobal.MODEL_SERVICE.equals(orderType)) {
+			orderTrack.setStateMsg(OrderGlobal.BACK_UNCHECK);
+			orderTrack.setHandleMsg(OrderGlobal.BACK_UNCHECK_DESC);
+			orderTrack.setStateMsgPhone(OrderGlobal.FRONT_UNCHECK);
+			orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_UNCHECK_DESC);
+			orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
+		} else {
+			orderTrack.setStateMsg(OrderGlobal.BACK_UNCHECK);
+			orderTrack.setHandleMsg(OrderGlobal.BACK_PAYED_DESC);
+			orderTrack.setStateMsgPhone(OrderGlobal.FRONT_APPOINTED);
+			orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_APPOINTED_DESC);
+			orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
+		}
 		this.save(orderTrack);
 	}
 
@@ -187,22 +219,26 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 	 *            取消类型：0超时取消 1用户取消
 	 */
 	@Transactional(readOnly = false)
-	public void createTrackCancel(String orderType, String orderId, String orderNo, String cancelType) {
+	public void createTrackCanceled(String orderType, String orderId, String orderNo, String cancelType) {
 		OrderTrack orderTrack = new OrderTrack();
 		orderTrack.setOrderId(orderId);
 		orderTrack.setOrderNo(orderNo);
 		orderTrack.setOrderType(orderType);
 		if (OrderGlobal.CANCEL_TYPE_OVERTIME.equals(cancelType)) {
+			orderTrack.setStateMsg(OrderGlobal.BACK__CANCELED);
 			// 超时取消
-			orderTrack.setStateMsg(null);
-			orderTrack.setHandleMsg(null);
+			if (OrderGlobal.ORDER_FIELD.equals(orderType)) {
+				orderTrack.setHandleMsg(OrderGlobal.BACK_OVERTIME_TEN_CANCELED_DESC);
+			} else {
+				orderTrack.setHandleMsg(OrderGlobal.BACK_OVERTIME_THIRTY_CANCELED_DESC);
+			}
 			orderTrack.setStateMsgPhone(OrderGlobal.FRONT_CANCELED);
 			orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_OVERTIME_CANCELED_DESC);
 			orderTrack.setCreateName(OrderGlobal.CREATE_NAME_SYSTEM);
 		} else {
 			// 用户取消
-			orderTrack.setStateMsg(null);
-			orderTrack.setHandleMsg(null);
+			orderTrack.setStateMsg(OrderGlobal.BACK__CANCELED);
+			orderTrack.setHandleMsg(OrderGlobal.BACK_ACCOUNT_CANCELED_DESC);
 			orderTrack.setStateMsgPhone(OrderGlobal.FRONT_CANCELED);
 			orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_ACCOUNT_CANCELED_DESC);
 			orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
@@ -214,23 +250,47 @@ public class OrderTrackService extends CrudService<OrderTrackDao, OrderTrack> {
 	 * 订单退款时插入订单跟踪状态
 	 * 
 	 * @param orderType
-	 *            订单类型:0商品类 1服务类 2 课程培训类 3场地预约类 4团购类
+	 *            订单类型:0商品类 1服务类
 	 * @param orderId
 	 *            订单ID
 	 * @param orderNo
 	 *            订单号
 	 */
 	@Transactional(readOnly = false)
-	public void createTrackRefund(String orderType, String orderId, String orderNo) {
+	public void createTrackRefunding(String orderType, String orderId, String orderNo) {
 		OrderTrack orderTrack = new OrderTrack();
 		orderTrack.setOrderId(orderId);
 		orderTrack.setOrderNo(orderNo);
 		orderTrack.setOrderType(orderType);
-		orderTrack.setStateMsg(null);
-		orderTrack.setHandleMsg(null);
+		orderTrack.setStateMsg(OrderGlobal.BACK_REFUNDING);
+		orderTrack.setHandleMsg(OrderGlobal.BACK_REFUNDING_DESC);
 		orderTrack.setStateMsgPhone(OrderGlobal.FRONT_REFUNDING);
 		orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_REFUNDING_DESC);
 		orderTrack.setCreateName(OrderGlobal.CREATE_NAME_ACCOUNT);
+		this.save(orderTrack);
+	}
+
+	/**
+	 * 订单已退款插入订单跟踪状态
+	 * 
+	 * @param orderType
+	 *            订单类型:0商品类 1服务类
+	 * @param orderId
+	 *            订单ID
+	 * @param orderNo
+	 *            订单号
+	 */
+	@Transactional(readOnly = false)
+	public void createTrackRefunded(String orderType, String orderId, String orderNo) {
+		OrderTrack orderTrack = new OrderTrack();
+		orderTrack.setOrderId(orderId);
+		orderTrack.setOrderNo(orderNo);
+		orderTrack.setOrderType(orderType);
+		orderTrack.setStateMsg(OrderGlobal.BACK_REFUNDED);
+		orderTrack.setHandleMsg(OrderGlobal.BACK_REFUNDED_DESC);
+		orderTrack.setStateMsgPhone(OrderGlobal.FRONT_REFUNDED);
+		orderTrack.setHandleMsgPhone(OrderGlobal.FRONT_REFUNDED_DESC);
+		orderTrack.setCreateName(OrderGlobal.CREATE_NAME_SYSTEM);
 		this.save(orderTrack);
 	}
 }

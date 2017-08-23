@@ -56,6 +56,9 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 	@Autowired
 	private GroupPurchasetimeService groupPurchasetimeService;
 
+	@Autowired
+	private ModuleManageService moduleManageService;
+
 	public OrderGroupPurc get(String id) {
 		return super.get(id);
 	}
@@ -124,7 +127,7 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		orderGroupPurc.setOrderNo(orderNo);
 		orderGroupPurc.setModuleManageId(moduleManageId);
 		// 产品模式：0商品购买 1服务预约 2课程购买 3场地预约
-		orderGroupPurc.setProdType(OrderGlobal.MODEL_LESSON);
+		orderGroupPurc.setProdType(moduleManageService.getProdType(moduleManageId));
 		// 终端类型(0 Android 1 IOS 2 商家后台)
 		orderGroupPurc.setType(null);
 		orderGroupPurc.setVillageInfoId(villageInfo.getId());
@@ -258,7 +261,7 @@ public class OrderGroupPurcService extends CrudService<OrderGroupPurcDao, OrderG
 		// 更新订单状态
 		this.update(orderGroupPurc);
 		// 插入订单追踪
-		orderTrackService.createTrackCancel(OrderGlobal.ORDER_GROUP_PURCHASE, orderGroupPurc.getId(), orderGroupPurc.getOrderNo(), cancelType);
+		orderTrackService.createTrackCanceled(OrderGlobal.ORDER_GROUP_PURCHASE, orderGroupPurc.getId(), orderGroupPurc.getOrderNo(), cancelType);
 		return true;
 	}
 

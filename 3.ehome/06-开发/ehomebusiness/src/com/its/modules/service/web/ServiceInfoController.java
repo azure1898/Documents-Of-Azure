@@ -225,25 +225,20 @@ public class ServiceInfoController extends BaseController {
 			Model model) {
 		// 特殊字符转换
 		// 服务名称
-		if (StringUtils.isBlank(serviceInfo.getName())) {
+		if (StringUtils.isNotBlank(serviceInfo.getName())) {
 			serviceInfo.setName(StringEscapeUtils.unescapeHtml4(serviceInfo.getName()));
 		}
 		// 服务介绍
-		if (StringUtils.isBlank(serviceInfo.getContent())) {
+		if (StringUtils.isNotBlank(serviceInfo.getContent())) {
+			// 特殊字符转义
+			serviceInfo.setContent(StringEscapeUtils.unescapeHtml4(serviceInfo.getContent()));
+			// "&"等特殊字符转义
 			serviceInfo.setContent(StringEscapeUtils.unescapeHtml4(serviceInfo.getContent()));
 		}
 
 		// 商家ID设定为当前登录的商家的ID
 		serviceInfo.setBusinessInfoId(UserUtils.getUser().getBusinessinfoId());
 		
-		// 图片校验
-		// 本身没有图片，且画面上没有添加
-		if (StringUtils.isBlank(serviceInfo.getImgs())
-				&& (serviceInfo.getPicList() == null || serviceInfo.getPicList().size() == 0)) {
-			addMessage(model, "未选择任何图片");
-			model.addAttribute("type", MSG_TYPE_ERROR);
-			return form(serviceInfo, serviceInfo.getSortItem(), serviceInfo.getSort(), null, request, response, model);
-		}
 		// 删除后的图片名称
 		String imgUrlsForUpdate = serviceInfo.getImgs();
 		if (StringUtils.isNotBlank(serviceInfo.getDelImageName())) {
@@ -253,13 +248,6 @@ public class ServiceInfoController extends BaseController {
 				// 避免该文件在最后一个
 				imgUrlsForUpdate = imgUrlsForUpdate.replace(imgName, "");
 			}
-		}
-		// 本身有图片，但全部删除场合
-		if (StringUtils.isBlank(imgUrlsForUpdate)
-				&& (serviceInfo.getPicList() == null || serviceInfo.getPicList().size() == 0)) {
-			addMessage(model, "未选择任何图片");
-			model.addAttribute("type", MSG_TYPE_ERROR);
-			return form(serviceInfo, serviceInfo.getSortItem(), serviceInfo.getSort(), null, request, response, model);
 		}
 		
 		// 字段校验

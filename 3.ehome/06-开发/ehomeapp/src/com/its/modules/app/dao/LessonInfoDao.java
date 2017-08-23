@@ -46,4 +46,13 @@ public interface LessonInfoDao extends CrudDao<LessonInfo> {
 	 * @return 操作的行数
 	 */
 	public int updateSellCount(String lessonInfoId);
+	
+	/**
+	 * 根据课程id获取非下架的课程
+	 * @param id
+	 * 			课程id
+	 * @return	
+	 * 			课程信息
+	 */
+	public LessonInfo getValidateById(String id);
 }

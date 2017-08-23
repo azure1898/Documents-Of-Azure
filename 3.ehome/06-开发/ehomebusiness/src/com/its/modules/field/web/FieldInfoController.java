@@ -3,16 +3,16 @@
  */
 package com.its.modules.field.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.its.modules.field.entity.FieldInfoPrice;
-import com.its.modules.field.entity.FieldInfoPriceList;
-import com.its.modules.field.entity.FieldPartitionPrice;
-import com.its.modules.field.service.FieldInfoPriceService;
-import com.its.modules.field.service.FieldPartitionPriceService;
-import com.its.modules.sys.entity.User;
-import com.its.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,15 +24,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.its.common.config.Global;
-import com.its.common.persistence.Page;
-import com.its.common.web.BaseController;
 import com.its.common.utils.StringUtils;
+import com.its.common.web.BaseController;
 import com.its.modules.field.entity.FieldInfo;
+import com.its.modules.field.entity.FieldInfoPrice;
+import com.its.modules.field.entity.FieldInfoPriceList;
+import com.its.modules.field.entity.FieldPartitionPrice;
+import com.its.modules.field.service.FieldInfoPriceService;
 import com.its.modules.field.service.FieldInfoService;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.its.modules.field.service.FieldPartitionPriceService;
+import com.its.modules.sys.entity.User;
+import com.its.modules.sys.utils.UserUtils;
 
 /**
  * 场地预约Controller
@@ -199,12 +201,44 @@ public class FieldInfoController extends BaseController {
 	 * @param fieldInfo 场地信息对象
 	 * @param redirectAttributes
 	 * @return
+	 * @throws ParseException 
 	 */
 	@RequiresPermissions("field:fieldInfo:delete")
 	@RequestMapping(value = "delete")
-	public String delete(FieldInfo fieldInfo, RedirectAttributes redirectAttributes) {
-		fieldInfoService.delete(fieldInfo);
-		addMessage(redirectAttributes, "删除场地预约成功");
+	public String delete(FieldInfo fieldInfo, RedirectAttributes redirectAttributes) throws ParseException {
+		//检查是否存在已预约的场地
+		/* 场地预约 */
+		Date date = new Date();
+		Calendar calendar=Calendar.getInstance();   
+		calendar.setTime(date); 
+		calendar.add(Calendar.DAY_OF_WEEK, 7); // 目前的時間加7天    
+		Date enddate =calendar.getTime();//7天后
+		//今天开始时间
+		Date startTime = new SimpleDateFormat("yyyy-MM-dd 00:00:00").parse(new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date));
+		Date endTime = new SimpleDateFormat("yyyy-MM-dd 23:59:59").parse(new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(enddate));
+		
+		if (fieldInfo.getPartitionPrice()==null){
+			fieldInfo.setPartitionPrice(new FieldPartitionPrice());
+			fieldInfo.getPartitionPrice().setStartTime(startTime);
+			fieldInfo.getPartitionPrice().setEndTime(endTime);
+		}
+		List<FieldInfo> fieldInfoList = fieldInfoService.findList(fieldInfo); //该场地最近8天场地预约信息
+		List<FieldPartitionPrice> fppList = fieldInfoList.get(0).getFieldPartitionPriceList();
+		boolean _b = true;
+		for(FieldPartitionPrice fpp:fppList){
+			if(fpp.getState().equals("1")){//已预约
+				_b=false;break;
+			}
+		}
+		if(!_b){//存在已预约项 将标记删除
+			fieldInfo.setDelFlag("3");
+			fieldInfoService.save(fieldInfo);
+			addMessage(redirectAttributes, "将在已预约场地消费后自动删除");
+		}else{
+			fieldInfoService.deleteAll(fieldInfo);
+			addMessage(redirectAttributes, "删除场地预约成功");
+		}
+		
 		return "redirect:"+Global.getAdminPath()+"/field/fieldInfo/?repage";
 	}
 

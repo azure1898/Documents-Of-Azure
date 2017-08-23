@@ -31,8 +31,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-        <li style="height:30px"> 基础资料>
-           <span><a href="${ctx}/sys/area/">城市管理 </a></span>
+        <li>
+           <span class="common-breadcrumb">基础资料&nbsp;>&nbsp;<a href="${ctx}/sys/area/">城市管理 </a></span>
         </li>
     </ul>
 	<form:form id="searchForm" modelAttribute="area"

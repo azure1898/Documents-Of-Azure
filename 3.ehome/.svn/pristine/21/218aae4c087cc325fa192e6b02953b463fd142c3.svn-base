@@ -1,0 +1,70 @@
+{
+"code" : 1000,
+"data" : [{
+  "plateName":"邻里发言",
+  "userId":"",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "subjectList":[{
+     "id":"",
+     "subName":""
+}],
+  "speakId":"",
+  "isSpeak":0,
+  "creatTime":"昨天18:30",
+  "visRange":"公开",
+  "content":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。",
+  "imgUrls":[
+  {"url":"../../images/pic01.jpg"},
+  {"url":"../../images/pic01.jpg"},
+  {"url":"../../images/pic01.jpg"}
+  ],
+  "isPraise":1,
+"rootSpeak":{
+  "id":"",
+  "noticeId":"",
+  "userName":"你好",
+  "title":"",
+  "summary":"",
+  "content":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助",
+  "image":"../../images/pic01.jpg"
+},
+"countForward":123,
+"countComment":456,
+"countPraise":789
+},{
+
+  "plateName":"邻里发言",
+  "userId":"",
+  "userHeadUrl":"../../images/pic01.jpg",
+  "userName":"蓝色理想",
+  "subjectList":[{
+     "id":"",
+     "subName":""
+}],
+  "speakId":"",
+  "isSpeak":1,
+  "creatTime":"昨天18:30",
+  "visRange":"公开",
+  "content":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助。",
+  "imgUrls":[
+  {"url":"../../images/pic01.jpg"},
+  {"url":"../../images/pic01.jpg"},
+  {"url":"../../images/pic01.jpg"}
+  ],
+  "isPraise":0,
+"rootSpeak":{
+  "id":"",
+  "noticeId":"",
+  "userName":"你好",
+  "title":"",
+  "summary":"",
+  "content":"从交房验房，到涉及预算到后期开始装修以及装修 后的一些处理，这个过程很复杂的，中间也会遇到不少猫腻。 今天就为大家分享几点，希望对即将装修的朋友有所帮助",
+  "image":"../../images/pic01.jpg"
+},
+"countForward":123,
+"countComment":456,
+"countPraise":789
+}],
+"message" : ""
+}

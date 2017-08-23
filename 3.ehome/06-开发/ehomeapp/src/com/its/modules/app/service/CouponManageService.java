@@ -1,5 +1,6 @@
 package com.its.modules.app.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -104,14 +105,16 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	}
 
 	/**
-	 * 获取某楼盘下买家可领取的优惠券
+	 * 获取某楼盘下某种领取方式的优惠券
 	 * 
+	 * @param receiveType
+	 *            领取方式：0买家领取 1下单赠送 2平台推送
 	 * @param villageInfoId
 	 *            楼盘ID
 	 * @return List<CouponManage>
 	 */
-	public List<CouponManage> getCanReceiveCoupons(String villageInfoId) {
-		return dao.getCanReceiveCoupons(villageInfoId);
+	public List<CouponManage> getCouponsOfReceiveType(String receiveType, String villageInfoId) {
+		return dao.getCouponsOfReceiveType(receiveType, villageInfoId);
 	}
 
 	/**
@@ -120,7 +123,7 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	public int getCouponStatus(CouponManage couponManage, int receiveNum) {
 		// 发放总量：0无限制 1限量发送
 		if (CommonGlobal.COUPON_GRANT_TYPE_LIMIT.equals(couponManage.getGrantType())) {
-			if (ValidateUtil.validateInteger(couponManage.getLimitedNum()) - ValidateUtil.validateInteger(couponManage.getReceiveNum()) == 0) {
+			if (ValidateUtil.validateInteger(couponManage.getLimitedNum()) <= ValidateUtil.validateInteger(couponManage.getReceiveNum())) {
 				return 2;
 			}
 		}
@@ -252,6 +255,86 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 	 */
 	@Transactional(readOnly = false)
 	public MemberDiscount createMemberDiscount(CouponManage couponManage, String userId) {
+		MemberDiscount memberDiscount = this.getMemberDiscount(couponManage, userId);
+		memberDiscount.setReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_RECEIVE);
+		// 新增会员的优惠券
+		memberDiscountService.save(memberDiscount);
+		// 修改优惠券领取总量
+		int row = this.updateReceiveNumById(couponManage.getReceiveNum() + 1, couponManage.getId());
+		if (row == 0) {
+			// 事务回滚
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return null;
+		}
+		return memberDiscount;
+	}
+
+	/**
+	 * 下单时赠送优惠券
+	 * 
+	 * @param couponManages
+	 *            优惠券列表
+	 * @param userId
+	 *            用户ID
+	 * @param orderId
+	 *            订单ID
+	 * @param orderType
+	 *            赠送的订单类型：0-商品；1服务；2课程；3场地
+	 * @param totalMoney
+	 *            订单总金额
+	 * @return List<MemberDiscount>
+	 */
+	@Transactional(readOnly = false)
+	public List<MemberDiscount> placeAnOrderAndGiveCoupons(List<CouponManage> couponManages, String userId, String orderId, String orderType, double totalMoney) {
+		List<MemberDiscount> memberDiscounts = new ArrayList<MemberDiscount>();
+		if (couponManages != null && couponManages.size() != 0) {
+			for (CouponManage couponManage : couponManages) {
+				// 发放总量：0无限制 1限量发送
+				if (CommonGlobal.COUPON_GRANT_TYPE_LIMIT.equals(couponManage.getGrantType())) {
+					if (ValidateUtil.validateInteger(couponManage.getLimitedNum()) <= ValidateUtil.validateInteger(couponManage.getReceiveNum())) {
+						continue;
+					}
+				}
+				// 同一个优惠券活动一个用户：只可参与一次（即，下单赠送了一张优惠券，再次下单不再赠送）
+				MemberDiscount isNull = memberDiscountService.judgeMemberDiscount(couponManage.getVillageInfoId(), userId, couponManage.getId());
+				if (isNull != null) {
+					continue;
+				}
+				// 赠送规则：0下单即送 1满额送
+				if (CommonGlobal.COUPON_GIVE_RULE_LIMITED.equals(couponManage.getGiveRule())) {
+					if (totalMoney < ValidateUtil.validateDouble(couponManage.getFullGiveRule())) {
+						continue;
+					}
+				}
+				MemberDiscount memberDiscount = this.getMemberDiscount(couponManage, userId);
+				memberDiscount.setReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_ORDER);
+				memberDiscount.setOrderType(orderType);
+				memberDiscount.setOrderId(orderId);
+				// 新增会员的优惠券
+				memberDiscountService.save(memberDiscount);
+				// 修改优惠券领取总量
+				int row = this.updateReceiveNumById(couponManage.getReceiveNum() + 1, couponManage.getId());
+				if (row == 0) {
+					// 事务回滚
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return new ArrayList<MemberDiscount>();
+				}
+				memberDiscounts.add(memberDiscount);
+			}
+		}
+		return memberDiscounts;
+	}
+
+	/**
+	 * 预处理会员的优惠券信息
+	 * 
+	 * @param couponManage
+	 *            优惠券信息
+	 * @param userId
+	 *            用户ID
+	 * @return MemberDiscount
+	 */
+	public MemberDiscount getMemberDiscount(CouponManage couponManage, String userId) {
 		MemberDiscount memberDiscount = new MemberDiscount();
 		memberDiscount.setVillageInfoId(couponManage.getVillageInfoId());
 		memberDiscount.setDiscountId(couponManage.getId());
@@ -273,16 +356,6 @@ public class CouponManageService extends CrudService<CouponManageDao, CouponMana
 		memberDiscount.setValidStart(validStart);
 		memberDiscount.setValidEnd(validEnd);
 		memberDiscount.setUseState(CommonGlobal.DISCOUNT_USE_STATE_UNUSED);
-		memberDiscount.setReceiveType(CommonGlobal.COUPON_RECEIVE_TYPE_RECEIVE);
-		// 新增会员的优惠券
-		memberDiscountService.save(memberDiscount);
-		// 修改优惠券领取总量
-		int row = this.updateReceiveNumById(couponManage.getReceiveNum() + 1, couponManage.getId());
-		if (row == 0) {
-			// 事务回滚
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return null;
-		}
 		return memberDiscount;
 	}
 

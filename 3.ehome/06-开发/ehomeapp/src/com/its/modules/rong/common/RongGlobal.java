@@ -14,8 +14,8 @@ public class RongGlobal {
 	public static final String APP_KEY = "x18ywvqfx605c";//appkey
 	public static final String APP_SECRET = "oTf3O2tXoRpMM";//替换成匹配上面key的secret
 	
-	public static final String Group_NumDays = "12";	//团购券临近几天过期
-	public static final String Group_Cron = "0/30 * * * * ?";	//团购券发送消息计划任务
+	public static final String Group_NumDays = "2";	//团购券临近几天过期
+	public static final String Group_Cron = "0 0 10 * * ?";	//团购券发送消息计划任务
 	
 	/** 消息一级类型1：订单；2：后台管理 ；3：邻里圈。*/
 	public static final int MSG_FIRTYPE_ORDER = 1;

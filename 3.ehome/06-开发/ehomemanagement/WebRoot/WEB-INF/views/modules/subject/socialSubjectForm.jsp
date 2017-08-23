@@ -9,6 +9,28 @@
 		$(document).ready(function() {
 			//$("#name").focus();
 			$("#inputForm").validate({
+				rules : {
+					subname : {
+						required : true
+					},
+					isrecommend : {
+						required : true
+					},
+					addrVillage : {
+						required : true
+					}
+				},
+				messages : {
+					subname : {
+						required : "请输入话题名称"
+					},
+					isrecommend : {
+						required : "请选择是否推荐"
+					},
+					addrVillage : {
+						required : "请选择要发布的楼盘"
+					}
+				},
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
 					form.submit();
@@ -37,6 +59,9 @@
 			<label class="control-label">话题名称：</label>
 			<div class="controls">
 				<form:input path="subname" htmlEscape="false" maxlength="200" class="input-xlarge "/>
+				<span class="help-inline">
+                    <font color="red">*</font>
+                </span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -49,7 +74,7 @@
             </div>
         </div>
 		<div class="control-group">
-            <label class="control-label">*发布楼盘：</label>
+            <label class="control-label">发布楼盘：</label>
             <div class="controls">
                 <select id="addrpro" name="addrPro" style="width: 120px" onchange="changeCity()">
                     <option value="">全部省份</option>
@@ -63,10 +88,13 @@
                 <select id="addrVillage" name="villageInfoId" class="required" style="width: 120px">
                     <option value="">全部楼盘</option>
                 </select>
-                <input type="text" class="hide" id="hidProId" value="">
-                <input type="text" class="hide" id="hidCityId" value="">
+                <input type="text" class="hide" id="hidProId" value="${socialSubject.addrpro}">
+                <input type="text" class="hide" id="hidCityId" value="${socialSubject.addrcity}">
                 <input type="text" class="hide" id="hidAreaId" value="">
-                <input type="text" class="hide" id="hidVillageId" value="${couponManage.villageInfoId}">
+                <input type="text" class="hide" id="hidVillageId" value="${socialSubject.villageInfoId}">
+                <span class="help-inline">
+                    <font color="red">*</font>
+                </span>
             </div>
         </div>
 		<div class="form-actions">

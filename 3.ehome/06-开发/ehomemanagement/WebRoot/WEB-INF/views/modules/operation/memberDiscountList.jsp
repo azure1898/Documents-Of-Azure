@@ -9,13 +9,17 @@
 	    $("#btnExport").click(function() {
 	        top.$.jBox.confirm("确认要导出优惠券数据吗？", "系统提示", function(v,h,f){
 	            if(v == 'ok'){
-	                $("#searchForm").prop("action", "${ctx}/operation/memberDiscount/export?discountId=${memberDiscount.discountId}");
+	                $("#searchForm").prop("action", "${ctx}/operation/memberDiscount/export");
 	                $("#searchForm").submit();
 	            }
 	        }, {
 	            buttonsFocus : 1
 	        });
 	        top.$('.jbox-body .jbox-icon').css('top', '55px');
+	    });
+	    $("#btnSubmit").click(function() {
+            $("#searchForm").prop("action", "${ctx}/operation/memberDiscount/");
+            $("#searchForm").submit();
 	    });
 	});
 	function page(n, s) {
@@ -52,7 +56,7 @@
 			<li><form:input path="discountNum"
 					htmlEscape="false" maxlength="32" class="input-large" placeholder="请输入优惠券号、领取手机号"  /></li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary"
-				type="submit" value="查找" /></li>
+				type="button" value="查找" /></li>
 			<shiro:hasPermission name="operation:couponManage:edit">
 				<li style="float: right"><a class="btn btn-primary" id="btnExport"
 					href="#"><i
@@ -92,10 +96,10 @@
                     <td>${memberDiscount.accountId}</td>
                     <td><fmt:formatDate value="${memberDiscount.obtainDate}" pattern="yyyy-MM-dd hh:mm:ss"/>
                     </td>
-                    <td>${memberDiscount.orderId}</td>
+                    <td>${memberDiscount.useOrderId}</td>
                     <td>${fns:getDictLabel(memberDiscount.useState, 'use_state_memberdiscount', '')}
                     </td>
-					<td><fmt:formatDate value="${memberDiscount.useDate}" pattern="yyyy-MM-dd"/>
+					<td><fmt:formatDate value="${memberDiscount.useDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 					</td>
 				</tr>
 			</c:forEach>

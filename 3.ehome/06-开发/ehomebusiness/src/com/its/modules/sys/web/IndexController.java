@@ -1,5 +1,6 @@
 package com.its.modules.sys.web;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,11 +10,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.its.common.utils.MyFDFSClientUtils;
+import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
 import com.its.modules.field.entity.FieldInfo;
 import com.its.modules.field.entity.FieldPartitionPrice;
@@ -140,7 +144,7 @@ public class IndexController extends BaseController {
 		model.addAttribute("ptlist", ptList);
 		/******************** 产品统计  ***************************************************/
 							/* 商品 */
-		GoodsInfo goodInfo = new GoodsInfo();
+		GoodsInfo goodInfo = new GoodsInfo(); 
 		goodInfo.setBusinessInfoId(businessInfo.getId());
 		List<GoodsInfo> goodsInfoList = goodsInfoService.findList(goodInfo);
 		model.addAttribute("goodsCount", goodsInfoList.size());// 商品总数
@@ -152,8 +156,21 @@ public class IndexController extends BaseController {
 			for (GoodsInfo gi : goodsInfoList) {
 				if ((gi.getStock()==null?2147483647:gi.getStock()) <= warnNum) {
 					goodsbzCount++;
-					if(goodsStock.size()<5)
-						goodsStock.add(gi);
+					if(goodsStock.size()<5){
+						 // 图片显示编辑
+			            if (StringUtils.isNotBlank(gi.getImgs())) {
+			                String[] imageNames = gi.getImgs().split(",");
+			                // 图片url集合
+			                List<String> imageUrls = new ArrayList<String>();
+			                try {
+			                    imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[0] + "_compress2"));
+			                } catch (IOException | MyException e) {
+			                }
+			                gi.setImageUrls(imageUrls);
+			            }
+				        goodsStock.add(gi);
+					}
+						
 				}
 			}
 		}
@@ -171,8 +188,20 @@ public class IndexController extends BaseController {
 			for (ServiceInfo si : serviceInfoList) {
 				if (si.getStock() <= warnNum) {
 					servicesbzCount++;
-					if(serviceStock.size()<5)
+					if(serviceStock.size()<5){
+						if (StringUtils.isNotBlank(si.getImgs())) {
+							String[] imageNames = si.getImgs().split(",");
+							// 图片url集合
+							List<String> imageUrls = new ArrayList<String>();
+							try {
+								imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[0] + "_compress2"));
+							} catch (IOException | MyException e) {
+							}
+							si.setImageUrls(imageUrls);
+						}
 						serviceStock.add(si);
+					}
+						
 				}
 			}
 		}
@@ -190,22 +219,37 @@ public class IndexController extends BaseController {
 		for(LessonInfo li:lessonInfoList){
 			if(li.getPeopleLimit()==0){
 				lessonbzCount++;
-				if(lessonStock.size()<5)
+				if(lessonStock.size()<5){
+					if (StringUtils.isNotBlank(li.getImgs())) {
+						String[] imageNames = li.getImgs().split(",");
+						// 图片url集合
+						List<String> imageUrls = new ArrayList<String>();
+						try {
+							imageUrls.add(MyFDFSClientUtils.get_fdfs_file_url(request, imageNames[0] + "_compress2"));
+						} catch (IOException | MyException e) {
+						}
+						li.setImageUrls(imageUrls);
+					}
 					lessonStock.add(li);
+				}
+					
 			}
 		}
 		model.addAttribute("lessonbzCount",lessonbzCount);// 约满数
 								/* 场地预约 */
-		Date startTime = new Date();//今天
+		Date date = new Date();
 		Calendar calendar=Calendar.getInstance();   
-		calendar.setTime(startTime); 
-		calendar.add(Calendar.DAY_OF_WEEK, 6); // 目前的時間加7天    
-		Date endTime =calendar.getTime();//6天后
+		calendar.setTime(date); 
+		calendar.add(Calendar.DAY_OF_WEEK, 6); // 目前的時間加6天    
+		Date enddate =calendar.getTime();//6天后
+		//今天开始时间
+		Date startTime = new SimpleDateFormat("yyyy-MM-dd 00:00:00").parse(new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date));
+		Date endTime = new SimpleDateFormat("yyyy-MM-dd 23:59:59").parse(new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(enddate));
 		
 		FieldInfo fieldInfo = new FieldInfo();
 		if (fieldInfo.getPartitionPrice()==null){
 			fieldInfo.setPartitionPrice(new FieldPartitionPrice());
-			fieldInfo.getPartitionPrice().setAppointmentTime(new Date());
+//			fieldInfo.getPartitionPrice().setAppointmentTime(new Date());
 			fieldInfo.getPartitionPrice().setStartTime(startTime);
 			fieldInfo.getPartitionPrice().setEndTime(endTime);
 		}
@@ -245,58 +289,87 @@ public class IndexController extends BaseController {
 		orderGoods.setBeginCreateDate(beginCreateDate);
 		orderGoods.setEndCreateDate(endCreateDate);
 		orderGoods.setBusinessInfoId(businessInfo.getId());
+//		orderGoods.setIsCancel(1);//排除已取消订单
 		List<OrderGoods> orderGoodsList = orderGoodsService.findList(orderGoods);
-		model.addAttribute("orderGoodsCount", orderGoodsList.size());// 总数
+		int orderGoodsCount=0;//已完成订单总数
+//		model.addAttribute("orderGoodsCount", orderGoodsList.size());// 总数
 							/* 服务订单 */
 		OrderService orderService = new OrderService();
 		orderService.setBeginCreateDate(beginCreateDate);
 		orderService.setEndCreateDate(endCreateDate);
 		orderService.setBusinessInfoId(businessInfo.getId());
+//		orderService.setIsCancel(1);//排除已取消订单
 		List<OrderService> orderServiceList = orderServiceService.findList(orderService);
-		model.addAttribute("orderServiceCount", orderServiceList.size());// 总数
+		int orderServiceCount=0;//已完成订单总数
+//		model.addAttribute("orderServiceCount", orderServiceList.size());// 总数
 							/* 课程培训 */
 		OrderLesson orderLesson = new OrderLesson();
 		orderLesson.setBeginCreateDate(beginCreateDate);
 		orderLesson.setEndCreateDate(endCreateDate);
 		orderLesson.setBusinessInfoId(businessInfo.getId());
+//		orderLesson.setIsCancel(1);//排除已取消订单
 		List<OrderLesson> orderLessonList = orderLessonService.findList(orderLesson);
-		model.addAttribute("orderLessonCount", orderLessonList.size());// 总数
+		int orderLessonCount=0;//已完成订单总数
+//		model.addAttribute("orderLessonCount", orderLessonList.size());// 总数
 							/* 场地预约 */
 		OrderField orderField = new OrderField();
 		orderField.setBeginCreateDate(beginCreateDate);
 		orderField.setEndCreateDate(endCreateDate);
 		orderField.setBusinessInfoId(businessInfo.getId());
+//		orderField.setIsCancel(1);//排除已取消订单
 		List<OrderField> orderFieldList = orderFieldService.findList(orderField);
-		model.addAttribute("orderFieldCount", orderFieldList.size());// 总数
+		int orderFieldCount=0;//已完成订单总数
+//		model.addAttribute("orderFieldCount", orderFieldList.size());// 总数
 		/******************** 本周收入 ***************************************************/
 		Double goodsInclu=0.0,//商品收入
 				serviceInclu=0.0,//服务收入
 				lessonInclu=0.0,//课程收入
 				fieldInclu=0.0;//场地收入
 		for(OrderGoods og:orderGoodsList){
-			if(!og.getOrderState().equals("4")){//排除取消的订单
-				goodsInclu+=og.getSumMoney();
+//			if(!og.getOrderState().equals("4")){//排除取消的订单
+//				goodsInclu+=og.getSumMoney();
+//			}
+			if(og.getOrderState().equals("3")){//已完成订单数
+				orderGoodsCount++;
+				goodsInclu+=og.getPayMoney();
 			}
 		}
 		for(OrderService os:orderServiceList){
-			if(!os.getOrderState().equals("3")){
-				serviceInclu+=os.getSumMoney();
+//			if(!os.getOrderState().equals("3")){
+//				serviceInclu+=os.getSumMoney();
+//			}
+			if(os.getOrderState().equals("2")){
+				orderServiceCount++;
+				serviceInclu+=os.getPayMoney();
 			}
 		}
 		for(OrderLesson ol:orderLessonList){
-			if(!ol.getOrderState().equals("2")){
-				lessonInclu+=ol.getSumMoney();
+//			if(!ol.getOrderState().equals("2")){
+//				lessonInclu+=ol.getSumMoney();
+//			}
+			if(ol.getOrderState().equals("1")){
+				orderLessonCount++;
+				lessonInclu+=ol.getPayMoney();
 			}
 		}
 		for(OrderField of:orderFieldList){
-			if(!of.getOrderState().equals("2")){
-				fieldInclu+=of.getSumMoney();
+//			if(!of.getOrderState().equals("2")){
+//				fieldInclu+=of.getSumMoney();
+//			}
+			if(of.getOrderState().equals("1")){
+				orderFieldCount++;
+				fieldInclu+=of.getPayMoney();
 			}
 		}
 		model.addAttribute("goodsInclu", goodsInclu);
 		model.addAttribute("serviceInclu", serviceInclu);
 		model.addAttribute("lessonInclu", lessonInclu);
 		model.addAttribute("fieldInclu", fieldInclu);
+		
+		model.addAttribute("orderGoodsCount", orderGoodsCount);
+		model.addAttribute("orderServiceCount", orderServiceCount);
+		model.addAttribute("orderLessonCount", orderLessonCount);
+		model.addAttribute("orderFieldCount", orderFieldCount);
 		/******************** 待办事宜 ***************************************************/
 			/*商品类 待处理订单*/
 		OrderGoods ogoods = new OrderGoods();
@@ -370,26 +443,30 @@ public class IndexController extends BaseController {
 		model.addAttribute("serviceStock", serviceStock);//库存不足服务
 		
 		
-				/*课程预约类 待处理订单*/
+				/*课程预约类 待处理订单(待付款)*/
 		
 		OrderLesson oLesson= new OrderLesson();
-		oLesson.setPending(1);
+//		oLesson.setPending(1);
+		oLesson.setPayState("0");
 		oLesson.setBusinessInfoId(businessInfo.getId());
 		List<OrderLesson> pendingOrderLessonList = orderLessonService.findList(oLesson);
 		int pendingPayLesson=0,//待付款
 				pendingHandleLesson=0;//待预约
 		List<OrderLesson> newOrderLessonList = new ArrayList<OrderLesson>();//存放五条
 		for(OrderLesson ol :pendingOrderLessonList ){
-			if(newOrderLessonList.size()<5){
+			if(newOrderLessonList.size()<5 && !ol.getOrderState().equals("2")){
 				if(ol.getUpdateDate()!=null){
 					ol.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ol.getUpdateDate()));
 				}
 				newOrderLessonList.add(ol);
 			}
-			if(ol.getOrderState().equals("0")){//待预约
-				pendingHandleLesson+=1;
-			}
-			if(ol.getPayState().equals("0")){//未支付 >待付款
+//			if(ol.getOrderState().equals("0")){//待预约
+//				pendingHandleLesson+=1;
+//			}
+//			if(ol.getPayState().equals("0")){//未支付 >待付款
+//				pendingPayLesson+=1;
+//			}
+			if(!ol.getOrderState().equals("2")){
 				pendingPayLesson+=1;
 			}
 		}
@@ -400,26 +477,30 @@ public class IndexController extends BaseController {
 		
 //		System.out.println("lessonStock.size()"+lessonStock.size());
 		
-				/*场地类 待处理订单*/
+				/*场地类 待处理订单(待付款)*/
 		
 		OrderField oField= new OrderField();
-		oField.setPending(1);
+//		oField.setPending(1);
+		oField.setPayState("0");
 		oField.setBusinessInfoId(businessInfo.getId());
 		List<OrderField> pendingOrderFieldList = orderFieldService.findList(oField);
 		int pendingPayField=0,//待付款
 				pendingHandleField=0;//待预约
 		List<OrderField> newOrderFieldList = new ArrayList<OrderField>();//存放五条
 		for(OrderField of :pendingOrderFieldList ){
-			if(newOrderFieldList.size()<5){
+			if(newOrderFieldList.size()<5 && !of.getOrderState().equals("2")){
 				if(of.getUpdateDate()!=null){
 					of.setUpdateDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(of.getUpdateDate()));
 				}
 				newOrderFieldList.add(of);
 			}
-			if(of.getOrderState().equals("0")){//待预约
-				pendingHandleField+=1;
-			}
-			if(of.getPayState().equals("0")){//未支付 >待付款
+//			if(of.getOrderState().equals("0")){//待预约
+//				pendingHandleField+=1;
+//			}
+//			if(of.getPayState().equals("0")){//未支付 >待付款
+//				pendingPayField+=1;
+//			}
+			if(!of.getOrderState().equals("2")){
 				pendingPayField+=1;
 			}
 		}

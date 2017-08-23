@@ -178,11 +178,13 @@
                 </td>
                 <td>
                     ${orderField.name}
-                    <c:if test="${orderField.orderFieldList != null}">
+                    <c:if test="${orderField.orderFieldList != null && fn:length(orderField.orderFieldList) gt 0}">
                         <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.appointmentTime}" pattern="yyyy年M月d日"/>
-                        <br/>
-                        <fmt:formatDate value="${orderField.orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderField.orderFieldList.endTime}" pattern="HH:mm"/>
+                        <fmt:formatDate value="${orderField.orderFieldList[0].appointmentTime}" pattern="yyyy年M月d日"/>
+                        <c:forEach items="${orderField.orderFieldList}" var="orderFieldList" varStatus="status1">
+                            <br/>
+                            <fmt:formatDate value="${orderFieldList.startTime}" pattern="HH:mm"/>~<fmt:formatDate value="${orderFieldList.endTime}" pattern="HH:mm"/>
+                        </c:forEach>
                     </c:if>
                 </td>
                 <td>

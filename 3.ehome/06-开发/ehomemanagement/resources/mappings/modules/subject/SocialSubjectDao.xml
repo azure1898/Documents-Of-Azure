@@ -26,11 +26,11 @@
 	
 	<select id="findList" resultType="socialSubject">
 		SELECT 
-			<include refid="socialSubjectColumns"/>, b.village_name AS "villageInfoName" 
-		FROM social_subject a, village_info b 
+			<include refid="socialSubjectColumns"/>
+		FROM social_subject a
 		<include refid="socialSubjectJoins"/>
 		<where>
-			a.villageInfoId = b.id 
+			1=1
 			<if test="subname != null and subname != ''">
 				AND a.subname LIKE 
 					<if test="dbName == 'oracle'">'%'||#{subname}||'%'</if>
@@ -39,6 +39,12 @@
 			</if>
 			<if test="beginCreatetime != null and endCreatetime != null and beginCreatetime != '' and endCreatetime != ''">
 				AND a.createtime BETWEEN #{beginCreatetime} AND #{endCreatetime} 
+			</if>
+			<if test="endCreatetime != null and endCreatetime != ''">
+				AND a.createtime &lt;= #{endCreatetime}
+			</if>
+			<if test="beginCreatetime != null and beginCreatetime != '' ">
+				AND a.createtime &gt;= #{beginCreatetime} 
 			</if>
 			<if test="addrpro != null and addrpro != ''">
 				AND a.villageInfoId IN(
@@ -62,7 +68,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.isrecommend, a.ordernum
+				ORDER BY a.isrecommend desc, a.ordernum, a.createtime desc
 			</otherwise>
 		</choose>
 	</select>
@@ -152,6 +158,13 @@
 	    select ss.subname 
 	    from social_subject ss, social_sub_relation ssr, social_speak a 
 	    where ss.id = ssr.subjectid and ssr.speakid = a.id and a.id=#{speakId}
+	</select>
+	
+	<select id="findByTag" resultType="SocialSubject">
+		SELECT
+			<include refid="socialSubjectColumns"/>
+		FROM social_subject a 
+		WHERE a.subname = #{tag}
 	</select>
 	
 </mapper>

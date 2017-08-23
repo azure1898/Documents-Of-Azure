@@ -9,7 +9,8 @@ var vm = new Vue({
 			comments:"../main/comment.html?id=",
 			forward:"../main/forward.html?id=",
 			myspeech:"myspeech.html?id=",
-			mypraise:"mypraise.html?id="
+			mypraise:"mypraise.html?id=",
+			personalpage:"../main/personalpage.html?id="
 		}
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
@@ -26,7 +27,7 @@ var vm = new Vue({
 //				_this.commentmes = res.data.data;
 //			});
 			this.$http.post(interfaceUrl + "/message/commentMe",{
-				userId:1,
+				userId:userInfo.userID,
 			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
 			});
@@ -42,7 +43,7 @@ var vm = new Vue({
 //				_this.commentmes = res.data.data;
 //				});
 			this.$http.post(interfaceUrl + "/message/commentMe",{
-				userId:1,
+				userId:userInfo.userID,
 			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
 			});
@@ -54,7 +55,7 @@ var vm = new Vue({
 //				_this.commentmes = res.data.data;
 //				});
 			this.$http.post(interfaceUrl + "/message/myComment",{
-				userId:1,
+				userId:userInfo.userID,
 			},{emulateJSON: true}).then(function(res){
 				_this.commentmes = res.data.data;
 			});
@@ -62,20 +63,22 @@ var vm = new Vue({
 				_this.type=1
 			}
 		},
-		deleteComments:function(index){
+		deleteComments:function(obj,index){
 			var _this = this;
 			layer.open({
 		    content: '确定删除评论吗？'
 		    ,btn: ['确定', '取消']
 		    ,yes: function(indext){
-		    	
+//		    	_this.commentmes.splice(index, 1)
+//		     	 	layer.close(indext);
 		    _this.$http.post(interfaceUrl + "/message/commentDel",{
-				commentId: "plid0001"  //_this.commentmes[index].commontList[0].id
+				commentId: obj.id  //_this.commentmes[index].commontList[0].id
 			},{emulateJSON: true}).then(function(res){
-				_this.commentmes = res.data.data;
+				if(res.data.code==1000){
+					_this.commentmes.splice(index, 1)
+		     	 	layer.close(indext);
+				}
 			});
-		    	_this.commentmes.splice(index, 1)
-		     	 layer.close(indext);
 		    },
 		    no: function(indext){
 				layer.close(indext);
@@ -84,7 +87,7 @@ var vm = new Vue({
 		},
 		reply:function(obj){//点击回复吧回复人的id和名字带过去
 			var _this=this;
-			window.location.href=_this.urlList.comments+obj.commontList[0].userId+"&name="+escape( obj.commontList[0].userName);
+			window.location.href=_this.urlList.comments+obj.commontList[0].id+"&name="+escape( obj.commontList[0].userName);
 		}
 	}
 });

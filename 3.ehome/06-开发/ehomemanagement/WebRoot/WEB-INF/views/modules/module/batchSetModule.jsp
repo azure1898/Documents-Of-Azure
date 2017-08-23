@@ -147,6 +147,13 @@
         $("input[name='productLine']").click(function() {
             getVillageList($(this).val());
         });
+        //绑定主导航数据
+        var mainNavigation=$("#mainNavigation").val();
+        $("input[name='mainNavigationIds']").each(function(i,dom){
+           if(mainNavigation.indexOf($(this).val())>=0){
+               $(this).attr("checked","checked");
+           }
+       });
         //---------------生活模块相关  --------结束
         //获取以选取的最大值
         function getMaxNum(obj) {
@@ -229,6 +236,7 @@
     </ul>
     <form:form id="inputForm" modelAttribute="villageLine" action="${ctx}/module/villageLine/batchSetModule" method="post" class="form-horizontal">
         <form:hidden path="id" />
+        <input id="mainNavigation" type="hidden" value="${villageLine.mainNavigation}">
         <input id="communityModule" type="hidden" name="communityModule" value="${villageLine.communityModule}">
         <input id="lifeModule" type="hidden" name="lifeModule" value="${villageLine.lifeModule}">
         <input id="communityModuleSort" type="hidden" name="communityModuleSort" value="${villageLine.communityModuleSort}">
@@ -246,7 +254,9 @@
             <div class="controls">
                 <label>首页【1】 <input type="hidden" value="0">
                 </label>
-                <form:checkboxes items="${fns:getDictList('mainNavigation')}" path="mainNavigationIds" itemLabel="label" itemValue="value" />
+                <c:forEach items="${fns:getDictList('mainNavigation')}" var="dict" varStatus="status">
+                    <input name="mainNavigationIds" type="checkbox" value="${dict.value}">${dict.label}【${status.count+1}】</input>
+                </c:forEach>
                 <span class="help-inline"><font color="red">*勾选数量只能为2个</font> </span>
             </div>
         </div>

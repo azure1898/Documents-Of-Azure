@@ -134,6 +134,7 @@
 		WHERE
 			a.del_flag = '0'
 		AND a.Village_Line_Recom_Special_ID = #{specialId}
+		AND a.Recom_Type IS NOT NULL
 	</select>
 	
 </mapper>

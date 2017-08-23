@@ -65,7 +65,7 @@
 				AND a.check_state = #{checkState}
 			</if>
             <if test="companyName != null and companyName != ''">
-                AND b.business_name like 
+                AND b.Company_Name like 
                     <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
                     <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
                     <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
@@ -111,7 +111,7 @@
                 AND a.check_state = #{checkState}
             </if>
             <if test="companyName != null and companyName != ''">
-                AND b.business_name like 
+                AND b.Company_Name like 
                     <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
                     <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
                     <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
@@ -433,7 +433,7 @@
                 AND b.check_state = #{checkState}
             </if>
             <if test="companyName != null and companyName != ''">
-                AND b.business_name like 
+                AND c.Company_Name like 
                     <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
                     <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
                     <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>

@@ -1,14 +1,14 @@
 <div id="partialContact">
 	<div class="grey_top">
-		<a href="#" class="fl font12" style="margin-left:10px;" @click="cancel">取消</a>
+		<a href="##" class="fl font12" style="margin-left:10px;" @click="cancel">取消</a>
 		选择联系人
-		<a href="#" @click="selectOK" class="topic_list_btn4">发送</a>
+		<a href="##" @click="selectOK" class="topic_list_btn4">发送</a>
 		<div class="topic_list_btn4_tip">{{selectedCount}}</div>
 	</div>
 	<div class="main_box">
 		<div class="choose_cont" style="height: 100px;">
 			<ul>
-				<li v-for="item in contactList" v-if="item.isSelected">
+				<li v-for="item in contactList" v-if="item.subDetail.isSelected">
 					<div class="tupian"><img :src="item.headPicSrc" width="110" height="110"></div>
 					<p>{{item.friendName}}</p>
 				</li>
@@ -17,54 +17,30 @@
 		</div>
 
 	</div>
-	<div class="choose_title">A</div>
-	<div class="main_box" style="padding:0; border-top:1px solid #ececec;">
-		<div class="my_message" v-for="item in contactList">
-			<div class="my_message_left4 mr12">
-				<a href="#" @click="choice(item)">
-					<img :src="item.isSelected?choiceIco:unchoiceIco" width="32" height="32">
-				</a>
-			</div>
-			<div class="my_message3">
-				<div class="my_message_left"><img :src="item.headPicSrc" width="80" height="80">
+	<div v-for="item in contactList">
+		<div class="choose_title" v-if="item.subDetail.length>0">{{item.firstWord}}</div>
+		<div class="main_box" style="padding:0; border-top:1px solid #ececec;" v-if="item.subDetail.length>0">
+			<div class="my_message"  v-for="ren in item.subDetail">
+				<div class="my_message_left4 mr12">
+					<a href="###" @click="choice(ren)">
+						<img :src="ren.isSelected?choiceIco:unchoiceIco" width="32" height="32">
+					</a>
 				</div>
-				<div class="my_message_right">
-					&nbsp;&nbsp;{{item.friendName}}
+				<div class="my_message3">
+					<div class="my_message_left"><img :src="ren.headPicSrc" width="80" height="80">
+					</div>
+					<div class="my_message_right">
+						&nbsp;&nbsp;{{ren.friendName}}
+					</div>
+					<div class="clear"></div>
 				</div>
 				<div class="clear"></div>
 			</div>
-			<div class="clear"></div>
 		</div>
 	</div>
+	
 
-	<div class="choose_title">B</div>
-	<div class="main_box" style="padding:0; border-top:1px solid #ececec;">
-		<div class="my_message">
-			<div class="my_message_left4 mr12"><img src="../../images/gx.png" width="32" height="32">
-			</div>
-			<div class="my_message3">
-				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
-				</div>
-				<div class="my_message_right">
-					&nbsp;&nbsp;@我的
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="clear"></div>
-		</div>
-
-		<div class="my_message" style="border-bottom:none;">
-			<div class="my_message_left4 mr12"><img src="../../images/gx02.png" width="32" height="32">
-			</div>
-			<div class="my_message3">
-				<div class="my_message_left"><img src="../../images/pic01.jpg" width="80" height="80">
-				</div>
-				<div class="my_message_right">
-					&nbsp;&nbsp;@我的
-				</div>
-				<div class="clear"></div>
-			</div>
-		</div>
+	
 	</div>
 </div>
 <script>
@@ -82,36 +58,20 @@
 					this.init();
 				});
 			},
-//			computed: {
-//				selectedCount: function() {
-//					var count = 0;
-//					$.each(this.contactList, function(idx, obj) {
-//						if(obj.isSelected) {
-//							count++;
-//						}
-//					});
-//					return count;
-//				}
-//			},
 			methods: {
-				
 				init: function() {
 					this.$http.post(interfaceUrl + "/forward/toUser",{
-					userId:1,
+					userId:userInfo.userID,
 				},{emulateJSON: true}).then(function(res){
 						var lst = res.data.data;
 						$.each(lst, function(idx, obj) {
-							obj.isSelected = false;
-							//
-//							if(vm.atwhos && vm.atwhos.length > 0) {
-//								$.each(vm.atwhos, function(i, whos) {
-//									if(whos.frendId == obj.frendId && whos.isSelected) {
-//										obj.isSelected = true;
-//									}
-//								})
-//							}
+							$.each(obj.subDetail,function(index,obj1){
+								obj1.isSelected = false;
+							})
+														
 						});
 						this.contactList = lst;
+						console.log(this.contactList)
 					});
 				},
 				choice: function(item) {
@@ -125,9 +85,12 @@
 				selectOK: function() {
 					vm.atwhos=[];
 					this.contactList.forEach(function(obj, index) {
-						if(obj.isSelected) {
-							vm.atwhos.push(obj);
-						}
+						$.each(obj.subDetail,function(index,obj1){
+								if(obj1.isSelected) {
+									vm.atwhos.push(obj1);
+								}
+							})
+						
 					});
 					vm.appendAt()
 					this.cancel()

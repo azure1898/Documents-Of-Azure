@@ -175,4 +175,16 @@
 		AND a.Product_Line = '0'
 	</select>
 	
+	<!-- 根据TYPE和VALUE查询字典表 -->
+	<select id="findSysDict" resultType="java.lang.String">
+		SELECT
+			a.label
+		FROM
+			Sys_Dict a
+		WHERE
+			a.del_flag = '0'
+		AND a.type = #{type}
+		AND a.value = #{value}
+	</select>
+	
 </mapper>

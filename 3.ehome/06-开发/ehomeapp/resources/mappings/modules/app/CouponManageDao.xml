@@ -263,15 +263,15 @@
 		ORDER BY b.Valid_End DESC
 	</select>
 	
-	<!-- 获取某楼盘下买家可领取的优惠券 -->
-	<select id="getCanReceiveCoupons" resultType="CouponManage">
+	<!-- 获取某楼盘下某种领取方式的优惠券 -->
+	<select id="getCouponsOfReceiveType" resultType="CouponManage">
 		SELECT DISTINCT
 			<include refid="couponManageColumns" />
 		FROM
 			Coupon_Manage a
 		WHERE
-			a.del_flag = 0
-		AND a.Receive_Type = 0
+			a.del_flag = '0'
+		AND a.Receive_Type = #{receiveType}
 		AND a.Active_State <![CDATA[<>]]> 3
 		AND a.Active_Start_Time <![CDATA[<=]]> NOW()
 		AND a.Active_End_Time > NOW()
@@ -375,7 +375,8 @@
 	<select id="updateUserState">
 		UPDATE Member_Discount a
 		SET a.Use_State = #{useState},
-		a.Use_Order_ID = #{orderId}
+		a.Use_Order_ID = #{orderId},
+		a.Use_Date = NOW()
 		WHERE
 			a.del_flag = '0'
 		AND a.ID = #{memberDiscountId}

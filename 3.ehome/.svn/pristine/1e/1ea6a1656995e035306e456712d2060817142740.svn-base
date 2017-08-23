@@ -1,0 +1,35 @@
+{
+	"headPicSrc":"../../images/pic01.jpg",
+	"id":123,
+	"userName":"姜昊",
+	"createTime":"1分鐘之前",
+	"countPraise":5,
+	"content":"這個過程很複雜的",
+	"isPraise":1,
+	"data":[
+		{
+		"headPicSrc":"../../images/pic01.jpg",
+		"userName":"姜昊",
+		"createTime":"2分鐘之前",
+		"countPraise":3,
+		"content":"房间打开slow",
+		"isPraise":1
+		},
+		{
+		"headPicSrc":"../../images/pic01.jpg",
+		"userName":"姜昊",
+		"createTime":"5分鐘之前",
+		"countPraise":5,
+		"content":"房间打开slow",
+		"isPraise":0
+		},
+		{
+		"headPicSrc":"../../images/pic01.jpg",
+		"userName":"姜昊",
+		"createTime":"1分鐘之前",
+		"countPraise":5,
+		"content":"房间打开slow",
+		"isPraise":1
+		}
+	]
+}

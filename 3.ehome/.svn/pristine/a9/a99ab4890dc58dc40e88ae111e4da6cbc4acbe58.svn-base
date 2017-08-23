@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.its.modules.order.dao.BusinessDealDao">
+    
+    <sql id="BusinessDealColumns">
+    	ID AS "id",
+		Business_Info_ID AS "businessInfoId",
+		Module_Manage_ID AS "moduleManageId",
+		Prod_Type AS "prodType",
+		Order_No AS "orderNo",
+		Sum_Money AS "sumMoney",
+		Coupon_Money AS "couponMoney",
+		Benefit_Money AS "benefitMoney",
+		Pay_Type AS "payType",
+		Order_State AS "orderState",
+		Type AS "type",
+		Create_Date AS "createDate",
+		Province_ID AS "provinceId",
+		City_ID AS "cityId",
+		Village_Info_ID AS "villageInfoId",
+		Update_Date AS "updateDate",
+		Del_Flag AS "delFlag"
+	</sql>
+    
+    <sql id="BusinessDealJoins">
+    </sql>
+    
+    <select id="get" resultType="BusinessDeal">
+        select b.business_name businessName,c.Module_Name moduleName,a.* from(
+			select <include refid="BusinessDealColumns" />,(Address_Money-Address_Benefit) AS "deliveryFee",(Sum_Money+Address_Money-Address_Benefit-Coupon_Money-Benefit_Money) AS "orderAmount" from order_goods
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_field
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_lesson
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,Service_Money AS "deliveryFee",(Sum_Money+Service_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_service
+			UNION ALL 
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_group_purc
+		)a LEFT JOIN Business_Info b ON (a.businessInfoId=b.id) LEFT JOIN Module_Manage c ON (a.moduleManageId=c.id)
+        WHERE a.id = #{id}
+    </select>
+    
+    <select id="findList" resultType="BusinessDeal">
+       select b.business_name businessName,c.Module_Name moduleName,a.* from(
+			select <include refid="BusinessDealColumns" />,(Address_Money-Address_Benefit) AS "deliveryFee",(Sum_Money+Address_Money-Address_Benefit-Coupon_Money-Benefit_Money) AS "orderAmount" from order_goods
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_field
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_lesson
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,Service_Money AS "deliveryFee",(Sum_Money+Service_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_service
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_group_purc
+		)a LEFT JOIN Business_Info b ON (a.businessInfoId=b.id) LEFT JOIN Module_Manage c ON (a.moduleManageId=c.id)
+        <where>
+            a.delFlag = #{DEL_FLAG_NORMAL}
+            <if test="beginCreateDate != null and beginCreateDate != ''">
+                AND a.createDate >= #{beginCreateDate}
+            </if>
+             <if test="endCreateDate != null and endCreateDate != ''">
+                <![CDATA[AND a.createDate <= #{endCreateDate}]]>
+            </if>
+            <if test="cityId != null and cityId != ''">
+                AND a.cityId = #{cityId}
+            </if>
+           <if test="villageInfoId != null and villageInfoId != ''">
+                AND a.villageInfoId = #{villageInfoId}
+            </if>
+            <if test="moduleManageId != null and moduleManageId != ''">
+                AND a.moduleManageId = #{moduleManageId}
+            </if>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+            <if test="payType != null and payType != ''">
+                AND a.payType = #{payType}
+            </if>
+             <if test="filter != null and filter != ''">
+                AND (
+                	a.orderNo =#{filter}
+					or b.business_name like
+					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+                )
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.updateDate DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <!-- 查询总计 -->
+    <resultMap type="java.util.HashMap" id="totalMap">
+    	<result column="orderAmount" property="orderAmount"/>
+    	<result column="benefitMoney" property="benefitMoney"/>
+    	<result column="couponMoney" property="couponMoney"/>
+    </resultMap>
+   <select id="getTotal" parameterType="BusinessDeal" resultMap="totalMap">
+    	select sum(d.orderAmount) AS "orderAmount",sum(d.benefitMoney) AS "benefitMoney",sum(d.couponMoney) AS "couponMoney" from(
+    		select b.business_name businessName,c.Module_Name moduleName,a.* from(
+			select <include refid="BusinessDealColumns" />,(Address_Money-Address_Benefit) AS "deliveryFee",(Sum_Money+Address_Money-Address_Benefit-Coupon_Money-Benefit_Money) AS "orderAmount" from order_goods
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_field
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_lesson
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,Service_Money AS "deliveryFee",(Sum_Money+Service_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_service
+			UNION ALL
+			select <include refid="BusinessDealColumns" />,0 AS "deliveryFee",(Sum_Money-Coupon_Money-Benefit_Money) AS "orderAmount" from order_group_purc
+		)a LEFT JOIN Business_Info b ON (a.businessInfoId=b.id) LEFT JOIN Module_Manage c ON (a.moduleManageId=c.id)
+        <where>
+            a.delFlag = #{DEL_FLAG_NORMAL}
+            <if test="beginCreateDate != null and beginCreateDate != ''">
+                AND a.createDate >= #{beginCreateDate}
+            </if>
+             <if test="endCreateDate != null and endCreateDate != ''">
+                <![CDATA[AND a.createDate <= #{endCreateDate}]]>
+            </if>
+            <if test="cityId != null and cityId != ''">
+                AND a.cityId = #{cityId}
+            </if>
+           <if test="villageInfoId != null and villageInfoId != ''">
+                AND a.villageInfoId = #{villageInfoId}
+            </if>
+            <if test="moduleManageId != null and moduleManageId != ''">
+                AND a.moduleManageId = #{moduleManageId}
+            </if>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+            <if test="payType != null and payType != ''">
+                AND a.payType = #{payType}
+            </if>
+             <if test="filter != null and filter != ''">
+                AND (
+                	a.orderNo like
+					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+					or b.business_name like
+					<if test="dbName == 'oracle'">'%'||#{filter}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{filter}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{filter},'%')</if>
+                )
+            </if>
+        </where>
+    	)d
+    </select>
+ <!-- 查詢訂單信息 -->
+	 <resultMap type="OrderGoods" id="orderGoodsMap">
+	 	<result column="ID" property="id"/>
+	 	<result column="Order_No" property="orderNo"/>
+	 	<result column="Account_Name" property="accountName"/>
+	 	<result column="Address" property="address"/>
+	 	<result column="Sum_Money" property="sumMoney"/>
+	 	<result column="Address_Type" property="addressType"/>
+	 	<result column="Pay_State" property="payState"/>
+	 	<result column="Order_State" property="orderState"/>
+	 	<result column="Create_Date" property="createDate"/>
+	 	<result column="Pay_Time" property="payTime"/>
+	 	<association property="orderGoodsList" column="ID" select="getAllOrderGoodsList" />
+	 	<association property="orderTrackList" column="Order_No" select="getAllOrderTrackList" />
+	 </resultMap>
+ 	<select id="getAll" parameterType="BusinessDeal" resultMap="orderGoodsMap">
+ 		select * from order_goods where id=#{id}
+ 	</select>
+ 	<resultMap type="OrderGoodsList" id="orderGoodsListMap">
+ 		<result column="ID" property="id"/>
+ 		<result column="Goods_Info_ID" property="goodsInfoId"/>
+ 		<result column="Serial_Numbers" property="serialNumbers"/>
+ 		<result column="Name" property="name"/>
+ 		<result column="Sku_Content" property="skuContent"/>
+ 		<result column="Base_Price" property="basePrice"/>
+ 		<result column="Benefit_Price" property="benefitPrice"/>
+ 		<result column="Goods_Sum" property="goodsSum"/>
+ 		<result column="Pay_Sum_Money" property="paySumMoney"/>
+ 		<result column="Content" property="content"/>
+ 		<result column="Imgs" property="imgs"/>
+ 	</resultMap>
+ 	<select id="getAllOrderGoodsList" parameterType="String" resultMap="orderGoodsListMap">
+ 		select * from order_goods_list where Order_Goods_ID=#{id}
+ 	</select>
+    <resultMap type="OrderTrack" id="orderTrackListMap">
+    	<result column="ID" property="id"/>
+    	<result column="State_Msg" property="stateMsg"/>
+    	<result column="Update_Date" property="updateDate"/>
+    	<result column="Handle_Msg" property="handleMsg"/>
+    	<!-- <result column="Update_By" property="updateBy"/> -->
+    	<result column="Remarks" property="remarks"/>
+    </resultMap>
+    <select id="getAllOrderTrackList" parameterType="String" resultMap="orderTrackListMap">
+    	select * from order_track where Order_No=#{id} order by Update_Date desc
+    </select>
+</mapper>

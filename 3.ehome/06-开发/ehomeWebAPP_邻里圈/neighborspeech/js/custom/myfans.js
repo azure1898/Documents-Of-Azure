@@ -1,7 +1,14 @@
 var vm = new Vue({
 	el:"#app",
 	data:{
-		myfansData:[]
+		myfansData:[],
+		urlList: {
+			speechdetail: "../main/speechdetails.html?id=",
+			commentdetail: "../main/commentdetails.html?id=",
+			comments:"../main/comment.html?id=",
+			forward:"../main/forward.html?id=",
+			personalpage:"../main/personalpage.html?id="
+		}
 	},
 	mounted:function(){//页面加载之后自动调用，常用于页面渲染
 		this.$nextTick(function(){//在2.0版本中，加mounted的$nextTick方法，才能使用vm

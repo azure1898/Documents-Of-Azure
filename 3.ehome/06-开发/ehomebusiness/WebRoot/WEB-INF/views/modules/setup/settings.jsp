@@ -18,7 +18,11 @@
         $("#inputForm").validate({
             rules : {},
             messages : {
+                newPassword : {
+                    required : "请输入新密码"
+                },
                 confirmNewPassword : {
+                    required : "请再次输入新密码",
                     equalTo : "输入与上面相同的密码"
                 }
             },

@@ -8,6 +8,8 @@
 <script type="text/javascript">
    
     function page(n, s) {
+    	$("#pageNo").val(n);
+    	$("#pageSize").val(s);
         $("#searchForm").attr("action", "${ctx}/sys/role/list");
         $("#searchForm").submit();
         return false;
@@ -17,12 +19,14 @@
 <body>
     <ul class="nav nav-tabs">
         <li>
-            <span>
-                系统管理 > <a href="${ctx}/sys/role/list">角色管理 </a>
+            <span class="common-breadcrumb">
+                系统管理&nbsp;>&nbsp;<a href="${ctx}/sys/role/list">角色管理 </a>
             </span>
         </li>
     </ul>
     <form:form id="searchForm" modelAttribute="role" action="${ctx}/sys/role/list" method="post" class="breadcrumb form-search ">
+        <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
         <ul class="ul-form">
             <li>
                 <form:select path="roleType" class="input-medium">
@@ -75,18 +79,19 @@
             <th>描述</th>
             <th>操作</th>
         </tr>
-        <c:forEach items="${list}" var="role" varStatus="status">
+        <c:forEach items="${page.list}" var="role" varStatus="status">
             <tr onClick="selectElem(this)">
-                <td>${status.index+1}<input id="elemId" type="hidden" value="${role.id}" /> <input id="roleSysData" type="hidden" value="${role.sysData}" />
+                <td>${(status.index + 1) + ((page.pageNo - 1) * (page.pageSize))}<input id="elemId" type="hidden" value="${role.id}" /> <input id="roleSysData" type="hidden" value="${role.sysData}" />
                 </td>
                 <td>${role.name}</td>
                 <td>${role.remarks}</td>
                 <shiro:hasPermission name="sys:role:edit">
-                    <td><a href="${ctx}/sys/user/list?role.enname=${role.id}">管理用户</a></td>
+                    <td><a href="${ctx}/sys/user/roleUserList?role.id=${role.id}">管理用户</a></td>
                 </shiro:hasPermission>
             </tr>
         </c:forEach>
     </table>
+    <div class="pagination">${page}</div>
     <script type="text/javascript">
     function elemEdit() {
     	if (!$("#selectElemId").val()) {

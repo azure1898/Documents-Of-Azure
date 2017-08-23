@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.its.common.config.Global;
 import com.its.common.utils.StringUtils;
 import com.its.common.web.BaseController;
-
 import com.its.modules.app.bean.CouponManageBean;
 import com.its.modules.app.bean.GoodsInfoBean;
 import com.its.modules.app.common.AppGlobal;
@@ -28,6 +27,7 @@ import com.its.modules.app.common.ValidateUtil;
 import com.its.modules.app.entity.Account;
 import com.its.modules.app.entity.Address;
 import com.its.modules.app.entity.BusinessInfo;
+import com.its.modules.app.entity.GoodsSkuPrice;
 import com.its.modules.app.entity.OrderGoods;
 import com.its.modules.app.entity.VillageInfo;
 import com.its.modules.app.service.AccountService;
@@ -35,6 +35,7 @@ import com.its.modules.app.service.AddressService;
 import com.its.modules.app.service.BusinessInfoService;
 import com.its.modules.app.service.CouponManageService;
 import com.its.modules.app.service.GoodsInfoService;
+import com.its.modules.app.service.GoodsSkuPriceService;
 import com.its.modules.app.service.OrderGoodsService;
 import com.its.modules.app.service.ShoppingCartService;
 import com.its.modules.app.service.VillageInfoService;
@@ -75,6 +76,9 @@ public class OrderGoodsController extends BaseController {
 
 	@Autowired
 	private VillageInfoService villageInfoService;
+
+	@Autowired
+	private GoodsSkuPriceService goodsSkuPriceService;
 
 	/**
 	 * 确认订单
@@ -127,6 +131,11 @@ public class OrderGoodsController extends BaseController {
 			}
 			// 处理购物车中的商品信息
 			List<GoodsInfoBean> list = shoppingCartService.getShoppingCartList(userID, buildingID, businessID);
+			if (list == null) {
+				toJson.put("code", Global.CODE_PROMOT);
+				toJson.put("message", "商品已下架");
+				return toJson;
+			}
 			List<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 			double totalMoney = 0;
 			boolean isBenefitPrice = false;
@@ -136,9 +145,10 @@ public class OrderGoodsController extends BaseController {
 				goods.put("commodityName", goodsInfoService.getGoodsInfoName(bean));
 				goods.put("commodityImage", goodsInfoService.getGoodsPicUrl(bean, request));
 				if (StringUtils.isNotBlank(bean.getGoodsSkuPriceID())) {
-					double price = bean.getSkuBasePrice();
-					if (bean.getSkuBenefitPrice() != null && bean.getSkuBenefitPrice() != 0) {
-						price = bean.getSkuBenefitPrice();
+					GoodsSkuPrice goodsSkuPrice = goodsSkuPriceService.get(bean.getGoodsSkuPriceID());
+					double price = ValidateUtil.validateDouble(goodsSkuPrice.getBasePrice());
+					if (goodsSkuPrice.getBenefitPrice() != null) {
+						price = ValidateUtil.validateDouble(goodsSkuPrice.getBenefitPrice());
 						isBenefitPrice = true;
 					}
 					goods.put("commodityPrice", price * bean.getCartNumber());
